@@ -51,6 +51,8 @@ Source: "{#BuildOut}\IRCAM Thermal Viewer.exe"; DestDir: "{app}"; Flags: ignorev
 Source: "{#BuildOut}\*.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\LICENSE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\NOTICE.md"; DestDir: "{app}"; Flags: ignoreversion
+; User manual (scripts\build-manual.py); the User Guide window opens it from the program folder
+Source: "..\build\manual\IRCAMSoftwareManual.pdf"; DestDir: "{app}"; Flags: ignoreversion skipifsourcedoesntexist
 Source: "..\deps\opencv\LICENSE.txt"; DestDir: "{app}\licenses"; DestName: "OpenCV-LICENSE.txt"; Flags: ignoreversion skipifsourcedoesntexist
 Source: "..\deps\opencv\LICENSE_FFMPEG.txt"; DestDir: "{app}\licenses"; DestName: "OpenCV-FFmpeg-LGPL-LICENSE.txt"; Flags: ignoreversion skipifsourcedoesntexist
 Source: "..\deps\glfw\LICENSE.md"; DestDir: "{app}\licenses"; DestName: "GLFW-LICENSE.md"; Flags: ignoreversion skipifsourcedoesntexist
@@ -61,6 +63,7 @@ Source: "{#PayloadDir}\vc_redist.x64.exe"; DestDir: "{tmp}"; Flags: deleteafteri
 
 [Icons]
 Name: "{group}\OpenRMH-IRCAM"; Filename: "{app}\IRCAM Thermal Viewer.exe"
+Name: "{group}\OpenRMH-IRCAM User Manual"; Filename: "{app}\IRCAMSoftwareManual.pdf"; Check: FileExists(ExpandConstant('{app}\IRCAMSoftwareManual.pdf'))
 Name: "{group}\{cm:UninstallProgram,OpenRMH-IRCAM}"; Filename: "{uninstallexe}"
 Name: "{userdesktop}\OpenRMH-IRCAM"; Filename: "{app}\IRCAM Thermal Viewer.exe"; Tasks: desktopicon
 

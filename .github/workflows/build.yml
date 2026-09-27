@@ -29,6 +29,16 @@ jobs:
             src/packages
           key: deps-${{ runner.os }}-${{ hashFiles('scripts/fetch-deps.ps1') }}
 
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Build user manual (PDF)
+        shell: pwsh
+        run: |
+          python -m pip install --disable-pip-version-check -r docs/manual/requirements.txt
+          python scripts/build-manual.py
+
       - name: Fetch dependencies
         if: steps.deps-cache.outputs.cache-hit != 'true'
         shell: pwsh
@@ -45,6 +55,7 @@ jobs:
           Copy-Item "src/x64/Release/IRCAM Thermal Viewer.exe" dist/
           Copy-Item src/x64/Release/*.dll dist/
           Copy-Item LICENSE, NOTICE.md dist/
+          Copy-Item build/manual/IRCAMSoftwareManual.pdf dist/
           # Licence texts of the redistributed third-party libraries
           Copy-Item deps/opencv/LICENSE.txt      dist/licenses/OpenCV-LICENSE.txt
           Copy-Item deps/opencv/LICENSE_FFMPEG.txt dist/licenses/OpenCV-FFmpeg-LGPL-LICENSE.txt
@@ -55,6 +66,12 @@ jobs:
         with:
           name: OpenRMH-IRCAM-win-x64
           path: dist/
+          if-no-files-found: error
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: OpenRMH-IRCAM-user-manual
+          path: build/manual/IRCAMSoftwareManual.pdf
           if-no-files-found: error
 
       - name: Download VC++ redistributable
@@ -100,6 +117,11 @@ jobs:
           name: OpenRMH-IRCAM-installer
           path: installer-out
 
+      - uses: actions/download-artifact@v4
+        with:
+          name: OpenRMH-IRCAM-user-manual
+          path: manual
+
       - name: Create zip and release
         env:
           GH_TOKEN: ${{ github.token }}
@@ -111,6 +133,8 @@ jobs:
           setup_path=$(find installer-out -name '*-setup.exe' | head -1)
           setup_name=$(basename "$setup_path")
           setup_sha=$(sha256sum "$setup_path" | cut -d' ' -f1)
+          manual_name="OpenRMH-IRCAM-${TAG}-user-manual.pdf"
+          cp manual/IRCAMSoftwareManual.pdf "${manual_name}"
           cat > notes.md <<EOF
           Community build of **IRCAM Thermal Viewer 3.0.0** (September 2026 source release by Rune Mark Hansen), built from tag \`${TAG}\`
           by GitHub Actions. The program reports itself as version 3.0.0; the tag suffix numbers builds of this repository.
@@ -122,6 +146,8 @@ jobs:
           **Install (portable):** unzip \`${zip_name}\` anywhere and run \`IRCAM Thermal Viewer.exe\` directly - no install, no
           admin rights, but install the [VC++ Redistributable (x64)](https://aka.ms/vc14/vc_redist.x64.exe) yourself if the
           program reports a missing DLL.
+
+          **User manual:** \`${manual_name}\` (also in the installer and the zip; the program's *User Guide* button shows it when Adobe Reader is installed).
 
           In the camera list choose your exact model (Thermal Master P2 Pro: *InfiRay Or Thermal Master P2Pro*).
           See docs/SUPPORTED-CAMERAS.md.
@@ -141,4 +167,4 @@ jobs:
           EOF
           awk -v t="## ${TAG} " 'index($0,t)==1{f=1;next} /^## /{f=0} f' CHANGELOG.md > changes.md || true
           if [ -s changes.md ]; then { printf '\n**Changes in this build**\n\n'; cat changes.md; } >> notes.md; fi
-          gh release create "${TAG}" "${zip_name}" "$setup_path" --repo "${GITHUB_REPOSITORY}" --title "OpenRMH-IRCAM ${TAG}" --notes-file notes.md --verify-tag
+          gh release create "${TAG}" "${zip_name}" "$setup_path" "${manual_name}" --repo "${GITHUB_REPOSITORY}" --title "OpenRMH-IRCAM ${TAG}" --notes-file notes.md --verify-tag

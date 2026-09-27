@@ -43,6 +43,19 @@ Or open `src\IRCAM Thermal Viewer.sln` in Visual Studio, choose **Release | x64*
 - **Debug|x64 is unmaintained**: it still references `opencv_world460d.lib`. Use Release until it is fixed.
 - **Licensing code.** No licence check is compiled in; the original TurboActivate dependency was removed.
 
+## Building the user manual (optional)
+
+The user manual is written in Markdown (`docs/manual/manual.md`) and built into `build\manual\IRCAMSoftwareManual.pdf`,
+the file the program's User Guide window opens. GitHub Actions builds it on every push. To build it locally (Python 3.9+):
+
+```powershell
+python -m pip install -r docs\manual\requirements.txt   # pinned pandoc (pypandoc_binary) and typst
+python scripts\build-manual.py
+```
+
+Run it before `scripts\build.ps1` and the build copies the PDF next to the exe; the installer picks it up too.
+Page setup and title are in `docs/manual/metadata.yaml`; `docs/manual/pdf.lua` sizes the images for the page.
+
 ## Building the installer (optional)
 
 The GitHub Actions release build produces a Windows installer with [Inno Setup](https://jrsoftware.org/isinfo.php) 6
