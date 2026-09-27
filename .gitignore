@@ -46,6 +46,10 @@ TurboActivate.dat
 *.snk
 secrets/
 
+# --- User manual PDF build (scripts/build-manual.py) ---
+/build/
+/docs/manual/manual.typ
+
 # --- Installers built from this repo (publish via GitHub Releases, not git) ---
 /dist/
 *.msi

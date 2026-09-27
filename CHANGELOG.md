@@ -5,6 +5,14 @@ the number counts builds of this repository.
 
 ## Unreleased
 
+- User manual: the author's manual, converted from the Word original in his source release to Markdown
+  (`docs/manual/`) and updated for 3.0.0 as a community edition. The sections on buying and activating a licence and
+  the proprietary Terms of Use (which applied to the earlier commercial release and contradicted the MIT licence) are
+  removed; the camera list, MATLAB examples and several settings are updated. GitHub Actions builds the PDF
+  (`scripts/build-manual.py`, pinned pandoc + Typst). It ships in the installer and the zip as
+  `IRCAMSoftwareManual.pdf`, and each release attaches it.
+- The User Guide button opens the manual in the system's default PDF viewer. The embedded viewer it replaces worked
+  only with Adobe Reader installed. If the PDF is missing or no viewer is installed, the status panel says so.
 - Input validation: a frame from a file or a camera is now checked against the size of the frame buffers before it is copied
   or indexed (`src/RMH_FrameBufferLimits.h`). Previously an oversized or corrupt snapshot PNG, recording AVI, or camera
   video format could write past the end of the global frame buffers.

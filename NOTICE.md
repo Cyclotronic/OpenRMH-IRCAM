@@ -33,7 +33,8 @@ Git history is the detailed record (`git log`, `git blame`).
 |---|---|
 | `src/*.h`, `src/*.cpp`, `src/*.resx`, solution and project, `examples/matlab/` (the original program) | Rune Mark Hansen. Files carry `Author: Rune Mark Hansen` where the author added a header. |
 | Changes made for this repository to those files: `src/*.vcxproj` (dependency paths, no TurboActivate, runtime-DLL copy step), `src/*.rc` (relative icon path), `examples/matlab/` (removed personal paths) | Cyclotronic, contributed under the same MIT licence. The files remain principally the author's. |
-| `scripts/`, `.github/`, `src/OpenRMH-IRCAM.deps.props`, `docs/`, `README.md`, `NOTICE.md` | Cyclotronic (files created for this repository carry an SPDX header). |
+| `docs/manual/manual.md` and `docs/manual/media/` (the user manual) | Rune Mark Hansen. Converted from the Word manual in his source release; the community-edition changes listed at the top of the manual are by Cyclotronic, under the same MIT licence. |
+| `scripts/`, `.github/`, `src/OpenRMH-IRCAM.deps.props`, `docs/` (other than the manual text and screenshots), `README.md`, `NOTICE.md` | Cyclotronic (files created for this repository carry an SPDX header). |
 | DirectShow camera layer and the other files noted below | Released by Rune Mark Hansen as part of his source release. The files carry no other author or licence notice. |
 | Libraries downloaded by `scripts/fetch-deps.ps1` (not in this repository) | Their own authors and licences - see the table further below. |
 
@@ -78,7 +79,9 @@ OpenCV FFmpeg DLL is LGPL — keep it as a separate DLL.
   build output, `.vs` cache, `.user` files and `.aps` resource cache.
 - Adobe Acrobat / VBA COM interop assemblies (not referenced by the code).
 - Third-party PDFs and logos from the original file share (image-processing textbook chapters, partner/Discord/Windows logos).
-- The author's user manual (`.docx`), installer script, sample data, and website/Discord links beyond what is compiled into source —
+- The Word original of the user manual, which is part of the author's source release: `docs/manual/` holds its converted,
+  edited form, and the 29 MB `.docx` adds nothing the Markdown doesn't.
+- The author's installer script, sample data, and website/Discord links beyond what is compiled into source —
   add them only with the author's approval.
 
 ## Personal / identifying content to review before publishing

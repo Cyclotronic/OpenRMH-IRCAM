@@ -1,0 +1,22 @@
+# Document settings for the PDF build (scripts/build-manual.py). Page setup follows the original Word manual:
+# A4 landscape with 2 cm side margins, so the full-width screenshots keep their size.
+title: IRCAM Thermal Viewer
+subtitle: User Manual - Community Edition for OpenRMH-IRCAM 3.0.0
+author:
+  - Rune Mark Hansen (original manual)
+  - OpenRMH-IRCAM contributors (community edition)
+lang: en
+papersize: a4
+margin:
+  x: 2cm
+  y: 2cm
+fontsize: 11pt
+toc: true
+toc-depth: 2
+toc-title: Contents
+header-includes: |
+  ```{=typst}
+  #set page(flipped: true)
+  #show heading.where(level: 1): it => pagebreak(weak: true) + it
+  #show figure: set block(breakable: true)
+  ```

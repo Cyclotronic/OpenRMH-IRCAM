@@ -38,7 +38,7 @@ What this repository is for:
 - **Keeping the author's work identifiable.** His code and headers are unchanged; changes made here are small, separate and
   listed in [`NOTICE.md`](NOTICE.md). Git history shows who changed what.
 - **Making it easy to build.** The original share is about 9 GB, most of it Visual Studio build output and caches. This
-  repository is source only (~16 MB); `scripts/fetch-deps.ps1` downloads the third-party libraries and a GitHub Actions
+  repository is source only (about 40 MB, most of it the user manual's screenshots); `scripts/fetch-deps.ps1` downloads the third-party libraries and a GitHub Actions
   workflow builds it on every push.
 - **Staying stand-alone.** The program has no licence check, and its source contains no networking code. Its only
   outward action is opening a web link in your default browser when you click one.
@@ -53,6 +53,13 @@ Author: Rune Mark Hansen - <https://rmg-engineering.com/>
 - Emissivity table, colour palettes (custom palette creator), colour bar, histogram, 3D surface plot (OpenGL)
 - Snapshot and recording analysis modes (work on saved data — no camera needed)
 - Full-frame temperature export and data logging to CSV
+
+## User manual
+
+[`docs/manual/manual.md`](docs/manual/manual.md) - the author's user manual, updated for 3.0.0 as a community edition.
+GitHub Actions builds it into a PDF on every push; the installer and the portable zip include it as
+`IRCAMSoftwareManual.pdf` (the installer also adds a Start Menu shortcut), and each release attaches it. The program's
+**User Guide** button shows it inside the program only when Adobe Reader is installed; any PDF viewer can open the file.
 
 ## Supported cameras
 
@@ -79,8 +86,9 @@ Details, prerequisites and troubleshooting: [`docs/BUILDING.md`](docs/BUILDING.m
 src/          Visual Studio solution and all source (C++/CLI WinForms + OpenGL)
   res/          icons/images the build needs
 installer/    Inno Setup script for the Windows installer (see docs/BUILDING.md)
-scripts/      fetch-deps.ps1, build.ps1
+scripts/      fetch-deps.ps1, build.ps1, build-manual.py
 docs/         building, supported cameras, architecture, developer guide
+  manual/       user manual source (Markdown + screenshots) and its PDF build settings
 examples/     MATLAB scripts that read the CSV exports
 deps/         (git-ignored) third-party libraries fetched by the script
 ```
