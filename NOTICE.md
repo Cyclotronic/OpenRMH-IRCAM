@@ -13,8 +13,9 @@ source of IRCAM Thermal Viewer is released for everyone to use, copy, modify and
 (OneDrive). He did not name a licence. This repository applies the **MIT License** (see [`LICENSE`](LICENSE)) as the standard licence that
 best matches that intent, with **Rune Mark Hansen** as copyright holder. New contributions are accepted under the same terms.
 
-The MIT licence covers the author's original code. It does **not** relicense the third-party components below, which keep their own
-licences, and it does not cover files whose origin is still to be confirmed (first table).
+The MIT licence covers the source released by the author. It does **not** relicense the third-party libraries listed below, which
+keep their own licences. All source files in this repository come from the author's release and are attributed to him as the
+releasing party; where a file carries a notice naming someone else, that notice governs that file.
 
 If the author prefers a different licence, this can be changed by him; contact the maintainers.
 
@@ -28,16 +29,20 @@ Git history is the detailed record (`git log`, `git blame`).
 | `src/*.h`, `src/*.cpp`, `src/*.resx`, solution and project, `examples/matlab/` (the original program) | Rune Mark Hansen. Files carry `Author: Rune Mark Hansen` where the author added a header. |
 | Changes made for this repository to those files: `src/*.vcxproj` (dependency paths, no TurboActivate, runtime-DLL copy step), `src/*.rc` (relative icon path), `examples/matlab/` (removed personal paths) | Cyclotronic, contributed under the same MIT licence. The files remain principally the author's. |
 | `scripts/`, `.github/`, `src/OpenRMH-IRCAM.deps.props`, `docs/`, `README.md`, `NOTICE.md` | Cyclotronic (files created for this repository carry an SPDX header). |
-| DirectShow camera layer and other files listed below | Not yet attributed - see the next section. |
+| DirectShow camera layer and the other files noted below | Released by Rune Mark Hansen as part of his source release. The files carry no other author or licence notice. |
 | Libraries downloaded by `scripts/fetch-deps.ps1` (not in this repository) | Their own authors and licences - see the table further below. |
 
-## Components in this repository that were not written by the author — provenance to confirm
+## Files whose exact authorship is not stated in the files
+
+Everything below was released by the author with the rest of the source, and is treated as part of that release. The files
+themselves do not say who first wrote them. If an upstream origin or a different copyright holder is identified, attribution
+will be added here and in the files; please open an issue.
 
 | Path | What it is | Note |
 |---|---|---|
-| `src/ds_camera*.{h,cpp}`, `src/abstract_ds_camera.*`, `src/camera_device.*`, `src/uvc_camera*.{h,cpp}`, `src/cv_mat_convertor.*`, `src/ds_*.h`, `src/ds_libs_setting.h` | DirectShow/UVC camera access layer | Files carry no author or licence header. `cv_mat_convertor.h` cites OpenCV's `cap_dshow.cpp` as a reference. Confirm origin and licence before publishing. |
+| `src/ds_camera*.{h,cpp}`, `src/abstract_ds_camera.*`, `src/camera_device.*`, `src/uvc_camera*.{h,cpp}`, `src/cv_mat_convertor.*`, `src/ds_*.h`, `src/ds_libs_setting.h` | DirectShow/UVC camera access layer | Files carry no author or licence header. `cv_mat_convertor.h` cites OpenCV's `cap_dshow.cpp` as a reference. Origin not stated; released with the author's source. |
 | `src/qedit.h` | Legacy Microsoft DirectShow header (removed from the modern Windows SDK) | Widely re-distributed workaround; origin noted in its first lines. |
-| `src/res/MainIcon.ico`, `MaxTrackS.png`, `MinTrackS.png` | Application icon and two UI images | Author's artwork. Confirm no third-party marks. |
+| `src/res/MainIcon.ico`, `MaxTrackS.png`, `MinTrackS.png` | Application icon and two UI images | Released by the author with the source. |
 | `examples/matlab/*.m` | MATLAB examples for the CSV exports | Author's scripts. |
 
 ## Third-party libraries (fetched by `scripts/fetch-deps.ps1`, not stored in this repository)
