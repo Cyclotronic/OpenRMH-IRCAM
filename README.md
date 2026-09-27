@@ -8,10 +8,25 @@ analysis (CSV, with MATLAB examples).
 > **Status:** early. Builds with Visual Studio 2022 and has been run against a Thermal Master P2 Pro.
 > Other cameras on the supported list are untested by this project — reports welcome.
 
-## Origin and credit
+## Origin, status and intent
 
-This code descends from **IRCAM Thermal Viewer** by **Rune Mark Hansen** (files carry `Author: Rune Mark Hansen`).
-See [`NOTICE.md`](NOTICE.md) for authorship, licence status and third-party components.
+OpenRMH-IRCAM is an **unofficial community repository** of the source code of **IRCAM Thermal Viewer**, written by
+**Rune Mark Hansen**. On 24-25 September 2026 the author announced that the complete source is released for everyone to
+use, copy, modify and own for free, and shared it publicly. He did not name a licence, so this repository applies the
+[MIT licence](LICENSE) with him as copyright holder ([`NOTICE.md`](NOTICE.md) has the details).
+
+What this repository is for:
+
+- **Keeping the author's work identifiable.** His code and headers are unchanged; changes made here are small, separate and
+  listed in [`NOTICE.md`](NOTICE.md). Git history shows who changed what.
+- **Making it easy to build.** The original share is about 9 GB, most of it Visual Studio build output and caches. This
+  repository is source only (~16 MB); `scripts/fetch-deps.ps1` downloads the third-party libraries and a GitHub Actions
+  workflow builds it on every push.
+- **Staying stand-alone.** The program has no licence check, and its source contains no networking code. Its only
+  outward action is opening a web link in your default browser when you click one.
+- **Coordinating with the author.** If he publishes his own repository, this one will be aligned with it rather than compete.
+
+Author: Rune Mark Hansen - <https://rmg-engineering.com/>
 
 ## Features
 
