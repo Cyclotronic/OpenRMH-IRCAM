@@ -3,7 +3,7 @@
 Tags look like `v<upstream version>-community.<n>`: the first part is the version of IRCAM Thermal Viewer the source came from,
 the number counts builds of this repository.
 
-## Unreleased
+## v3.0.0-community.4 - 2026-09-27
 
 - User manual: the author's manual, converted from the Word original in his source release to Markdown
   (`docs/manual/`) and updated for 3.0.0 as a community edition. The sections on buying and activating a licence and
@@ -23,6 +23,8 @@ the number counts builds of this repository.
   - The DirectShow layer takes an optional destination size and refuses to copy a larger frame.
 - Fixed the centre-pixel index overflowing for 640-pixel-wide sensors (pool 3).
 - Saved-session values are range-checked: an out-of-range list index is ignored and the recording frame rate is clamped.
+- Verified on hardware with a Thermal Master P2 Pro: camera connect, snapshot, recording, saving and loading a session,
+  the user manual button, and rejecting a file that isn't a valid snapshot or recording.
 
 ## v3.0.0-community.3 - 2026-09-27
 
