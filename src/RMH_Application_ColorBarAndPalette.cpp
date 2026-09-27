@@ -18,7 +18,7 @@
 #include "GlobalObjectsAndVariables.h"
 #include "RMH_CustomColorPalette_Resources.h"
 
-// Globale Namespaces
+// Global namespaces
 using namespace System;
 using namespace std;
 
@@ -1348,22 +1348,22 @@ void RMH_ColorPalette_EnableDualColorPalettes(System::Windows::Forms::Button^ Du
 
 void RMH_ColorPalette_UpdateHistogramColorPaletteInvertionState() {
 
-	// Routinen opdaterer histogrammets color palettes inverterings stadie
+	// This routine updates the inversion state of the histogram color palettes
 
 	// Check which color palette the histogram uses
 	// If the histogram color palette is set to the dual color palette
 	if (HistogramDualOrLiveViewPaletteFlag == true) {
 
-		// Skal Dual color paletten inverteres for Histogrammet
+		// Should the dual color palette be inverted for the histogram
 		if (InvertLiveViewDualPaletteFlag == true) {
 
-			// Opdater histogrammets color palette inverterings flag 
+			// Update the inversion flag of the histogram color palette 
 			GlobalVariables::OpenGLHistogram->RMH_OpenGL_InvertHistogramColorPalette(true);
 
 		}
 		else {
 
-			// Opdater histogrammets color palette inverterings flag 
+			// Update the inversion flag of the histogram color palette 
 			GlobalVariables::OpenGLHistogram->RMH_OpenGL_InvertHistogramColorPalette(false);
 
 		}
@@ -1371,16 +1371,16 @@ void RMH_ColorPalette_UpdateHistogramColorPaletteInvertionState() {
 	}
 	else {
 
-		// Skal Live view color paletten inverteres for Histogrammet
+		// Should the live view color palette be inverted for the histogram
 		if (InvertLiveViewPaletteFlag == true) {
 
-			// Opdater histogrammets color palette inverterings flag 
+			// Update the inversion flag of the histogram color palette 
 			GlobalVariables::OpenGLHistogram->RMH_OpenGL_InvertHistogramColorPalette(true);
 
 		}
 		else {
 
-			// Opdater histogrammets color palette inverterings flag 
+			// Update the inversion flag of the histogram color palette 
 			GlobalVariables::OpenGLHistogram->RMH_OpenGL_InvertHistogramColorPalette(false);
 
 		}
@@ -1393,7 +1393,7 @@ void RMH_ColorPalette_InvertColorPalettes(System::Object^ sender) {
 
 	// This routine updates the inverted state of a selected color palette
 
-	// Cast Sender objekt som Forms ToolStripMenuItem objekt
+	// Cast the sender object as a WinForms ToolStripMenuItem object
 	System::Windows::Forms::ToolStripMenuItem^ InvertMenuItem = (System::Windows::Forms::ToolStripMenuItem^)sender;
 
 	// Read the identification tag of the tool strip menu
@@ -1409,10 +1409,10 @@ void RMH_ColorPalette_InvertColorPalettes(System::Object^ sender) {
 
 	}
 
-	// Opdater histogrammets color palette inverterings stadie
+	// Update the inversion state of the histogram color palette
 	RMH_ColorPalette_UpdateHistogramColorPaletteInvertionState();
 
-	// Opdater Colorbarens paletters inverterings stadier 
+	// Update the inversion states of the colorbar palettes 
 	GlobalVariables::OpenGLColorBar->RMH_OpenGL_InvertColorBarPalettes(InvertLiveViewPaletteFlag, InvertLiveViewDualPaletteFlag);
 
 }
@@ -1426,7 +1426,7 @@ void RMH_ColorBar_ChangeManualRangeMouseWheelStepSize(System::Object^ sender) {
 	// Read the temporary array data and sort the kernel array
 	float MouseWheelStepSize = 0.0;
 
-	// Cast Sender objekt som Forms Tool Strip objekt
+	// Cast the sender object as a WinForms ToolStrip object
 	System::Windows::Forms::ToolStripMenuItem^ MenuStripIndex = (System::Windows::Forms::ToolStripMenuItem^)sender;
 
 	// Read the sub context menu identification tag
@@ -1457,7 +1457,7 @@ void RMH_ColorBar_ChangeColorBarAmountOfTemperatureTick(System::Object^ sender) 
 	// Read the temporary array data and sort the kernel array
 	unsigned char ColorBarTempTicks = 0;
 
-	// Cast Sender objekt som Forms Tool Strip objekt
+	// Cast the sender object as a WinForms ToolStrip object
 	System::Windows::Forms::ToolStripMenuItem^ MenuStripIndex = (System::Windows::Forms::ToolStripMenuItem^)sender;
 
 	// Read the sub context menu identification tag

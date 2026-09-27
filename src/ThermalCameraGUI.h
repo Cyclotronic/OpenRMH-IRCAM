@@ -14,7 +14,7 @@
 #include "RMH_DataLoggingFeature_Resources.h"
 #include "RMH_GeneralTriggerEvent_Resources.h"
 
-// Klasse Namespace
+// Class namespace
 namespace IRCAMThermalViewer {
 
 	// Associated namespaces
@@ -42,9 +42,9 @@ namespace IRCAMThermalViewer {
 
 	public:
 
-		// ------------------------------------ Klasse Konstruktor ------------------------------------ //
+		// ------------------------------------ Class Constructor ------------------------------------ //
 
-		// Form Konstruktor
+		// Form constructor
 		ThermalCameraGUI() {
 
 			// Init GUI components and objects
@@ -52,13 +52,13 @@ namespace IRCAMThermalViewer {
 			// Format arrays and objects of WinForms components for global use
 			InitializeComponentArraysAndObjects();
 
-			// Aktiver Applikationens TitelBars Dark Mode
+			// Enable dark mode for the application title bar
 			RMH_Winforms_EnableTitleBarDarkMode(this->Handle);
 
-			// Initiliser Pop-Up GUI Form
+			// Initialize the pop-up GUI form
 			ManagedLocals::PopUpDialogForm = gcnew IRCAMThermalViewer::PopUpDialog("Information", GlobalVariables::TOPDONCameraInformationString);
 
-			// Indstil Gemte Sessions Applikations Parametere
+			// Set the saved session application parameters
 			GlobalVariables::GlobalRecordingFrameRateNumericUpDown->Value = RecordingFrameRateSetValue;
 
 			// Update the default snapshot file path string 
@@ -68,13 +68,13 @@ namespace IRCAMThermalViewer {
 			// Update the default data logging file path string 
 			this->DefaultDataLoggingSavePathString->Text = "Default Save File Path:  " + GlobalVariables::LoggingCSVDefaultPath;
 
-			// Load data strings ind i hver 2D Plot Data set ComboBoxer
+			// Load data strings into each 2D plot data set ComboBox
 			LoadDataToDataSetComboBoxsAndSetStartUpConfiguration();
 
 			// Load data strings into the temperature alarm menu ComboBoxes
 			LoadTemperatureAlarmsConfigDataToComboboxes();
 
-			// Opdaterer Teksten i toppen af GUIen
+			// Update the text at the top of the GUI
 			RMH_Winforms_ChangeFormTitleBarText(this, "Thermal Camera Settings, Setup And Configuration");
 
 			// Insert the list of supported thermal cameras into the "Supported Devices" ComboBox.
@@ -261,7 +261,7 @@ namespace IRCAMThermalViewer {
 		void LoadDataToDataSetComboBoxsAndSetStartUpConfiguration() {
 
 			// This routine loads data strings into each 2D plot data set ComboBox
-			// Samt indstiller start konfigurationen for 2D plot pointere og ComboBoxer
+			// and sets the start configuration for the 2D plot pointers and ComboBoxes
 
 			// Insert the list of available temperature plot data set sources into the ComboBox
 			RMH_Winforms_CombiBox_AddArrayOfItemStrings(this->DataSet1ComboBox, PlorDataSetSources);
@@ -354,7 +354,7 @@ namespace IRCAMThermalViewer {
 			RMH_Winforms_CombiBox_AddArrayOfItemStrings(GlobalVariables::GlobalPeriodicEventnComboBox[3], PeriodicTriggerEventFuncStrings);
 			RMH_Winforms_CombiBox_AddArrayOfItemStrings(GlobalVariables::GlobalPeriodicEventnComboBox[4], PeriodicTriggerEventFuncStrings);
 
-			// Indstil default periodiske trigger event funktionerne
+			// Set the default periodic trigger event functions
 			RMH_Winforms_CombiBox_SetSellectedItemPosition(GlobalVariables::GlobalPeriodicEventnComboBox[0], _TriggerEventFunction_None);
 			RMH_Winforms_CombiBox_SetSellectedItemPosition(GlobalVariables::GlobalPeriodicEventnComboBox[1], _TriggerEventFunction_None);
 			RMH_Winforms_CombiBox_SetSellectedItemPosition(GlobalVariables::GlobalPeriodicEventnComboBox[2], _TriggerEventFunction_None);
@@ -7955,9 +7955,9 @@ namespace IRCAMThermalViewer {
 
 #pragma endregion
 
-		// ------------------ Main GUI Opstartnings Og Nedluknings Callback Routiner ------------------ //
+		// ------------------ Main GUI Start-Up And Shutdown Callback Routines ------------------ //
 
-		// Thermal Camera Form Opstartnings Callback Routine -> 
+		// Thermal camera form start-up callback routine -> 
 		private: System::Void ThermalCameraGUI_Shown(System::Object^ sender, System::EventArgs^ e) {
 
 			// Update the associated form flag
@@ -7970,7 +7970,7 @@ namespace IRCAMThermalViewer {
 
 		}
 
-	    // Thermal Camera Form Nedluknings Callback Routine ->
+	    // Thermal camera form shutdown callback routine ->
 		private: System::Void ThermalCameraGUI_FormClosing(System::Object^ sender, System::Windows::Forms::FormClosingEventArgs^ e) {
 
 			// Update the associated form flag
@@ -7996,27 +7996,27 @@ namespace IRCAMThermalViewer {
 			// Check whether the event arguments are not null
 			if (MouseEventArgs != nullptr) {
 
-				// Deaktiver yderligere event for handle
+				// Disable further events for the handle
 				MouseEventArgs->Handled = true;
 
 			}
 
 		}
 
-		// --------------------------- GUI Menu/Sub-Menu Callback Routiner ---------------------------- //
+		// --------------------------- GUI Menu/Sub-Menu Callback Routines ---------------------------- //
 
-		// Connect To Thermal Camera Menu Knap Callback ->
+		// Connect to thermal camera menu button callback ->
 		private: System::Void ConnectTCAMMenuButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Toggle Termisk Kamera Connect Sub Menu
+			// Toggle the thermal camera connect sub menu
 			RMH_Winforms_ToggleSubMenuPanel(this->ConnectTCAMSubMenuPanel, this->ConnectTCAMMenuButton);
 
 		}
 
-		// Thermal Camera Konfiguration Menu Knap Callback ->
+		// Thermal camera configuration menu button callback ->
 		private: System::Void CameraConfigMenuButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Toggle Termisk Kamera Konfigurations Sub Menu
+			// Toggle the thermal camera configuration sub menu
 			RMH_Winforms_ToggleSubMenuPanel(this->CameraConfigSubMenuPanel, this->CameraConfigMenuButton);
 
 		}
@@ -8024,23 +8024,23 @@ namespace IRCAMThermalViewer {
 		// Automatic camera calibration menu button callback ->
 		private: System::Void AutoCalMenuButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Toggle Termisk Kamera Auto Kalibrerings Sub Menu
+			// Toggle the thermal camera auto calibration sub menu
 			RMH_Winforms_ToggleSubMenuPanel(this->AutoCalSubMenuPanel, this->AutoCalMenuButton);
 
 		}
 
-		// Snapshot Indstillinger Menu Knap Callback ->
+		// Snapshot settings menu button callback ->
 		private: System::Void SnapshotConfigMenuButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Toggle Snapshot Indstillingers Sub Menu
+			// Toggle the snapshot settings sub menu
 			RMH_Winforms_ToggleSubMenuPanel(this->SnapshotConfigSubMenuPanel, this->SnapshotConfigMenuButton);
 
 		}
 
-		// Video Optagnings Indstillinger Menu Knap Callback ->
+		// Video recording settings menu button callback ->
 		private: System::Void VideoRecordingMenuButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Toggle Video Optagning Indstillingers Sub Menu
+			// Toggle the video recording settings sub menu
 			RMH_Winforms_ToggleSubMenuPanel(this->VideoRecSettingsSubMenuPanel, this->VideoRecordingMenuButton);
 
 		}
@@ -8053,15 +8053,15 @@ namespace IRCAMThermalViewer {
 
 		}
 
-		// Data Logging Indstillingers Menu Knap Callback ->
+		// Data logging settings menu button callback ->
 		private: System::Void DataLoggingSettingsMenuButton_Click(System::Object^ sender, System::EventArgs^ e) {
 			
-			// Toggle Data Loggings Indstillingers Sub Menu
+			// Toggle the data logging settings sub menu
 			RMH_Winforms_ToggleSubMenuPanel(this->DataLoggingSettingsSubMenuPanel, this->DataLoggingSettingsMenuButton);
 
 		}
 		
-		// Data Logging Delimiter CombiBox Ny Delimiter Valgt CallBack ROutine ->
+		// Data logging delimiter ComboBox new delimiter selected callback routine ->
 		private: System::Void DataLoggingCSVDelimiterCombiBox_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
 
 			// Update which data delimiter is used when saving a data logging CSV file
@@ -8075,7 +8075,7 @@ namespace IRCAMThermalViewer {
 			// Update the associated "menu is open" flag
 			TempAlarmsConfigMenuIsOpen = !TempAlarmsConfigMenuIsOpen;
 
-			// Toggle Temp Alarmernes Konfiguration Indstillingers Sub Menu
+			// Toggle the temperature alarms configuration settings sub menu
 			RMH_Winforms_ToggleSubMenuPanel(this->TempAlarmsConfigSubMenuPanel, this->TempAlarmsConfigMenuButton);
 
 		}
@@ -8083,12 +8083,12 @@ namespace IRCAMThermalViewer {
 		// General and periodic trigger configuration menu button callback ->
 		private: System::Void PeriodicTriggerConfigMenuButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Toggle General Og Periodisk Trigger Konfiguration Indstillingers Sub Menu
+			// Toggle the general and periodic trigger configuration settings sub menu
 			RMH_Winforms_ToggleSubMenuPanel(this->PeriodicTriggerSubMenuPanel, this->PeriodicTriggerConfigMenuButton);
 
 		}
 
-		// -------------------- Thermal Camera Connect Og Konfigurations Callbacks -------------------- //
+		// -------------------- Thermal Camera Connect And Configuration Callbacks -------------------- //
 
 		// Connect button click event callback routine ->
 		private: System::Void ConnectButton_Click(System::Object^ sender, System::EventArgs^ e) {
@@ -8112,7 +8112,7 @@ namespace IRCAMThermalViewer {
 			// Handle the actions when the camera source ComboBox item changes - same as disconnect
 			RMH_ThermalViewer_HandleSellectedDeviceOrModeChange();
 
-			// Opdater GUI controls (Executes any pending requests for painting.)
+			// Update the GUI controls (executes any pending requests for painting.)
 			this->Update();
 
 		}
@@ -8123,7 +8123,7 @@ namespace IRCAMThermalViewer {
 			// Handle the actions when the camera source ComboBox item changes
 			RMH_ThermalViewer_HandleSellectedDeviceOrModeChange();
 
-			// Opdater GUI controls (Executes any pending requests for painting.)
+			// Update the GUI controls (executes any pending requests for painting.)
 			this->Update();
 
 		}
@@ -8134,7 +8134,7 @@ namespace IRCAMThermalViewer {
 			// Read and show the internal camera configuration parameters read
 			RMH_ThermalViewer_ReadAndDisplayCameraConfigParameters();
 
-			// Opdater GUI controls (Executes any pending requests for painting.)
+			// Update the GUI controls (executes any pending requests for painting.)
 			this->Update();
 
 		}
@@ -8148,7 +8148,7 @@ namespace IRCAMThermalViewer {
 			// Write/set the configured camera configuration parameters to the camera memory
 			RMH_ThermalViewer_SetCameraConfigParameters();
 
-			// Opdater GUI controls (Executes any pending requests for painting.)
+			// Update the GUI controls (executes any pending requests for painting.)
 			this->Update();
 
 		}
@@ -8161,12 +8161,12 @@ namespace IRCAMThermalViewer {
 
 		}
 
-		// ------------- Automatisk Shutter Kalibration Menu Og Konfigurations Callbacks -------------- //
+		// ------------- Automatic Shutter Calibration Menu And Configuration Callbacks -------------- //
 
 		// Enable auto calibration timer button click callback routine ->
 		private: System::Void AutoShutterCalButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Toggle Automatisk shutter kalibrerings feature timeren
+			// Toggle the automatic shutter calibration feature timer
 			RMH_ThermalViewer_ToggleCameraAutoShutterCalibrationTimer();
 
 		}
@@ -8174,12 +8174,12 @@ namespace IRCAMThermalViewer {
 		// Enable temperature-drift-based calibration timer button click callback routine ->
 		private: System::Void SensorDriftCalButton_Click(System::Object^ sender, System::EventArgs^ e) {
 			
-			// Toggle Temperatur Drift Baseret kalibrerings feature timeren
+			// Toggle the temperature-drift-based calibration feature timer
 			RMH_ThermalViewer_ToggleCameraDriftBasedCalibrationTimer();
 
 		}
 
-		// Auto Kalibrerings timer Callback Routine ->
+		// Auto calibration timer callback routine ->
 		private: System::Void AutoCalTimer_Tick(System::Object^ sender, System::EventArgs^ e) {
 
 			// Execute the events of the auto calibration timer callback
@@ -8245,7 +8245,7 @@ namespace IRCAMThermalViewer {
 
 		}
 
-		// ------------- Video Optagnings Indstillingers Menu Og Konfigurations Callbacks ------------- //
+		// ------------- Video Recording Settings Menu And Configuration Callbacks ------------- //
 
 		// Default live view video capturing application button callback routine ->
 		private: System::Void UseWinSnippingToolButton_Click(System::Object^ sender, System::EventArgs^ e) {
@@ -8319,7 +8319,7 @@ namespace IRCAMThermalViewer {
 
 		}
 
-		// --------------- Data Logging Indstillingers Menu Og Konfigurations Callbacks --------------- //
+		// --------------- Data Logging Settings Menu And Configuration Callbacks --------------- //
 
 		// Set data logging default file path callback routine ->
 		private: System::Void ChangeCSVDefaultPathButton_Click(System::Object^ sender, System::EventArgs^ e) {
@@ -8411,7 +8411,7 @@ namespace IRCAMThermalViewer {
 
 		}
 
-		// Reset Alarm trigger event eksikvering knappers Callback Routine ->
+		// Reset alarm trigger event execution buttons callback routine ->
 		private: System::Void Alarm1TriggerEventResetButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
 			// Reset the "Trigger event has been executed" flag for the associated temperature alarm
@@ -8422,7 +8422,7 @@ namespace IRCAMThermalViewer {
 		// Alarm trigger event delay timer UpDown value changed callback routine ->
 		private: System::Void AlarmTriggerEventsIntervalUpDown_ValueChanged(System::Object^ sender, System::EventArgs^ e) {
 
-			// Opdater Alarm trigger event Delay timer interval 
+			// Update the alarm trigger event delay timer interval 
 			GlobalVariables::GlobalAlarmTriggerEventTimer->Interval = (unsigned int)(GlobalVariables::GlobalAlarmTriggerEventsIntervalUpDown->Value * 1000);
 
 		}
@@ -8437,7 +8437,7 @@ namespace IRCAMThermalViewer {
 
 		}
 		
-		// Periodisk Trigger Event Aktiverings CheckBoxCallback Routine ->
+		// Periodic trigger event enable CheckBox callback routine ->
 		private: System::Void PeriodicEventnEnableCheckBox_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
 
 			// Enable or disable the selected periodic trigger event

@@ -23,28 +23,28 @@ namespace IRCAMThermalViewer {
 
 	public:
 
-		// ------------------------------------ Klasse Konstruktor ------------------------------------ //
+		// ------------------------------------ Class Constructor ------------------------------------ //
 
 		InputValueDialog(System::String^ InfoLabel1String, System::String^ InfoLabel2String, float UpDownMaxRangeVal, float UpDownMinRangeVal, float *DialogOutputVal, bool *NewValueReadyFlag) {
 
 			// Init GUI components and objects
 			InitializeComponent();
 
-			// Aktiver Applikationens TitelBars Dark Mode
+			// Enable dark mode for the application title bar
 			RMH_Winforms_EnableTitleBarDarkMode(this->Handle);
 
 			// Initialize the local output dialog value and "value ready" flag pointers
 			DialogOutputValuePointer = DialogOutputVal;
 			DialogNewValueReadyFlag = NewValueReadyFlag;
 
-			// Opdaterer Teksten i toppen af Dialogen
+			// Update the text at the top of the dialog
 			RMH_Winforms_ChangeFormTitleBarText(this, "Please Enter A Value");
 			
 			// Update the information labels
 			this->InfoLabel1->Text = InfoLabel1String;
 			this->InfoLabel2->Text = InfoLabel2String;
 
-			// Opdater Input dialog UpDown Max/Min Range
+			// Update the max/min range of the input dialog UpDown
 			this->InputValueUpDown->Maximum = (System::Decimal)UpDownMaxRangeVal;
 			this->InputValueUpDown->Minimum = (System::Decimal)UpDownMinRangeVal;
 
@@ -75,7 +75,7 @@ namespace IRCAMThermalViewer {
 
 			}
 
-			// Ryd op i managed objekter i RAM
+			// Clean up managed objects in RAM
 			System::GC::Collect();
 
 		}
@@ -324,7 +324,7 @@ namespace IRCAMThermalViewer {
 
 #pragma endregion
 
-		// ------------------------------ Input Dialog Callback Routiner ------------------------------ //
+		// ------------------------------ Input Dialog Callback Routines ------------------------------ //
 
 		// Input value dialog OK button callback routine ->
 		private: System::Void SetInputValueButton_Click(System::Object^ sender, System::EventArgs^ e) {

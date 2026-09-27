@@ -38,7 +38,7 @@ double RMH_ImageCalculations_CalMeanOfImage16Bit(unsigned short* ImageData, unsi
 		// Sum the pixels over all X positions
 		for (unsigned int X = 0; X < FrameWidth; X++) {
 
-			// Udregn samlede pixel data Sum
+			// Calculate the total pixel data sum
 			PixelValSum += ImageData[Y * FrameWidth + X]; 
 
 		}
@@ -52,7 +52,7 @@ double RMH_ImageCalculations_CalMeanOfImage16Bit(unsigned short* ImageData, unsi
 
 }
 
-// ---------------------- Billede Non-Uniformity Korrektions Routiner ----------------------- //
+// ---------------------- Image Non-Uniformity Correction Routines ----------------------- //
 
 void RMH_ImageNonUniformityCorrection_ConvertBaselineImageTo16Bit(unsigned char* BaselineImageData, unsigned short* OutputBaseline16Bit, unsigned int FrameWidth, unsigned int FrameHeight) {
 
@@ -108,7 +108,7 @@ void RMH_ImageNonUniformityCorrection_ZeroNonUniformityMapArrayData(double* Outp
 
 	// This routine resets all data positions of the non-uniformity map array to '0'
 
-	// Loop igennem all Non-Uniformity Map Arrayets data positioner
+	// Loop through all data positions of the non-uniformity map array
 	for (unsigned int i = 0; i < FrameWidth * FrameHeight; i += 8) {
 
 		// Reset the array index data to '0'
@@ -132,7 +132,7 @@ void RMH_ImageConversion_ArrangeYUY2ToRGB24(unsigned char* YUY2in, unsigned char
 	// This routine rearranges an input image frame array in YUY2 format
 	// into an image frame array in RGB24 format.
 
-	// Omarrangere YUY2 Pixels til RGB24 Format
+	// Rearrange YUY2 pixels to RGB24 format
 	for (int i = 0, j = 0; i < (FrameWidth * FrameHeight * 3); i += 6, j += 4) {
 
 		// Write the rearranged data to the pointer
@@ -220,7 +220,7 @@ void RMH_ImageConversion_ConvertRGB24ToGrayscaleRGB24(unsigned char *RGBin, unsi
 
 }
 
-// -------------- Color Palette Billede Processerings & Konverterings Routiner -------------- //
+// -------------- Color Palette Image Processing & Conversion Routines -------------- //
 
 void RMH_ImageProcessing_ApplyColorPaletteToGrayscaleImageData(unsigned short* Data, unsigned int FrameWidth, unsigned int FrameHeight, unsigned short ColorPalette[3][16384], bool InvertColorPalette, unsigned short* MappedData) {
 
@@ -359,7 +359,7 @@ void RMH_ImageProcessing_DisplayColorPaletteInPictureBox(unsigned char ColorPale
 
 	// Local array for reformatting the given color palette
 	unsigned char ColorPaletteRGB[_ColorBar_Width * _ColorBar_Height * _ColorBar_RGBBands] = { 0 };
-	// Udregn Givet Color Palette array til RGB Color Palette array offset  
+	// Calculate the offset of the given color palette array to the RGB color palette array  
 	unsigned char ColorPaletteArrayOffset = (_ColorBar_Width * _ColorBar_Height * _ColorBar_RGBBands) / _ColorBar_Height;
 
 	// Convert and format the color palette to an RGB array
@@ -372,7 +372,7 @@ void RMH_ImageProcessing_DisplayColorPaletteInPictureBox(unsigned char ColorPale
 
 	}
 
-	// Konverter Formaterede RGB array til Bitmap
+	// Convert the formatted RGB array to a bitmap
 	System::Drawing::Bitmap^ ColorBarBitmap = gcnew System::Drawing::Bitmap(
 		_ColorBar_Width,
 		_ColorBar_Height,
@@ -383,26 +383,26 @@ void RMH_ImageProcessing_DisplayColorPaletteInPictureBox(unsigned char ColorPale
 	// Rotate the bitmap by 180 degrees - CAN BE OPTIMIZED!!
 	ColorBarBitmap->RotateFlip(System::Drawing::RotateFlipType::Rotate180FlipNone);
 
-	// Ryd Grafik objektet til default "BackColor"
+	// Clear the graphics object to the default "BackColor"
 	BitmapGraphics->Clear(PictureBox->BackColor);
 
-	// Konfigurer Bitmap Interpolations metode
+	// Configure the bitmap interpolation method
 	BitmapGraphics->InterpolationMode = System::Drawing::Drawing2D::InterpolationMode::Bilinear;
 
 	// Fit the color palette bitmap into the area of the PictureBox
 	BitmapGraphics->DrawImage(
 		ColorBarBitmap,                                          // Source bitmap image
 		System::Drawing::Rectangle(0, 0, PictureBox->Width, PictureBox->Height),  // Distanations Rectangle
-		0,                                                       // Source X kordinat
-		0,                                                       // Source Y kordinat
+		0,                                                       // Source X coordinate
+		0,                                                       // Source Y coordinate
 		_ColorBar_Width - 1,                                     // Width of the source rectangle
 		_ColorBar_Height,                                        // Height of the source rectangle
-		GraphicsUnit::Pixel);                                    // Grafisk Unit Format 
+		GraphicsUnit::Pixel);                                    // Graphics unit format 
 
     // Delete the temporary graphics object
 	delete BitmapGraphics;
 
-	// Display Formaterede Color Palette Bitmap i PictureBox
+	// Display the formatted color palette bitmap in the PictureBox
 	PictureBox->Image = TempBitmap;
 
 }
@@ -425,7 +425,7 @@ void RMH_ImageProcessing_FormatColorPaletteRangeInsideBackgroundPalette(unsigned
 			// Should the whole primary color palette be adjusted to fit the set range
 			if (AdaptFullPaletteWithinRange == true) {
 
-				// Udregn Range Index for full color palette range justering
+				// Calculate the range index for adjusting the full color palette range
 				RangedIndex = (unsigned int)(RangeScale * (i - MainPaletteMinRange));
 
 			}
@@ -444,7 +444,7 @@ void RMH_ImageProcessing_FormatColorPaletteRangeInsideBackgroundPalette(unsigned
 		}
 		else {
 
-			// Kompenser for inverterede main color palette
+			// Compensate for the inverted main color palette
 			if (MainPaletteInvertFlag == true) {
 
 				// Should the background palette be inverted
@@ -510,9 +510,9 @@ void RMH_ImageProcessing_LinearAutomaticGainControlRaw(unsigned short *ThermalDa
 	register double PixelValue3 = 0.0;
 	register double PixelValue4 = 0.0;
 
-	// Udregn linear skallerings faktoren (a Parameter)
+	// Calculate the linear scaling factor (a parameter)
 	double LinearScaleFactor = ((double)MinOutPixelVal - (double)MaxOutPixelVal) / ((double)MinInPixelVal - (double)MaxInPixelVal);
-	// Udregn linear Offset skalleringen (b Parameter)
+	// Calculate the linear offset scaling (b parameter)
 	double OffsetScale = -LinearScaleFactor * (double)MaxInPixelVal + (double)MaxOutPixelVal;
 
 	// Loop up to and including the frame resolution W * H
@@ -547,7 +547,7 @@ unsigned char RMH_ImageProcessing_GetKernelPixelOverlayPixelValue(unsigned char*
 	if (YPos < 0.0) { YPos = 0.0; }
 	if (YPos > ImageDataHeight - 1) { YPos = ImageDataHeight - 1; }
 
-	// Konverter matrice index til array index
+	// Convert the matrix index to an array index
 	ArrayIndex = (YPos * ImageDataWidth) + XPos;
 
 	// Return the pixel data value
@@ -573,15 +573,15 @@ void RMH_ImageProcessing_2DGaussian3x3KernelBlur(unsigned char* ImageData, unsig
 		// Loop through all columns of the image matrix
 		for (unsigned int X = 0; X < ImageDataWidth; X++) {
 
-			// Nulstil Gaussian kernel sum variabelet
+			// Reset the Gaussian kernel sum variable
 			GaussianImageKernelSum = 0;
-			// Nulstil Gaussian Kernal sum variablet
+			// Reset the Gaussian kernel sum variable
 			GaussianKernelSum = 0;
 
 			// Loop over each position in the kernel mask
 			for (unsigned int i = 0; i < KernalMaskSize; i++) {
 
-				// Udregn Gaussian Kernelens Sum
+				// Calculate the sum of the Gaussian kernel
 				GaussianKernelSum = GaussianKernelSum + Gaussian3x3KernelMask[i];
 
 				// Calculate the filtered 2nd-order Laplacian image data coefficient
@@ -592,7 +592,7 @@ void RMH_ImageProcessing_2DGaussian3x3KernelBlur(unsigned char* ImageData, unsig
 			// Divide the calculated Gaussian blur pixel value by the kernel sum (kernel normalization)
 			GaussianImageKernelSum = GaussianImageKernelSum / GaussianKernelSum;
 
-			// Konverter matrice index til array index
+			// Convert the matrix index to an array index
 			ArrayIndex = (Y * ImageDataWidth) + X;
 
 			// Clamp the processed image pixel data to the 8-bit range
@@ -608,12 +608,12 @@ void RMH_ImageProcessing_2DGaussian3x3KernelBlur(unsigned char* ImageData, unsig
 
 }
 
-// --- Unsharp Mask Billede Sharpenning Processering --->
+// --- Unsharp Mask Image Sharpening --->
 
 bool RMH_ImageProcessing_GenerateUnsharpKernelMask(unsigned char KernelMaskSize, float Sigma, float *KernelMaskPointer) {
 
 	// This routine generates a normalized unsharp kernel mask for the unsharp image filtering routine
-	// Givet sigma indput er Unsharp Kernel maskens Standard diviation
+	// The given sigma input is the standard deviation of the unsharp kernel mask
 	// The routine returns a status flag indicating that the kernel mask was generated correctly
 
 	// Local variables
@@ -643,7 +643,7 @@ bool RMH_ImageProcessing_GenerateUnsharpKernelMask(unsigned char KernelMaskSize,
 		// Loop up to and including the size of the Gaussian kernel mask to be generated
 		for (unsigned int i = 0; i < KernelMaskSize; i++) {
 
-			// Udregn del stykker af samlede Gaussian Kernel formular
+			// Calculate the partial terms of the total Gaussian kernel formula
 			EQDivisionPart = 1 / (2 * PI * pow(Sigma, 2));
 			EQExponentialPart = exp(-(pow(KernelXCoordPointer[i], 2) + pow(KernelYCoordPointer[i], 2)) / (2 * pow(Sigma, 2)));
 
@@ -658,7 +658,7 @@ bool RMH_ImageProcessing_GenerateUnsharpKernelMask(unsigned char KernelMaskSize,
 
 			}
 
-			// Udregn Gaussian kernelens Normalicerings Faktor
+			// Calculate the normalization factor of the Gaussian kernel
 			KernalScaleFactor = 1.0 / MinimumKernalValue;
 
 			// Calculate the normalized Gaussian kernel value
@@ -666,18 +666,18 @@ bool RMH_ImageProcessing_GenerateUnsharpKernelMask(unsigned char KernelMaskSize,
 
 		}
 
-		// Opdater kernel maske status flag
+		// Update the kernel mask status flag
 		KernelMaskGeneratedOkFlag = true;
 
 	}
 	else {
 
-		// Opdater kernel maske status flag
+		// Update the kernel mask status flag
 		KernelMaskGeneratedOkFlag = false;
 
 	}
 
-	// Retuner kernel maske genererings stauts
+	// Return the kernel mask generation status
 	return KernelMaskGeneratedOkFlag;
 
 }
@@ -687,7 +687,7 @@ void RMH_ImageProcessing_2DUnsharpMaskKernelImageSharpening(unsigned short* Imag
 	// This routine implements a 2-dimensional Gaussian blur unsharp kernel mask image processing technique
 	// which is used to sharpen an image, with configurable strength.
 	// 19-05-2023 -> The routine has been heavily optimized with "loop unrolling" by a factor of 8 = 450% faster
-	// 23-07-2023 -> Opdaterede.
+	// 23-07-2023 -> Updated.
 
 	/*
 		
@@ -767,12 +767,12 @@ void RMH_ImageProcessing_2DUnsharpMaskKernelImageSharpening(unsigned short* Imag
 	// Loop over each position in the kernel mask
 	for (unsigned int i = 0; i < KernelMaskSize; i++) {
 
-		// Udregn Gaussian Kernel maskens Sum
+		// Calculate the sum of the Gaussian kernel mask
 		GaussianKernelSum = GaussianKernelSum + *(KernelMaskPointer + i);  
 
 	}
 
-	// Division til Multiplikations konverter gaussian sum (CPU Cycle Optimering)
+	// Division to multiplication converts the Gaussian sum (CPU cycle optimization)
 	GaussianKernelSum = 1.0 / GaussianKernelSum;
 
 	// Loop through all rows of the image matrix
@@ -781,7 +781,7 @@ void RMH_ImageProcessing_2DUnsharpMaskKernelImageSharpening(unsigned short* Imag
 		// Loop through all columns of the image matrix
 		for (unsigned int X = 0; X < ImageDataWidth; X += 8) {
 
-			// Nulstil Gaussian kernel sum variabelet
+			// Reset the Gaussian kernel sum variable
 			GaussianImageKernelSum1 = 0.0;
 			GaussianImageKernelSum2 = 0.0;
 			GaussianImageKernelSum3 = 0.0;
@@ -838,7 +838,7 @@ void RMH_ImageProcessing_2DUnsharpMaskKernelImageSharpening(unsigned short* Imag
 
 			}
 
-			// Konverter matrice index til array index
+			// Convert the matrix index to an array index
 			ArrayIndex1 = (Y * ImageDataWidth) + X;
 			ArrayIndex2 = ArrayIndex1 + 1;
 			ArrayIndex3 = ArrayIndex1 + 2;
@@ -953,7 +953,7 @@ void RMH_ImageProcessing_LaplacianImageSharpening(unsigned char* ImageData, unsi
 
 	}
 
-	// Udregn Kernel mertricens center koefficients array index
+	// Calculate the center coefficient array index of the kernel matrix
 	KernelCenterIndex = (KernalMaskSize - 1) / 2;
 
 	// Loop through all rows of the image matrix
@@ -973,7 +973,7 @@ void RMH_ImageProcessing_LaplacianImageSharpening(unsigned char* ImageData, unsi
 
 			}
 
-			// Konverter matrice index til array index
+			// Convert the matrix index to an array index
 			ArrayIndex = (Y * ImageDataWidth) + X;
 
 			// Check the polarity of the filter mask center coefficient (avoids clipping)
@@ -1090,13 +1090,13 @@ void RMH_ImageProcessing_ImageMedianFiltering(unsigned char* ImageData, unsigned
 			MedianKernelArray[7] = RMH_ImageProcessing_GetKernelPixelOverlayPixelValue(&ImageData[0], ImageDataWidth, ImageDataHeight, (float)FrameColumn, (float)FrameRow + 1);
 			MedianKernelArray[8] = RMH_ImageProcessing_GetKernelPixelOverlayPixelValue(&ImageData[0], ImageDataWidth, ImageDataHeight, (float)FrameColumn + 1, (float)FrameRow + 1);
 
-			// Konverter matrice index til array index
+			// Convert the matrix index to an array index
 			ArrayIndex = (FrameRow * ImageDataWidth) + FrameColumn;
 
 			// Sort the rows of the median kernel matrix
 			for (unsigned int i = 0; i < MedianMaskSize - 1; i++) {
 
-				// Sorter Median kernel matricens kolonner
+				// Sort the columns of the median kernel matrix
 				for (unsigned int j = 0; j < MedianMaskSize - i; j++) {
 
 					// Sort the lowest kernel values from the start to the end index
@@ -1131,7 +1131,7 @@ void RMH_ImageProcessing_ImageMedianFiltering(unsigned char* ImageData, unsigned
 
 void RMH_ImageProcessing_2DBilinearInterpolation(unsigned short* ImageData, unsigned int ImageDataWidth, unsigned int ImageDataHeight, unsigned int InterpolatedImageWidth, unsigned int InterpolatedImageHeight, unsigned short* InterpolatedImage) {
 
-	// Routinen implementerer 2D Bilinear Interpolation 
+	// This routine implements 2D bilinear interpolation 
 	// which is used to scale an image's resolution up or down
 	// The routine is specially optimized to be extremely fast when handling positive integer image data.
 
@@ -1162,7 +1162,7 @@ void RMH_ImageProcessing_2DBilinearInterpolation(unsigned short* ImageData, unsi
 
 		// Calculate the Y pixel length, height and weight from the associated height/length ratio
 		YHeightLength = XHeightRatioStepSize;
-		YHeightHeight = (unsigned int)(XHeightRatioStepSize + 0.999);  // RMH Implementering af Hurtig -> ceil(XHeightRatioStepSize);
+		YHeightHeight = (unsigned int)(XHeightRatioStepSize + 0.999);  // RMH fast implementation of -> ceil(XHeightRatioStepSize);
 		YHeightWeight = XHeightRatioStepSize - YHeightLength;
 
 		// Calculate the Y height and weight indices of the image data array
@@ -1177,7 +1177,7 @@ void RMH_ImageProcessing_2DBilinearInterpolation(unsigned short* ImageData, unsi
 
 			// Calculate the X pixel length, height and weight from the associated height/length ratio
 			XWidthLength = YWidthRatioStepSize;
-			XWidthHeight = (unsigned int)(YWidthRatioStepSize + 0.999); // RMH Implementering af Hurtig -> ceil(YWidthRatioStepSize);
+			XWidthHeight = (unsigned int)(YWidthRatioStepSize + 0.999); // RMH fast implementation of -> ceil(YWidthRatioStepSize);
 			XWidthWeight = YWidthRatioStepSize - XWidthLength;
 
 			// Calculate the interpolated pixel value

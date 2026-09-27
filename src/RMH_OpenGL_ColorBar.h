@@ -18,7 +18,7 @@
 using namespace System::Windows::Forms;
 using namespace std;
 
-// Klasse konfigurations macroer
+// Class configuration macros
 #define _ColorBarMaxNumberOfTicks       20 // Major Ticks + Minor Ticks
 #define _NumberOfMovableTags            2
 
@@ -31,32 +31,32 @@ static GLdouble MovableTagY0[_NumberOfMovableTags + 1];
 static std::string MaximumTagStdString = "MAX";
 static std::string MinimumTagStdString = "MIN";
 
-// OpenGL Klasse definition
+// OpenGL class definition
 namespace OpenGLColorBar {
 
 	// ------------------------- Global Class Structure Objects -------------------------- //
 
-	// ColorBar Tag Positions Data Klasse struktur
+	// ColorBar tag position data class structure
 	class ColorBarTagPosition {
 	public:
 
-		// Tag Positions parametere
+		// Tag position parameters
 		unsigned short MaximumTagPos = 0;
 		unsigned short MinimumTagPos = 16384;
 
 	};
 
-	// ColorBar Manual Range Max/Min temperatur Klasse struktur
+	// ColorBar manual range max/min temperature class structure
 	class ColorBarManualRangeTemps {
 	public:
 
-		// Tag Positions parametere
+		// Tag position parameters
 		GLfloat ManualMaxRangeTemp = 0.0f;
 		GLfloat ManualMinRangeTemp = 0.0f;
 
 	};
 
-	// ----------------- Privat Custom Winforms Gennemsigtigt Panel Klasse ----------------- //
+	// ----------------- Private Custom WinForms Transparent Panel Class ----------------- //
 
 	// Associated local class namespace object
 	namespace NativeForm = System::Windows::Forms;
@@ -69,7 +69,7 @@ namespace OpenGLColorBar {
 
 		protected: virtual property NativeForm::CreateParams^ CreateParams {
 
-			// Overskriv panelets konfigurations parametere
+			// Override the configuration parameters of the panel
 			NativeForm::CreateParams^ get() override {
 
 				// Read the control parameters of the panel
@@ -86,7 +86,7 @@ namespace OpenGLColorBar {
 
 		public: TextureOverlayPanel() {
 
-			// Gennemsigtig overlay panel klasse konstruktor
+			// Transparent overlay panel class constructor
 
 		}
 
@@ -115,7 +115,7 @@ namespace OpenGLColorBar {
 		// Local reference structure
 		ref struct PrivateLocals {
 
-			// ColorBar Major Og Minor tick Label array
+			// ColorBar major and minor tick label array
 			static cli::array<System::String^>^ ColorBarTickLabels = gcnew cli::array<System::String^>(_ColorBarMaxNumberOfTicks);
 
 		};
@@ -124,7 +124,7 @@ namespace OpenGLColorBar {
 
 	private:
 
-		// ColorBar Konfigurations Parametere
+		// ColorBar configuration parameters
 		private: GLfloat ColorBarPixelWidth = 1;
 		private: GLfloat ColorBarPixelHeight = 256;
 		private: unsigned int ColorBarPaletteResolution = 16384;
@@ -164,7 +164,7 @@ namespace OpenGLColorBar {
 		private: GLfloat TickLabelXOffset = 0.5;
 		private: GLfloat TickLabelYOffset = 0.8;
 
-		// Positions justerbar Tag konfigurations variabler
+		// Position-adjustable tag configuration variables
 		private: unsigned char MaxTagID = 1;
 		private: unsigned char MinTagID = 2;
 		private: GLfloat MaxMinTagX0Pos = 9;
@@ -247,14 +247,14 @@ namespace OpenGLColorBar {
 
 	public:
 
-		// ------------------------- ColorBar Konstruktur Routiner ------------------------- //
+		// ------------------------- ColorBar Constructor Routines ------------------------- //
 
 		RMHOpenGLColorBar(System::Windows::Forms::Panel^ TexturePanel, unsigned char ResolutionScaleFactor) {
 
 			// This routine sets up an OpenGL-supported graphics area for rendering
 			// A WinForms panel is given as the physical texture area.
 
-			// Initialiser Colorbar Tick Labels array med start strings
+			// Initialize the colorbar tick labels array with start strings
 			RMH_OpenGL_InitCliArray(PrivateLocals::ColorBarTickLabels, "N/A");
 
 			// Set start values for the max/min tag Y positions
@@ -281,7 +281,7 @@ namespace OpenGLColorBar {
 			ControlParams->Width = (GLdouble)TexturePanel->Width * TextureResScaleFactor;
 			ControlParams->Height = (GLdouble)TexturePanel->Height * TextureResScaleFactor;
 
-			// Konfigurer Textur parent handler
+			// Configure the texture parent handler
 			ControlParams->Parent = TexturePanel->Handle;
 			// Create a "child" of the selected "parent" and make it OpenGL compliant
 			ControlParams->Style = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN;
@@ -295,11 +295,11 @@ namespace OpenGLColorBar {
 			// Is this handle active
 			if (m_hDC) {
 
-				// Konfigurer Textur Pixel format
+				// Configure the texture pixel format
 				RMH_OpenGL_SetTexturePixelFormat(m_hDC);
 				// Configure the size of the texture
 				RMH_OpenGL_ResizeOpenGLWinformsScene(ControlParams->Width, ControlParams->Height);
-				// Initialisere OpenGL for Winforms C++
+				// Initialize OpenGL for WinForms C++
 				RMH_OpenGL_Init();
 
 			}
@@ -349,7 +349,7 @@ namespace OpenGLColorBar {
 
 		}
 
-		// ---------------- Textur Panel Til Textur Konverterings Routiner ----------------- //
+		// ---------------- Texture Panel To Texture Conversion Routines ----------------- //
 
 		private: GLdouble RMH_OpenGL_TranslateOverlayPanelMouseXPosToTextureXPos(System::Windows::Forms::MouseEventArgs^ OverlayPanelMouseEvent) {
 
@@ -359,10 +359,10 @@ namespace OpenGLColorBar {
 			GLdouble MouseTextureXPos = 0.0;
 			GLdouble PanelsWidthDifference = 0.0;
 
-			// Udregn Pixel Differensen imellem overlejede panel og textur panelet 
+			// Calculate the pixel difference between the overlaid panel and the texture panel 
 			PanelsWidthDifference = CurrentTexturePanelWidth - OverlayPanel->Width;
 
-			// Konverter overlejede panel Mus position til aktuel Textur Panel Mus Position
+			// Convert the overlaid panel mouse position to the actual texture panel mouse position
 			MouseTextureXPos = (OverlayPanelMouseEvent->X + PanelsWidthDifference) * (TextureWidth / CurrentTexturePanelWidth);
 
 			// Handling at the minimum texture mouse position 
@@ -380,7 +380,7 @@ namespace OpenGLColorBar {
 			// Round the mouse position up to the nearest integer
 			MouseTextureXPos = RMH_Math_Round(MouseTextureXPos);
 
-			// Retuner aktuel Textur Panel Mus Position
+			// Return the current texture panel mouse position
 			return MouseTextureXPos;
 
 		}
@@ -393,10 +393,10 @@ namespace OpenGLColorBar {
 			GLdouble MouseTextureYPos = 0.0;
 			GLdouble PanelsHeightDifference = 0.0;
 
-			// Udregn Pixel Differensen imellem overlejede panel og textur panelet 
+			// Calculate the pixel difference between the overlaid panel and the texture panel 
 			PanelsHeightDifference = CurrentTexturePanelHeight - OverlayPanel->Height;
 
-			// Konverter overlejede panel Mus position til aktuel Textur Panel Mus Position
+			// Convert the overlaid panel mouse position to the actual texture panel mouse position
 			MouseTextureYPos = (OverlayPanelMouseEvent->Y + PanelsHeightDifference) * (TextureHeight / CurrentTexturePanelHeight);
 
 			// Handling at the minimum texture mouse position 
@@ -414,7 +414,7 @@ namespace OpenGLColorBar {
 			// Round the mouse position up to the nearest integer
 			MouseTextureYPos = RMH_Math_Round(MouseTextureYPos);
 
-			// Retuner aktuel Textur Panel Mus Position
+			// Return the current texture panel mouse position
 			return MouseTextureYPos;
 
 		}
@@ -465,7 +465,7 @@ namespace OpenGLColorBar {
 			// Bind the texture as a 2D texture
 			glBindTexture(GL_TEXTURE_2D, ColorBarTexture[0]);
 
-			// Konfigurer Textur parametere
+			// Configure the texture parameters
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16, ColorBarPixelWidth, ColorBarPaletteResolution, 0, GL_RGBA, GL_UNSIGNED_SHORT, NULL);
 			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
 			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
@@ -480,7 +480,7 @@ namespace OpenGLColorBar {
 
 		private: GLvoid RMH_OpenGL_UpdateTextureFieldOfView(unsigned int TextureWidth, unsigned int TextureHeight) {
 
-			// Routinen indstiller texturens syns vinkel for display i control handler komponentet
+			// This routine sets the viewing angle (field of view) of the texture for display in the control handler component
 
 			// Local variables
 			GLdouble PlaneXLook = 0.0;
@@ -495,10 +495,10 @@ namespace OpenGLColorBar {
 			PlaneXLook = (GLdouble)TextureWidth * 0.5;
 			PlaneYLook = (GLdouble)TextureHeight * 0.5;
 
-			// Udregn textur Aspect ratio
+			// Calculate the texture aspect ratio
 			PlaneAspectRatio = ((GLdouble)TextureWidth / (GLdouble)TextureHeight);
 
-			// Udregn affstanden imellem Frame data planet og textur planet
+			// Calculate the distance between the frame data plane and the texture plane
 			PlaneDistance = (GLdouble)TextureHeight * TanHalfFieldOfView;
 
 			// Update the viewing angle (field of view) of the texture
@@ -519,7 +519,7 @@ namespace OpenGLColorBar {
 
 			// Add the font list properties
 			glPushAttrib(GL_LIST_BIT);
-			// Benyt FONT Base List
+			// Use the FONT base list
 			glListBase(BaseFont - 32);
 			// Execute and render the characters on the texture
 			glCallLists(strlen(CharArray), GL_UNSIGNED_BYTE, CharArray);
@@ -532,7 +532,7 @@ namespace OpenGLColorBar {
 
 			// This routine renders a given string on an OpenGL texture
 
-			// Konfigurer Textens Farve
+			// Configure the text color
 			glColor3ub(ColorR, ColorG, ColorB);
 			// Set the position of the text on the texture
 			glRasterPos2f(StringX, StringY);
@@ -550,7 +550,7 @@ namespace OpenGLColorBar {
 			StringX = StringX * TextureToPanelScaleWidthFactor;
 			StringY = StringY * TextureToPanelScaleHeightFactor;
 
-			// Konfigurer Textens Farve
+			// Configure the text color
 			glColor3ub(ColorR, ColorG, ColorB);
 			// Set the position of the text on the texture
 			glRasterPos2f(StringX, StringY);
@@ -560,13 +560,13 @@ namespace OpenGLColorBar {
 
 		}
 
-		// --------------------- ColorBar Textur Rendererings Routiner --------------------- //
+		// --------------------- ColorBar Texture Rendering Routines --------------------- //
 
 		private: GLvoid RMH_OpenGL_ClearTextureBuffer() {
 
 			// This routine clears the associated texture buffers
 
-			// Ryd Textur farve og bit buffere
+			// Clear the texture color and bit buffers
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		}
@@ -585,7 +585,7 @@ namespace OpenGLColorBar {
 
 			// This routine renders a given colorbar palette
 
-			// Lager X/Y/W/H i globale variabler
+			// Store X/Y/W/H in global variables
 			ColorBarAreaX0 = (GLfloat)ColorBarX0 * TextureToPanelScaleWidthFactor;
 			ColorBarAreaY0 = (GLfloat)ColorBarY0 * TextureToPanelScaleHeightFactor;
 			ColorBarAreaWidth = (GLfloat)ColorBarWidth * TextureToPanelScaleWidthFactor;
@@ -599,13 +599,13 @@ namespace OpenGLColorBar {
 			// Write the color palette data to the texture
 			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, ColorBarPixelWidth, ColorBarPaletteResolution, GL_RGBA, GL_UNSIGNED_SHORT, PaletteData);
 			
-			// Begynd Renderering
+			// Begin rendering
 			glBegin(GL_QUADS);
 
 			// Should the display of the color palette be inverted
 			if (InvertColorPalette == true) {
 
-				// Opdater render textur kordinater - inverterede
+				// Update the render texture coordinates - inverted
 				glTexCoord2f(ColorBarTexture_t, ColorBarTexture_u);
 				glVertex2f(ColorBarAreaX0 + ColorBarAreaWidth, ColorBarAreaY0 + ColorBarAreaHeight);
 				glTexCoord2f(0.0, ColorBarTexture_u);
@@ -630,7 +630,7 @@ namespace OpenGLColorBar {
 
 			}
 
-			// Konfiguration Slut
+			// End of configuration
 			glEnd();
 
 			// Disable 2D texture
@@ -660,10 +660,10 @@ namespace OpenGLColorBar {
 			ColorBarMinTickXPos = TickLineX0 * TextureToPanelScaleWidthFactor;
 			ColorBarMinTickYPos = (TickLineY0 + TickLineHeight) * TextureToPanelScaleHeightFactor;
 
-			// Lager Antal ColorBar Ticks globalt i klasse
+			// Store the number of colorbar ticks globally in the class
 			NmbOfColorBarTicks = NmbOfMinorTicks + 2;
 
-			// Inkrementer givet input Antal ticks 
+			// Increment the given input number of ticks 
 			NmbOfMinorTicks = NmbOfMinorTicks + 1;
 			// Calculate the length of the major tick line
 			MajorTickLinePixelSize = ColorBarMinTickYPos - ColorBarMaxTickYPos;
@@ -685,39 +685,39 @@ namespace OpenGLColorBar {
 			glVertex2f(ColorBarMaxTickXPos, ColorBarMaxTickYPos);
 			glVertex2f(ColorBarMaxTickXPos, ColorBarMinTickYPos);
 
-			// Render Top Max ColorBar Tick Linje
+			// Render the top max ColorBar tick line
 			glVertex2f(ColorBarMaxTickXPos, ColorBarMaxTickYPos);
 			glVertex2f(ColorBarMaxTickXPos + ColorBarMajorTickLength, ColorBarMaxTickYPos);
 
-			// Lager Major Maximum Label positioner i arrays
+			// Store the major maximum label positions in arrays
 			MinorTickLabelXPos[0] = ColorBarMaxTickXPos + ColorBarMajorTickLength + TickLabelXOffset;
 			MinorTickLabelYPos[0] = ColorBarMaxTickYPos + TickLabelYOffset;
 
-			// Render Minor colorbar Tick linjer
+			// Render the minor colorbar tick lines
 			for (i = 0; i < NmbOfMinorTicks - 1; i++) {
 
-				// Udregn Y position for minor tick linje
+				// Calculate the Y position of the minor tick line
 				ColorBarMaxTickYPos = ColorBarMaxTickYPos + MinorTickPixelRes;
 
-				// Render minor ColorBar Tick Linje
+				// Render the minor ColorBar tick line
 				glVertex2f(ColorBarMaxTickXPos, ColorBarMaxTickYPos);
 				glVertex2f(ColorBarMaxTickXPos + ColorBarMinorTickLength, ColorBarMaxTickYPos);
 
-				// Lager Minor Ticks positioner i arrays
+				// Store the minor tick positions in arrays
 				MinorTickLabelXPos[i + 1] = ColorBarMaxTickXPos + ColorBarMinorTickLength + TickLabelXOffset;
 				MinorTickLabelYPos[i + 1] = ColorBarMaxTickYPos + TickLabelYOffset;
 
 			}
 
-			// Lager Major Minimum Label Positioner i arrays
+			// Store the major minimum label positions in arrays
 			MinorTickLabelXPos[i + 1] = ColorBarMinTickXPos + ColorBarMajorTickLength + TickLabelXOffset;
 			MinorTickLabelYPos[i + 1] = ColorBarMinTickYPos + TickLabelYOffset;
 
-			// Render Bund Min ColorBar Tick Linje
+			// Render the bottom min ColorBar tick line
 			glVertex2f(ColorBarMinTickXPos, ColorBarMinTickYPos);
 			glVertex2f(ColorBarMinTickXPos + ColorBarMajorTickLength, ColorBarMinTickYPos);
 
-			// Konfiguration Slut
+			// End of configuration
 			glEnd();
 			// Disable the 1D texture
 			glDisable(GL_TEXTURE_1D);
@@ -734,20 +734,20 @@ namespace OpenGLColorBar {
 			// Read the temporary array data and sort the kernel array
 			unsigned int i = 0;
 
-			// Render Colorbarens Maximums temperatur label
+			// Render the maximum temperature label of the colorbar
 			RMH_OpenGL_RenderStringOnTexture(MinorTickLabelXPos[0], MinorTickLabelYPos[0] + 1, 
 				RMH_Conversion_SystemStringToStdString(PrivateLocals::ColorBarTickLabels[0]), ColorR, ColorG, ColorB);
 
 			// Loop through the number of minor colorbar ticks
 			for (i = 0; i < NmbOfMinorTicks - 1; i++) {
 
-				// Render Colorbarens minor tick labels
+				// Render the minor tick labels of the colorbar
 				RMH_OpenGL_RenderStringOnTexture(MinorTickLabelXPos[i + 1], MinorTickLabelYPos[i + 1], 
 					RMH_Conversion_SystemStringToStdString(PrivateLocals::ColorBarTickLabels[i + 1]), ColorR, ColorG, ColorB);
 
 			}
 
-			// Render Colorbarens Minimums temperatur label
+			// Render the minimum temperature label of the colorbar
 			RMH_OpenGL_RenderStringOnTexture(MinorTickLabelXPos[i + 1], MinorTickLabelYPos[i + 1] - 1, 
 				RMH_Conversion_SystemStringToStdString(PrivateLocals::ColorBarTickLabels[i + 1]), ColorR, ColorG, ColorB);
 
@@ -770,7 +770,7 @@ namespace OpenGLColorBar {
 			TagLength = TagLength * TextureToPanelScaleWidthFactor;
 			TagHeight = TagHeight * TextureToPanelScaleHeightFactor;
 
-			// Udregn Tag polygon linjers positioner
+			// Calculate the positions of the tag polygon lines
 			TagPos1 = (TagX0 - ArrowLength);
 			TagPos2 = (TagX0 - ArrowLength - TagLength);
 			TagPos3 = (TagY0 - (TagHeight * 0.5));
@@ -787,7 +787,7 @@ namespace OpenGLColorBar {
 			// Render the polygon on the texture
 			glBegin(GL_POLYGON);
 
-			// Render Tag Polygon linjer
+			// Render the tag polygon lines
 			glVertex2f(TagX0, TagY0);
 			glVertex2f(TagPos1, TagPos3);
 			glVertex2f(TagX0, TagY0);
@@ -799,7 +799,7 @@ namespace OpenGLColorBar {
 			glVertex2f(TagPos2, TagPos3);
 			glVertex2f(TagPos2, TagPos4);
 
-			// Konfiguration Slut
+			// End of configuration
 			glEnd();
 			// Disable the 1D texture
 			glDisable(GL_TEXTURE_1D);
@@ -830,13 +830,13 @@ namespace OpenGLColorBar {
 			glVertex2f(ArrowX0, ArrowY0);
 			glVertex2f(ArrowX0 - ArrowLength, ArrowY0);
 			
-			// Render pilens retnings linjer
+			// Render the direction lines of the arrow
 			glVertex2f(ArrowX0, ArrowY0);
 			glVertex2f(ArrowX0 - (ArrowLength / ArrowHeadFactor), ArrowY0 - 1);
 			glVertex2f(ArrowX0, ArrowY0);
 			glVertex2f(ArrowX0 - (ArrowLength / ArrowHeadFactor), ArrowY0 + 1);
 
-			// Konfiguration Slut
+			// End of configuration
 			glEnd();
 			// Disable the 1D texture
 			glDisable(GL_TEXTURE_1D);
@@ -867,7 +867,7 @@ namespace OpenGLColorBar {
 			// Render the polygon on the texture
 			glBegin(GL_POLYGON);
 
-			// Render Indikator Polygon linjer
+			// Render the indicator polygon lines
 			glVertex2f(X0Pos, Y0Pos);
 			glVertex2f(X0Pos + (Width * 0.5), Y0Pos + Height);
 			glVertex2f(X0Pos, Y0Pos);
@@ -875,7 +875,7 @@ namespace OpenGLColorBar {
 			glVertex2f(X0Pos + (Width * 0.5), Y0Pos + Height);
 			glVertex2f(X0Pos - (Width * 0.5), Y0Pos + Height);
 
-			// Konfiguration Slut
+			// End of configuration
 			glEnd();
 			// Disable the 1D texture
 			glDisable(GL_TEXTURE_1D);
@@ -903,7 +903,7 @@ namespace OpenGLColorBar {
 			// Render the polygon on the texture
 			glBegin(GL_POLYGON);
 
-			// Render Indikator Polygon linjer
+			// Render the indicator polygon lines
 			glVertex2f(X0Pos, Y0Pos);
 			glVertex2f(X0Pos + (Width * 0.5), Y0Pos - Height);
 			glVertex2f(X0Pos, Y0Pos);
@@ -911,7 +911,7 @@ namespace OpenGLColorBar {
 			glVertex2f(X0Pos + (Width * 0.5), Y0Pos - Height);
 			glVertex2f(X0Pos - (Width * 0.5), Y0Pos - Height);
 
-			// Konfiguration Slut
+			// End of configuration
 			glEnd();
 			// Disable the 1D texture
 			glDisable(GL_TEXTURE_1D);
@@ -974,7 +974,7 @@ namespace OpenGLColorBar {
 					// Store the selected tag index
 					SelectedTagIndex = i;
 
-					// Bryd For Loop
+					// Break the for loop
 					break;
 
 				}
@@ -1038,7 +1038,7 @@ namespace OpenGLColorBar {
 
 		}
 
-		// ----------- Textur Panel Interaktions Cursor Event Callback Routiner ------------ //
+		// ----------- Texture Panel Interaction Cursor Event Callback Routines ------------ //
 
 		private: GLvoid TexturePanel_MouseDown(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e) {
 
@@ -1046,7 +1046,7 @@ namespace OpenGLColorBar {
 			GLdouble MouseXPosition = RMH_OpenGL_TranslateOverlayPanelMouseXPosToTextureXPos(e);
 			GLdouble MouseYPosition = RMH_OpenGL_TranslateOverlayPanelMouseYPosToTextureYPos(e);
 			
-			// Opdater overlay panel click flag
+			// Update the overlay panel click flag
 			OverlayPanelIsClick = true;
 
 			// Handle events when a position-adjustable tag is clicked
@@ -1056,7 +1056,7 @@ namespace OpenGLColorBar {
 
 		private: GLvoid TexturePanel_MouseUp(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e) {
 
-			// Opdater overlay panel click flag
+			// Update the overlay panel click flag
 			OverlayPanelIsClick = false;
 
 			// Reset the tag move flag
@@ -1082,20 +1082,20 @@ namespace OpenGLColorBar {
 			GLfloat ColorBarPanelHeight = ColorBarPixelHeight + (ColorBarPanelTexturePadding * 2.0f);
 			GLfloat ColorBarPanelMiddle = ColorBarPanelHeight / 2.0f;
 
-			// Kontroller polariteten at scroll retningen
+			// Check the polarity of the scroll direction
 			if (e->Delta > 0) {
 
-				// Positiv polaritet
+				// Positive polarity
 				MouseWheelScrollPolarity = MouseWheelStepSize;
-				// Opdater Mus Hjulets polaritets flag
+				// Update the polarity flag of the mouse wheel
 				MouseWheelPolNegativeFlag = false;
 
 			}
 			else {
 
-				// Negativ polaritet
+				// Negative polarity
 				MouseWheelScrollPolarity = -MouseWheelStepSize;
-				// Opdater Mus Hjulets polaritets flag
+				// Update the polarity flag of the mouse wheel
 				MouseWheelPolNegativeFlag = true;
 
 			}
@@ -1103,7 +1103,7 @@ namespace OpenGLColorBar {
 			// Check whether the mouse is in the top or bottom part of the colorbar panel
 			if (RMH_OpenGL_TranslateOverlayPanelMouseYPosToTextureYPos(e) > ColorBarPanelMiddle) {
 
-				// Er Mus Hjulets polaritet positiv
+				// Is the mouse wheel polarity positive
 				if (MouseWheelPolNegativeFlag == false) {
 
 					// Is the min temperature range setting of the colorbar lower than the max temperature setting
@@ -1131,7 +1131,7 @@ namespace OpenGLColorBar {
 			}
 			else {
 
-				// Er Mus Hjulets polaritet negativt
+				// Is the mouse wheel polarity negative
 				if (MouseWheelPolNegativeFlag == true) {
 
 					// Is the max temperature range setting of the colorbar higher than the min temperature setting
@@ -1173,35 +1173,35 @@ namespace OpenGLColorBar {
 				FirstColorPaletteData[i + 0] = ColorPalette[0][j];
 				FirstColorPaletteData[i + 1] = ColorPalette[1][j];
 				FirstColorPaletteData[i + 2] = ColorPalette[2][j];
-				FirstColorPaletteData[i + 3] = ColorBarPaletteIntegerRange; // Alpha Kanal
+				FirstColorPaletteData[i + 3] = ColorBarPaletteIntegerRange; // Alpha channel
 				FirstColorPaletteData[i + 4] = ColorPalette[0][j + 1];
 				FirstColorPaletteData[i + 5] = ColorPalette[1][j + 1];
 				FirstColorPaletteData[i + 6] = ColorPalette[2][j + 1];
-				FirstColorPaletteData[i + 7] = ColorBarPaletteIntegerRange; // Alpha Kanal
+				FirstColorPaletteData[i + 7] = ColorBarPaletteIntegerRange; // Alpha channel
 				FirstColorPaletteData[i + 8] = ColorPalette[0][j + 2];
 				FirstColorPaletteData[i + 9] = ColorPalette[1][j + 2];
 				FirstColorPaletteData[i + 10] = ColorPalette[2][j + 2];
-				FirstColorPaletteData[i + 11] = ColorBarPaletteIntegerRange; // Alpha Kanal
+				FirstColorPaletteData[i + 11] = ColorBarPaletteIntegerRange; // Alpha channel
 				FirstColorPaletteData[i + 12] = ColorPalette[0][j + 3];
 				FirstColorPaletteData[i + 13] = ColorPalette[1][j + 3];
 				FirstColorPaletteData[i + 14] = ColorPalette[2][j + 3];
-				FirstColorPaletteData[i + 15] = ColorBarPaletteIntegerRange; // Alpha Kanal
+				FirstColorPaletteData[i + 15] = ColorBarPaletteIntegerRange; // Alpha channel
 				FirstColorPaletteData[i + 16] = ColorPalette[0][j + 4];
 				FirstColorPaletteData[i + 17] = ColorPalette[1][j + 4];
 				FirstColorPaletteData[i + 18] = ColorPalette[2][j + 4];
-				FirstColorPaletteData[i + 19] = ColorBarPaletteIntegerRange; // Alpha Kanal
+				FirstColorPaletteData[i + 19] = ColorBarPaletteIntegerRange; // Alpha channel
 				FirstColorPaletteData[i + 20] = ColorPalette[0][j + 5];
 				FirstColorPaletteData[i + 21] = ColorPalette[1][j + 5];
 				FirstColorPaletteData[i + 22] = ColorPalette[2][j + 5];
-				FirstColorPaletteData[i + 23] = ColorBarPaletteIntegerRange; // Alpha Kanal
+				FirstColorPaletteData[i + 23] = ColorBarPaletteIntegerRange; // Alpha channel
 				FirstColorPaletteData[i + 24] = ColorPalette[0][j + 6];
 				FirstColorPaletteData[i + 25] = ColorPalette[1][j + 6];
 				FirstColorPaletteData[i + 26] = ColorPalette[2][j + 6];
-				FirstColorPaletteData[i + 27] = ColorBarPaletteIntegerRange; // Alpha Kanal
+				FirstColorPaletteData[i + 27] = ColorBarPaletteIntegerRange; // Alpha channel
 				FirstColorPaletteData[i + 28] = ColorPalette[0][j + 7];
 				FirstColorPaletteData[i + 29] = ColorPalette[1][j + 7];
 				FirstColorPaletteData[i + 30] = ColorPalette[2][j + 7];
-				FirstColorPaletteData[i + 31] = ColorBarPaletteIntegerRange; // Alpha Kanal
+				FirstColorPaletteData[i + 31] = ColorBarPaletteIntegerRange; // Alpha channel
 				
 			}
 
@@ -1218,35 +1218,35 @@ namespace OpenGLColorBar {
 				SecondColorPaletteData[i + 0] = ColorPalette[0][j];
 				SecondColorPaletteData[i + 1] = ColorPalette[1][j];
 				SecondColorPaletteData[i + 2] = ColorPalette[2][j];
-				SecondColorPaletteData[i + 3] = ColorBarPaletteIntegerRange; // Alpha Kanal
+				SecondColorPaletteData[i + 3] = ColorBarPaletteIntegerRange; // Alpha channel
 				SecondColorPaletteData[i + 4] = ColorPalette[0][j + 1];
 				SecondColorPaletteData[i + 5] = ColorPalette[1][j + 1];
 				SecondColorPaletteData[i + 6] = ColorPalette[2][j + 1];
-				SecondColorPaletteData[i + 7] = ColorBarPaletteIntegerRange; // Alpha Kanal
+				SecondColorPaletteData[i + 7] = ColorBarPaletteIntegerRange; // Alpha channel
 				SecondColorPaletteData[i + 8] = ColorPalette[0][j + 2];
 				SecondColorPaletteData[i + 9] = ColorPalette[1][j + 2];
 				SecondColorPaletteData[i + 10] = ColorPalette[2][j + 2];
-				SecondColorPaletteData[i + 11] = ColorBarPaletteIntegerRange; // Alpha Kanal
+				SecondColorPaletteData[i + 11] = ColorBarPaletteIntegerRange; // Alpha channel
 				SecondColorPaletteData[i + 12] = ColorPalette[0][j + 3];
 				SecondColorPaletteData[i + 13] = ColorPalette[1][j + 3];
 				SecondColorPaletteData[i + 14] = ColorPalette[2][j + 3];
-				SecondColorPaletteData[i + 15] = ColorBarPaletteIntegerRange; // Alpha Kanal
+				SecondColorPaletteData[i + 15] = ColorBarPaletteIntegerRange; // Alpha channel
 				SecondColorPaletteData[i + 16] = ColorPalette[0][j + 4];
 				SecondColorPaletteData[i + 17] = ColorPalette[1][j + 4];
 				SecondColorPaletteData[i + 18] = ColorPalette[2][j + 4];
-				SecondColorPaletteData[i + 19] = ColorBarPaletteIntegerRange; // Alpha Kanal
+				SecondColorPaletteData[i + 19] = ColorBarPaletteIntegerRange; // Alpha channel
 				SecondColorPaletteData[i + 20] = ColorPalette[0][j + 5];
 				SecondColorPaletteData[i + 21] = ColorPalette[1][j + 5];
 				SecondColorPaletteData[i + 22] = ColorPalette[2][j + 5];
-				SecondColorPaletteData[i + 23] = ColorBarPaletteIntegerRange; // Alpha Kanal
+				SecondColorPaletteData[i + 23] = ColorBarPaletteIntegerRange; // Alpha channel
 				SecondColorPaletteData[i + 24] = ColorPalette[0][j + 6];
 				SecondColorPaletteData[i + 25] = ColorPalette[1][j + 6];
 				SecondColorPaletteData[i + 26] = ColorPalette[2][j + 6];
-				SecondColorPaletteData[i + 27] = ColorBarPaletteIntegerRange; // Alpha Kanal
+				SecondColorPaletteData[i + 27] = ColorBarPaletteIntegerRange; // Alpha channel
 				SecondColorPaletteData[i + 28] = ColorPalette[0][j + 7];
 				SecondColorPaletteData[i + 29] = ColorPalette[1][j + 7];
 				SecondColorPaletteData[i + 30] = ColorPalette[2][j + 7];
-				SecondColorPaletteData[i + 31] = ColorBarPaletteIntegerRange; // Alpha Kanal
+				SecondColorPaletteData[i + 31] = ColorBarPaletteIntegerRange; // Alpha channel
 
 			}
 
@@ -1348,14 +1348,14 @@ namespace OpenGLColorBar {
 
 			// Calculate the temperature difference from max to min
 			TempDifference = ColorBarMaxTempRange - ColorBarMinTempRange;
-			// Udregn Temperatur tick step differensen 
+			// Calculate the temperature tick step difference 
 			TempTickStepDiff = TempDifference / ((GLfloat)(NmbOfColorBarTicks - 1));
 
-			// Udregn Colorbarens Max/Min Tag Temperaturer
+			// Calculate the max/min tag temperatures of the colorbar
 			MaxTagTemperature = ColorBarMaxTempRange - ((TempDifference / ColorBarPaletteResolution) * MaxMinTagsPositions.MaximumTagPos);
 			MinTagTemperature = ColorBarMaxTempRange - ((TempDifference / ColorBarPaletteResolution) * MaxMinTagsPositions.MinimumTagPos);
 
-			// Formater Colorbarens Maximum temperatur tick label 
+			// Format the maximum temperature tick label of the colorbar 
 			PrivateLocals::ColorBarTickLabels[0] = ColorBarMaxTempRange.ToString("F2") + " " + TempUnitString;
 
 			// Loop for the selected number of colorbar minor ticks
@@ -1364,15 +1364,15 @@ namespace OpenGLColorBar {
 				// Decrement the minor tick temperature value
 				TickTemperature = TickTemperature - TempTickStepDiff;
 
-				// Formater Colorbarens Minor temperatur tick labels 
+				// Format the minor temperature tick labels of the colorbar 
 				PrivateLocals::ColorBarTickLabels[i + 1] = TickTemperature.ToString("F1") + " " + TempUnitString;
 
 			}
 
-			// Formater Colorbarens Minimum temperatur tick label 
+			// Format the minimum temperature tick label of the colorbar 
 			PrivateLocals::ColorBarTickLabels[i + 1] = ColorBarMinTempRange.ToString("F2") + " " + TempUnitString;
 
-			// Formater Tag Max/Min temperaturer til System::Strings
+			// Format the max/min tag temperatures to System::Strings
 			MaximumTagSystemString = MaxTagTemperature.ToString("F1") + TempUnitString;
 			MinimumTagSystemString = MinTagTemperature.ToString("F1") + TempUnitString;
 
@@ -1385,7 +1385,7 @@ namespace OpenGLColorBar {
 			}
 			else {
 
-				// Display Tag indstillings temperaturen i Taget
+				// Display the tag setting temperature in the tag
 				MaximumTagStdString = RMH_Conversion_SystemStringToStdString(MaximumTagSystemString);
 
 			}
@@ -1399,7 +1399,7 @@ namespace OpenGLColorBar {
 			}
 			else {
 
-				// Display Tag indstillings temperaturen i Taget
+				// Display the tag setting temperature in the tag
 				MinimumTagStdString = RMH_Conversion_SystemStringToStdString(MinimumTagSystemString);
 
 			}
@@ -1414,9 +1414,9 @@ namespace OpenGLColorBar {
 			GLfloat LinearScaleFactor;
 			GLfloat OffsetScale;
 
-			// Udregn linear skallerings faktoren (a Parameter)
+			// Calculate the linear scaling factor (a parameter)
 			LinearScaleFactor = ((ColorBarPixelHeight + ColorBarPanelTexturePadding) - ColorBarPanelTexturePadding) / (ColorBarMinTempRange - ColorBarMaxTempRange);
-			// Udregn linear Offset skalleringen (b Parameter)
+			// Calculate the linear offset scaling (b parameter)
 			OffsetScale = -ColorBarMaxTempRange * LinearScaleFactor + ColorBarPanelTexturePadding;
 
 			// Calculate and update the positions of the maximum, minimum and center temperature arrows of the colorbar
@@ -1461,13 +1461,13 @@ namespace OpenGLColorBar {
 
 		}
 
-		// --------------------- ColorBar Farve Indstillings Routiner ---------------------- //
+		// --------------------- ColorBar Color Setting Routines ---------------------- //
 
 		public: GLvoid RMH_OpenGL_SetColorBarTickLineColor(GLubyte ColorR, GLubyte ColorG, GLubyte ColorB) {
 
-			// Routinen indstiller farven for colorbarens tick linje
+			// This routine sets the color of the tick line of the colorbar
 
-			// Indstil colorbarens tick linje farve
+			// Set the tick line color of the colorbar
 			TickLineColorR = ColorR;
 			TickLineColorG = ColorG;
 			TickLineColorB = ColorB;
@@ -1478,7 +1478,7 @@ namespace OpenGLColorBar {
 
 			// This routine sets the color of the maximum temperature tag of the colorbar
 
-			// Indstil colorbarens maximum tag farve
+			// Set the color of the maximum tag of the colorbar
 			MaxTagColorR = ColorR;
 			MaxTagColorG = ColorG;
 			MaxTagColorB = ColorB;
@@ -1489,7 +1489,7 @@ namespace OpenGLColorBar {
 
 			// This routine sets the color of the minimum temperature tag of the colorbar
 
-			// Indstil colorbarens maximum tag farve
+			// Set the color of the maximum tag of the colorbar
 			MinTagColorR = ColorR;
 			MinTagColorG = ColorG;
 			MinTagColorB = ColorB;
@@ -1562,7 +1562,7 @@ namespace OpenGLColorBar {
 
 		}
 
-		// ---------------- Samlede ColorBar Grafiske Rendererings Routine ----------------- //
+		// ---------------- Combined ColorBar Graphics Rendering Routine ----------------- //
 
 		public: GLvoid RMH_OpenGL_RenderColorBar(unsigned int TexturePanelWidth, unsigned int TexturePanelHeight, bool DualPaletteEnableFlag, unsigned char NmbOfMinorTicks, bool EnableCenterArrowFlag, bool ManualRangeFlag, bool ManualRangeHighFlag, bool ManualRangeLowFlag) {
 
@@ -1573,24 +1573,24 @@ namespace OpenGLColorBar {
 			CurrentTexturePanelHeight = (GLdouble)TexturePanelHeight;
 			CurrentTexturePanelWidth = (GLdouble)TexturePanelWidth;
 
-			// Udregn Textur til panel skallerings faktor
+			// Calculate the texture-to-panel scaling factor
 			TextureToPanelScaleWidthFactor = CurrentTexturePanelWidth / TotalTextureScalableWidth;
 			TextureToPanelScaleHeightFactor = CurrentTexturePanelHeight / TotalTextureScalableHeight;
 
 			// Make the associated render context the current render context
 			RMH_OpenGL_MakeRenderContextCurrent();
-			// Ryd Textur farve og bit buffere
+			// Clear the texture color and bit buffers
 			RMH_OpenGL_ClearTextureBuffer();
-			// Opdater Textur Field Of View
+			// Update the texture field of view
 			RMH_OpenGL_UpdateTextureFieldOfView(TextureWidth, TextureHeight);
 
-			// Bind OpenGL textur og Start OpenGL renderering
+			// Bind the OpenGL texture and start OpenGL rendering
 			RMH_OpenGL_StartColorBarRender();
 
 			// Render the primary ColorBar
 			RMH_OpenGL_RenderColorBarPalette(ColorBarX0TexturePos, ColorBarPanelTexturePadding, ColorBarTextureWidth, ColorBarPixelHeight, &FirstColorPaletteData[0], InvertFirstPaletteFlag);
 
-			// Skal Dual color palette vises
+			// Should the dual color palette be shown
 			if (DualPaletteEnableFlag == true) {
 
 				// Render the secondary ColorBar
@@ -1598,7 +1598,7 @@ namespace OpenGLColorBar {
 
 			}
 
-			// Render Colorbarent Tick Linje
+			// Render the tick line of the colorbar
 			RMH_OpenGL_RenderColorBarTickLinesAndLabels(ColorBarX0TexturePos + ColorBarTextureWidth + TickLineColorBarOffset, ColorBarPanelTexturePadding,
 				ColorBarPixelHeight, NmbOfMinorTicks, TickLineColorR, TickLineColorG, TickLineColorB);
 
@@ -1626,7 +1626,7 @@ namespace OpenGLColorBar {
 					// Render the maximum indicator only if it is within the Y area of the colorbar
 					if (ColorBarMaxArrowYPos < ColorBarPixelHeight + ColorBarPanelTexturePadding) {
 
-						// Render Colorbarens Maximum temperatur indikator pil
+						// Render the maximum temperature indicator arrow of the colorbar
 						RMH_OpenGL_RenderArrowWithLabel(MaxMinTagX0Pos - 1, ColorBarMaxArrowYPos, 5, 5, "MAX",
 							MaxTrackArrowColorR, MaxTrackArrowColorG, MaxTrackArrowColorB,
 							MaxTrackArrowLabelColorR, MaxTrackArrowLabelColorG, MaxTrackArrowLabelColorB);
@@ -1653,7 +1653,7 @@ namespace OpenGLColorBar {
 					// Render the minimum indicator only if it is within the Y area of the colorbar
 					if (ColorBarMinArrowYPos > ColorBarPanelTexturePadding) {
 
-						// Render Colorbarens Minimum temperatur indikator pil
+						// Render the minimum temperature indicator arrow of the colorbar
 						RMH_OpenGL_RenderArrowWithLabel(MaxMinTagX0Pos - 1, ColorBarMinArrowYPos, 5, 5, "MIN",
 							MinTrackArrowColorR, MinTrackArrowColorG, MinTrackArrowColorB,
 							MinTrackArrowLabelColorR, MinTrackArrowLabelColorG, MinTrackArrowLabelColorB);
@@ -1683,7 +1683,7 @@ namespace OpenGLColorBar {
 					// Render the maximum indicator only if it is within the Y area of the colorbar
 					if (ColorBarMaxArrowYPos < ColorBarPixelHeight + ColorBarPanelTexturePadding) {
 
-						// Render Colorbarens Maximum temperatur indikator pil
+						// Render the maximum temperature indicator arrow of the colorbar
 						RMH_OpenGL_RenderArrowWithLabel(MaxMinTagX0Pos - 1, ColorBarMaxArrowYPos, 5, 5, "MAX",
 							MaxTrackArrowColorR, MaxTrackArrowColorG, MaxTrackArrowColorB,
 							MaxTrackArrowLabelColorR, MaxTrackArrowLabelColorG, MaxTrackArrowLabelColorB);
@@ -1713,7 +1713,7 @@ namespace OpenGLColorBar {
 					// Render the minimum indicator only if it is within the Y area of the colorbar
 					if (ColorBarMinArrowYPos > ColorBarPanelTexturePadding) {
 
-						// Render Colorbarens Minimum temperatur indikator pil
+						// Render the minimum temperature indicator arrow of the colorbar
 						RMH_OpenGL_RenderArrowWithLabel(MaxMinTagX0Pos - 1, ColorBarMinArrowYPos, 5, 5, "MIN",
 							MinTrackArrowColorR, MinTrackArrowColorG, MinTrackArrowColorB,
 							MinTrackArrowLabelColorR, MinTrackArrowLabelColorG, MinTrackArrowLabelColorB);
@@ -1739,7 +1739,7 @@ namespace OpenGLColorBar {
 					// Render the center indicator only if it is within the Y area of the colorbar
 					if (ColorBarCntArrowYPos < ColorBarPixelHeight + ColorBarPanelTexturePadding) {
 
-						// Render Colorbarens Center temperatur indikator pil
+						// Render the center temperature indicator arrow of the colorbar
 						RMH_OpenGL_RenderArrowWithLabel(MaxMinTagX0Pos - 1, ColorBarCntArrowYPos, 7, 7, "Center",
 							CntTrackArrowColorR, CntTrackArrowColorG, CntTrackArrowColorB,
 							CntTrackArrowLabelColorR, CntTrackArrowLabelColorG, CntTrackArrowLabelColorB);
@@ -1789,7 +1789,7 @@ namespace OpenGLColorBar {
 
 		}
 
-		// -------------------- OpenGL Renderering Slut Punkts Routiner -------------------- //
+		// -------------------- OpenGL Rendering Endpoint Routines -------------------- //
 
 		private: GLvoid RMH_OpenGL_SwapOpenGLBuffers(GLvoid) {
 
@@ -1805,7 +1805,7 @@ namespace OpenGLColorBar {
 			// This routine marks the end of an OpenGL rendering sequence
 			// and must always be called last, when all object renderings have been executed
 
-			// Swap Textur buffere
+			// Swap the texture buffers
 			RMH_OpenGL_SwapOpenGLBuffers();
 
 			// Reset the render context
@@ -1824,7 +1824,7 @@ namespace OpenGLColorBar {
 			// Delete the OpenGL context
 			DeleteOpenGL();
 
-			// Destruer OpenGL Handler objekt
+			// Destroy the OpenGL handler object
 			this->DestroyHandle();
 
 			// Garbage Collect managed data
@@ -1834,7 +1834,7 @@ namespace OpenGLColorBar {
 
 		private: GLvoid DeleteOpenGL(GLvoid) {
 
-			// Routinen sletter alt OpenGL Context
+			// This routine deletes the whole OpenGL context
 
 			// Read the temporary array data and sort the kernel array
 			HGLRC hglrc;
@@ -1846,7 +1846,7 @@ namespace OpenGLColorBar {
 			hdc = wglGetCurrentDC();
 			// Make the render context the current context
 			wglMakeCurrent(NULL, NULL);
-			// Frigiv Device context
+			// Release the device context
 			ReleaseDC(NULL, hdc);
 			// Delete the render context
 			wglDeleteContext(hglrc);
@@ -1859,16 +1859,16 @@ namespace OpenGLColorBar {
 
 		private: bool RMH_OpenGL_SetTexturePixelFormat(HDC hdc) {
 
-			// Routinen konfigurerer Texturens Pixel format
+			// This routine configures the pixel format of the texture
 
 			// The format tells Windows how the texture data should be interpreted
 			PIXELFORMATDESCRIPTOR pfd = {
 
 				sizeof(PIXELFORMATDESCRIPTOR),				// Size of this pixel format descriptor
-				1,											// Formatets Versions Nummer 
+				1,											// Version number of the format 
 				PFD_DRAW_TO_WINDOW |						// The format must support Windows
 				PFD_SUPPORT_OPENGL |						// The format must support OpenGL
-				PFD_DOUBLEBUFFER,							// Formatet skal supporterer "Double Buffering"
+				PFD_DOUBLEBUFFER,							// The format must support "double buffering"
 				PFD_TYPE_RGBA,								// Request an RGBA format
 				16,										    // Select the "color depth" (16-bit)
 				0, 0, 0, 0, 0, 0,							// Color bits are to be ignored
@@ -1876,7 +1876,7 @@ namespace OpenGLColorBar {
 				0,											// Shift bit is to be ignored
 				0,											// No "accumulation buffer"
 				0, 0, 0, 0,									// Accumulator bits are to be ignored
-				16,											// 16Bit Z-Buffer (Buffer dybde)  
+				16,											// 16-bit Z-buffer (buffer depth)  
 				0,											// No "stencil buffer"
 				0,											// No "auxiliary buffer"
 				PFD_MAIN_PLANE,								// Set as the main "drawing" layer
@@ -1935,7 +1935,7 @@ namespace OpenGLColorBar {
 			glMatrixMode(GL_PROJECTION);
 			// Reset the projection matrix
 			glLoadIdentity();
-			// Udregn vinduets aspect ratio
+			// Calculate the aspect ratio of the window
 			gluPerspective(60.0f, (GLfloat)TotalTextureWidth / (GLfloat)TotalTextureHeight, 0.1, 500.0);
 			// Select the "model view" matrix
 			glMatrixMode(GL_MODELVIEW);
@@ -1954,7 +1954,7 @@ namespace OpenGLColorBar {
 			// Update the font list
 			BaseFont = glGenLists(96);
 
-			// Generer Strutureret Font Objekt
+			// Generate the structured font object
 			TextureFont = CreateFont(
 				-12,                            // nHeight
 				0,								// nWidth
@@ -1973,27 +1973,27 @@ namespace OpenGLColorBar {
 
 			// Set the FONT to the OpenGL object structure
 			SelectObject(m_hDC, TextureFont);
-			// Generer Bitmap Display FONT Liste
+			// Generate the bitmap display FONT list
 			wglUseFontBitmaps(m_hDC, 32, 96, BaseFont);
 
 		}
 
 		private: bool RMH_OpenGL_Init(GLvoid) {
 
-			// Routinen Initialisere OpenGL I Winforms C++/CLR
+			// This routine initializes OpenGL in WinForms C++/CLR
 
 			// Enable "flat shader" mode
 			glShadeModel(GL_SMOOTH);
-			// Default Baggrund farve
+			// Default background color
 			glClearColor(0.13725f, 0.13725f, 0.13725f, 1.0f);
 			// Set up the "depth buffer"
 			glClearDepth(1.0f);
 			// Disable OpenGL "depth testing"
 			glDisable(GL_DEPTH_TEST);
-			// For perspektiv - Fortag "Very Nice" udregniner
+			// For perspective - use "very nice" calculations
 			glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
 
-			// Generer FONT Objekt
+			// Generate the FONT object
 			RMH_OpenGL_BuildFont();
 
 			// Return the "OpenGL setup" finished flag

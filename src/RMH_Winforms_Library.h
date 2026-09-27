@@ -17,17 +17,17 @@
 #include <vector>
 #include <array>
 
-// Status Meddelses typer macroer
+// Status message type macros
 #define _StatusMessageType_Normal      1
 #define _StatusMessageType_Success     2
 #define _StatusMessageType_Warning     3
 #define _StatusMessageType_Error       4
 
-// Microsoft Store applikationers "PackageFamilyName" strings
+// Microsoft Store application "PackageFamilyName" strings
 #define _MicrosoftStore_ScreenRecorderForWindows11          "45907smallapp.ScreenRecorderforWindows11_z9hw59krvrfng"
 #define _MicrosoftStore_SnippingTool                        "Microsoft.ScreenSketch_8wekyb3d8bbwe"
 
-// Form Docking & Undockings indstillings Macroer
+// Form docking & undocking settings macros
 #define _FormDockingState_DockForm         1
 #define _FormDockingState_UndockForm       2
 
@@ -69,7 +69,7 @@ struct WINMonitorSettings {
 
 void RMH_Winforms_EnableTitleBarDarkMode(System::IntPtr FormHandle);
 
-// ----------------------------- Winform Benchmarkings Routiner ----------------------------- //
+// ----------------------------- WinForms Benchmarking Routines ----------------------------- //
 
 System::Diagnostics::Stopwatch^ RMH_Winforms_StartBenchMarkTimer();
 void RMH_Winforms_StopBenchmarkTimerAndDisplay(System::Diagnostics::Stopwatch^ BenchmarkTimer);
@@ -156,7 +156,7 @@ void RMH_Winforms_Charts_AddDataArrayToChartSeries(System::Windows::Forms::DataV
 void RMH_Winforms_Charts_AddDataPointToChartSeries(System::Windows::Forms::DataVisualization::Charting::Chart^ Chart, unsigned int ChartSeriesIndex, double PointXData, double PointYData);
 void RMH_Winforms_Charts_ClearChartDataPoints(System::Windows::Forms::DataVisualization::Charting::Chart^ Chart, unsigned int ChartSeriesIndex);
 
-// ------------------------ Winform Panel Billede SnapShot Routiner ------------------------- //
+// ------------------------ WinForms Panel Image Snapshot Routines ------------------------- //
 
 bool RMH_Winforms_SavePanelSnapShotPNG(System::Windows::Forms::Panel^ SrcPanel, System::String^ SnapShotPath);
 bool RMH_Winforms_SaveRawImageDataAsSnapShotPNG(System::String^ SnapShotPath, unsigned int ImageDataWidth, unsigned int ImageDataHeight, unsigned char* ImageData);

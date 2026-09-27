@@ -21,7 +21,7 @@
 // Associated namespaces
 using namespace std;
 
-// --------------------------------- Konverterings Routiner --------------------------------- //
+// --------------------------------- Conversion Routines --------------------------------- //
 
 void RMH_Conversion_IntToUnsignedCharArray(unsigned int InputInteger, unsigned short TargetStringLength, unsigned char* OutputCharArray);
 System::String^ RMH_Conversion_StdStringToSystemString(std::string InputString);
@@ -49,7 +49,7 @@ const char* RMH_Conversion_SystemStringToCharPtr(System::String^ str);
 System::String^ RMH_Conversion_UnsignedCharArrayToSystemString(unsigned char* InputArray, unsigned int ArrayLength);
 cv::String RMH_VideoRecording_ConvertSystemStringToCVString(System::String^ sysString);
 
-// -------------------- Matematiske Udregnings & Konverterings Routiner --------------------- //
+// -------------------- Mathematical Calculation & Conversion Routines --------------------- //
 
 unsigned int RMH_Math_Round(double InputValue);
 double RMH_Math_absDouble(double InputValue);

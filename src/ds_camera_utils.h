@@ -108,7 +108,7 @@ namespace DirectShowCameraUtils
 
                 /*  
                 * 
-                *   Tidligere Implementering ->
+                *   Previous implementation ->
                 * 
                 *   while (iEnumMoniker->Next(1, &moniker, NULL) == S_OK)
                 *   {

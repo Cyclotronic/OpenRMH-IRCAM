@@ -25,7 +25,7 @@
 #define _TemperatureAlarm_4                        3
 #define _TemperatureAlarm_5                        4
 
-// Temperatur Alarm Source Index Macroer
+// Temperature alarm source index macros
 #define _TempAlarmDataSource_MaximumTemp			0
 #define _TempAlarmDataSource_MinimumTemp			1
 #define _TempAlarmDataSource_AverageTemp			2
@@ -72,12 +72,12 @@
 #define _TempAlarmDataSource_ROI10MinTemp			43
 #define _TempAlarmDataSource_MousePositionTemp		44
 
-// Temperatur Alarm konfigurations type Macroer
+// Temperature alarm configuration type macros
 #define _TempAlarmType_Above                        0
 #define _TempAlarmType_Below                        1
 #define _TempAlarmType_Window                       2
 
-// Temperatur alarmers trigger aktion konfigurations Macroer
+// Temperature alarm trigger action configuration macros
 #define _TempAlarmTriggerAction_None                    0    
 #define _TempAlarmTriggerAction_StartDataLogging        1                
 #define _TempAlarmTriggerAction_StopDataLogging         2      

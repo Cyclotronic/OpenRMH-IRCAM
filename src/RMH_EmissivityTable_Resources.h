@@ -13,12 +13,12 @@
 #ifndef RMH_EmissivityTable_Resources_H 
 #define RMH_EmissivityTable_Resources_H
 
-// Emissivity Tabel Konfigurations Macroer
+// Emissivity table configuration macros
 #define _EmissivityTableNumberOfElements		77
 
-// ---------------------- Emissivity Tabel Matriale String Navne Array ---------------------- //
+// ---------------------- Emissivity Table Material String Names Array ---------------------- //
 
-// Emissivity Tabellens Header overskrift strings ->
+// Header title strings of the emissivity table ->
 static std::vector<std::string> EmissivityTableHeaderStrings = { "Type Of Material:",
 																 "Emissivity Value:" };
 

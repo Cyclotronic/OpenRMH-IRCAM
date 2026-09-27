@@ -15,7 +15,7 @@
 #include "RMH_MathConversions_Library.h"
 #include "RMH_AnalysisMode_Routines.h"
 
-// Globale namespaces
+// Global namespaces
 using namespace System;
 using namespace System::Windows::Forms;
 using namespace System::Diagnostics;
@@ -158,7 +158,7 @@ RAWFileIDFormat RMH_AnalysisMode_ReadRAWMetaData(unsigned int FrameWidth, unsign
         // Check whether the end character has been reached
         if (RAWFrameDataArray[i] == '!') {
 
-            // Bryd For Loop
+            // Break the for loop
             break;
 
         }
@@ -175,11 +175,11 @@ RAWFileIDFormat RMH_AnalysisMode_ReadRAWMetaData(unsigned int FrameWidth, unsign
 bool RMH_VideoFileRecording_SetupRecordingAnalysisModeVideoFile(System::String^ FileSavePath, System::String^ FileName, unsigned int FrameWidth, unsigned int FrameHeight, double FrameRate) {
 
     // This routine configures and prepares an .avi video file for recording RAW camera data.
-    // Denne fil benyttes i "REcording Analysis Mode".
+    // This file is used in "Recording Analysis mode".
     // The saved AVI video file name is formatted as: "'FileName'_HHmmssddMMyyyy"
-    // Input Fil Path (FileSavePath) Eksempel: C:\Users\User\Desktop
+    // Input file path (FileSavePath) example: C:\Users\User\Desktop
     
-    // Formater Filens navne string (Recording_HHmmssddMMyyyy)
+    // Format the file name string (Recording_HHmmssddMMyyyy)
     System::String^ FileNameDate = System::DateTime::Now.ToString("HHmmssddMMyyyy");
 
     // Convert the given file name string to a cv::string - with the associated .avi file type string 
@@ -191,13 +191,13 @@ bool RMH_VideoFileRecording_SetupRecordingAnalysisModeVideoFile(System::String^ 
     // Check whether the "VideoWriter" object has been initialized correctly and is ready for writing.
     if (RECAnalysisModeFileWriterRAW.isOpened() == true) {
 
-        // Retuner: "VideoWriter" objekt initialisering OK
+        // Return: "VideoWriter" object initialization OK
         return true;
 
     }
     else {
 
-        // Retuner: "VideoWriter" objekt initialisering fejl!
+        // Return: "VideoWriter" object initialization error!
         return false;
 
     }
@@ -208,9 +208,9 @@ bool RMH_VideoFileRecording_SetupLiveViewCaptureVideoFile(System::String^ FileSa
 
     // This routine configures and prepares an .avi video file for recording the live view stream data.
     // The saved AVI video file name is formatted as: "'FileName'_HHmmssddMMyyyy"
-    // Input Fil Path (FileSavePath) Eksempel: C:\Users\User\Desktop
+    // Input file path (FileSavePath) example: C:\Users\User\Desktop
 
-    // Formater Filens navne string (Recording_HHmmssddMMyyyy)
+    // Format the file name string (Recording_HHmmssddMMyyyy)
     System::String^ FileNameDate = System::DateTime::Now.ToString("HHmmssddMMyyyy");
 
     // Convert the given file name string to a cv::string - with the associated .avi file type string 
@@ -222,13 +222,13 @@ bool RMH_VideoFileRecording_SetupLiveViewCaptureVideoFile(System::String^ FileSa
     // Check whether the "VideoWriter" object has been initialized correctly and is ready for writing.
     if (LiveViewDataFileWriter.isOpened() == true) {
 
-        // Retuner: "VideoWriter" objekt initialisering OK
+        // Return: "VideoWriter" object initialization OK
         return true;
 
     }
     else {
 
-        // Retuner: "VideoWriter" objekt initialisering fejl!
+        // Return: "VideoWriter" object initialization error!
         return false;
 
     }
@@ -239,10 +239,10 @@ void RMH_VideoFileRecording_WriteDataToFile(unsigned short FileIndex, unsigned i
 
     // This routine writes the given frame data array to the selected video file
 
-    // Hvilket VideoWriter objekt er blevet valgt
+    // Which VideoWriter object has been selected
     switch (FileIndex) {
 
-        // VideoWriter Objekt nummer 1
+        // VideoWriter object number 1
         case _VideoFileWriteObject_RecordingAnalysisModeFile:
 
             // Add an extra pixel row to the analysis mode file - for ID data
@@ -255,13 +255,13 @@ void RMH_VideoFileRecording_WriteDataToFile(unsigned short FileIndex, unsigned i
     // Convert the image data to cv::Mat format
     cv::Mat MatFrame(FrameHeight, FrameWidth, CV_8UC3, CapturedFrameData);
 
-    // Konverter BGR Format Til RGB Format
+    // Convert BGR format to RGB format
     cv::cvtColor(MatFrame, FrameFormatRGB, cv::COLOR_BGR2RGB);
 
-    // Hvilket VideoWriter objekt er blevet valgt
+    // Which VideoWriter object has been selected
     switch (FileIndex) {
 
-        // VideoWriter Objekt nummer 1 - Recording Analysis Mode Fil
+        // VideoWriter object number 1 - Recording Analysis mode file
         case _VideoFileWriteObject_RecordingAnalysisModeFile:
 
             // Write the frame data to the AVI video file
@@ -269,7 +269,7 @@ void RMH_VideoFileRecording_WriteDataToFile(unsigned short FileIndex, unsigned i
             
         break;
 
-        // VideoWriter Objekt nummer 2 - Live View Stream Fil
+        // VideoWriter object number 2 - live view stream file
         case _VideoFileWriteObject_LiveViewStreamFile:
 
             // Write the frame data to the AVI video file
@@ -288,10 +288,10 @@ void RMH_VideoFileRecording_WriteDataToFile16Bit(unsigned short FileIndex, unsig
     // Local objects
     cv::Mat MatFrame8U;
 
-    // Hvilket VideoWriter objekt er blevet valgt
+    // Which VideoWriter object has been selected
     switch (FileIndex) {
 
-        // VideoWriter Objekt nummer 1
+        // VideoWriter object number 1
         case _VideoFileWriteObject_RecordingAnalysisModeFile:
 
             // Add an extra pixel row to the analysis mode file - for ID data
@@ -304,16 +304,16 @@ void RMH_VideoFileRecording_WriteDataToFile16Bit(unsigned short FileIndex, unsig
     // Convert the image data to cv::Mat format
     cv::Mat MatFrame(FrameHeight, FrameWidth, CV_16UC3, CapturedFrameData);
 
-    // Konverter 16Bit Video Frame Til 8Bit (1 / 256 = 0.00390625)
+    // Convert a 16-bit video frame to 8-bit (1 / 256 = 0.00390625)
     MatFrame.convertTo(MatFrame8U, CV_8UC3, 0.00390625);
 
-    // Konverter BGR Format Til RGB Format
+    // Convert BGR format to RGB format
     cv::cvtColor(MatFrame8U, FrameFormatRGB, cv::COLOR_BGR2RGB);
 
-    // Hvilket VideoWriter objekt er blevet valgt
+    // Which VideoWriter object has been selected
     switch (FileIndex) {
 
-        // VideoWriter Objekt nummer 1 - Recording Analysis Mode Fil
+        // VideoWriter object number 1 - Recording Analysis mode file
         case _VideoFileWriteObject_RecordingAnalysisModeFile:
 
             // Write the frame data to the AVI video file
@@ -321,7 +321,7 @@ void RMH_VideoFileRecording_WriteDataToFile16Bit(unsigned short FileIndex, unsig
 
         break;
 
-        // VideoWriter Objekt nummer 2 - Live View Stream Fil
+        // VideoWriter object number 2 - live view stream file
         case _VideoFileWriteObject_LiveViewStreamFile:
 
             // Write the frame data to the AVI video file
@@ -338,10 +338,10 @@ bool RMH_VideoFileRecording_CloseVideoFileWriting(unsigned short FileIndex) {
     // This routine closes and saves the AVI video file
     // Returns "true" if the "VideoWriter" object has been closed correctly
 
-    // Hvilket VideoWriter objekt er blevet valgt
+    // Which VideoWriter object has been selected
     switch (FileIndex) {
 
-        // VideoWriter Objekt nummer 1 - Recording Analysis Mode Fil
+        // VideoWriter object number 1 - Recording Analysis mode file
         case _VideoFileWriteObject_RecordingAnalysisModeFile:
 
             // Check whether the "VideoWriter" object is open.
@@ -363,7 +363,7 @@ bool RMH_VideoFileRecording_CloseVideoFileWriting(unsigned short FileIndex) {
 
         break;
 
-        // VideoWriter Objekt nummer 2 - Live View Stream Fil
+        // VideoWriter object number 2 - live view stream file
         case _VideoFileWriteObject_LiveViewStreamFile:
 
             // Check whether the "VideoWriter" object is open.
@@ -528,7 +528,7 @@ unsigned int RMH_VideoFileReading_ReadVideoFileFrame(unsigned long TargetFrameNu
     // Check whether the video file is open
     if (RMH_VideoFileReading_IsRECAnalysisModeFileOpen() == true) {
 
-        // Er givet frame nummer inden for 0 - FileTotalNumOfFrames
+        // Is the given frame number within 0 - FileTotalNumOfFrames
         if (TargetFrameNumber >= 0 && TargetFrameNumber < FileTotalNumOfFrames) {
 
             // Set the position of the selected frame number for reading
@@ -642,11 +642,11 @@ RAWSnapShotFileInfo RMH_AnalysisMode_ReadAndLoadPNGImage(System::String^ ImageFi
     // Initialize the COM library
     CoInitialize(nullptr);
 
-    // Generer og konfigurer "WIC factory"
+    // Create and configure the "WIC factory"
     IWICImagingFactory* pFactory = nullptr;
     HRESULT hr = CoCreateInstance(CLSID_WICImagingFactory, nullptr, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&pFactory));
 
-    // Kontroler handler fejl
+    // Check the handler error
     if (FAILED(hr)) {
 
         // Uninitialize the COM library
@@ -666,10 +666,10 @@ RAWSnapShotFileInfo RMH_AnalysisMode_ReadAndLoadPNGImage(System::String^ ImageFi
     IWICBitmapDecoder* pDecoder = nullptr;
     hr = pFactory->CreateDecoderFromFilename(wfilename.c_str(), nullptr, GENERIC_READ, WICDecodeMetadataCacheOnLoad, &pDecoder);
 
-    // Kontroler handler fejl
+    // Check the handler error
     if (FAILED(hr)) {
 
-        // Frigiv "WIC factory"
+        // Release the "WIC factory"
         pFactory->Release();
         // Uninitialize the COM library
         CoUninitialize();
@@ -688,12 +688,12 @@ RAWSnapShotFileInfo RMH_AnalysisMode_ReadAndLoadPNGImage(System::String^ ImageFi
     IWICBitmapFrameDecode* pFrame = nullptr;
     hr = pDecoder->GetFrame(0, &pFrame);
 
-    // Kontroler handler fejl
+    // Check the handler error
     if (FAILED(hr)) {
 
         // Release the image decoder
         pDecoder->Release();
-        // Frigiv "WIC factory"
+        // Release the "WIC factory"
         pFactory->Release();
         // Uninitialize the COM library
         CoUninitialize();
@@ -711,14 +711,14 @@ RAWSnapShotFileInfo RMH_AnalysisMode_ReadAndLoadPNGImage(System::String^ ImageFi
     // Read the size of the PNG image
     hr = pFrame->GetSize(&ImgWidth, &ImgHeight);
 
-    // Kontroler handler fejl
+    // Check the handler error
     if (FAILED(hr)) {
 
         // Release the image size structure
         pFrame->Release();
         // Release the image decoder
         pDecoder->Release();
-        // Frigiv "WIC factory"
+        // Release the "WIC factory"
         pFactory->Release();
         // Uninitialize the COM library
         CoUninitialize();
@@ -740,14 +740,14 @@ RAWSnapShotFileInfo RMH_AnalysisMode_ReadAndLoadPNGImage(System::String^ ImageFi
     // Calculate the buffer size for the pixel data of the PNG image (3 bands RGB)
     BufferSize = ImgWidth * ImgHeight * 3;
 
-    // Alloker hukommelse til billedets pixel data
+    // Allocate memory for the pixel data of the image
     unsigned char* Buffer = new unsigned char[BufferSize];
 
     // Read the PNG image pixel data RGB
     WICRect Rect = { 0, 0, static_cast<unsigned int>(ImgWidth), static_cast<unsigned int>(ImgHeight) };
     hr = pFrame->CopyPixels(&Rect, ImgWidth * 3, BufferSize, Buffer);
 
-    // Kontroler handler fejl
+    // Check the handler error
     if (FAILED(hr)) {
 
         // Delete the allocated memory of the pixel buffer 
@@ -756,7 +756,7 @@ RAWSnapShotFileInfo RMH_AnalysisMode_ReadAndLoadPNGImage(System::String^ ImageFi
         pFrame->Release();
         // Release the image decoder
         pDecoder->Release();
-        // Frigiv "WIC factory"
+        // Release the "WIC factory"
         pFactory->Release();
         // Uninitialize the COM library
         CoUninitialize();
@@ -794,7 +794,7 @@ RAWSnapShotFileInfo RMH_AnalysisMode_ReadAndLoadPNGImage(System::String^ ImageFi
     // Uninitialize the COM library
     CoUninitialize();
 
-    // Kopir pixel data til "ImageData" array
+    // Copy the pixel data to the "ImageData" array
     memcpy(ImageData, Buffer, BufferSize);
 
     // Delete the allocated memory of the pixel buffer 

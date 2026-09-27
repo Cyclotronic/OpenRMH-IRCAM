@@ -24,14 +24,14 @@ using namespace std;
 // Static global class variables
 static unsigned int HistDistributionData[16384];
 
-// OpenGL Klasse definition
+// OpenGL class definition
 namespace OpenGLHistogram {
 
 	public ref class RMHOpenGLHistogram : public System::Windows::Forms::NativeWindow {
 
 	private:
 
-		// Histogram Konfigurations Parametere
+		// Histogram configuration parameters
 		private: unsigned int NumberOfHistogramBins = 256;
 		private: unsigned int HistgramColorPaletteResolution = 16384;
 		private: unsigned int HistgramColorPaletteResolutionRange = 65535;
@@ -66,7 +66,7 @@ namespace OpenGLHistogram {
 
 	public:
 
-		// ------------------------ Histogram Konstruktur Routiner ------------------------- //
+		// ------------------------ Histogram Constructor Routines ------------------------- //
 
 		RMHOpenGLHistogram(System::Windows::Forms::Panel^ TexturePanel, unsigned char HeightScaleFactor) {
 
@@ -76,7 +76,7 @@ namespace OpenGLHistogram {
 			ControlParams->Width = (GLdouble)TexturePanel->Width;
 			ControlParams->Height = (GLdouble)TexturePanel->Height * HeightScaleFactor;
 
-			// Konfigurer Textur parent handler
+			// Configure the texture parent handler
 			ControlParams->Parent = TexturePanel->Handle;
 			// Create a "child" of the selected "parent" and make it OpenGL compliant
 			ControlParams->Style = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN;
@@ -90,11 +90,11 @@ namespace OpenGLHistogram {
 			// Is this handle active
 			if (m_hDC) {
 
-				// Konfigurer Textur Pixel format
+				// Configure the texture pixel format
 				RMH_OpenGL_SetTexturePixelFormat(m_hDC);
 				// Configure the size of the texture
 				RMH_OpenGL_ResizeOpenGLWinformsScene(ControlParams->Width, ControlParams->Height);
-				// Initialisere OpenGL for Winforms C++
+				// Initialize OpenGL for WinForms C++
 				RMH_OpenGL_Init();
 
 			}
@@ -142,7 +142,7 @@ namespace OpenGLHistogram {
 			// Bind the texture as a 2D texture
 			glBindTexture(GL_TEXTURE_2D, HistogramTexture[0]);
 
-			// Konfigurer Textur parametere
+			// Configure the texture parameters
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, HistogramTextureWidth, HistogramTextureHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
 			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
 			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
@@ -157,7 +157,7 @@ namespace OpenGLHistogram {
 
 		private: GLvoid RMH_OpenGL_UpdateTextureFieldOfView(unsigned int TextureWidth, unsigned int TextureHeight) {
 
-			// Routinen indstiller texturens syns vinkel for display i control handler komponentet
+			// This routine sets the viewing angle (field of view) of the texture for display in the control handler component
 
 			// Local variables
 			GLdouble PlaneXLook = 0.0;
@@ -172,10 +172,10 @@ namespace OpenGLHistogram {
 			PlaneXLook = (GLdouble)TextureWidth * 0.5;
 			PlaneYLook = (GLdouble)TextureHeight * 0.5;
 
-			// Udregn textur Aspect ratio
+			// Calculate the texture aspect ratio
 			PlaneAspectRatio = ((GLdouble)TextureWidth / (GLdouble)TextureHeight);
 
-			// Udregn affstanden imellem Frame data planet og textur planet
+			// Calculate the distance between the frame data plane and the texture plane
 			PlaneDistance = (GLdouble)TextureHeight * TanHalfFieldOfView;
 
 			// Update the viewing angle (field of view) of the texture
@@ -196,7 +196,7 @@ namespace OpenGLHistogram {
 
 			// Add the font list properties
 			glPushAttrib(GL_LIST_BIT);
-			// Benyt FONT Base List
+			// Use the FONT base list
 			glListBase(BaseFont - 32);
 			// Execute and render the characters on the texture
 			glCallLists(strlen(CharArray), GL_UNSIGNED_BYTE, CharArray);
@@ -209,7 +209,7 @@ namespace OpenGLHistogram {
 
 			// This routine renders a given string on an OpenGL texture
 
-			// Konfigurer Textens Farve
+			// Configure the text color
 			glColor3ub(ColorR, ColorG, ColorB);
 			// Set the position of the text on the texture
 			glRasterPos2f(StringX, StringY);
@@ -219,13 +219,13 @@ namespace OpenGLHistogram {
 
 		}
 
-		// -------------------- Histogram Textur Rendererings Routiner --------------------- //
+		// -------------------- Histogram Texture Rendering Routines --------------------- //
 
 		private: GLvoid RMH_OpenGL_ClearTextureBuffer() {
 
 			// This routine clears the associated texture buffers
 
-			// Ryd Textur farve og bit buffere
+			// Clear the texture color and bit buffers
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		}
@@ -259,7 +259,7 @@ namespace OpenGLHistogram {
 			glVertex2f(LineX0, LineY0);
 			glVertex2f(LineX1, LineY1);
 
-			// Konfiguration Slut
+			// End of configuration
 			glEnd();
 			// Disable the 1D texture
 			glDisable(GL_TEXTURE_1D);
@@ -282,7 +282,7 @@ namespace OpenGLHistogram {
 			// Render the polygon on the texture
 			glBegin(GL_POLYGON);
 
-			// Render Polygon rektangel linjer
+			// Render the polygon rectangle lines
 			glVertex2f(BinX0, BinY0);
 			glVertex2f(BinX0, BinY0 + BinHeight);
 			glVertex2f(BinX0, BinY0);
@@ -292,10 +292,10 @@ namespace OpenGLHistogram {
 			glVertex2f(BinX0 - BinLength, BinY0);
 			glVertex2f(BinX0 - BinLength, BinY0 + BinHeight);
 
-			// Konfiguration Slut
+			// End of configuration
 			glEnd();
 
-			// Linje Rendererings Mode
+			// Line rendering mode
 			/*glBegin(GL_LINES);
 			glVertex2f(BinX0, BinY0);
 			glVertex2f(BinX0, BinY0 + BinHeight);
@@ -350,7 +350,7 @@ namespace OpenGLHistogram {
 				HistogramBinLengthData3 = *(BinData + ((NumberOfHistogramBins - 1) - (i + 2)));
 				HistogramBinLengthData4 = *(BinData + ((NumberOfHistogramBins - 1) - (i + 3)));
 			
-				// Skaller Histogram bin Dataen. Fit dataen til histogram Y aksen
+				// Scale the histogram bin data. Fit the data to the histogram Y axis
 				HistogramBinLengthData1 = HistogramBinLengthData1 * HistBinDataFitScaleFactor;
 				HistogramBinLengthData2 = HistogramBinLengthData2 * HistBinDataFitScaleFactor;
 				HistogramBinLengthData3 = HistogramBinLengthData3 * HistBinDataFitScaleFactor;
@@ -374,10 +374,10 @@ namespace OpenGLHistogram {
 				if (HistogramBinLengthData3 <= 1) { HistogramBinLengthData3 = 1; }
 				if (HistogramBinLengthData4 <= 1) { HistogramBinLengthData4 = 1; }
 
-				// Skal histogrammets color palette inverteres
+				// Should the color palette of the histogram be inverted
 				if (HistogramColorPaletteInvertFlag == true) {
 
-					// Render Histogram Bin Rektangler vertikalt
+					// Render the histogram bin rectangles vertically
 					RMH_OpenGL_RenderHistogramBin(HistogramX0, HistogramNextBinPos1, HistogramBinHeight, HistogramBinLengthData1, HistogramPalettePtr[0][ColorPaletteBinIndexValue1], HistogramPalettePtr[1][ColorPaletteBinIndexValue1], HistogramPalettePtr[2][ColorPaletteBinIndexValue1]);
 					RMH_OpenGL_RenderHistogramBin(HistogramX0, HistogramNextBinPos2, HistogramBinHeight, HistogramBinLengthData2, HistogramPalettePtr[0][ColorPaletteBinIndexValue2], HistogramPalettePtr[1][ColorPaletteBinIndexValue2], HistogramPalettePtr[2][ColorPaletteBinIndexValue2]);
 					RMH_OpenGL_RenderHistogramBin(HistogramX0, HistogramNextBinPos3, HistogramBinHeight, HistogramBinLengthData3, HistogramPalettePtr[0][ColorPaletteBinIndexValue3], HistogramPalettePtr[1][ColorPaletteBinIndexValue3], HistogramPalettePtr[2][ColorPaletteBinIndexValue3]);
@@ -386,13 +386,13 @@ namespace OpenGLHistogram {
 				}
 				else {
 
-					// Udregn Den inverterede Colorpalettes index
+					// Calculate the index of the inverted color palette
 					IntvertedIndex1 = (HistgramColorPaletteResolution - 1) - ColorPaletteBinIndexValue1;
 					IntvertedIndex2 = (HistgramColorPaletteResolution - 1) - ColorPaletteBinIndexValue2;
 					IntvertedIndex3 = (HistgramColorPaletteResolution - 1) - ColorPaletteBinIndexValue3;
 					IntvertedIndex4 = (HistgramColorPaletteResolution - 1) - ColorPaletteBinIndexValue4;
 
-					// Render Histogram Bin Rektangler vertikalt
+					// Render the histogram bin rectangles vertically
 					RMH_OpenGL_RenderHistogramBin(HistogramX0, HistogramNextBinPos1, HistogramBinHeight, HistogramBinLengthData1, HistogramPalettePtr[0][IntvertedIndex1], HistogramPalettePtr[1][IntvertedIndex1], HistogramPalettePtr[2][IntvertedIndex1]);
 					RMH_OpenGL_RenderHistogramBin(HistogramX0, HistogramNextBinPos2, HistogramBinHeight, HistogramBinLengthData2, HistogramPalettePtr[0][IntvertedIndex2], HistogramPalettePtr[1][IntvertedIndex2], HistogramPalettePtr[2][IntvertedIndex2]);
 					RMH_OpenGL_RenderHistogramBin(HistogramX0, HistogramNextBinPos3, HistogramBinHeight, HistogramBinLengthData3, HistogramPalettePtr[0][IntvertedIndex3], HistogramPalettePtr[1][IntvertedIndex3], HistogramPalettePtr[2][IntvertedIndex3]);
@@ -404,22 +404,22 @@ namespace OpenGLHistogram {
 
 		}
 
-		// ---------------- Samlede Histogram Grafiske Rendererings Routine ---------------- //
+		// ---------------- Combined Histogram Graphics Rendering Routine ---------------- //
 
 		public: GLvoid RMH_OpenGL_LoadHistogramColorPalette(unsigned short (*HistogramPalette)[16384]) {
 
 			// This routine loads a given histogram color palette
 
-			// Opdater histogram color palette pointer
+			// Update the histogram color palette pointer
 			HistogramPalettePtr = HistogramPalette;
 
 		}
 
 		public: GLvoid RMH_OpenGL_InvertHistogramColorPalette(bool FlagState) {
 
-			// Routinen opdaterer histogrammets color palette inverterings flag
+			// This routine updates the inversion flag of the histogram color palette
 
-			// Opdater histogrammets color palette inverterings flag
+			// Update the inversion flag of the histogram color palette
 			HistogramColorPaletteInvertFlag = FlagState;
 
 		}
@@ -442,7 +442,7 @@ namespace OpenGLHistogram {
 
 			}
 
-			// Udregn Histogram Bin data bredden
+			// Calculate the histogram bin data width
 			BinWidth = ((GLfloat)MaxBinVal - (GLfloat)MinBinVal) / ((GLfloat)NumberOfHistogramBins - 1.0);
 
 			// Distribute the given data into the associated histogram bins 
@@ -495,7 +495,7 @@ namespace OpenGLHistogram {
 
 			}
 
-			// Udregn Histogram Bin data bredden
+			// Calculate the histogram bin data width
 			BinWidth = (MaxBinVal - MinBinVal) / ((GLfloat)NumberOfHistogramBins - 1.0);
 
 			// Distribute the given data into the associated histogram bins 
@@ -554,7 +554,7 @@ namespace OpenGLHistogram {
 
 			}
 
-			// Udregn Histogram Bin data bredden
+			// Calculate the histogram bin data width
 			BinWidth = (MaxBinVal - MinBinVal) / ((GLfloat)NumberOfHistogramBins - 1.0);
 
 			// Distribute the given data into the associated histogram bins 
@@ -598,7 +598,7 @@ namespace OpenGLHistogram {
 
 			// This routine sets the number of bins rendered by the histogram
 
-			// Cast Sender objekt som Forms Tool Strip objekt
+			// Cast the sender object as a WinForms ToolStrip object
 			System::Windows::Forms::ToolStripMenuItem^ BinsTagValue = (System::Windows::Forms::ToolStripMenuItem^)sender;
 			// Read the sub context menu identification tag
 			unsigned int NumberOfBins = Convert::ToInt32(BinsTagValue->Tag);
@@ -625,17 +625,17 @@ namespace OpenGLHistogram {
 
 			// Make the associated render context the current render context
 			RMH_OpenGL_MakeRenderContextCurrent();
-			// Ryd Textur farve og bit buffere
+			// Clear the texture color and bit buffers
 			RMH_OpenGL_ClearTextureBuffer();
-			// Opdater Textur Field Of View
+			// Update the texture field of view
 			RMH_OpenGL_UpdateTextureFieldOfView(TextureWidth, TextureHeight);
 
-			// Bind OpenGL textur og Start OpenGL renderering
+			// Bind the OpenGL texture and start OpenGL rendering
 			RMH_OpenGL_StartHistogramRender();
 
 			// ----------------------------------- Render Histogram ----------------------------------- //
 			
-			// Render Historam Reference Linje (X akse)
+			// Render the histogram reference line (X axis)
 			RMH_OpenGL_RenderLine(HistogramX0, HistogramY0, HistogramX0, HistogramY1, 1, 0, 0, 0);
 
 			// Renderer Histogram Bins
@@ -648,7 +648,7 @@ namespace OpenGLHistogram {
 
 		}
 
-		// -------------------- OpenGL Renderering Slut Punkts Routiner -------------------- //
+		// -------------------- OpenGL Rendering Endpoint Routines -------------------- //
 
 		private: GLvoid RMH_OpenGL_SwapOpenGLBuffers(GLvoid) {
 
@@ -664,7 +664,7 @@ namespace OpenGLHistogram {
 			// This routine marks the end of an OpenGL rendering sequence
 			// and must always be called last, when all object renderings have been executed
 
-			// Swap Textur buffere
+			// Swap the texture buffers
 			RMH_OpenGL_SwapOpenGLBuffers();
 
 			// Reset the render context
@@ -683,7 +683,7 @@ namespace OpenGLHistogram {
 			// Delete the OpenGL context
 			DeleteOpenGL();
 
-			// Destruer OpenGL Handler objekt
+			// Destroy the OpenGL handler object
 			this->DestroyHandle();
 
 			// Garbage Collect managed data
@@ -693,7 +693,7 @@ namespace OpenGLHistogram {
 
 		private: GLvoid DeleteOpenGL(GLvoid) {
 
-			// Routinen sletter alt OpenGL Context
+			// This routine deletes the whole OpenGL context
 
 			// Read the temporary array data and sort the kernel array
 			HGLRC hglrc;
@@ -705,7 +705,7 @@ namespace OpenGLHistogram {
 			hdc = wglGetCurrentDC();
 			// Make the render context the current context
 			wglMakeCurrent(NULL, NULL);
-			// Frigiv Device context
+			// Release the device context
 			ReleaseDC(NULL, hdc);
 			// Delete the render context
 			wglDeleteContext(hglrc);
@@ -718,16 +718,16 @@ namespace OpenGLHistogram {
 
 		private: bool RMH_OpenGL_SetTexturePixelFormat(HDC hdc) {
 
-			// Routinen konfigurerer Texturens Pixel format
+			// This routine configures the pixel format of the texture
 
 			// The format tells Windows how the texture data should be interpreted
 			PIXELFORMATDESCRIPTOR pfd = {
 
 				sizeof(PIXELFORMATDESCRIPTOR),				// Size of this pixel format descriptor
-				1,											// Formatets Versions Nummer 
+				1,											// Version number of the format 
 				PFD_DRAW_TO_WINDOW |						// The format must support Windows
 				PFD_SUPPORT_OPENGL |						// The format must support OpenGL
-				PFD_DOUBLEBUFFER,							// Formatet skal supporterer "Double Buffering"
+				PFD_DOUBLEBUFFER,							// The format must support "double buffering"
 				PFD_TYPE_RGBA,								// Request an RGBA format
 				16,										    // Select the "color depth" (16-bit)
 				0, 0, 0, 0, 0, 0,							// Color bits are to be ignored
@@ -735,7 +735,7 @@ namespace OpenGLHistogram {
 				0,											// Shift bit is to be ignored
 				0,											// No "accumulation buffer"
 				0, 0, 0, 0,									// Accumulator bits are to be ignored
-				16,											// 16Bit Z-Buffer (Buffer dybde)  
+				16,											// 16-bit Z-buffer (buffer depth)  
 				0,											// No "stencil buffer"
 				0,											// No "auxiliary buffer"
 				PFD_MAIN_PLANE,								// Set as the main "drawing" layer
@@ -794,7 +794,7 @@ namespace OpenGLHistogram {
 			glMatrixMode(GL_PROJECTION);
 			// Reset the projection matrix
 			glLoadIdentity();
-			// Udregn vinduets aspect ratio
+			// Calculate the aspect ratio of the window
 			gluPerspective(60.0f, (GLfloat)TotalTextureWidth / (GLfloat)TotalTextureHeight, 0.01f, 10000.0f);
 			// Select the "model view" matrix
 			glMatrixMode(GL_MODELVIEW);
@@ -813,7 +813,7 @@ namespace OpenGLHistogram {
 			// Update the font list
 			BaseFont = glGenLists(96);
 
-			// Generer Strutureret Font Objekt
+			// Generate the structured font object
 			TextureFont = CreateFont(
 				-12,                            // nHeight
 				0,								// nWidth
@@ -832,27 +832,27 @@ namespace OpenGLHistogram {
 
 			// Set the FONT to the OpenGL object structure
 			SelectObject(m_hDC, TextureFont);
-			// Generer Bitmap Display FONT Liste
+			// Generate the bitmap display FONT list
 			wglUseFontBitmaps(m_hDC, 32, 96, BaseFont);
 
 		}
 
 		private: bool RMH_OpenGL_Init(GLvoid) {
 
-			// Routinen Initialisere OpenGL I Winforms C++/CLR
+			// This routine initializes OpenGL in WinForms C++/CLR
 
 			// Enable "flat shader" mode
 			glShadeModel(GL_SMOOTH);
-			// Default Baggrund farve
+			// Default background color
 			glClearColor(0.13725f, 0.13725f, 0.13725f, 1.0f);
 			// Set up the "depth buffer"
 			glClearDepth(1.0f);
 			// Disable OpenGL "depth testing"
 			glDisable(GL_DEPTH_TEST);
-			// For perspektiv - Fortag "Very Nice" udregniner
+			// For perspective - use "very nice" calculations
 			glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
 
-			// Generer FONT Objekt
+			// Generate the FONT object
 			RMH_OpenGL_BuildFont();
 
 			// Return the "OpenGL setup" finished flag

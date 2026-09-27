@@ -9,7 +9,7 @@
 static unsigned char ElapsedTimeStringChar[] = { '0','0','0',':','0','0',':','0','0',':','0','0','0' };
 static unsigned char RemainingTimeStringChar[] = { '0','0','0',':','0','0',':','0','0',':','0','0','0' };
 
-// Klasse Namespace
+// Class namespace
 namespace IRCAMThermalViewer {
 
 	// Associated namespaces
@@ -26,7 +26,7 @@ namespace IRCAMThermalViewer {
 
 	public:
 
-		// ------------------------------------ Klasse Konstruktor ------------------------------------ //
+		// ------------------------------------ Class Constructor ------------------------------------ //
 
 		VideoPlayBackTools() {
 
@@ -35,7 +35,7 @@ namespace IRCAMThermalViewer {
 			// Set global objects from this form for global use
 			InitializeGlobalFormsObjects();
 
-			// Aktiver Applikationens TitelBars Dark Mode
+			// Enable dark mode for the application title bar
 			RMH_Winforms_EnableTitleBarDarkMode(this->Handle);
 
 			// Read the information parameters of the selected video file 
@@ -44,7 +44,7 @@ namespace IRCAMThermalViewer {
 			// Update the "video playback form is open" flag
 			VideoPlaybackControlsFormIsOpenFlag = true;
 
-			// Opdaterer Teksten i toppen af GUIens TitelBar
+			// Update the text at the top of the title bar of the GUI
 			RMH_Winforms_ChangeFormTitleBarText(this, "Video Playback Controls");
 
 			// Update the thermal camera configuration labels
@@ -75,7 +75,7 @@ namespace IRCAMThermalViewer {
 
 		}
 
-		// ---------------------------- Diverse Specifikke Klasse Metoder ----------------------------- //
+		// ---------------------------- Miscellaneous Class-Specific Methods ----------------------------- //
 
 		void InitializeGlobalFormsObjects() {
 
@@ -96,9 +96,9 @@ namespace IRCAMThermalViewer {
 
 			// This routine converts and handles the update of the two elapsed time and remaining time labels
 
-			// Udregn hver video frames tids periode i sekunter
+			// Calculate the time period of each video frame in seconds
 			double FramePeriod = RecordingAnalysisModeFileInfo.DurationTime / (double)RecordingAnalysisModeFileInfo.NumberOfFrames;
-			// Udregn video filens varighed i MilliSekunter
+			// Calculate the duration of the video file in milliseconds
 			double TotalVideoDurationMilliSec = RecordingAnalysisModeFileInfo.DurationTime * 1000.0;
 
 			// Calculate the elapsed time from the current playback frame number 
@@ -106,13 +106,13 @@ namespace IRCAMThermalViewer {
 			// Calculate the remaining time from the current playback frame number 
 			unsigned long RemainingTimeTimeValueMilliSec = (unsigned long)(TotalVideoDurationMilliSec - (double)ElapsedTimeValueMilliSec);
 
-			// Formater "Elapsed" tids label
+			// Format the "elapsed" time label
 			unsigned int HoursValue = (ElapsedTimeValueMilliSec / 3600000) % 720;
 			unsigned int MinutesValue = (ElapsedTimeValueMilliSec / 60000) % 60;
 			unsigned int SecondsValue = (ElapsedTimeValueMilliSec / 1000) % 60;
 			unsigned int MilliSecValue = ElapsedTimeValueMilliSec % 1000;
 
-			// Konverterog formater  Timer, Minutter, Sekundter og millisekundter for "Elapsed Time" label string
+			// Convert and format hours, minutes, seconds and milliseconds for the "Elapsed Time" label string
 			ElapsedTimeStringChar[0] = (HoursValue / 100) % 10 + 48;
 			ElapsedTimeStringChar[1] = (HoursValue / 10) % 10 + 48;
 			ElapsedTimeStringChar[2] = HoursValue % 10 + 48;
@@ -124,13 +124,13 @@ namespace IRCAMThermalViewer {
 			ElapsedTimeStringChar[11] = (MilliSecValue / 10) % 10 + 48;
 			ElapsedTimeStringChar[12] = MilliSecValue % 10 + 48;
 
-			// Formater "Remaining" tids label
+			// Format the "remaining" time label
 			HoursValue = (RemainingTimeTimeValueMilliSec / 3600000) % 720;
 			MinutesValue = (RemainingTimeTimeValueMilliSec / 60000) % 60;
 			SecondsValue = (RemainingTimeTimeValueMilliSec / 1000) % 60;
 			MilliSecValue = RemainingTimeTimeValueMilliSec % 1000;
 
-			// Konverterog formater  Timer, Minutter, Sekundter og millisekundter for "Remaining Time" label string
+			// Convert and format hours, minutes, seconds and milliseconds for the "Remaining Time" label string
 			RemainingTimeStringChar[0] = (HoursValue / 100) % 10 + 48;
 			RemainingTimeStringChar[1] = (HoursValue / 10) % 10 + 48;
 			RemainingTimeStringChar[2] = HoursValue % 10 + 48;
@@ -990,15 +990,15 @@ namespace IRCAMThermalViewer {
 
 #pragma endregion
 
-		// ---------------------- Opstartnings Og Nedluknings Callback Routiner ----------------------- //
+		// ---------------------- Start-Up And Shutdown Callback Routines ----------------------- //
 		
-		// Video Playback Controls Form Opstartnings Callback Routine -> 
+		// Video playback controls form start-up callback routine -> 
 		private: System::Void VideoPlayBackTools_Shown(System::Object^ sender, System::EventArgs^ e) {
 
 
 		}
 
-		// Video Playback Controls Form Nedluknings Callback Routine -> 
+		// Video playback controls form shutdown callback routine -> 
 		private: System::Void VideoPlayBackTools_FormClosing(System::Object^ sender, System::Windows::Forms::FormClosingEventArgs^ e) {
 
 			// Reset the "video playback form is open" flag
@@ -1014,7 +1014,7 @@ namespace IRCAMThermalViewer {
 
 		}
 
-		// ---------------------------- Form GUI Event & Callback Routiner ---------------------------- //
+		// ---------------------------- Form GUI Event & Callback Routines ---------------------------- //
 
 		// Video frame trackbar value changed callback routine ->
 		private: System::Void FrameTrackBar_ValueChanged(System::Object^ sender, System::EventArgs^ e) {
@@ -1124,7 +1124,7 @@ namespace IRCAMThermalViewer {
 		// Video Playback "Always In Front" Checkbox Callback Routine ->
 		private: System::Void TopMostCheckBox_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
 
-			// Opdater Video PLayback formens "Top Most" konfiguration
+			// Update the "top most" configuration of the video playback form
 			this->TopMost = this->TopMostCheckBox->Checked;
 
 		}

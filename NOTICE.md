@@ -39,7 +39,7 @@ Git history is the detailed record (`git log`, `git blame`).
 
 ## Comment translation
 
-The source comments were originally written in Danish. They were translated to English (about 5,500 comment lines in 53
+The source comments were originally written in Danish. They were translated to English (about 7,000 comment lines in 52
 files) without changing any code: for every file, the source with comments stripped is identical before and after, line
 counts are unchanged, and each file keeps its original text encoding and line endings. The translation is a plain reading of
 the author's comments, not a rewrite; comments that were commented-out code were left as they were. Translation errors are

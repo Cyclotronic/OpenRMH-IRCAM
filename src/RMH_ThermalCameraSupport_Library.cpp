@@ -82,7 +82,7 @@ double RMH_IRThermalCamera_ReadCameraFPS() {
 
 void RMH_IRThermalCamera_StartCapturing() {
 
-	// Routinen starter kameraets video capture
+	// This routine starts the video capture of the camera
 
 	// Check that the camera is open
 	if (IRThermalCamera.isOpened() == true) {
@@ -96,7 +96,7 @@ void RMH_IRThermalCamera_StartCapturing() {
 
 void RMH_IRThermalCamera_StopCapturing() {
 
-	// Routinen stopper kameraets video capture
+	// This routine stops the video capture of the camera
 
 	// Check that the camera is open
 	if (IRThermalCamera.isOpened() == true) {
@@ -113,7 +113,7 @@ void RMH_IRThermalCamera_CloseIRCameraDevice() {
 	// This routine stops and closes the DirectShow webcam device
 	// which also disables video streaming
 
-	// Luk for Video Capture device
+	// Close the video capture device
 	IRThermalCamera.stopCapture();
 	IRThermalCamera.close();
 
@@ -246,7 +246,7 @@ void RMH_IRThermalCamera_SetIRCameraTemperatureRange(unsigned int TemperatureRan
 			// Which temperature range should be set
 			switch (TemperatureRange) {
 
-				// Konfigurerer IR kameraets Temperatur Range
+				// This routine configures the temperature range of the IR camera
 				case _ThermalCamera_TemperatureRange_HighRange: IRThermalCamera.setZoom(_IRCameraPool1_TemperatureRange_HighRangeREG); break;
 				case _ThermalCamera_TemperatureRange_LowRange:  IRThermalCamera.setZoom(_IRCameraPool1_TemperatureRange_LowRangeREG);  break;
 
@@ -260,7 +260,7 @@ void RMH_IRThermalCamera_SetIRCameraTemperatureRange(unsigned int TemperatureRan
 			// Which temperature range should be set
 			switch (TemperatureRange) {
 
-				// Konfigurerer IR kameraets Temperatur Range
+				// This routine configures the temperature range of the IR camera
 				case _ThermalCamera_TemperatureRange_HighRange: break;
 				case _ThermalCamera_TemperatureRange_LowRange:  break;
 
@@ -274,7 +274,7 @@ void RMH_IRThermalCamera_SetIRCameraTemperatureRange(unsigned int TemperatureRan
 			// Which temperature range should be set
 			switch (TemperatureRange) {
 
-				// Konfigurerer IR kameraets Temperatur Range
+				// This routine configures the temperature range of the IR camera
 				case _ThermalCamera_TemperatureRange_HighRange: IRThermalCamera.setZoom(_IRCameraPool3_TemperatureRange_HighRangeREG); break;
 				case _ThermalCamera_TemperatureRange_LowRange:  IRThermalCamera.setZoom(_IRCameraPool3_TemperatureRange_LowRangeREG);  break;
 
@@ -288,7 +288,7 @@ void RMH_IRThermalCamera_SetIRCameraTemperatureRange(unsigned int TemperatureRan
 			// Which temperature range should be set
 			switch (TemperatureRange) {
 
-				// Konfigurerer IR kameraets Temperatur Range
+				// This routine configures the temperature range of the IR camera
 				case _ThermalCamera_TemperatureRange_HighRange: break;
 				case _ThermalCamera_TemperatureRange_LowRange:  break;
 
@@ -323,10 +323,10 @@ void RMH_IRThermalCamera_InitIRCameraConstants(ThermalCameraDevice::IRCameraDevi
 			// Calculate the length to the start of metadata 1
 			CameraStatus->MetaData1Index = CameraStatus->FrameWidth * FrameHeightMinusMeta;
 
-			// Kontroller IR sensorens Pixel bredde
+			// Check the pixel width of the IR sensor
 			switch (CameraStatus->FrameWidth) {
 
-				// For 640x IR Sensorer
+				// For 640x IR sensors
 				case 640:
 
 					// Set the detector temperature calibration constants
@@ -337,7 +337,7 @@ void RMH_IRThermalCamera_InitIRCameraConstants(ThermalCameraDevice::IRCameraDevi
 
 				break;
 
-				// For 384x IR Sensorer
+				// For 384x IR sensors
 				case 384:
 
 					// Set the detector temperature calibration constants
@@ -348,7 +348,7 @@ void RMH_IRThermalCamera_InitIRCameraConstants(ThermalCameraDevice::IRCameraDevi
 
 				break;
 
-				// For 256x IR Sensorer
+				// For 256x IR sensors
 				case 256:
 
 					// Set the detector temperature calibration constants
@@ -362,7 +362,7 @@ void RMH_IRThermalCamera_InitIRCameraConstants(ThermalCameraDevice::IRCameraDevi
 
 				break;
 
-				// For 240x IR Sensorer
+				// For 240x IR sensors
 				case 240:
 
 					// Set the detector temperature calibration constants
@@ -375,7 +375,7 @@ void RMH_IRThermalCamera_InitIRCameraConstants(ThermalCameraDevice::IRCameraDevi
 
 			}
 
-			// Udregn matrice index for meta data 1 og meta data 2
+			// Calculate the matrix index for metadata 1 and metadata 2
 			CameraStatus->MetaData1Index = CameraStatus->MetaData1Index - 1;
 			CameraStatus->MetaData2Index = CameraStatus->MetaData2Index - 1;
 
@@ -385,7 +385,7 @@ void RMH_IRThermalCamera_InitIRCameraConstants(ThermalCameraDevice::IRCameraDevi
 
 		case _SupportedThermalCameras_Pool_2:
 
-			// Indstil Meta Data Index 1 for Max/Min/Center frame data
+			// Set metadata index 1 for the max/min/center frame data
 			CameraStatus->MetaData1Index = CameraStatus->FrameWidth * (CameraStatus->FrameHeight - CameraStatus->FrameMetadataSize);
 
 		break;
@@ -401,10 +401,10 @@ void RMH_IRThermalCamera_InitIRCameraConstants(ThermalCameraDevice::IRCameraDevi
 			// Calculate the length to the start of metadata 1
 			CameraStatus->MetaData1Index = CameraStatus->FrameWidth * FrameHeightMinusMeta;
 
-			// Kontroller IR sensorens Pixel bredde
+			// Check the pixel width of the IR sensor
 			switch (CameraStatus->FrameWidth) {
 
-				// For 640x IR Sensorer
+				// For 640x IR sensors
 				case 640:
 
 					// Set the detector temperature calibration constants
@@ -415,7 +415,7 @@ void RMH_IRThermalCamera_InitIRCameraConstants(ThermalCameraDevice::IRCameraDevi
 
 				break;
 
-				// For 384x IR Sensorer
+				// For 384x IR sensors
 				case 384:
 
 					// Set the detector temperature calibration constants
@@ -426,7 +426,7 @@ void RMH_IRThermalCamera_InitIRCameraConstants(ThermalCameraDevice::IRCameraDevi
 
 				break;
 
-				// For 256x IR Sensorer
+				// For 256x IR sensors
 				case 256:
 
 					// Set the detector temperature calibration constants
@@ -440,7 +440,7 @@ void RMH_IRThermalCamera_InitIRCameraConstants(ThermalCameraDevice::IRCameraDevi
 
 				break;
 
-				// For 240x IR Sensorer
+				// For 240x IR sensors
 				case 240:
 
 					// Set the detector temperature calibration constants
@@ -453,11 +453,11 @@ void RMH_IRThermalCamera_InitIRCameraConstants(ThermalCameraDevice::IRCameraDevi
 
 			}
 
-			// Udregn matrice index for meta data 1 og meta data 2
+			// Calculate the matrix index for metadata 1 and metadata 2
 			CameraStatus->MetaData1Index = CameraStatus->MetaData1Index - 1;
 			CameraStatus->MetaData2Index = CameraStatus->MetaData2Index - 1;
 
-			// Indstil Meta Data Index 3 for Max/Min/Center frame data
+			// Set metadata index 3 for the max/min/center frame data
 			CameraStatus->MetaData3Index = CameraStatus->FrameWidth * (CameraStatus->FrameHeight - CameraStatus->FrameMetadataSize);
 
 		break;
@@ -559,7 +559,7 @@ ThermalCameraDevice::IRCameraDeviceFormat RMH_IRThermalCamera_ConnectToThermalCa
 					CameraStatus.ConnectedFlag = true;
 					// Save the camera index value 
 					CameraStatus.IRCameraDeviceIndex = i;
-					// Bryd indereste for loop
+					// Break the inner for loop
 					break;
 
 				}
@@ -572,10 +572,10 @@ ThermalCameraDevice::IRCameraDeviceFormat RMH_IRThermalCamera_ConnectToThermalCa
 
 			}
 
-			// Blev indereste for loop brudt?
+			// Was the inner for loop broken?
 			if (CameraStatus.ConnectedFlag == true) {
 
-				// Bryd ydereste for loop
+				// Break the outer for loop
 				break;
 
 			}
@@ -631,7 +631,7 @@ ThermalCameraDevice::IRCameraDeviceFormat RMH_IRThermalCamera_ConnectToThermalCa
 
 			// Reset the camera device name from the class object
 			CameraStatus.CameraDeviceName = "NAN";
-			// Nulstil kameraets system device path
+			// Reset the system device path of the camera
 			CameraStatus.CameraSystemDevicePath = "NAN";
 			// Reset the camera index value 
 			CameraStatus.IRCameraDeviceIndex = 0;
@@ -642,7 +642,7 @@ ThermalCameraDevice::IRCameraDeviceFormat RMH_IRThermalCamera_ConnectToThermalCa
 			// Reset the camera device info - metadata size
 			CameraStatus.FrameMetadataSize = 0;
 
-			// Nulstil IR Kameraets Operative Konstanter
+			// Reset the operating constants of the IR camera
 			CameraStatus.fpa_off = 0.0;
 			CameraStatus.fpa_div = 0.0;
 			CameraStatus.CalValue0Offset = 0.0;
@@ -701,7 +701,7 @@ double RMH_IRThermalCamera_ConvertYUY2To14BitThermalDataArray(ThermalCameraDevic
 			// since they are already part of the frame metadata
 			AddMaxMinCenterDataToThermalDataArray = false;
 
-			// Indstil Stop index for Max/Min/Center data
+			// Set the stop index for the max/min/center data
 			AddMaxMinCenterStopIndex = IRCamera->FrameWidth * IRCamera->FrameHeight;
 
 			// Do not perform non-uniformity correction of the image data
@@ -721,7 +721,7 @@ double RMH_IRThermalCamera_ConvertYUY2To14BitThermalDataArray(ThermalCameraDevic
 			// Max/min/center data must be appended to the end of the thermal frame data array
 			AddMaxMinCenterDataToThermalDataArray = true;
 
-			// Indstil Stop index for Max/Min/Center data
+			// Set the stop index for the max/min/center data
 			AddMaxMinCenterStopIndex = IRCamera->FrameWidth * (IRCamera->FrameHeight - IRCamera->FrameMetadataSize);
 
 		break;
@@ -738,7 +738,7 @@ double RMH_IRThermalCamera_ConvertYUY2To14BitThermalDataArray(ThermalCameraDevic
 			// Max/min/center data must be appended to the end of the thermal frame data array
 			AddMaxMinCenterDataToThermalDataArray = true;
 
-			// Indstil Stop index for Max/Min/Center data
+			// Set the stop index for the max/min/center data
 			AddMaxMinCenterStopIndex = IRCamera->FrameWidth * (IRCamera->FrameHeight - IRCamera->FrameMetadataSize);
 
 			// Perform non-uniformity correction of the image data
@@ -815,7 +815,7 @@ double RMH_IRThermalCamera_ConvertYUY2To14BitThermalDataArray(ThermalCameraDevic
 
 					}
 
-					// Inkrementer Pixel X koordinat variablet 
+					// Increment the pixel X coordinate variable 
 					PixelXCoordinate = PixelXCoordinate + 1;
 
 					// If the X coordinate variable is greater than or equal to the frame width
@@ -824,7 +824,7 @@ double RMH_IRThermalCamera_ConvertYUY2To14BitThermalDataArray(ThermalCameraDevic
 						// Reset the pixel X coordinate
 						PixelXCoordinate = 0;
 
-						// Inkrementer Pixel Y koordinat variablet 
+						// Increment the pixel Y coordinate variable 
 						PixelYCoordinate = PixelYCoordinate + 1;
 
 						// If the Y coordinate variable is greater than or equal to the frame height
@@ -906,9 +906,9 @@ void RMH_IRThermalCamera_LinearAutomaticGainControlTemp(unsigned short* ThermalD
 	register double PixelValue3 = 0.0;
 	register double PixelValue4 = 0.0;
 	
-	// Udregn linear skallerings faktoren (a Parameter)
+	// Calculate the linear scaling factor (a parameter)
 	double LinearScaleFactor = ((double)MinOutPixelVal - (double)MaxOutPixelVal) / ((double)MinInPixelVal - (double)MaxInPixelVal);
-	// Udregn linear Offset skalleringen (b Parameter)
+	// Calculate the linear offset scaling (b parameter)
 	double OffsetScale = -LinearScaleFactor * (double)MaxInPixelVal + (double)MaxOutPixelVal;
 
 	// The AGC image data is then passed on to the pointer array.
@@ -1063,7 +1063,7 @@ ROIAreaPixelInfoFormat RMH_IRThermalCamera_ReadROIAreaPixelInfoInsideFrameArea(T
 				// Update the maximum pixel value
 				ROIPixelData.MaxValue = PixelTempValue;
 
-				// Lager Maximum temperaturens Frame W/H Kordinater
+				// Store the frame W/H coordinates of the maximum temperature
 				ROIPixelData.ROIMaxPixelWidth = (AreaX0Pos + k);
 				ROIPixelData.ROIMaxPixelHeight = (AreaY0Pos + i);
 
@@ -1075,7 +1075,7 @@ ROIAreaPixelInfoFormat RMH_IRThermalCamera_ReadROIAreaPixelInfoInsideFrameArea(T
 				// Update the minimum pixel value
 				ROIPixelData.MinValue = PixelTempValue;
 
-				// Lager Minimum temperaturens Frame W/H Kordinater
+				// Store the frame W/H coordinates of the minimum temperature
 				ROIPixelData.ROIMinPixelWidth = (AreaX0Pos + k);
 				ROIPixelData.ROIMinPixelHeight = (AreaY0Pos + i);
 
@@ -1089,7 +1089,7 @@ ROIAreaPixelInfoFormat RMH_IRThermalCamera_ReadROIAreaPixelInfoInsideFrameArea(T
 
 	}
 
-	// Udregn ROI Arealets gennemsnitlige temperatur
+	// Calculate the average temperature of the ROI area
 	ROIPixelData.AvgValue = PixelAvgTempValue / (double)ROINumberOfPixels;
 
 	// Return the maximum and minimum pixel format
@@ -1460,7 +1460,7 @@ void RMH_IRThermalCamera_SaveConfigParametersToCamera(ThermalCameraDevice::IRCam
 
 }
 
-// --------------------------------------------- Thermodynamiske Udregnings Routiner --------------------------------------------- //
+// --------------------------------------------- Thermodynamic Calculation Routines --------------------------------------------- //
 
 double RMH_IRThermalCamera_CalAtmosphericWaterVaporContribution(double Humidity, double AmbientTemp) {
 
@@ -1499,7 +1499,7 @@ double RMH_IRThermalCamera_CalAtmosphericWaterVaporAttenuation(double Omega, uns
 	double a1 = 0.0066;
 	double a2 = 0.0126;
 
-	// Vand damp attenuerings konstanter (ved jordens overflade)
+	// Water vapor attenuation constants (at the Earth's surface)
 	double b1 = -0.0023;
 	double b2 = -0.0067;
 
@@ -1511,7 +1511,7 @@ double RMH_IRThermalCamera_CalAtmosphericWaterVaporAttenuation(double Omega, uns
 
 }
 
-// --------------------------------------------- Thermografiske Udregnings Routiner ---------------------------------------------- //
+// --------------------------------------------- Thermographic Calculation Routines ---------------------------------------------- //
 
 // CHANGED 18-11-2025 !!!!!!!
 void RMH_IRThermalCamera_GenerateThermoGrapicLookUpTable(ThermalCameraDevice::IRCameraDeviceFormat* IRCamera, unsigned short SupportedCameraPool) {
@@ -1545,7 +1545,7 @@ void RMH_IRThermalCamera_GenerateThermoGrapicLookUpTable(ThermalCameraDevice::IR
 		// Supported camera pools 1 and 3
 		case _SupportedThermalCameras_Pool_1: case _SupportedThermalCameras_Pool_3:
 
-			// ------------------------------------------------- Termografisk Loop-Up Tabels Udregninger Pool 1 ------------------------------------------------- // 
+			// ------------------------------------------------- Thermographic Look-Up Table Calculations Pool 1 ------------------------------------------------- // 
 
 			// Calculate the reflected contribution from atmospheric water vapor
 			Omega = RMH_IRThermalCamera_CalAtmosphericWaterVaporContribution(IRCamera->HumiditySetting, IRCamera->AmbientTemperatureSetting);
@@ -1588,7 +1588,7 @@ void RMH_IRThermalCamera_GenerateThermoGrapicLookUpTable(ThermalCameraDevice::IR
 			// Generate a look-up table with the length of the bit width of the IR sensor - 14-bit 
 			for (unsigned int i = 0; i < 16384; i++) {
 
-				// Udreng Kvardratrods parameter  
+				// Calculate the square root parameter  
 				SqrtComplexNegative = (((double)i - LookUpTableOffset) * CalValue_D + CalValue_C) / IRCamera->CalValue1 + CalValue_B;
 					
 				// Check whether the value is negative
@@ -1692,7 +1692,7 @@ double RMH_IRThermalCamera_ReadFramePixelTemperature(ThermalCameraDevice::IRCame
 	unsigned int PixelData = 0;
 	unsigned int ArrayIndex = 0;
 
-	// Konverter matrice index til array index
+	// Convert the matrix index to an array index
 	ArrayIndex = (PixelHeight * IRCamera->FrameWidth) + PixelWidth;
 
 	// Which supported camera pool is selected
@@ -1701,7 +1701,7 @@ double RMH_IRThermalCamera_ReadFramePixelTemperature(ThermalCameraDevice::IRCame
 		// Supported camera pools 1 and 3
 		case _SupportedThermalCameras_Pool_1: case _SupportedThermalCameras_Pool_3:
 
-			// Forhindre Array index Overflow
+			// Prevent array index overflow
 			if (ArrayIndex > (IRCamera->FrameWidth * IRCamera->FrameHeight) - 1) { ArrayIndex = 0; }
 
 			// Read the pixel data from the thermal frame data
@@ -1715,7 +1715,7 @@ double RMH_IRThermalCamera_ReadFramePixelTemperature(ThermalCameraDevice::IRCame
 		// Supported camera pool 2
 		case _SupportedThermalCameras_Pool_2: case _SupportedThermalCameras_Pool_4:
 
-			// Forhindre Array index Overflow
+			// Prevent array index overflow
 			if (ArrayIndex > (IRCamera->FrameWidth * (IRCamera->FrameHeight - IRCamera->FrameMetadataSize)) - 1) { ArrayIndex = 0; }
 
 			// Read the pixel data from the thermal frame data
@@ -1943,7 +1943,7 @@ void RMH_IRThermalCamera_CalibrateThermalCamera() {
 			// Read a single frame with the camera shutter closed - CMOS baseline measurement
 			RMH_IRThermalCamera_ReadFrameRaw(&IRCameraFrameData[0], &VideoFrameSize);
 
-			// --------------------------------------- Non-Uniformity Korrektion --------------------------------------- //
+			// --------------------------------------- Non-Uniformity Correction --------------------------------------- //
 
 			// Write GUI status message
 			RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "Performing Non-Uniformity Correction & Calibration...", _StatusMessageType_Normal);
@@ -2221,7 +2221,7 @@ void RMH_IRThermalCamera_ThermalCameraInitialConnectionEvents_Pool1() {
 
 			}
 
-			// Bryd While Loop
+			// Break the while loop
 			break;
 
 		}
@@ -2238,7 +2238,7 @@ void RMH_IRThermalCamera_ThermalCameraInitialConnectionEvents_Pool1() {
 			// Set the camera connect error flag
 			CameraConnectErrorFlag = true;
 
-			// Bryd While Loop
+			// Break the while loop
 			break;
 
 		}
@@ -2263,7 +2263,7 @@ void RMH_IRThermalCamera_ThermalCameraInitialConnectionEvents_Pool1() {
 
 	// ---------------------------------------------- Write Camera Temperature Configuration ---------------------------------------------- //
 
-	// Skriv GUI status meddelse - Konfigurations parametere
+	// Write GUI status message - configuration parameters
 	RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "Thermal Camera Device Pool: Pool " + RMH_Conversion_IntToStdString(IRCamera.ThermalCameraSupportPool), _StatusMessageType_Normal);
 	RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "Temperature Correction: " + RMH_Conversion_FloatToStdString(IRCamera.TemperatureCorrectionSetting, 5), _StatusMessageType_Normal);
 	RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "Reflected Temperature: " + RMH_Conversion_FloatToStdString(IRCamera.ReflectedTemperatureSetting * TemperatureUnitScaleFactor + TemperatureUnitOffsetFactor, 5), _StatusMessageType_Normal);
@@ -2338,7 +2338,7 @@ void RMH_IRThermalCamera_ThermalCameraInitialConnectionEvents_Pool1() {
 	// Write GUI status message
 	RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "Generating Temperature Look-Up Tabel...", _StatusMessageType_Normal);
 
-	// Generer Temperatur Loop-Up Tabel
+	// Generate the temperature look-up table
 	RMH_IRThermalCamera_GenerateThermoGrapicLookUpTable(&IRCamera, IRCamera.ThermalCameraSupportPool);
 
 }
@@ -2361,7 +2361,7 @@ void RMH_IRThermalCamera_ThermalCameraInitialConnectionEvents_Pool2() {
 
 	// ---------------------------------------------- Write Camera Temperature Configuration ---------------------------------------------- //
 
-	// Skriv GUI status meddelse - Konfigurations parametere
+	// Write GUI status message - configuration parameters
 	RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "Thermal Camera Device Pool: Pool " + RMH_Conversion_IntToStdString(IRCamera.ThermalCameraSupportPool), _StatusMessageType_Normal);
 	RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "Temperature Correction: " + RMH_Conversion_FloatToStdString(IRCamera.TemperatureCorrectionSetting, 5), _StatusMessageType_Normal);
 	RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "Reflected Temperature: " + RMH_Conversion_FloatToStdString(IRCamera.ReflectedTemperatureSetting * TemperatureUnitScaleFactor + TemperatureUnitOffsetFactor, 5), _StatusMessageType_Normal);
@@ -2433,7 +2433,7 @@ void RMH_IRThermalCamera_ThermalCameraInitialConnectionEvents_Pool2() {
 	// Read the frame metadata of the IR camera and calculate the internal IR sensor temperatures
 	RMH_IRThermalCamera_ReadCalFrameMetaData(&FrameThermalDataRaw[0], &IRCamera, IRCamera.ThermalCameraSupportPool);
 
-	// Generer Temperatur Loop-Up Tabel
+	// Generate the temperature look-up table
 	RMH_IRThermalCamera_GenerateThermoGrapicLookUpTable(&IRCamera, IRCamera.ThermalCameraSupportPool);
 
 }
@@ -2477,7 +2477,7 @@ void RMH_IRThermalCamera_ThermalCameraInitialConnectionEvents_Pool3() {
 
 	// ---------------------------------------------- Write Camera Temperature Configuration ---------------------------------------------- //
 
-	// Skriv GUI status meddelse - Konfigurations parametere
+	// Write GUI status message - configuration parameters
 	RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "Thermal Camera Device Pool: Pool " + RMH_Conversion_IntToStdString(IRCamera.ThermalCameraSupportPool), _StatusMessageType_Normal);
 	RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "Temperature Correction: " + RMH_Conversion_FloatToStdString(IRCamera.TemperatureCorrectionSetting, 5), _StatusMessageType_Normal);
 	RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "Reflected Temperature: " + RMH_Conversion_FloatToStdString(IRCamera.ReflectedTemperatureSetting * TemperatureUnitScaleFactor + TemperatureUnitOffsetFactor, 5), _StatusMessageType_Normal);
@@ -2552,7 +2552,7 @@ void RMH_IRThermalCamera_ThermalCameraInitialConnectionEvents_Pool3() {
 	// Write GUI status message
 	RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "Generating Temperature Look-Up Tabel...", _StatusMessageType_Normal);
 
-	// Generer Temperatur Loop-Up Tabel
+	// Generate the temperature look-up table
 	RMH_IRThermalCamera_GenerateThermoGrapicLookUpTable(&IRCamera, IRCamera.ThermalCameraSupportPool);
 
 }
@@ -2575,7 +2575,7 @@ void RMH_IRThermalCamera_ThermalCameraInitialConnectionEvents_Pool4() {
 
 	// ---------------------------------------------- Write Camera Temperature Configuration ---------------------------------------------- //
 
-	// Skriv GUI status meddelse - Konfigurations parametere
+	// Write GUI status message - configuration parameters
 	RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "Thermal Camera Device Pool: Pool " + RMH_Conversion_IntToStdString(IRCamera.ThermalCameraSupportPool), _StatusMessageType_Normal);
 	RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "Temperature Correction: " + RMH_Conversion_FloatToStdString(IRCamera.TemperatureCorrectionSetting, 5), _StatusMessageType_Normal);
 	RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "Reflected Temperature: " + RMH_Conversion_FloatToStdString(IRCamera.ReflectedTemperatureSetting * TemperatureUnitScaleFactor + TemperatureUnitOffsetFactor, 5), _StatusMessageType_Normal);
@@ -2647,7 +2647,7 @@ void RMH_IRThermalCamera_ThermalCameraInitialConnectionEvents_Pool4() {
 	// Read the frame metadata of the IR camera and calculate the internal IR sensor temperatures
 	RMH_IRThermalCamera_ReadCalFrameMetaData(&FrameThermalDataRaw[0], &IRCamera, IRCamera.ThermalCameraSupportPool);
 
-	// Generer Temperatur Loop-Up Tabel
+	// Generate the temperature look-up table
 	RMH_IRThermalCamera_GenerateThermoGrapicLookUpTable(&IRCamera, IRCamera.ThermalCameraSupportPool);
 
 }
@@ -2657,7 +2657,7 @@ void RMH_IRThermalCamera_ConnectToThermalCameraOrAnalysisMode() {
 	// This routine handles the events when connecting to a selected thermal camera pool
 	// or the events if "Recording Analysis" mode is selected
 
-	// Ryd Status Meddelses Arealet
+	// Clear the status message area
 	GlobalVariables::GlobalGUIInfoTextArea->Clear();
 
 	// Reset the CMOS non-uniformity mapping data array when connecting or changing mode
@@ -2684,7 +2684,7 @@ void RMH_IRThermalCamera_ConnectToThermalCameraOrAnalysisMode() {
 	}
 	*/
 
-	// Er "Snapshot Analysis" Mode valgt
+	// Is "Snapshot Analysis" mode selected
 	if (GlobalVariables::GlobalCameraSourceDropList->SelectedIndex == _SnapShotAnalysisMode) {
 
 		// Check whether a snapshot file, or "Snapshot Analysis" mode, is already active and open
@@ -2717,7 +2717,7 @@ void RMH_IRThermalCamera_ConnectToThermalCameraOrAnalysisMode() {
 				// Check the frame width of the snapshot file read
 				if (SnapShotAnalysisModeFileInfo.FrameWidth > 0) {
 
-					// Skriv GUI Status Meddelse - Filens Frame Bredde
+					// Write GUI status message - frame width of the file
 					RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "File Frame Width: " + RMH_Conversion_IntToStdString(SnapShotAnalysisModeFileInfo.FrameWidth) + " Pixels", _StatusMessageType_Normal);
 
 					// Check the frame height of the snapshot file read
@@ -2758,7 +2758,7 @@ void RMH_IRThermalCamera_ConnectToThermalCameraOrAnalysisMode() {
 
 									// Reset the RAW file ID string match flag - the ID string is not a match
 									RAWFileIDStringMatchFlag = false;
-									// Bryd For Loop
+									// Break the for loop
 									break;
 
 								}
@@ -2769,7 +2769,7 @@ void RMH_IRThermalCamera_ConnectToThermalCameraOrAnalysisMode() {
 							//                                    Check Whether The Metadata Of The Opened File Contains The Correct ID String                                        // 
 							// ----------------------------------------------------------------------------------------------------------------------------------------------- //
 
-							// Var SnapShot filens ID String et match
+							// Was the ID string of the snapshot file a match
 							if (RAWFileIDStringMatchFlag == true) {
 
 								// Configure and set the camera parameters from the snapshot metadata read
@@ -2810,7 +2810,7 @@ void RMH_IRThermalCamera_ConnectToThermalCameraOrAnalysisMode() {
 								// Update the connect button border color 
 								GlobalVariables::GlobalConnectButton->FlatAppearance->BorderColor = System::Drawing::Color::Lime;
 
-								// ----------------------------------- Initialisering OpenGL Rendererings Textur For Live Video Stream ----------------------------------- //
+								// ----------------------------------- Initialization Of The OpenGL Rendering Texture For The Live Video Stream ----------------------------------- //
 
 								// Configure the live view stream OpenGL texture rendering resolution 
 								GlobalVariables::OpenGLRender->RMH_OpenGL_InitImageTexture(IRCamera.FrameWidth, IRCamera.FrameHeight - IRCamera.FrameMetadataSize);
@@ -2827,7 +2827,7 @@ void RMH_IRThermalCamera_ConnectToThermalCameraOrAnalysisMode() {
 								// Update the camera "file is connected" flag
 								IRCamera.ConnectedFlag = true;
 
-								// Start Asynkron Thread operation
+								// Start the asynchronous thread operation
 								GlobalVariables::GlobalVideoStreamThread->RunWorkerAsync();
 								GlobalVariables::GlobalSecondaryProcessingThread->RunWorkerAsync();
 
@@ -2926,7 +2926,7 @@ void RMH_IRThermalCamera_ConnectToThermalCameraOrAnalysisMode() {
 		}
 
 	}
-	else if (GlobalVariables::GlobalCameraSourceDropList->SelectedIndex == _RecordingAnalysisMode) { // Er "Recording Analysis" Mode valgt
+	else if (GlobalVariables::GlobalCameraSourceDropList->SelectedIndex == _RecordingAnalysisMode) { // Is "Recording Analysis" mode selected
 
 		// Check whether a video file, or "Recording Analysis" mode, is already active and open
 		if (InRecordingAnalysisModeFlag == true || RecordingAnalysisModeFileInfo.IsFileOpenFlag == true) {
@@ -2965,7 +2965,7 @@ void RMH_IRThermalCamera_ConnectToThermalCameraOrAnalysisMode() {
 				// Check the frame width of the file read
 				if (RecordingAnalysisModeFileInfo.FrameWidth > 0) {
 
-					// Skriv GUI Status Meddelse - Filens Frame Bredde
+					// Write GUI status message - frame width of the file
 					RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "File Frame Width: " + RMH_Conversion_IntToStdString(RecordingAnalysisModeFileInfo.FrameWidth) + " Pixels", _StatusMessageType_Normal);
 
 					// Check the frame height of the file read
@@ -2983,13 +2983,13 @@ void RMH_IRThermalCamera_ConnectToThermalCameraOrAnalysisMode() {
 							// Check the frame rate of the file read
 							if (RecordingAnalysisModeFileInfo.FrameRate > 0) {
 
-								// Skriv GUI Status Meddelse - Filens Frame Rate
+								// Write GUI status message - frame rate of the file
 								RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "File Frame Rate: " + RMH_Conversion_IntToStdString(RecordingAnalysisModeFileInfo.FrameRate) + " FPS", _StatusMessageType_Normal);
 
 								// Check the duration of the file read in seconds
 								if (RecordingAnalysisModeFileInfo.DurationTime > 0.0) {
 
-									// Skriv GUI Status Meddelse - Filens varighed i sekundter
+									// Write GUI status message - duration of the file in seconds
 									RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "File Duration: " + RMH_Conversion_FloatToStdString(RecordingAnalysisModeFileInfo.DurationTime, 5) + " Sec", _StatusMessageType_Normal);
 
 									// ----------------------------------------------------------------------------------------------------------------------------------------------- // 
@@ -3024,7 +3024,7 @@ void RMH_IRThermalCamera_ConnectToThermalCameraOrAnalysisMode() {
 
 											// Reset the RAW file ID string match flag - the ID string is not a match
 											RAWFileIDStringMatchFlag = false;
-											// Bryd For Loop
+											// Break the for loop
 											break;
 
 										}
@@ -3035,11 +3035,11 @@ void RMH_IRThermalCamera_ConnectToThermalCameraOrAnalysisMode() {
 									//                                    Check Whether The Metadata Of The Opened File Contains The Correct ID String                                        // 
 									// ----------------------------------------------------------------------------------------------------------------------------------------------- //
 
-									// Var video filens ID String et match
+									// Was the ID string of the video file a match
 									if (RAWFileIDStringMatchFlag == true) {
 
 										// ----------------------------------------------------------------------------------------------------------------------------------------------- // 
-										//                                                 Konfigurer Og Opstart "Recording Analysis Mode"                                                 // 
+										//                                                 Configure And Start "Recording Analysis Mode"                                                 // 
 										// ----------------------------------------------------------------------------------------------------------------------------------------------- //
 
 										// Configure and set the camera parameters from the video data metadata read
@@ -3080,7 +3080,7 @@ void RMH_IRThermalCamera_ConnectToThermalCameraOrAnalysisMode() {
 										// Update the connect button border color 
 										GlobalVariables::GlobalConnectButton->FlatAppearance->BorderColor = System::Drawing::Color::Lime;
 
-										// ----------------------------------- Initialisering OpenGL Rendererings Textur For Live Video Stream ----------------------------------- //
+										// ----------------------------------- Initialization Of The OpenGL Rendering Texture For The Live Video Stream ----------------------------------- //
 
 										// Configure the live view stream OpenGL texture rendering resolution 
 										GlobalVariables::OpenGLRender->RMH_OpenGL_InitImageTexture(IRCamera.FrameWidth, IRCamera.FrameHeight - IRCamera.FrameMetadataSize);
@@ -3097,7 +3097,7 @@ void RMH_IRThermalCamera_ConnectToThermalCameraOrAnalysisMode() {
 										// Update the camera "file is connected" flag
 										IRCamera.ConnectedFlag = true;
 
-										// Start Asynkron Thread operation
+										// Start the asynchronous thread operation
 										GlobalVariables::GlobalVideoStreamThread->RunWorkerAsync();
 										GlobalVariables::GlobalSecondaryProcessingThread->RunWorkerAsync();
 
@@ -3138,7 +3138,7 @@ void RMH_IRThermalCamera_ConnectToThermalCameraOrAnalysisMode() {
 								}
 								else {
 
-									// Skriv GUI Status Meddelse - Filens varighed Fejl
+									// Write GUI status message - file duration error
 									RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "Selected File Error: Duration Is 0 Sec!", _StatusMessageType_Error);
 
 									// Reset the "in Recording Analysis mode" flag
@@ -3149,7 +3149,7 @@ void RMH_IRThermalCamera_ConnectToThermalCameraOrAnalysisMode() {
 							}
 							else {
 
-								// Skriv GUI Status Meddelse - Frame Rate Fejl
+								// Write GUI status message - frame rate error
 								RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "Selected File Error: Frame Rate Is '0' FPS!", _StatusMessageType_Error);
 
 								// Reset the "in Recording Analysis mode" flag
@@ -3353,7 +3353,7 @@ void RMH_IRThermalCamera_ConnectToThermalCameraOrAnalysisMode() {
 					// Enable the record button in the live view tools panel
 					GlobalVariables::GlobalRecordingButton->Enabled = true;
 
-					// ----------------------------------- Initialisering OpenGL Rendererings Textur For Live Video Stream ----------------------------------- //
+					// ----------------------------------- Initialization Of The OpenGL Rendering Texture For The Live Video Stream ----------------------------------- //
 
 					// Configure the live view stream OpenGL texture rendering resolution 
 					GlobalVariables::OpenGLRender->RMH_OpenGL_InitImageTexture(IRCamera.FrameWidth, IRCamera.FrameHeight - IRCamera.FrameMetadataSize);
@@ -3365,7 +3365,7 @@ void RMH_IRThermalCamera_ConnectToThermalCameraOrAnalysisMode() {
 					// Toggle/update the live view ultra image resolution mode
 					RMH_ThermalViewer_ToggleLiveViewUltraResolution();
 
-					// ------------------------------- Start Kamera Video Capturing, Processerings Thread & Main Update Timer -------------------------------- //
+					// ------------------------------- Start Camera Video Capturing, Processing Thread & Main Update Timer -------------------------------- //
 
 					// Write GUI status message
 					RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "Starting The Live View Video Stream...", _StatusMessageType_Normal);
@@ -3373,7 +3373,7 @@ void RMH_IRThermalCamera_ConnectToThermalCameraOrAnalysisMode() {
 					// Start the camera video capture
 					RMH_IRThermalCamera_StartCapturing();
 
-					// Start Asynkron Thread operation
+					// Start the asynchronous thread operation
 					GlobalVariables::GlobalVideoStreamThread->RunWorkerAsync();
 					GlobalVariables::GlobalSecondaryProcessingThread->RunWorkerAsync();
 
@@ -3405,7 +3405,7 @@ void RMH_IRThermalCamera_ConnectToThermalCameraOrAnalysisMode() {
 					// Reset the camera connect flag
 					IRCamera.ConnectedFlag = false;
 
-					// ------------------------------------------- Stop Kamera Video Capturing & Main Update Timer ------------------------------------------- //
+					// ------------------------------------------- Stop Camera Video Capturing & Main Update Timer ------------------------------------------- //
 
 					// Disable the GUI update timer
 					GlobalVariables::GlobalMainGUIUpdateTimer->Enabled = false;

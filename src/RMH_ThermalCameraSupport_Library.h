@@ -17,12 +17,12 @@
 #include <string>
 #include <vector>
 
-// ------------------------------ Blbliotek Reference Klasser ------------------------------- //
+// ------------------------------ Library Reference Classes ------------------------------- //
 
-// ROI Areal Pixel Information Klasse struktur
+// ROI area pixel information class structure
 struct ROIAreaPixelInfoFormat {
 
-    // Maximum/Minimum Pixel parametere
+    // Maximum/minimum pixel parameters
     double MaxValue = 0.0;
     double MinValue = 0.0;
     double AvgValue = 0.0;
@@ -39,7 +39,7 @@ struct ROIAreaPixelInfoFormat {
 // Associated namespace for the class
 namespace ThermalCameraDevice {
 
-    // IR Kamera Device informations Klasse 
+    // IR camera device information class 
     class IRCameraDeviceFormat {
     public:
 
@@ -47,7 +47,7 @@ namespace ThermalCameraDevice {
         unsigned int SellectedCameraIndex = 0;
         unsigned short ThermalCameraSupportPool = 0;
 
-        // Frame Pixel Data Width/Height Offset parametere
+        // Frame pixel data width/height offset parameters
         unsigned int FrameWidthPixelOffset = 0;
         unsigned int FrameHeightPixelOffset = 0;
 
@@ -84,20 +84,20 @@ namespace ThermalCameraDevice {
         unsigned int FrameMetadataSize = 0;
 
         // Static metadata variables & objects
-        unsigned short Tmax_X = 0;            // Frame Max Temp X-Kordinat
-        unsigned short Tmax_Y = 0;            // Frame Max Temp Y-Kordinat
+        unsigned short Tmax_X = 0;            // Frame max temp X coordinate
+        unsigned short Tmax_Y = 0;            // Frame max temp Y coordinate
         unsigned short Tmax_Tmp_Raw = 0;      // Frame max temp raw data
-        unsigned short Tmin_X = 0;            // Frame Min Temp X-Kordinat
-        unsigned short Tmin_Y = 0;            // Frame Min Temp Y-Kordinat
+        unsigned short Tmin_X = 0;            // Frame min temp X coordinate
+        unsigned short Tmin_Y = 0;            // Frame min temp Y coordinate
         unsigned short Tmin_Tmp_Raw = 0;      // Frame min temp raw data
         double Tavg_Tmp_Raw = 0;              // Frame sensor average value
         unsigned short Center_Tmp_Raw = 0;    // Frame center temp raw data
         unsigned short temp_fpa_Raw = 0;      // IR camera detector temp raw data
         unsigned short temp_shutter_Raw = 0;  // IR camera shutter temp raw data
         unsigned short temp_core_Raw = 0;     // IR camera core temp raw data
-        double temp_fpa = 0.0;                // IR Kamera Detector Temp (Udregnede)
-        double temp_shutter = 0.0;            // IR Kamera Shutter Temp (Udregnede)
-        double temp_core = 0.0;               // IR Kamera Core Temp (Udregnede)
+        double temp_fpa = 0.0;                // IR camera detector temp (calculated)
+        double temp_shutter = 0.0;            // IR camera shutter temp (calculated)
+        double temp_core = 0.0;               // IR camera core temp (calculated)
 
         // Static calibration variables
         float CalValue0 = 0.0;
@@ -160,12 +160,12 @@ void RMH_IRThermalCamera_ReadCameraConfigParameters(unsigned short* ThermalData,
 void RMH_IRThermalCamera_WriteCameraConfigParameter(unsigned int ParameterAddress, float ParameterValue, unsigned short SupportedCameraPool);
 void RMH_IRThermalCamera_SaveConfigParametersToCamera(ThermalCameraDevice::IRCameraDeviceFormat* IRCamera, unsigned short SupportedCameraPool);
 
-// --------------------------------------------- Thermodynamiske Udregnings Routiner --------------------------------------------- //
+// --------------------------------------------- Thermodynamic Calculation Routines --------------------------------------------- //
 
 double RMH_IRThermalCamera_CalAtmosphericWaterVaporContribution(double Humidity, double AmbientTemp);
 double RMH_IRThermalCamera_CalAtmosphericWaterVaporAttenuation(double Omega, unsigned short DistanceMeters);
 
-// --------------------------------------------- Thermografiske Udregnings Routiner ---------------------------------------------- //
+// --------------------------------------------- Thermographic Calculation Routines ---------------------------------------------- //
 
 void RMH_IRThermalCamera_GenerateThermoGrapicLookUpTable(ThermalCameraDevice::IRCameraDeviceFormat* IRCamera, unsigned short SupportedCameraPool);
 double RMH_IRThermalCamera_ReadPixelTemperature(ThermalCameraDevice::IRCameraDeviceFormat* IRCamera, unsigned short PixelValue, unsigned short SupportedCameraPool);

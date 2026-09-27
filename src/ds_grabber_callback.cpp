@@ -217,7 +217,7 @@ namespace DirectShowCamera
 
         }
 
-        // Eksikver applikationens frame grabber callback
+        // Execute the frame grabber callback of the application
         RMH_ThermalViewer_FrameCrabberCallback();
 
         return S_OK;

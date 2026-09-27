@@ -11,7 +11,7 @@
 #include "StatisticsWindow.h"
 #include <iostream>
 
-// Klasse Namespace
+// Class namespace
 namespace IRCAMThermalViewer {
 
 	// Associated namespaces
@@ -36,7 +36,7 @@ namespace IRCAMThermalViewer {
 
 	public:
 
-		// ------------------------------------ Klasse Konstruktor ------------------------------------ //
+		// ------------------------------------ Class Constructor ------------------------------------ //
 
 		LiveViewTools(void) {
 
@@ -45,15 +45,15 @@ namespace IRCAMThermalViewer {
 			// Format arrays and objects of WinForms components for global use
 			InitializeComponentArraysAndGlobalObjects();
 
-			// Aktiver Applikationens TitelBars Dark Mode
+			// Enable dark mode for the application title bar
 			RMH_Winforms_EnableTitleBarDarkMode(this->Handle);
 
-			// Opdaterer Teksten i toppen af GUIen
+			// Update the text at the top of the GUI
 			RMH_Winforms_ChangeFormTitleBarText(this, "Live View Tools");
 			
 		}
 
-		// ---------------------------- Diverse Specifikke Klasse Metoder ----------------------------- //
+		// ---------------------------- Miscellaneous Class-Specific Methods ----------------------------- //
 
 		void InitializeComponentArraysAndGlobalObjects(void) {
 
@@ -127,7 +127,7 @@ namespace IRCAMThermalViewer {
 			// Check that the colorbar range dialog is not already open
 			if (ColorBarDialogIsShownFlag == false) {
 
-				// Initiliser ColorBar Temperatur Range Dialog Form
+				// Initialize the ColorBar temperature range dialog form
 				ColorBarRangeDialogForm = gcnew IRCAMThermalViewer::ColorBarRangeDialog();
 
 				// Open the temperature range dialog form of the colorbar
@@ -150,7 +150,7 @@ namespace IRCAMThermalViewer {
 			// Check that the live view statistics window is not already open
 			if (LiveViewStatisticsWindowIsShownFlag == false) {
 
-				// Initiliser Live View Statistik Vindue Formen
+				// Initialize the live view statistics window form
 				StatisticsWindowForm = gcnew IRCAMThermalViewer::StatisticsWindow();
 
 				// Open the live view statistics window form
@@ -939,9 +939,9 @@ namespace IRCAMThermalViewer {
 
 #pragma endregion
 
-		// ---------------------- Opstartnings Og Nedluknings Callback Routiner ----------------------- //
+		// ---------------------- Start-Up And Shutdown Callback Routines ----------------------- //
 
-		// Live View Tools Form Opstartnings Callback Routine -> 
+		// Live view tools form start-up callback routine -> 
 		private: System::Void LiveViewTools_Shown(System::Object^ sender, System::EventArgs^ e) {
 
 			// Insert the list of available color palettes into the "Color Palette" ComboBox
@@ -974,7 +974,7 @@ namespace IRCAMThermalViewer {
 
 		}
 
-		// Live View Tools Form Nedluknings Callback Routine -> 
+		// Live view tools form shutdown callback routine -> 
 		private: System::Void LiveViewTools_FormClosing(System::Object^ sender, System::Windows::Forms::FormClosingEventArgs^ e) {
 
 			// Update the associated form flag
@@ -994,7 +994,7 @@ namespace IRCAMThermalViewer {
 		// Live view stream run/stop button callback routine ->
 		public: System::Void LiveViewRunStopButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Toggle Live View Streamen Run/Stop Stadie
+			// Toggle the live view stream run/stop state
 			RMH_ThermalViewer_ToggleLiveViewStreamRunStop();
 
 		}
@@ -1004,7 +1004,7 @@ namespace IRCAMThermalViewer {
 		// Color palette drop-down list changed callback routine ->
 		public: System::Void ColorPaletteComboBox_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
 
-			// Opdater Live View Color Palette
+			// Update the live view color palette
 			RMH_ColorPalette_ChangeColorPalette(this->ColorPaletteComboBox);
 
 			// Store the selected color palette in the global variable for the saved session parameter
@@ -1015,7 +1015,7 @@ namespace IRCAMThermalViewer {
 		// Dual color palette drop-down list changed callback routine ->
 		public: System::Void DualColorPaletteComboBox_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
 
-			// Opdater Live View Dual Color Palette
+			// Update the live view dual color palette
 			RMH_ColorPalette_ChangeDualColorPalette(this->DualColorPaletteComboBox);
 
 			// Store the selected dual color palette in the global variable for the saved session parameter
@@ -1026,7 +1026,7 @@ namespace IRCAMThermalViewer {
 		// Background color palette drop-down list changed callback routine ->
 		public: System::Void ColorBarBackPaletteComboBox_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
 
-			// Opdater Colorbarens Baggrunds Color Palette
+			// Update the background color palette of the colorbar
 			RMH_ColorPalette_ChangeColorBarBackgroundColorPalette(this->ColorBarBackPaletteComboBox);
 
 		}
@@ -1056,7 +1056,7 @@ namespace IRCAMThermalViewer {
 		// Maximum temperature tracking button callback routine ->
 		public: System::Void MaxTempTrackButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Toggel live view maximum temperatur tracking
+			// Toggle live view maximum temperature tracking
 			RMH_ThermalViewer_ToggleMaximumTempTracking();
 
 		}
@@ -1064,7 +1064,7 @@ namespace IRCAMThermalViewer {
 		// Minimum temperature tracking button callback routine ->
 		public: System::Void MinTempTrackButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Toggel live view minimum temperatur tracking
+			// Toggle live view minimum temperature tracking
 			RMH_ThermalViewer_ToggleMinimumTempTracking();
 
 		}
@@ -1072,7 +1072,7 @@ namespace IRCAMThermalViewer {
 		// Center temperature tracking button callback routine ->
 		public: System::Void CenterTempTrackButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Toggel live view center temperatur tracking
+			// Toggle live view center temperature tracking
 			RMH_ThermalViewer_ToggleCenterTempTracking();
 
 		}
@@ -1122,7 +1122,7 @@ namespace IRCAMThermalViewer {
 		// Mouse temperature tracking button callback routine ->
 		public: System::Void CursorTempTrackButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Toggel live view Mus Cursor temperatur tracking
+			// Toggle live view mouse cursor temperature tracking
 			RMH_ThermalViewer_ToggleMouseCursorTempTracking();
 
 		}
@@ -1132,7 +1132,7 @@ namespace IRCAMThermalViewer {
 		// Dual color palette button callback routine ->
 		public: System::Void DualColorPaletteButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Toggle Dual Color palette aktiverings flag
+			// Toggle the dual color palette enable flag
 			DualColorPaletteEnableFlag = !DualColorPaletteEnableFlag;
 
 			// Handle the event when dual live view color palettes are enabled
@@ -1144,13 +1144,13 @@ namespace IRCAMThermalViewer {
 			// Enable or disable the histogram context sub menu if the dual palette is active
 			if (DualColorPaletteEnableFlag == true) {
 
-				// Aktiver relavant Histogram Context sub menu
+				// Enable the relevant histogram context sub menu
 				GlobalVariables::GlobaluseDualPaletteToolStripMenuItem->Enabled = true;
 
 			}
 			else {
 
-				// Deaktiver relavant Histogram Context sub menu
+				// Disable the relevant histogram context sub menu
 				GlobalVariables::GlobaluseDualPaletteToolStripMenuItem->Enabled = false;
 
 			}
@@ -1186,7 +1186,7 @@ namespace IRCAMThermalViewer {
 		// Image sharpening button callback routine ->
 		public: System::Void ImageSharpButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Toggel Live view Image Sharpening feature
+			// Toggle the live view image sharpening feature
 			RMH_ThermalViewer_ToggleLiveViewImageSharpening();
 
 		}
@@ -1232,12 +1232,12 @@ namespace IRCAMThermalViewer {
 			// Update the video recording flag
 			VideoRecordingStartedFlag = !VideoRecordingStartedFlag;
 
-			// Start eller Stop Video Optagning
+			// Start or stop video recording
 			RMH_ThermalViewer_StartStopVideoRecording();
 
 		}
 
-		// ------------------- Temperatur Enheds Knappers Event & Callback Routiner ------------------- //
+		// ------------------- Temperature Unit Buttons Event & Callback Routines ------------------- //
 
 		// Nested temperature unit buttons event callback routine ->
 		public: System::Void TempUnitCButton_Click(System::Object^ sender, System::EventArgs^ e) {
@@ -1282,7 +1282,7 @@ namespace IRCAMThermalViewer {
 
 		}
 		
-		// --------------- Start Periodisk Trigger Timer Knap Event & Callback Routiner --------------- //
+		// --------------- Start Periodic Trigger Timer Button Event & Callback Routines --------------- //
 
 		// Start periodic trigger timer button callback routine ->
 		public: System::Void PeriodicTimerTriggerButton_Click(System::Object^ sender, System::EventArgs^ e) {

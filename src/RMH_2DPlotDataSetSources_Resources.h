@@ -30,7 +30,7 @@
 #define _2DPlotDataSet_9                        8
 #define _2DPlotDataSet_10                       9
 
-// 2D Plot Data Set Source Index Macroer
+// 2D plot data set source index macros
 #define _2DPlotDataSource_MaximumTemp			0
 #define _2DPlotDataSource_MinimumTemp			1
 #define _2DPlotDataSource_AverageTemp			2

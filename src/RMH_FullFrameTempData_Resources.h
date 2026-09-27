@@ -3,7 +3,7 @@
  *  RMH_FullFrameTempData_Resources.h
  *
  *  Author: Rune Mark Hansen
- *  Date: Juli 2023
+ *  Date: July 2023
  *
  */
 
@@ -13,7 +13,7 @@
 #ifndef RMH_FullFrameTempData_Resources_H 
 #define RMH_FullFrameTempData_Resources_H
 
-// Temperatur CSV Data Delimiter Index macroer
+// Temperature CSV data delimiter index macros
 #define _FullFrameTempCSVDataDelimiterIndex_Comma           0       
 #define _FullFrameTempCSVDataDelimiterIndex_Semicolon       1          
 #define _FullFrameTempCSVDataDelimiterIndex_Colon           2            

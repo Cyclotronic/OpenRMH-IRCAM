@@ -56,7 +56,7 @@
 #include "MainGUI.h"
 #include "SplashScreen.h"
 
-// Globale namespaces
+// Global namespaces
 using namespace System;
 using namespace System::Windows::Forms;
 using namespace System::Diagnostics;
@@ -66,14 +66,14 @@ using namespace std;
 
 void main() {
 
-	// Aktiver Applikationens Visual stil render
+	// Enable the visual style rendering of the application
 	System::Windows::Forms::Application::EnableVisualStyles();
-	// Applicationen Benytter den globale default Text render 
+	// The application uses the global default text rendering 
 	System::Windows::Forms::Application::SetCompatibleTextRenderingDefault(false);
 
 	// Show the start splash screen
 	System::Windows::Forms::Application::Run(gcnew SplashScreen());
-	// Start Main GUI applikation
+	// Start the main GUI application
 	System::Windows::Forms::Application::Run(gcnew MainGUI());
 
 }

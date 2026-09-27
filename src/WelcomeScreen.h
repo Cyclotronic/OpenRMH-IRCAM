@@ -6,7 +6,7 @@
 // Included resources
 #include "RMH_Application_Information.h"
 
-// Klasse Namespace
+// Class namespace
 namespace IRCAMThermalViewer {
 
 	// Associated class namespace
@@ -27,10 +27,10 @@ namespace IRCAMThermalViewer {
 			// Init GUI components and objects
 			InitializeComponent();
 
-			// Aktiver Applikationens TitelBars Dark Mode
+			// Enable dark mode for the application title bar
 			RMH_Winforms_EnableTitleBarDarkMode(this->Handle);
 
-			// Opdaterer Teksten i toppen af GUIen
+			// Update the text at the top of the GUI
 			RMH_Winforms_ChangeFormTitleBarText(this, "About And General Information");
 
 		}
@@ -147,9 +147,9 @@ namespace IRCAMThermalViewer {
 
 #pragma endregion
 
-		// ------------ Welcome/About GUI Opstartnings Og Nedluknings Callback Routiner ------------- //
+		// ------------ Welcome/About GUI Start-Up And Shutdown Callback Routines ------------- //
 
-		// Welcome/About Form Opstartnings Callback Routine -> 
+		// Welcome/About form start-up callback routine -> 
 		private: System::Void WelcomeScreen_Shown(System::Object^ sender, System::EventArgs^ e) {
 
 			// Update the associated form flag
@@ -157,7 +157,7 @@ namespace IRCAMThermalViewer {
 
 		}
 
-		// Welcome/About Form Nedluknings Callback Routine ->
+		// Welcome/About form shutdown callback routine ->
 		private: System::Void WelcomeScreen_FormClosing(System::Object^ sender, System::Windows::Forms::FormClosingEventArgs^ e) {
 
 			// Update the associated form flag

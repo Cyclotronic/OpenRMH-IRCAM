@@ -22,7 +22,7 @@
 // Definition of global extern objects
 IRCameraDeviceFormat IRCamera;
 
-// Live view elementers Farve globale variable
+// Global variables for live view element colors
 bool EnableLabelBackgroundFlag = true;
 unsigned char CommonLabelColorR = 255;
 unsigned char CommonLabelColorG = 255;
@@ -159,11 +159,11 @@ bool IncludeColorBarSnapshotFlag = true;
 bool CaptureRawSensorSnapshotFlag = true;
 bool LiveViewHistogramEnableFlag = false;
 bool LiveViewHistogramDataReadyFlag = false;
-bool HistogramDualOrLiveViewPaletteFlag = false; // Default: Benyt Live View Palette
+bool HistogramDualOrLiveViewPaletteFlag = false; // Default: use the live view palette
 bool HistogramShowRangedPaletteFlag = true;
 unsigned char HistogramDataSourceTag = 5;
 bool LiveViewImageSharpeningEnableFlag = true;
-float ImageSharpeningStrength = 1.5;  // Default Styrke 1.5 
+float ImageSharpeningStrength = 1.5;  // Default strength 1.5 
 float ImageUnSharpeningSigma = 2; // Default Standard Deviation
 bool NewGaussianKernelMaskGenerateFlag = false;
 float GlobalGaussian3x3KernelMask[_ImageKernelMaskFilter_Size3x3] = { 1, 2, 1, 2, 4, 2, 1, 2, 1 }; // Sigma = 1

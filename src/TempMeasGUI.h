@@ -3,7 +3,7 @@
 // Included libraries
 #include "GlobalObjectsAndVariables.h"
 
-// Klasse Namespace
+// Class namespace
 namespace IRCAMThermalViewer {
 
 	// Associated namespaces
@@ -19,7 +19,7 @@ namespace IRCAMThermalViewer {
 
 	public:
 
-		// ------------------------------------ Klasse Konstruktor ------------------------------------ //
+		// ------------------------------------ Class Constructor ------------------------------------ //
 
 		TempMeasGUI(void) {
 
@@ -28,10 +28,10 @@ namespace IRCAMThermalViewer {
 			// Format arrays and objects of WinForms components for global use
 			InitializeComponentArraysAndGlobalObjects();
 
-			// Aktiver Applikationens TitelBars Dark Mode
+			// Enable dark mode for the application title bar
 			RMH_Winforms_EnableTitleBarDarkMode(this->Handle);
 
-			// Opdaterer Teksten i toppen af GUIen
+			// Update the text at the top of the GUI
 			RMH_Winforms_ChangeFormTitleBarText(this, "Temperature Measurements Plot");
 
 		}
@@ -42,7 +42,7 @@ namespace IRCAMThermalViewer {
 
 			// This routine formats arrays of WinForms components for global use
 
-			// Array Af 2D Plot Legend LAbels
+			// Array of 2D plot legend labels
 			GlobalVariables::Plot2DLegendLabels = gcnew cli::array<System::Windows::Forms::Label^>(10) {
 				this->LegendLabel1,
 				this->LegendLabel2,
@@ -56,7 +56,7 @@ namespace IRCAMThermalViewer {
 				this->LegendLabel10
 			};
 
-			// Generer textur til 2D plot OpenGL renderering
+			// Generate the texture for 2D plot OpenGL rendering
 			GlobalVariables::OpenGL2DPlot = gcnew OpenGL2DPlot::RMHOpenGL2DPlot(this->Temp2DPlotPanel, 4, 4);
 
 			// Set the global data logging thread object
@@ -65,7 +65,7 @@ namespace IRCAMThermalViewer {
 			// Update the 2D plot legend
 			RMH_ThermalViewer_Update2DPlotLegendLabels();
 
-			// Opdater Temp Meas GUI ready flag
+			// Update the temp meas GUI ready flag
 			TempMeasGUIReadyFlag = true;
 
 		}
@@ -79,7 +79,7 @@ namespace IRCAMThermalViewer {
 		/// </summary>
 		~TempMeasGUI() {
 
-			// Opdater Temp Meas GUI ready flag
+			// Update the temp meas GUI ready flag
 			TempMeasGUIReadyFlag = false;
 
 			if (components) {
@@ -803,9 +803,9 @@ namespace IRCAMThermalViewer {
 
 #pragma endregion
 
-		// ------------------ Temp GUI Opstartnings Og Nedluknings Callback Routiner ------------------ //
+		// ------------------ Temp GUI Start-Up And Shutdown Callback Routines ------------------ //
 
-		// Temp Meas GUI Form Opstartnings Callback Routine -> 
+		// Temp meas GUI form start-up callback routine -> 
 		private: System::Void TempMeasGUI_Shown(System::Object^ sender, System::EventArgs^ e) {
 
 			// Update the associated form flag
@@ -813,7 +813,7 @@ namespace IRCAMThermalViewer {
 
 		}
 
-		// Temp Meas GUI Form Nedluknings Callback Routine ->
+		// Temp meas GUI form shutdown callback routine ->
 		private: System::Void TempMeasGUI_FormClosing(System::Object^ sender, System::Windows::Forms::FormClosingEventArgs^ e) {
 
 			// Update the associated form flag
@@ -828,7 +828,7 @@ namespace IRCAMThermalViewer {
 
 		}
 
-		// ----------------------- Temp Meas GUI Context Menu Callback Routiner ----------------------- //
+		// ----------------------- Temp Meas GUI Context Menu Callback Routines ----------------------- //
 
 		// X-Axis Number Of Ticks Context Menu Callback Routine ->
 		private: System::Void toolStripMenuItem2_Click(System::Object^ sender, System::EventArgs^ e) {
@@ -865,7 +865,7 @@ namespace IRCAMThermalViewer {
 		// Show plot grid context menu callback routine ->
 		private: System::Void showGridToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Vis 2D Plottets Grid linjer
+			// Show the grid lines of the 2D plot
 			GlobalVariables::OpenGL2DPlot->RMH_OpenGL_Enable2DPlotGridLines(true);
 
 		}
@@ -873,7 +873,7 @@ namespace IRCAMThermalViewer {
 		// Hide plot grid context menu callback routine ->
 		private: System::Void hideGridToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Skjul 2D Plottets Grid linjer
+			// Hide the grid lines of the 2D plot
 			GlobalVariables::OpenGL2DPlot->RMH_OpenGL_Enable2DPlotGridLines(false);
 
 		}
@@ -907,7 +907,7 @@ namespace IRCAMThermalViewer {
 		// Data Logging Thread Do Work Event Callback Routine ->
 		private: System::Void DataLoggingThread_DoWork(System::Object^ sender, System::ComponentModel::DoWorkEventArgs^ e) {
 
-			// Eksikver Data logging Thread process
+			// Execute the data logging thread process
 			RMH_ThermalViewer_DataLoggingThreadProcess();
 
 		}

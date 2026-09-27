@@ -24,13 +24,13 @@ namespace IRCAMThermalViewer {
 			// Init GUI components and objects
 			InitializeComponent();
 
-			// Aktiver Applikationens TitelBars Dark Mode
+			// Enable dark mode for the application title bar
 			RMH_Winforms_EnableTitleBarDarkMode(this->Handle);
 
-			// Opdaterer Teksten i toppen af Dialogen
+			// Update the text at the top of the dialog
 			RMH_Winforms_ChangeFormTitleBarText(this, DialogTitleText);
 
-			// Opdater Pop-Up Dialogens informations Text
+			// Update the information text of the pop-up dialog
 			PopUpDialogText->Text = DialogInfoText;
 			
 		}

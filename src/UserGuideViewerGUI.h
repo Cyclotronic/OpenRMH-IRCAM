@@ -2,7 +2,7 @@
 
 // Included libraries
 
-// Klasse Namespace
+// Class namespace
 namespace IRCAMThermalViewer {
 	
 	// Associated namespaces
@@ -20,7 +20,7 @@ namespace IRCAMThermalViewer {
 
 	public:
 
-		// ------------------------------------ Klasse Konstruktor ------------------------------------ //
+		// ------------------------------------ Class Constructor ------------------------------------ //
 
 		UserGuideViewerGUI(void) {
 
@@ -29,7 +29,7 @@ namespace IRCAMThermalViewer {
 			// Set global objects from this form for global use
 			InitializeGlobalFormsObjects();
 
-			// Aktiver Applikationens TitelBars Dark Mode
+			// Enable dark mode for the application title bar
 			RMH_Winforms_EnableTitleBarDarkMode(this->Handle);
 
 			// Open the software manual PDF file in the web browser window
@@ -37,7 +37,7 @@ namespace IRCAMThermalViewer {
 
 		}
 
-		// ---------------------------- Diverse Specifikke Klasse Metoder ----------------------------- //
+		// ---------------------------- Miscellaneous Class-Specific Methods ----------------------------- //
 
 		void InitializeGlobalFormsObjects() {
 
@@ -115,9 +115,9 @@ namespace IRCAMThermalViewer {
 
 #pragma endregion
 
-		// ---------------------- Opstartnings Og Nedluknings Callback Routiner ----------------------- //
+		// ---------------------- Start-Up And Shutdown Callback Routines ----------------------- //
 
-		// User Guide Form Opstartnings Callback Routine ->
+		// User guide form start-up callback routine ->
 		private: System::Void UserGuideViewerGUI_Shown(System::Object^ sender, System::EventArgs^ e) {
 
 			// Update the associated form flag
@@ -125,7 +125,7 @@ namespace IRCAMThermalViewer {
 			
 		}
  
-		// User Guide Form Nedluknings Callback Routine -> 
+		// User guide form shutdown callback routine -> 
 		private: System::Void UserGuideViewerGUI_FormClosing(System::Object^ sender, System::Windows::Forms::FormClosingEventArgs^ e) {
 
 			// Update the associated form flag

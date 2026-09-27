@@ -6,7 +6,7 @@
 // Included application resources
 #include "RMH_EmissivityTable_Resources.h"
 
-// Klasse Namespace
+// Class namespace
 namespace IRCAMThermalViewer {
 
 	// Associated namespaces
@@ -22,14 +22,14 @@ namespace IRCAMThermalViewer {
 
 	public:
 
-		// ------------------------------------ Klasse Konstruktor ------------------------------------ //
+		// ------------------------------------ Class Constructor ------------------------------------ //
 
 		EmissivityTableGUI(void) {
 
 			// Init GUI components and objects
 			InitializeComponent();
 
-			// Aktiver Applikationens TitelBars Dark Mode
+			// Enable dark mode for the application title bar
 			RMH_Winforms_EnableTitleBarDarkMode(this->Handle);
 
 			// Load data into the emissivity table
@@ -39,7 +39,7 @@ namespace IRCAMThermalViewer {
 				System::Drawing::Color::FromArgb(255, 32, 32, 32), 50, 150, 
 				EmissivityMaterialNames, &MaterialEmissivityValues[0]);
 
-			// Opdaterer Teksten i toppen af GUIen
+			// Update the text at the top of the GUI
 			RMH_Winforms_ChangeFormTitleBarText(this, "Emissivity Material Loop-Up Table");
 
 		}
@@ -178,9 +178,9 @@ namespace IRCAMThermalViewer {
 
 #pragma endregion
 
-		// --------------- Emissivity GUI Opstartnings Og Nedluknings Callback Routiner --------------- //
+		// --------------- Emissivity GUI Start-Up And Shutdown Callback Routines --------------- //
 
-		// Emissivity Tabel GUI Opstartnings Callback Routine -> 
+		// Emissivity table GUI start-up callback routine -> 
 		private: System::Void EmissivityTableGUI_Shown(System::Object^ sender, System::EventArgs^ e) {
 
 			// Update the associated form flag
@@ -188,7 +188,7 @@ namespace IRCAMThermalViewer {
 
 		}
 
-		// Emissivity Tabel GUI Nedluknings Callback Routine ->
+		// Emissivity table GUI shutdown callback routine ->
 		private: System::Void EmissivityTableGUI_FormClosing(System::Object^ sender, System::Windows::Forms::FormClosingEventArgs^ e) {
 
 			// Update the associated form flag
@@ -203,9 +203,9 @@ namespace IRCAMThermalViewer {
 
 		}
 
-		// ----------------------- Emissivity Tabel GUI Event Callback Routiner ----------------------- //
+		// ----------------------- Emissivity Table GUI Event Callback Routines ----------------------- //
 
-		// Emissivity Tabel Celle Double Click Event Callback Routine ->
+		// Emissivity table cell double click event callback routine ->
 		private: System::Void EmissivityDataGridView_CellDoubleClick(System::Object^ sender, System::Windows::Forms::DataGridViewCellEventArgs^ e) {
 
 			// Set the selected emissivity value to the thermal camera

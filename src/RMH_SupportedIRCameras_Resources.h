@@ -18,13 +18,13 @@
 
 // -------------------- Common Supported IR Camera Reference Macros --------------------- //
 
-// Aspect Ratio Konstant for InfiRay & HTI Termiske kameraer
+// Aspect ratio constant for InfiRay & HTI thermal cameras
 #define _FixedThermalCameraFrame_AspectRatio_Pool_1      1.33333333
 #define _FixedThermalCameraFrame_AspectRatio_Pool_2      1.33333333
 #define _FixedThermalCameraFrame_AspectRatio_Pool_3      1.33333333
 #define _FixedThermalCameraFrame_AspectRatio_Pool_4      1.33333333
 
-// Kamera Pools tids Konstanter Reference Macroer
+// Camera pool timing constants reference macros
 #define _ThermalCameraShutter_CloseTimeMs                500
 #define _ThermalCameraShutter_OpenTimeMs                 850
 #define _ThermalCameraShutter_CALOpenTimeMs              1000
@@ -41,7 +41,7 @@
 #define _IRThermalCameraDefault_ObjectEmissivityValue           0.98     
 #define _IRThermalCameraDefault_ObjectDistanceValue             1.0  
 
-// Supporterede Termiske kamera pool reference macroer
+// Supported thermal camera pool reference macros
 #define _SupportedThermalCameras_Pool_1                   1
 #define _SupportedThermalCameras_Pool_2                   2
 #define _SupportedThermalCameras_Pool_3                   3
@@ -51,7 +51,7 @@
 #define _ThermalCamera_TemperatureRange_HighRange         1
 #define _ThermalCamera_TemperatureRange_LowRange          0
 
-// Supporterede Termiske kamera reference index macroer
+// Supported thermal camera reference index macros
 #define _SnapShotAnalysisMode                             0  
 #define _RecordingAnalysisMode                            1   
 #define _SupportedThermalCamera_InfiRayT2L                2     
@@ -103,7 +103,7 @@
 #define _SupportedThermalCamera_Victor328B_SupportsHighRange                true 
 #define _SupportedThermalCamera_LODESTARL2_SupportsHighRange                true     
 
-// Supporterer Termiske kamera Frame Rate Reference Macroer
+// Supported thermal camera frame rate reference macros
 #define _SupportedThermalCamera_InfiRayT2L_FrameRate                25.0      
 #define _SupportedThermalCamera_InfiRayT2LV2_FrameRate              25.0  
 #define _SupportedThermalCamera_InfiRayT2Search_FrameRate           25.0   
@@ -128,9 +128,9 @@
 #define _SupportedThermalCamera_Victor328B_FrameRate                25.0  
 #define _SupportedThermalCamera_LODESTARL2_FrameRate                25.0  
 
-// -------------------- Supporterede IR Kamera Pool 1 Reference Macroer --------------------- //
+// -------------------- Supported IR Camera Pool 1 Reference Macros --------------------- //
 
-// Specifikke Supporterede Termiske kamera pool 1 konfiguration macroer
+// Specific supported thermal camera pool 1 configuration macros
 #define _SupporteredeThermalCameraPool1_FrameWidthPixelOffset       0  
 #define _SupporteredeThermalCameraPool1_FrameHeightPixelOffset      0 
 
@@ -146,20 +146,20 @@
 #define _IRCameraPool1_ConfigParameterAddress_EmissivityREG    0x0010         
 #define _IRCameraPool1_ConfigParameterAddress_DistanceREG      0x0014  
 
-// IR Camera Kalibrerings Register Kommando - For Supporterede Kamera Pool 1
+// IR camera calibration register command - for supported camera pool 1
 #define _IRCameraPool1_NUCCalibrationCommand                   0x8000
 
-// -------------------- Supporterede IR Kamera Pool 2 Reference Macroer --------------------- //
+// -------------------- Supported IR Camera Pool 2 Reference Macros --------------------- //
 
-// Spesifikke Supporterede Termiske kamera pool 2 konfiguration macroer
+// Specific supported thermal camera pool 2 configuration macros
 #define _SupporteredeThermalCameraPool2_SensorWidthWithThermalData       256  
 #define _SupporteredeThermalCameraPool2_SensorHeightWithThermalData      384  
 #define _SupporteredeThermalCameraPool2_FrameWidthPixelOffset            0  
 #define _SupporteredeThermalCameraPool2_FrameHeightPixelOffset           192  
 
-// -------------------- Supporterede IR Kamera Pool 3 Reference Macroer --------------------- //
+// -------------------- Supported IR Camera Pool 3 Reference Macros --------------------- //
 
-// Specifikke Supporterede Termiske kamera pool 3 konfiguration macroer
+// Specific supported thermal camera pool 3 configuration macros
 #define _SupporteredeThermalCameraPool3_FrameWidthPixelOffset       0  
 #define _SupporteredeThermalCameraPool3_FrameHeightPixelOffset      0 
 
@@ -175,12 +175,12 @@
 #define _IRCameraPool3_ConfigParameterAddress_EmissivityREG    0x0010         
 #define _IRCameraPool3_ConfigParameterAddress_DistanceREG      0x0014  
 
-// IR Camera Kalibrerings Register Kommando - For Supporterede Kamera Pool 3
+// IR camera calibration register command - for supported camera pool 3
 #define _IRCameraPool3_NUCCalibrationCommand                   0x8000
 
-// -------------------- Supporterede IR Kamera Pool 4 Reference Macroer --------------------- //
+// -------------------- Supported IR Camera Pool 4 Reference Macros --------------------- //
 
-// Spesifikke Supporterede Termiske kamera pool 4 konfiguration macroer
+// Specific supported thermal camera pool 4 configuration macros
 #define _SupporteredeThermalCameraPool4_SensorWidthWithThermalData       256  
 #define _SupporteredeThermalCameraPool4_SensorHeightWithThermalData      386 
 #define _SupporteredeThermalCameraPool4_FrameWidthPixelOffset            0  

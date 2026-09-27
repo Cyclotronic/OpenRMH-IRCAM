@@ -19,7 +19,7 @@ namespace IRCAMThermalViewer {
 
 	public:
 
-		// ------------------------------------ Klasse Konstruktor ------------------------------------ //
+		// ------------------------------------ Class Constructor ------------------------------------ //
 
 		SurfacePlotGUI() {
 
@@ -28,10 +28,10 @@ namespace IRCAMThermalViewer {
 			// Format arrays and objects of WinForms components for global use
 			InitializeComponentArraysAndGlobalObjects();
 
-			// Aktiver Applikationens TitelBars Dark Mode
+			// Enable dark mode for the application title bar
 			RMH_Winforms_EnableTitleBarDarkMode(this->Handle);
 			
-			// Opdaterer Teksten i toppen af GUIen
+			// Update the text at the top of the GUI
 			RMH_Winforms_ChangeFormTitleBarText(this, "3D Surface Plot");
 
 		}
@@ -64,7 +64,7 @@ namespace IRCAMThermalViewer {
 
 			}
 
-			// Ryd op i managed objekter i RAM
+			// Clean up managed objects in RAM
 			System::GC::Collect();
 
 		}
@@ -704,9 +704,9 @@ namespace IRCAMThermalViewer {
 
 #pragma endregion
 		
-		// -------------------- GUI Opstartnings Og Nedluknings Callback Routiner --------------------- //
+		// -------------------- GUI Start-Up And Shutdown Callback Routines --------------------- //
 		
-		// Surface Plot Form Opstartnings Callback Routine -> 
+		// Surface plot form start-up callback routine -> 
 		private: System::Void SurfacePlotGUI_Shown(System::Object^ sender, System::EventArgs^ e) {
 
 			// Update the associated form flag
@@ -714,7 +714,7 @@ namespace IRCAMThermalViewer {
 
 		}
 
-		// Surface Plot Form Nedluknings Callback Routine ->
+		// Surface plot form shutdown callback routine ->
 		private: System::Void SurfacePlotGUI_FormClosing(System::Object^ sender, System::Windows::Forms::FormClosingEventArgs^ e) {
 
 			// Update the associated form flag
@@ -729,12 +729,12 @@ namespace IRCAMThermalViewer {
 
 		}
 
-		// ----------------------- Surface Plot Context Menu Callback Routiner ------------------------ //
+		// ----------------------- Surface Plot Context Menu Callback Routines ------------------------ //
 
 		// Surface Plot polygon renderings mode callback routine ->
 		private: System::Void pointModeToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Indstil Surface Plot polygon renderings mode
+			// Set the polygon rendering mode of the surface plot
 			GlobalVariables::OpenGLSurfacePlot->RMH_OpenGL_SetSurfacePlotPolygonMode(sender);
 
 		}
@@ -771,7 +771,7 @@ namespace IRCAMThermalViewer {
 
 		}
 
-		// Surface Plot Z-Data Skala context menu callback routine ->
+		// Surface plot Z-data scale context menu callback routine ->
 		private: System::Void ZDataScaleMenuItem2_Click(System::Object^ sender, System::EventArgs^ e) {
 
 			// Update the maximum Z height of the surface plot

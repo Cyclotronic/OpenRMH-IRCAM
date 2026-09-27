@@ -12,13 +12,13 @@
 #ifndef RMH_Application_Information_H 
 #define RMH_Application_Information_H
 
-// Applikationens Discord Server URL Link String
+// Discord server URL link string of the application
 static std::string DiscordServerLinkAddress = "https://discord.gg/3zq3zXFA8B";
 
 // Preset file name of the application ->
 static std::string Application_PresetFileName = "IRCAMApplicationPreset.txt";
 
-// Applikationens Information ->
+// Application information ->
 static std::string Application_Name = "IRCAM Thermal Viewer";
 static std::string Application_VersionNumber = "3.0.0";
 static std::string Application_Revision = "";

@@ -19,12 +19,12 @@
 #include <math.h>
 #include "RMH_Winforms_Library.h"
 
-// Rendereret Objekters Z-Ordens Indstillings Macroer
+// Rendered object Z-order setting macros
 #define _ZOrden_CrosshairsInFront	      0
 #define _ZOrden_RectanglesInFront	      1
 #define _ZOrden_LinesInFront			  2
 
-// Globale Faste Konfigurations Macroer
+// Global fixed configuration macros
 #define _MaxNumberOfMovableRectangles     12   // 10x ROI + 1x Palette ROI + 1x Zoom ROI
 #define _NumberOfNonMainLiveViewROIs      2    // 1x Palette ROI + 1x Zoom ROI
 #define _MaxNumberOfMovableCrosshairs     10 
@@ -52,7 +52,7 @@ using namespace System;
 using namespace System::Windows::Forms;
 using namespace std;
 
-// Klasse Positions Justerbar Rektangel Enum
+// Class position-adjustable rectangle enum
 enum RectangelSizableSides {
 
 	TopLine,
@@ -63,7 +63,7 @@ enum RectangelSizableSides {
 
 };
 
-// Klasse Positions Justerbar Crosshair Enum
+// Class position-adjustable crosshair enum
 enum CrosshairSizableSides {
 
 	Crosshair,
@@ -71,7 +71,7 @@ enum CrosshairSizableSides {
 
 };
 
-// Klasse Positions Justerbar Linje Enum
+// Class position-adjustable line enum
 enum LineMovableSides {
 
 	LeftSide,
@@ -81,16 +81,16 @@ enum LineMovableSides {
 
 };
 
-// OpenGL Klasse definition
+// OpenGL class definition
 namespace OpenGLWinForms {
 
 	// ---------------------------------- Global Class Structure Objects --------------------------------- //
 
-	// Rektangel Positions Data Klasse struktur
+	// Rectangle position data class structure
 	class RectangelPosition {
 	public:
 
-		// Rektangel Positions parametere
+		// Rectangle position parameters
 		GLdouble RectangleX0Pos = 0.0;
 		GLdouble RectangleY0Pos = 0.0;
 		GLdouble RectangleWidth = 0.0;
@@ -98,31 +98,31 @@ namespace OpenGLWinForms {
 
 	};
 
-	// Crosshair med Label Positions Data Klasse struktur
+	// Crosshair with label position data class structure
 	class CrosshairWLabelPosition {
 	public:
 
-		// Crosshair Positions parametere
+		// Crosshair position parameters
 		GLfloat CrosshairX0Pos = 0.0;
 		GLfloat CrosshairY0Pos = 0.0;
 
 	};
 
-	// Mus Cursor Positions Data Klasse struktur
+	// Mouse cursor position data class structure
 	class MouseCursorPosition {
 	public:
 
-		// Mus Cursor Positions parametere
+		// Mouse cursor position parameters
 		GLdouble CursorXPos = 0.0;
 		GLdouble CursorYPos = 0.0;
 
 	};
 
-	// Linje Spesifikations Data Klasse struktur
+	// Line specification data class structure
 	class LineSpecsPosition {
 	public:
 
-		// Linje Spesifikations parametere
+		// Line specification parameters
 		unsigned short LineType = 0;
 		GLfloat LineSlope = 0.0;
 		unsigned short LinePixelLength = 0;
@@ -137,7 +137,7 @@ namespace OpenGLWinForms {
 
 	};
 
-	// ------------------------- Privat Custom Winforms Gennemsigtigt Panel Klasse ------------------------- //
+	// ------------------------- Private Custom WinForms Transparent Panel Class ------------------------- //
 
 	// Associated local class namespace object
 	namespace NativeForm = System::Windows::Forms;
@@ -150,7 +150,7 @@ namespace OpenGLWinForms {
 
 		protected: virtual property NativeForm::CreateParams^ CreateParams {
 
-			// Overskriv panelets konfigurations parametere
+			// Override the configuration parameters of the panel
 			NativeForm::CreateParams^ get() override {
 
 				// Read the control parameters of the panel
@@ -167,7 +167,7 @@ namespace OpenGLWinForms {
 
 		public: TextureOverlayPanel() {
 
-			// Gennemsigtig overlay panel klasse konstruktor
+			// Transparent overlay panel class constructor
 
 		}
 
@@ -278,7 +278,7 @@ namespace OpenGLWinForms {
 		private: unsigned short OldNmbOfActiveLines = 0;
 		private: bool LineMoveFlag = false;
 	
-		// Default Positions justerbar Rektangel Konfigurations parameter
+		// Default position-adjustable rectangle configuration parameters
 		public: GLdouble MinimumRectHeight = 20.0;
 		public: GLdouble MinimumRectWidth = 20.0;
 		private: GLdouble InitialRectHeight = 0.0;
@@ -290,7 +290,7 @@ namespace OpenGLWinForms {
 		private: GLdouble ROIIdentifierLabelYPixelOffset = 2.0;
 		private: GLdouble ROIRectangleLiveViewBorderPixelPadding = 2.0;
 
-		// Default Positions justerbar Crosshair Konfigurations parameter
+		// Default position-adjustable crosshair configuration parameters
 		private: GLfloat CrosshairSize = 2.0;
 		private: GLfloat CrosshairInsideAreaPadding = 5.0;
 		private: unsigned short CrosshairLineWidth = 2;
@@ -303,17 +303,17 @@ namespace OpenGLWinForms {
 		private: GLfloat MovableLineQuadrant4LabelXOffset = -10.0;
 		private: GLfloat MovableLineQuadrant4LabelYOffset = -2.0;
 
-		// Default Crosshair Med Center Label Konfigurations parameter
+		// Default crosshair with center label configuration parameters
 		private: GLfloat ChrosshairWithCenterLabelXOffset = -4.0;
 		private: GLfloat ChrosshairWithCenterLabelYOffset = 2.8;
 
-		// Default Positions justerbar linje Konfigurations parameter
+		// Default position-adjustable line configuration parameters
 		private: unsigned char MovableLineCursorOffset = 4;
 		private: unsigned short MovableLineCurnerToMiddleOffset = 4;
 		private: unsigned short MovableLineMinimumLength = 10;
 		private: unsigned short LineTextureBorderPadding = 3;
 
-		// Text Label og label Baggrunds Konfigurations parameter
+		// Text label and label background configuration parameters
 		private: bool EnableLabelBackgroundFlag = true;
 		private: GLfloat LabelBackgroundXOffset = 0.2;
 		private: GLfloat LabelBackgroundYOffset = 1.1;
@@ -337,7 +337,7 @@ namespace OpenGLWinForms {
 
 	public:
 
-		// ------------------------------- OpenGL Textur Objekt Konstruktur Routiner ------------------------------- //
+		// ------------------------------- OpenGL Texture Object Constructor Routines ------------------------------- //
 
 		RMHOpenGLWF(System::Windows::Forms::Panel^ TexturePanel, unsigned char ResolutionScaleFactor) {
 
@@ -359,7 +359,7 @@ namespace OpenGLWinForms {
 			ControlParams->Width = InitialTextureWidth * TextureResScaleFactor;
 			ControlParams->Height = InitialTextureHeight * TextureResScaleFactor;
 
-			// Konfigurer Textur parent handler
+			// Configure the texture parent handler
 			ControlParams->Parent = TexturePanel->Handle;
 			// Create a "child" of the selected "parent" and make it OpenGL compliant
 			ControlParams->Style = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN;
@@ -373,11 +373,11 @@ namespace OpenGLWinForms {
 			// Is this handle active
 			if (m_hDC) {
 
-				// Konfigurer Textur Pixel format
+				// Configure the texture pixel format
 				RMH_OpenGL_SetTexturePixelFormat(m_hDC);
 				// Configure the size of the texture
 				RMH_OpenGL_ResizeOpenGLWinformsScene(ControlParams->Width, ControlParams->Height);
-				// Initialisere OpenGL for Winforms C++
+				// Initialize OpenGL for WinForms C++
 				RMH_OpenGL_Init();
 
 			}
@@ -487,7 +487,7 @@ namespace OpenGLWinForms {
 
 		}
 
-		// ---------------------------- Textur Panel Til Textur Konverterings Routiner ----------------------------- //
+		// ---------------------------- Texture Panel To Texture Conversion Routines ----------------------------- //
 
 		GLdouble RMH_OpenGL_TranslateOverlayPanelMouseXPosToTextureXPos(System::Windows::Forms::MouseEventArgs^ OverlayPanelMouseEvent) {
 
@@ -497,7 +497,7 @@ namespace OpenGLWinForms {
 			GLdouble MouseTextureXPos = 0.0;
 			GLdouble PanelsWidthDifference = 0.0;
 
-			// Udregn Pixel Differensen imellem overlejede panel og textur panelet 
+			// Calculate the pixel difference between the overlaid panel and the texture panel 
 			PanelsWidthDifference = CurrentTexturePanelWidth - OverlayPanel->Width;
 
 			// Check the selected aspect ratio setting
@@ -506,13 +506,13 @@ namespace OpenGLWinForms {
 				// If horizontal aspect ratio compensation is needed
 				if (LiveViewPosX0 <= 0.0) {
 
-					// Konverter overlejede panel Mus position til aktuel Textur Panel Mus Position
+					// Convert the overlaid panel mouse position to the actual texture panel mouse position
 					MouseTextureXPos = (OverlayPanelMouseEvent->X + PanelsWidthDifference) * (ImageDataPixelWidth / CurrentTexturePanelWidth);
 					
 				}
 				else {
 
-					// Konverter overlejede panel Mus position til aktuel Textur Panel Mus Position - Fast Aspect Ratio Mode
+					// Convert the overlaid panel mouse position to the actual texture panel mouse position - fixed aspect ratio mode
 					MouseTextureXPos = ImageDataPixelWidth * ((GLdouble)OverlayPanelMouseEvent->X + PanelsWidthDifference - 0.5f * CurrentTexturePanelWidth + 0.5f * CurrentPanelWidthFixedAspect) / CurrentPanelWidthFixedAspect;
 					
 				}
@@ -520,7 +520,7 @@ namespace OpenGLWinForms {
 			}
 			else {
 
-				// Konverter overlejede panel Mus position til aktuel Textur Panel Mus Position
+				// Convert the overlaid panel mouse position to the actual texture panel mouse position
 				MouseTextureXPos = (OverlayPanelMouseEvent->X + PanelsWidthDifference) * (ImageDataPixelWidth / CurrentTexturePanelWidth);
 
 			}
@@ -540,7 +540,7 @@ namespace OpenGLWinForms {
 			// Round the mouse position up to the nearest integer
 			MouseTextureXPos = RMH_Math_Round(MouseTextureXPos);
 
-			// Retuner aktuel Textur Panel Mus Position
+			// Return the current texture panel mouse position
 			return MouseTextureXPos;
 
 		}
@@ -553,7 +553,7 @@ namespace OpenGLWinForms {
 			GLdouble MouseTextureYPos = 0.0;
 			GLdouble PanelsHeightDifference = 0.0;
 
-			// Udregn Pixel Differensen imellem overlejede panel og textur panelet 
+			// Calculate the pixel difference between the overlaid panel and the texture panel 
 			PanelsHeightDifference = CurrentTexturePanelHeight - OverlayPanel->Height;
 
 			// Check the selected aspect ratio setting
@@ -562,13 +562,13 @@ namespace OpenGLWinForms {
 				// If horizontal aspect ratio compensation is needed
 				if (LiveViewPosX0 <= 0.0) {
 
-					// Konverter overlejede panel Mus position til aktuel Textur Panel Mus Position - Fast Aspect Ratio Mode
+					// Convert the overlaid panel mouse position to the actual texture panel mouse position - fixed aspect ratio mode
 					MouseTextureYPos = ImageDataPixelHeight * ((GLdouble)OverlayPanelMouseEvent->Y + PanelsHeightDifference - 0.5f * CurrentTexturePanelHeight + 0.5f * CurrentPanelHeightFixedAspect) / CurrentPanelHeightFixedAspect;
 
 				}
 				else {
 
-					// Konverter overlejede panel Mus position til aktuel Textur Panel Mus Position
+					// Convert the overlaid panel mouse position to the actual texture panel mouse position
 					MouseTextureYPos = (OverlayPanelMouseEvent->Y + PanelsHeightDifference) * (ImageDataPixelHeight / CurrentTexturePanelHeight);
 
 				}
@@ -576,7 +576,7 @@ namespace OpenGLWinForms {
 			}
 			else {
 
-				// Konverter overlejede panel Mus position til aktuel Textur Panel Mus Position
+				// Convert the overlaid panel mouse position to the actual texture panel mouse position
 				MouseTextureYPos = (OverlayPanelMouseEvent->Y + PanelsHeightDifference) * (ImageDataPixelHeight / CurrentTexturePanelHeight);
 
 			}
@@ -596,7 +596,7 @@ namespace OpenGLWinForms {
 			// Round the mouse position up to the nearest integer
 			MouseTextureYPos = RMH_Math_Round(MouseTextureYPos);
 
-			// Retuner aktuel Textur Panel Mus Position
+			// Return the current texture panel mouse position
 			return MouseTextureYPos;
 
 		}
@@ -640,7 +640,7 @@ namespace OpenGLWinForms {
 			// Should linear interpolation be enabled
 			if (EnableInterpolationFlag == true) {
 
-				// Konfigurer Textur parametere
+				// Configure the texture parameters
 				glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
 				glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 				glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -650,7 +650,7 @@ namespace OpenGLWinForms {
 			}
 			else {
 
-				// Konfigurer Textur parametere
+				// Configure the texture parameters
 				glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
 				glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 				glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -801,7 +801,7 @@ namespace OpenGLWinForms {
 
 		GLvoid RMH_OpenGL_UpdateTextureFieldOfView(unsigned int FrameWidth, unsigned int FrameHeight) {
 
-			// Routinen indstiller texturens syns vinkel for display i control handler komponentet
+			// This routine sets the viewing angle (field of view) of the texture for display in the control handler component
 
 			// Local variables
 			GLdouble PlaneXLook = 0.0;
@@ -816,10 +816,10 @@ namespace OpenGLWinForms {
 			PlaneXLook = (GLdouble)TextureWidth * 0.5;
 			PlaneYLook = (GLdouble)TextureHeight * 0.5;
 
-			// Udregn textur Aspect ratio
+			// Calculate the texture aspect ratio
 			PlaneAspectRatio = ((GLdouble)TextureWidth / (GLdouble)TextureHeight);
 
-			// Udregn affstanden imellem Frame data planet og textur planet
+			// Calculate the distance between the frame data plane and the texture plane
 			PlaneDistance = (GLdouble)TextureHeight * TanHalfFieldOfView;
 
 			// Update the viewing angle (field of view) of the texture
@@ -840,7 +840,7 @@ namespace OpenGLWinForms {
 
 			// Add the font list properties
 			glPushAttrib(GL_LIST_BIT);
-			// Benyt FONT Base List
+			// Use the FONT base list
 			glListBase(BaseFont - 32);
 			// Execute and render the characters on the texture
 			glCallLists(strlen(CharArray), GL_UNSIGNED_BYTE, CharArray);
@@ -853,7 +853,7 @@ namespace OpenGLWinForms {
 
 			// This routine renders a given string on an OpenGL texture
 
-			// Konfigurer Textens Farve
+			// Configure the text color
 			glColor3ub(ColorR, ColorG, ColorB);
 
 			// Set the position of the text on the texture
@@ -926,16 +926,16 @@ namespace OpenGLWinForms {
 			// Render the line on the texture
 			glBegin(GL_LINES);
 
-			// Render linje med givet kordinater
+			// Render the line with the given coordinates
 			glVertex2f(LineX0, LineY0);
 			glVertex2f(LineX1, LineY1);
 
-			// Konfiguration Slut
+			// End of configuration
 			glEnd();
 			// Disable the 1D texture
 			glDisable(GL_TEXTURE_1D);
 
-			// Renderer Linje Identifikations Label
+			// Render the line identification label
 			RMH_OpenGL_RenderStringOnTexture((LineX0 + LineX1) * 0.5, (LineY0 + LineY1) * 0.5, "L" + RMH_Conversion_IntToStdString(RenderedLineCounter + 1), 255 - ColorR, 255 - ColorG, 255 - ColorB);
 
 		}
@@ -956,7 +956,7 @@ namespace OpenGLWinForms {
 			// Reset the slope parameter of the line
 			LineParameters.LineSlope = 0;
 
-			// ------------------------------ Linje Type 1 ------------------------------ //
+			// ------------------------------ Line Type 1 ------------------------------ //
 
 			// Check the line type
 			if ((LineX0 < LineX1) && (LineY0 < LineY1)) {
@@ -973,7 +973,7 @@ namespace OpenGLWinForms {
 					// Calculate the slope of the line
 					LineParameters.LineSlope = (LineY1 - LineY0) / (LineX1 - LineX0);
 
-					// Indstil Linjens X/Y Offsets
+					// Set the X/Y offsets of the line
 					LineParameters.LineXOffset = 1;
 					LineParameters.LineYOffset = LineParameters.LineSlope;
 
@@ -986,7 +986,7 @@ namespace OpenGLWinForms {
 					// Calculate the slope of the line
 					LineParameters.LineSlope = (LineX0 - LineX1) / (LineY1 - LineY0);
 
-					// Indstil Linjens X/Y Offsets
+					// Set the X/Y offsets of the line
 					LineParameters.LineXOffset = -LineParameters.LineSlope;
 					LineParameters.LineYOffset = 1;
 
@@ -994,7 +994,7 @@ namespace OpenGLWinForms {
 				
 			}
 
-			// ------------------------------ Linje Type 2 ------------------------------ //
+			// ------------------------------ Line Type 2 ------------------------------ //
 
 			// Check the line type
 			if ((LineX0 > LineX1) && (LineY0 < LineY1)) {
@@ -1011,7 +1011,7 @@ namespace OpenGLWinForms {
 					// Calculate the slope of the line
 					LineParameters.LineSlope = (LineY1 - LineY0) / (LineX0 - LineX1);
 
-					// Indstil Linjens X/Y Offsets
+					// Set the X/Y offsets of the line
 					LineParameters.LineXOffset = -1;
 					LineParameters.LineYOffset = LineParameters.LineSlope;
 
@@ -1024,7 +1024,7 @@ namespace OpenGLWinForms {
 					// Calculate the slope of the line
 					LineParameters.LineSlope = (LineX1 - LineX0) / (LineY1 - LineY0);
 
-					// Indstil Linjens X/Y Offsets
+					// Set the X/Y offsets of the line
 					LineParameters.LineXOffset = LineParameters.LineSlope;
 					LineParameters.LineYOffset = 1;
 
@@ -1032,7 +1032,7 @@ namespace OpenGLWinForms {
 
 			}
 
-			// ------------------------------ Linje Type 3 ------------------------------ //
+			// ------------------------------ Line Type 3 ------------------------------ //
 
 			// Check the line type
 			if ((LineX0 > LineX1) && (LineY0 > LineY1)) {
@@ -1049,7 +1049,7 @@ namespace OpenGLWinForms {
 					// Calculate the slope of the line
 					LineParameters.LineSlope = (LineY0 - LineY1) / (LineX0 - LineX1);
 
-					// Indstil Linjens X/Y Offsets
+					// Set the X/Y offsets of the line
 					LineParameters.LineXOffset = -1;
 					LineParameters.LineYOffset = -LineParameters.LineSlope;
 
@@ -1062,7 +1062,7 @@ namespace OpenGLWinForms {
 					// Calculate the slope of the line
 					LineParameters.LineSlope = (LineX1 - LineX0) / (LineY0 - LineY1);
 
-					// Indstil Linjens X/Y Offsets
+					// Set the X/Y offsets of the line
 					LineParameters.LineXOffset = LineParameters.LineSlope;
 					LineParameters.LineYOffset = -1;
 
@@ -1070,7 +1070,7 @@ namespace OpenGLWinForms {
 
 			}
 
-			// ------------------------------ Linje Type 4 ------------------------------ //
+			// ------------------------------ Line Type 4 ------------------------------ //
 
 			// Check the line type
 			if ((LineX0 < LineX1) && (LineY0 > LineY1)) {
@@ -1087,7 +1087,7 @@ namespace OpenGLWinForms {
 					// Calculate the slope of the line
 					LineParameters.LineSlope = (LineY0 - LineY1) / (LineX1 - LineX0);
 
-					// Indstil Linjens X/Y Offsets
+					// Set the X/Y offsets of the line
 					LineParameters.LineXOffset = 1;
 					LineParameters.LineYOffset = -LineParameters.LineSlope;
 
@@ -1100,7 +1100,7 @@ namespace OpenGLWinForms {
 					// Calculate the slope of the line
 					LineParameters.LineSlope = (LineX0 - LineX1) / (LineY0 - LineY1);
 
-					// Indstil Linjens X/Y Offsets
+					// Set the X/Y offsets of the line
 					LineParameters.LineXOffset = -LineParameters.LineSlope;
 					LineParameters.LineYOffset = -1;
 
@@ -1108,7 +1108,7 @@ namespace OpenGLWinForms {
 
 			}
 
-			// ------------------------------ Linje Type 5 ------------------------------ //
+			// ------------------------------ Line Type 5 ------------------------------ //
 
 			// Check the line type
 			if ((LineY0 == LineY1) && (LineX0 < LineX1)) {
@@ -1122,13 +1122,13 @@ namespace OpenGLWinForms {
 				// Calculate the slope of the line
 				LineParameters.LineSlope = 1;
 
-				// Indstil Linjens X/Y Offsets
+				// Set the X/Y offsets of the line
 				LineParameters.LineXOffset = 1;
 				LineParameters.LineYOffset = 0;
 
 			}
 
-			// ------------------------------ Linje Type 6 ------------------------------ //
+			// ------------------------------ Line Type 6 ------------------------------ //
 
 			// Check the line type
 			if ((LineY0 == LineY1) && (LineX0 > LineX1)) {
@@ -1142,13 +1142,13 @@ namespace OpenGLWinForms {
 				// Calculate the slope of the line
 				LineParameters.LineSlope = 1;
 
-				// Indstil Linjens X/Y Offsets
+				// Set the X/Y offsets of the line
 				LineParameters.LineXOffset = -1;
 				LineParameters.LineYOffset = 0;
 
 			}
 
-			// ------------------------------ Linje Type 7 ------------------------------ //
+			// ------------------------------ Line Type 7 ------------------------------ //
 
 			// Check the line type
 			if ((LineX0 == LineX1) && (LineY0 < LineY1)) {
@@ -1162,13 +1162,13 @@ namespace OpenGLWinForms {
 				// Calculate the slope of the line
 				LineParameters.LineSlope = 1;
 
-				// Indstil Linjens X/Y Offsets
+				// Set the X/Y offsets of the line
 				LineParameters.LineXOffset = 0;
 				LineParameters.LineYOffset = 1;
 
 			}
 
-			// ------------------------------ Linje Type 8 ------------------------------ //
+			// ------------------------------ Line Type 8 ------------------------------ //
 
 			// Check the line type
 			if ((LineX0 == LineX1) && (LineY0 > LineY1)) {
@@ -1182,7 +1182,7 @@ namespace OpenGLWinForms {
 				// Calculate the slope of the line
 				LineParameters.LineSlope = 1;
 
-				// Indstil Linjens X/Y Offsets
+				// Set the X/Y offsets of the line
 				LineParameters.LineXOffset = 0;
 				LineParameters.LineYOffset = -1;
 
@@ -1256,7 +1256,7 @@ namespace OpenGLWinForms {
 						// Update the cursor position status
 						IsInsideStatus = true;
 
-						// bryd for loop
+						// break the for loop
 						break;
 
 					}
@@ -1297,7 +1297,7 @@ namespace OpenGLWinForms {
 						// Update the returned selected line enum value
 						ReturnedSide = LineMovableSides::Middle;
 
-						// bryd for loop
+						// break the for loop
 						break;
 
 					}
@@ -1389,10 +1389,10 @@ namespace OpenGLWinForms {
 						// Update the move flag of the line
 						LineMoveFlag = true;
 
-						// Lager Valgte linje Tag Index
+						// Store the tag index of the selected line
 						SelectedLineTagIndex = MovableLineOrderIndex[i];
 
-						// Bryd For Loop
+						// Break the for loop
 						break;
 
 					}
@@ -1536,7 +1536,7 @@ namespace OpenGLWinForms {
 			// Check for the maximum tag order value
 			if (OrderPriority < 1 || OrderPriority > _MaxNumberOfMovableCrosshairs) {
 
-				// Skriv Status Meddelse I Terminal
+				// Write status message in the terminal
 				cout << "Order Must Be Higher Then 0 And Less That Max" << endl;
 
 			}
@@ -1547,7 +1547,7 @@ namespace OpenGLWinForms {
 					MovableLineX0[OrderPriority], MovableLineY0[OrderPriority], 
 					MovableLineX1[OrderPriority], MovableLineY1[OrderPriority]);
 				
-				// Lager linjens rendererings Orden
+				// Store the rendering order of the line
 				MovableLineOrderIndex[RenderedLineCounter] = OrderPriority;
 
 				// Is this rendered line the last selected line
@@ -1589,7 +1589,7 @@ namespace OpenGLWinForms {
 
 			// This routine enables the rendering of a background rectangle for all rendered text labels
 
-			// Opdater Label Baggrunds aktiverings flag
+			// Update the label background enable flag
 			EnableLabelBackgroundFlag = EnableFlag;
 
 		}
@@ -1607,7 +1607,7 @@ namespace OpenGLWinForms {
 
 		GLvoid RMH_OpenGL_ChangeLabelBackgroundColor(GLubyte BackgroundColorR, GLubyte BackgroundColorG, GLubyte BackgroundColorB) {
 
-			// Routinen opdaterer label baggrundens farve
+			// This routine updates the color of the label background
 
 			// Set the color of the label background
 			LabelBackgroundColorR = BackgroundColorR;
@@ -1630,7 +1630,7 @@ namespace OpenGLWinForms {
 				// Check whether the position is in quadrant 1
 				if (X >= ((GLfloat)ImageDataPixelWidth * 0.5) && Y <= ((GLfloat)ImageDataPixelHeight * 0.5)) {
 
-					// Kontroller Live View Roterings Indstillingen
+					// Check the live view rotation setting
 					if (LiveViewRotationDegrees == 0) {
 
 						// Update the quadrant offset values - 0 degrees rotation
@@ -1665,7 +1665,7 @@ namespace OpenGLWinForms {
 				// Check whether the position is in quadrant 2
 				if (X <= ((GLfloat)ImageDataPixelWidth * 0.5) && Y <= ((GLfloat)ImageDataPixelHeight * 0.5)) {
 	
-					// Kontroller Live View Roterings Indstillingen
+					// Check the live view rotation setting
 					if (LiveViewRotationDegrees == 0) {
 
 						// Update the quadrant offset values - 0 degrees rotation
@@ -1700,7 +1700,7 @@ namespace OpenGLWinForms {
 				// Check whether the position is in quadrant 3
 				if (X <= ((GLfloat)ImageDataPixelWidth * 0.5) && Y >= ((GLfloat)ImageDataPixelHeight * 0.5)) {
 
-					// Kontroller Live View Roterings Indstillingen
+					// Check the live view rotation setting
 					if (LiveViewRotationDegrees == 0) {
 
 						// Update the quadrant offset values - 0 degrees rotation
@@ -1735,7 +1735,7 @@ namespace OpenGLWinForms {
 				// Check whether the position is in quadrant 4
 				if (X >= ((GLfloat)ImageDataPixelWidth * 0.5) && Y >= ((GLfloat)ImageDataPixelHeight * 0.5)) {
 	
-					// Kontroller Live View Roterings Indstillingen
+					// Check the live view rotation setting
 					if (LiveViewRotationDegrees == 0) {
 
 						// Update the quadrant offset values - 0 degrees rotation
@@ -1772,7 +1772,7 @@ namespace OpenGLWinForms {
 			// Check the selected aspect ratio setting
 			if (LocalAspectRatioFlag == true) {
 
-				// Kontroller Live View Roterings Indstillingen
+				// Check the live view rotation setting
 				if (LiveViewRotationDegrees == 0) {
 
 					// If horizontal aspect ratio compensation is needed
@@ -1800,7 +1800,7 @@ namespace OpenGLWinForms {
 				}
 				if (LiveViewRotationDegrees == 90) {
 
-					// Skaller X/Y koordinater
+					// Scale the X/Y coordinates
 					X = X / ImageDataPixelAspectRatio;
 					Y = Y * ImageDataPixelAspectRatio;
 
@@ -1825,13 +1825,13 @@ namespace OpenGLWinForms {
 
 					}
 
-					// Juster X Koordinat
+					// Adjust the X coordinate
 					X = LiveViewPosY1 - X;
 
 				}
 				if (LiveViewRotationDegrees == 180) {
 
-					// Skaller X/Y koordinater
+					// Scale the X/Y coordinates
 					Y = ImageDataPixelHeight - Y;
 					X = ImageDataPixelWidth - X;
 
@@ -1860,7 +1860,7 @@ namespace OpenGLWinForms {
 				}
 				if (LiveViewRotationDegrees == 270) {
 
-					// Skaller X/Y koordinater
+					// Scale the X/Y coordinates
 					X = (ImageDataPixelWidth - X) / ImageDataPixelAspectRatio;
 					Y = (ImageDataPixelHeight - Y) * ImageDataPixelAspectRatio;
 
@@ -1885,7 +1885,7 @@ namespace OpenGLWinForms {
 
 					}
 
-					// Juster X Koordinat
+					// Adjust the X coordinate
 					X = LiveViewPosY1 - X;
 
 				}
@@ -1893,7 +1893,7 @@ namespace OpenGLWinForms {
 			}
 			else {
 
-				// Kontroller Live View Roterings Indstillingen
+				// Check the live view rotation setting
 				if (LiveViewRotationDegrees == 0) {
 
 					// Calculate the crosshair Y coordinate when scaling the texture window
@@ -1905,7 +1905,7 @@ namespace OpenGLWinForms {
 				}
 				if (LiveViewRotationDegrees == 90) {
 
-					// Skaller X/Y koordinater
+					// Scale the X/Y coordinates
 					X = X / ImageDataPixelAspectRatio;
 					Y = Y * ImageDataPixelAspectRatio;
 
@@ -1915,13 +1915,13 @@ namespace OpenGLWinForms {
 					// Calculate the crosshair X coordinate when scaling the texture window - auto aspect ratio mode
 					X = X * CurrentTexturePanelHeight * TotalTextureScalableHeight;
 
-					// Juster X Koordinat
+					// Adjust the X coordinate
 					X = LiveViewPosY1 - X;
 
 				}
 				if (LiveViewRotationDegrees == 180) {
 
-					// Skaller X/Y koordinater
+					// Scale the X/Y coordinates
 					Y = ImageDataPixelHeight - Y;
 					X = ImageDataPixelWidth - X;
 
@@ -1934,7 +1934,7 @@ namespace OpenGLWinForms {
 				}
 				if (LiveViewRotationDegrees == 270) {
 
-					// Skaller X/Y koordinater
+					// Scale the X/Y coordinates
 					X = (ImageDataPixelWidth - X) / ImageDataPixelAspectRatio;
 					Y = (ImageDataPixelHeight - Y) * ImageDataPixelAspectRatio;
 
@@ -1944,7 +1944,7 @@ namespace OpenGLWinForms {
 					// Calculate the crosshair X coordinate when scaling the texture window - auto aspect ratio mode
 					X = X * CurrentTexturePanelHeight * TotalTextureScalableHeight;
 
-					// Juster X Koordinat
+					// Adjust the X coordinate
 					X = LiveViewPosY1 - X;
 
 				}
@@ -1964,10 +1964,10 @@ namespace OpenGLWinForms {
 				// Render the rectangle on the texture
 				glBegin(GL_QUADS);
 
-				// Kontroller Live View Roterings Indstillingen
+				// Check the live view rotation setting
 				if (LiveViewRotationDegrees == 0) {
 
-					// Render label rektanglens positioner
+					// Render the positions of the label rectangle
 					glVertex2f((X + QuadrantXOffset) - LabelBackgroundXOffset, (Y + QuadrantYOffset) - LabelBackgroundYOffset);
 					glVertex2f((X + QuadrantXOffset) - LabelBackgroundXOffset + LabelBackgroundWidth, (Y + QuadrantYOffset) - LabelBackgroundYOffset);
 					glVertex2f((X + QuadrantXOffset) - LabelBackgroundXOffset + LabelBackgroundWidth, (Y + QuadrantYOffset) - LabelBackgroundYOffset + LabelBackgroundHeight);
@@ -1976,7 +1976,7 @@ namespace OpenGLWinForms {
 				}
 				if (LiveViewRotationDegrees == 90) {
 
-					// Render label rektanglens positioner
+					// Render the positions of the label rectangle
 					glVertex2f((Y + QuadrantXOffset) - LabelBackgroundXOffset, (X + QuadrantYOffset) - LabelBackgroundYOffset);
 					glVertex2f((Y + QuadrantXOffset) - LabelBackgroundXOffset + LabelBackgroundWidth, (X + QuadrantYOffset) - LabelBackgroundYOffset);
 					glVertex2f((Y + QuadrantXOffset) - LabelBackgroundXOffset + LabelBackgroundWidth, (X + QuadrantYOffset) - LabelBackgroundYOffset + LabelBackgroundHeight);
@@ -1985,7 +1985,7 @@ namespace OpenGLWinForms {
 				}
 				if (LiveViewRotationDegrees == 180) {
 
-					// Render label rektanglens positioner
+					// Render the positions of the label rectangle
 					glVertex2f((X + QuadrantXOffset) - LabelBackgroundXOffset, (Y + QuadrantYOffset) - LabelBackgroundYOffset);
 					glVertex2f((X + QuadrantXOffset) - LabelBackgroundXOffset + LabelBackgroundWidth, (Y + QuadrantYOffset) - LabelBackgroundYOffset);
 					glVertex2f((X + QuadrantXOffset) - LabelBackgroundXOffset + LabelBackgroundWidth, (Y + QuadrantYOffset) - LabelBackgroundYOffset + LabelBackgroundHeight);
@@ -1994,7 +1994,7 @@ namespace OpenGLWinForms {
 				}
 				if (LiveViewRotationDegrees == 270) {
 
-					// Render label rektanglens positioner
+					// Render the positions of the label rectangle
 					glVertex2f((Y + QuadrantXOffset) - LabelBackgroundXOffset, (X + QuadrantYOffset) - LabelBackgroundYOffset);
 					glVertex2f((Y + QuadrantXOffset) - LabelBackgroundXOffset + LabelBackgroundWidth, (X + QuadrantYOffset) - LabelBackgroundYOffset);
 					glVertex2f((Y + QuadrantXOffset) - LabelBackgroundXOffset + LabelBackgroundWidth, (X + QuadrantYOffset) - LabelBackgroundYOffset + LabelBackgroundHeight);
@@ -2002,7 +2002,7 @@ namespace OpenGLWinForms {
 
 				}
 
-				// Konfiguration Slut
+				// End of configuration
 				glEnd();
 				// Disable the 1D texture
 				glDisable(GL_TEXTURE_1D);
@@ -2013,7 +2013,7 @@ namespace OpenGLWinForms {
 			// Should a label be added to the crosshair
 			if (EnableLabel == true) {
 
-				// Kontroller Live View Roterings Indstillingen
+				// Check the live view rotation setting
 				if (LiveViewRotationDegrees == 0) {
 
 					// Add the label to the crosshair
@@ -2052,53 +2052,53 @@ namespace OpenGLWinForms {
 			// Render the line on the texture
 			glBegin(GL_LINES);
 
-			// Kontroller Live View Roterings Indstillingen
+			// Check the live view rotation setting
 			if (LiveViewRotationDegrees == 0) {
 
-				// Vertikale Linje
+				// Vertical line
 				glVertex2f(X, Y - (CrosshairSize * 0.5));
 				glVertex2f(X, Y + (CrosshairSize * 0.5));
 
-				// Horisontal Linje
+				// Horizontal line
 				glVertex2f(X - (CrosshairSize * 0.5), Y);
 				glVertex2f(X + (CrosshairSize * 0.5), Y);
 
 			}
 			if (LiveViewRotationDegrees == 90) {
 
-				// Vertikale Linje
+				// Vertical line
 				glVertex2f(Y - (CrosshairSize * 0.5), X);
 				glVertex2f(Y + (CrosshairSize * 0.5), X);
 
-				// Horisontal Linje
+				// Horizontal line
 				glVertex2f(Y, X - (CrosshairSize * 0.5));
 				glVertex2f(Y, X + (CrosshairSize * 0.5));
 
 			}
 			if (LiveViewRotationDegrees == 180) {
 
-				// Vertikale Linje
+				// Vertical line
 				glVertex2f(X, Y - (CrosshairSize * 0.5));
 				glVertex2f(X, Y + (CrosshairSize * 0.5));
 
-				// Horisontal Linje
+				// Horizontal line
 				glVertex2f(X - (CrosshairSize * 0.5), Y);
 				glVertex2f(X + (CrosshairSize * 0.5), Y);
 
 			}
 			if (LiveViewRotationDegrees == 270) {
 
-				// Vertikale Linje
+				// Vertical line
 				glVertex2f(Y - (CrosshairSize * 0.5), X);
 				glVertex2f(Y + (CrosshairSize * 0.5), X);
 
-				// Horisontal Linje
+				// Horizontal line
 				glVertex2f(Y, X - (CrosshairSize * 0.5));
 				glVertex2f(Y, X + (CrosshairSize * 0.5));
 
 			}
 
-			// Konfiguration Slut
+			// End of configuration
 			glEnd();
 			// Disable the 1D texture
 			glDisable(GL_TEXTURE_1D);
@@ -2139,13 +2139,13 @@ namespace OpenGLWinForms {
 				// Render the rectangle on the texture
 				glBegin(GL_QUADS);
 
-				// Render label rektanglens positioner
+				// Render the positions of the label rectangle
 				glVertex2f((X + ChrosshairWithCenterLabelXOffset) - CenterLabelBackgroundXOffset, (Y + ChrosshairWithCenterLabelYOffset) - CenterLabelBackgroundYOffset);
 				glVertex2f((X + ChrosshairWithCenterLabelXOffset) - CenterLabelBackgroundXOffset + CenterLabelBackgroundWidth, (Y + ChrosshairWithCenterLabelYOffset) - CenterLabelBackgroundYOffset);
 				glVertex2f((X + ChrosshairWithCenterLabelXOffset) - CenterLabelBackgroundXOffset + CenterLabelBackgroundWidth, (Y + ChrosshairWithCenterLabelYOffset) - CenterLabelBackgroundYOffset + CenterLabelBackgroundHeight);
 				glVertex2f((X + ChrosshairWithCenterLabelXOffset) - CenterLabelBackgroundXOffset, (Y + ChrosshairWithCenterLabelYOffset) - CenterLabelBackgroundYOffset + CenterLabelBackgroundHeight);
 
-				// Konfiguration Slut
+				// End of configuration
 				glEnd();
 				// Disable the 1D texture
 				glDisable(GL_TEXTURE_1D);
@@ -2168,15 +2168,15 @@ namespace OpenGLWinForms {
 			// Render the line on the texture
 			glBegin(GL_LINES);
 
-			// Vertikale Linje
+			// Vertical line
 			glVertex2f(X, Y - (CrosshairSize * 0.5));
 			glVertex2f(X, Y + (CrosshairSize * 0.5));
 
-			// Horisontal Linje
+			// Horizontal line
 			glVertex2f(X - (CrosshairSize * 0.5), Y);
 			glVertex2f(X + (CrosshairSize * 0.5), Y);
 
-			// Konfiguration Slut
+			// End of configuration
 			glEnd();
 			// Disable the 1D texture
 			glDisable(GL_TEXTURE_1D);
@@ -2284,10 +2284,10 @@ namespace OpenGLWinForms {
 						// Update the move flag of the crosshair
 						CrosshairMoveFlag = true;
 
-						// Lager Valgte Regtangel Tag Index
+						// Store the tag index of the selected rectangle
 						SelectedCrosshairTagIndex = CrosshairOrderIndex[i];
 
-						// Bryd For Loop
+						// Break the for loop
 						break;
 
 					}
@@ -2356,13 +2356,13 @@ namespace OpenGLWinForms {
 			// Check for the maximum tag order value
 			if (OrderPriority < 1 || OrderPriority > _MaxNumberOfMovableCrosshairs) {
 
-				// Skriv Status Meddelse I Terminal
+				// Write status message in the terminal
 				cout << "Order Must Be Higher Then 0 And Less That Max" << endl;
 
 			}
 			else {
 
-				// Kontroller Live View Roterings Indstillingen
+				// Check the live view rotation setting
 				if (LiveViewRotationDegrees == 0) {
 
 					// Read the crosshair position parameters for returning - compensate for live view rotation
@@ -2392,7 +2392,7 @@ namespace OpenGLWinForms {
 
 				}
 
-				// Lager Crosshair med label rendererings Orden
+				// Store the rendering order of the crosshair with label
 				CrosshairOrderIndex[RenderedCrosshairCounter] = OrderPriority;
 
 				// Is this rendered rectangle the last selected rectangle
@@ -2438,7 +2438,7 @@ namespace OpenGLWinForms {
 			GLfloat QuadrantXOffset = 0.0;
 			GLfloat QuadrantYOffset = 0.0;
 
-			// Er Mus Cursor Tracking aktiverede
+			// Is mouse cursor tracking enabled
 			if (CursorTrackingEnableFlag == true) {
 
 				// Read the mouse cursor X and Y position
@@ -2537,13 +2537,13 @@ namespace OpenGLWinForms {
 				// Render the rectangle on the texture
 				glBegin(GL_QUADS);
 
-				// Render label rektanglens positioner
+				// Render the positions of the label rectangle
 				glVertex2f(CursorTrackTextureXPos - MouseLabelBackgroundXOffset, CursorTrackTextureYPos - MouseLabelBackgroundYOffset);
 				glVertex2f(CursorTrackTextureXPos - MouseLabelBackgroundXOffset + MouseLabelBackgroundWidth, CursorTrackTextureYPos - MouseLabelBackgroundYOffset);
 				glVertex2f(CursorTrackTextureXPos - MouseLabelBackgroundXOffset + MouseLabelBackgroundWidth, CursorTrackTextureYPos - MouseLabelBackgroundYOffset + MouseLabelBackgroundHeight);
 				glVertex2f(CursorTrackTextureXPos - MouseLabelBackgroundXOffset, CursorTrackTextureYPos - MouseLabelBackgroundYOffset + MouseLabelBackgroundHeight);
 
-				// Konfiguration Slut
+				// End of configuration
 				glEnd();
 				// Disable the 1D texture
 				glDisable(GL_TEXTURE_1D);
@@ -2551,15 +2551,15 @@ namespace OpenGLWinForms {
 
 			}
 
-			// Er Mus Cursor Tracking aktiverede
+			// Is mouse cursor tracking enabled
 			if (CursorTrackingEnableFlag == true) {
 
-				// Renderer Label Lige over Mus Cursor Positionen
+				// Render a label just above the mouse cursor position
 				RMH_OpenGL_RenderStringOnTexture(CursorTrackTextureXPos, CursorTrackTextureYPos, RMH_Conversion_SystemStringToStdString(DisplayString) + ": X: " + RMH_Conversion_IntToStdString(CursorTrackXPos) + " Y: " + RMH_Conversion_IntToStdString(CursorTrackYPos), LabelColorR, LabelColorG, LabelColorB);
 
 			}
 
-			// Kontroller Live View Roterings Indstillingen
+			// Check the live view rotation setting
 			if (LiveViewRotationDegrees == 0) {
 
 				// Read the mouse cursor X and Y position
@@ -2723,13 +2723,13 @@ namespace OpenGLWinForms {
 					// The highest-priority rectangle is always selected first in the layering 
 					if (RMH_OpenGL_IsCursorInsideRectangle(MouseXPosition, MouseYPosition, RectX0[RectOrderIndex[i]], RectY0[RectOrderIndex[i]], RectWidth[RectOrderIndex[i]], RectHeight[RectOrderIndex[i]])) {
 
-						// Opdater Rektangel panel Move flag
+						// Update the rectangle panel move flag
 						RectangleMoveFlag = true;
 
-						// Lager Valgte Regtangel Tag Index
+						// Store the tag index of the selected rectangle
 						SelectedRectTagIndex = RectOrderIndex[i];
 
-						// Bryd For Loop
+						// Break the for loop
 						break;
 
 					}
@@ -2982,7 +2982,7 @@ namespace OpenGLWinForms {
 			// Check for the maximum tag order value
 			if (OrderPriority < 1 || OrderPriority > _MaxNumberOfMovableRectangles) {
 
-				// Skriv Status Meddelse I Terminal
+				// Write status message in the terminal
 				cout << "Order Must Be Higher Then 0 And Less Than Max" << endl;
 
 			}
@@ -2994,9 +2994,9 @@ namespace OpenGLWinForms {
 				RenderedRectPosition.RectangleWidth = RectWidth[OrderPriority];
 				RenderedRectPosition.RectangleHeight = RectHeight[OrderPriority];
 
-				// Lager Regtanglens rendererings Orden
+				// Store the rendering order of the rectangle
 				RectOrderIndex[RenderedRectanglesCounter] = OrderPriority;
-				// Lager Regtanglens fast aspect ratio aktiverings flag
+				// Store the fixed aspect ratio enable flag of the rectangle
 				RectFixedAspectRatioFlags[OrderPriority] = FixedAspectRatioFlag;
 
 				// Check the selected aspect ratio setting
@@ -3072,25 +3072,25 @@ namespace OpenGLWinForms {
 				// Render the line on the texture
 				glBegin(GL_LINES);
 
-				// Top Regtangel Linjer
+				// Top rectangle lines
 				glVertex2f(RenderedRectPosition.RectangleX0Pos, RenderedRectPosition.RectangleY0Pos);
 				glVertex2f(RenderedRectPosition.RectangleWidth, RenderedRectPosition.RectangleY0Pos);
 				// Right rectangle lines
 				glVertex2f(RenderedRectPosition.RectangleWidth, RenderedRectPosition.RectangleY0Pos);
 				glVertex2f(RenderedRectPosition.RectangleWidth, RenderedRectPosition.RectangleHeight);
-				// Bund Regtangel Linjer
+				// Bottom rectangle lines
 				glVertex2f(RenderedRectPosition.RectangleWidth, RenderedRectPosition.RectangleHeight);
 				glVertex2f(RenderedRectPosition.RectangleX0Pos, RenderedRectPosition.RectangleHeight);
-				// Venstre Regtangel Linjer
+				// Left rectangle lines
 				glVertex2f(RenderedRectPosition.RectangleX0Pos, RenderedRectPosition.RectangleHeight);
 				glVertex2f(RenderedRectPosition.RectangleX0Pos, RenderedRectPosition.RectangleY0Pos);
 
-				// Konfiguration Slut
+				// End of configuration
 				glEnd();
 				// Disable the 1D texture
 				glDisable(GL_TEXTURE_1D);
 		
-				// Kontroller Live View Roterings Indstillingen
+				// Check the live view rotation setting
 				if (LiveViewRotationDegrees == 0) {
 
 					// Update the position coordinate values
@@ -3278,7 +3278,7 @@ namespace OpenGLWinForms {
 			LiveViewPosX1 = 0.0;
 			LiveViewPosY1 = 0.0;
 
-			// Nulstil Aspect-Ratio Offset parameter
+			// Reset the aspect ratio offset parameter
 			AspectRatioWidthOffSet = 0.0;
 			// Update the local class aspect ratio status flag
 			LocalAspectRatioFlag = FixedAspectRatio;
@@ -3299,7 +3299,7 @@ namespace OpenGLWinForms {
 			// Check the selected aspect ratio setting
 			if (FixedAspectRatio == true) {
 
-				// Kontroller Live View Roterings Indstillingen
+				// Check the live view rotation setting
 				if (LiveViewRotationDegrees == 90 || LiveViewRotationDegrees == 270) {
 
 					// Calculate the aspect-ratio-compensated pixel width and height of the texture panel - for 90 and 270 degree rotation
@@ -3325,7 +3325,7 @@ namespace OpenGLWinForms {
 				// Add the X0 aspect ratio margin on the left side of the texture window
 				LiveViewPosX0 = AspectRatioWidthOffSet;
 
-				// Kompenser for fast aspect ratio i horizontal retning
+				// Compensate for fixed aspect ratio in the horizontal direction
 				if (LiveViewPosX0 <= 0.0) {
 
 					// Reset the X0 position
@@ -3348,7 +3348,7 @@ namespace OpenGLWinForms {
 
 			}
 
-			// Ryd Textur farve og bit buffere
+			// Clear the texture color and bit buffers
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 			// Enable OpenGL 2D texture
@@ -3360,13 +3360,13 @@ namespace OpenGLWinForms {
 			glTranslatef(0.0f, FrameHeight, 0.0f);
 			glRotatef(180.0f, 1.0f, 0.0f, 0.0f);
 
-			// Begynd Renderering
+			// Begin rendering
 			glBegin(GL_QUADS);
 
-			// Kontroller Live View Roterings Indstillingen
+			// Check the live view rotation setting
 			if (LiveViewRotationDegrees == 0) {
 
-				// Opdater renderede textur kordinater - 0 Grader Rotering
+				// Update the rendered texture coordinates - 0 degrees rotation
 				glTexCoord2f(0.0, 0.0);
 				glVertex2f(LiveViewPosX0, LiveViewPosY0);
 				glTexCoord2f(UltraResolutionFrameOffsetValue, 0.0);
@@ -3379,7 +3379,7 @@ namespace OpenGLWinForms {
 			}
 			else if (LiveViewRotationDegrees == 90) {
 
-				// Opdater renderede textur kordinater - 90 Grader Rotering
+				// Update the rendered texture coordinates - 90 degrees rotation
 				glTexCoord2f(0.0, 0.0);
 				glVertex2f(LiveViewPosX0, LiveViewPosY1);
 				glTexCoord2f(UltraResolutionFrameOffsetValue, 0.0);
@@ -3392,7 +3392,7 @@ namespace OpenGLWinForms {
 			}
 			else if (LiveViewRotationDegrees == 180) {
 				
-				// Opdater renderede textur kordinater - 180 Grader Rotering
+				// Update the rendered texture coordinates - 180 degrees rotation
 				glTexCoord2f(0.0, 0.0);
 				glVertex2f(LiveViewPosX1, LiveViewPosY1);
 				glTexCoord2f(UltraResolutionFrameOffsetValue, 0.0);
@@ -3405,7 +3405,7 @@ namespace OpenGLWinForms {
 			}
 			else {
 
-				// Opdater renderede textur kordinater - 270 Grader Rotering
+				// Update the rendered texture coordinates - 270 degrees rotation
 				glTexCoord2f(0.0, 0.0);
 				glVertex2f(LiveViewPosX1, LiveViewPosY0);
 				glTexCoord2f(UltraResolutionFrameOffsetValue, 0.0);
@@ -3417,7 +3417,7 @@ namespace OpenGLWinForms {
 
 			}
 
-			// Konfiguration Slut
+			// End of configuration
 			glEnd();
 			// Disable 2D texture
 			glDisable(GL_TEXTURE_2D);
@@ -3456,7 +3456,7 @@ namespace OpenGLWinForms {
 
 		}
 
-		// ----------------------- Textur Panel Interaktions Cursor Event Callback Routiner ------------------------ //
+		// ----------------------- Texture Panel Interaction Cursor Event Callback Routines ------------------------ //
 
 		GLvoid RMH_OpenGL_UpdateRenderedObjectsZOrder(unsigned short ZOrden) {
 
@@ -3483,10 +3483,10 @@ namespace OpenGLWinForms {
 			GLdouble MouseXPosition = RMH_OpenGL_TranslateOverlayPanelMouseXPosToTextureXPos(e);
 			GLdouble MouseYPosition = RMH_OpenGL_TranslateOverlayPanelMouseYPosToTextureYPos(e);
 
-			// Opdater overlay panel click flag
+			// Update the overlay panel click flag
 			OverlayPanelIsClick = true;
 
-			// Valg Af Rendererings Orden (Z-Orden)
+			// Selection of the rendering order (Z-order)
 			switch (MovableObjectsRenderZOrder) {
 
 				// Crosshairs are in front
@@ -3537,7 +3537,7 @@ namespace OpenGLWinForms {
 
 		GLvoid TexturePanel_MouseUp(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e) {
 
-			// Opdater overlay panel click flag
+			// Update the overlay panel click flag
 			OverlayPanelIsClick = false;
 
 			// Reset the rectangle move flag
@@ -3563,7 +3563,7 @@ namespace OpenGLWinForms {
 			// Update the cursor label position, if the feature is enabled
 			RMH_OpenGL_UpdateCursorTrackingPosition(MouseXPosition, MouseYPosition);
 
-			// Valg Af Rendererings Orden (Z-Orden)
+			// Selection of the rendering order (Z-order)
 			switch (MovableObjectsRenderZOrder) {
 
 				// Crosshairs are in front
@@ -3617,16 +3617,16 @@ namespace OpenGLWinForms {
 			// Check whether mouse scroll wheel live view rotation is enabled
 			if (LiveViewMouseScrollWheelRotationEnablFlag == true) {
 
-				// Kontroller Mus hjulets drejnings polaritet
+				// Check the rotation polarity of the mouse wheel
 				if (e->Delta < 0.0) {
 
-					// Roter Live View Billeder 90 Grader Med Uret
+					// Rotate the live view image 90 degrees clockwise
 					RMH_OpenGL_RotateLiveViewCW();
 
 				}
 				else {
 
-					// Roter Live View Billeder 90 Grader Mod Uret
+					// Rotate the live view image 90 degrees counterclockwise
 					RMH_OpenGL_RotateLiveViewCCW();
 
 				}
@@ -3635,7 +3635,7 @@ namespace OpenGLWinForms {
 
 		}
 
-		// -------------------------------- OpenGL Renderering Slut Punkts Routiner -------------------------------- //
+		// -------------------------------- OpenGL Rendering Endpoint Routines -------------------------------- //
 		
 		GLvoid RMH_OpenGL_SwapOpenGLBuffers(GLvoid) {
 
@@ -3666,7 +3666,7 @@ namespace OpenGLWinForms {
 			// Reset the line rendering counter variable
 			RenderedLineCounter = 0;
 
-			// Swap Textur buffere
+			// Swap the texture buffers
 			RMH_OpenGL_SwapOpenGLBuffers();
 
 			// Reset the render context
@@ -3685,7 +3685,7 @@ namespace OpenGLWinForms {
 			// Delete the OpenGL context
 			DeleteOpenGL();
 
-			// Destruer OpenGL Handler objekt
+			// Destroy the OpenGL handler object
 			this->DestroyHandle();
 
 			// Garbage Collect managed data
@@ -3695,7 +3695,7 @@ namespace OpenGLWinForms {
 
 		GLvoid DeleteOpenGL(GLvoid)	{
 
-			// Routinen sletter alt OpenGL Context
+			// This routine deletes the whole OpenGL context
 
 			// Read the temporary array data and sort the kernel array
 			HGLRC hglrc;
@@ -3707,7 +3707,7 @@ namespace OpenGLWinForms {
 			hdc = wglGetCurrentDC();
 			// Make the render context the current context
 			wglMakeCurrent(NULL, NULL);
-			// Frigiv Device context
+			// Release the device context
 			ReleaseDC(NULL, hdc);
 			// Delete the render context
 			wglDeleteContext(hglrc);
@@ -3720,16 +3720,16 @@ namespace OpenGLWinForms {
 
 		bool RMH_OpenGL_SetTexturePixelFormat(HDC hdc) {
 
-			// Routinen konfigurerer Texturens Pixel format
+			// This routine configures the pixel format of the texture
 
 			// The format tells Windows how the texture data should be interpreted
 			PIXELFORMATDESCRIPTOR pfd = {
 
 				sizeof(PIXELFORMATDESCRIPTOR),				// Size of this pixel format descriptor
-				1,											// Formatets Versions Nummer 
+				1,											// Version number of the format 
 				PFD_DRAW_TO_WINDOW |						// The format must support Windows
 				PFD_SUPPORT_OPENGL |						// The format must support OpenGL
-				PFD_DOUBLEBUFFER,							// Formatet skal supporterer "Double Buffering"
+				PFD_DOUBLEBUFFER,							// The format must support "double buffering"
 				PFD_TYPE_RGBA,								// Request an RGBA format
 				16,										    // Select the "color depth" (16-bit)
 				0, 0, 0, 0, 0, 0,							// Color bits are to be ignored
@@ -3737,7 +3737,7 @@ namespace OpenGLWinForms {
 				0,											// Shift bit is to be ignored
 				0,											// No "accumulation buffer"
 				0, 0, 0, 0,									// Accumulator bits are to be ignored
-				16,											// 16Bit Z-Buffer (Buffer dybde)  
+				16,											// 16-bit Z-buffer (buffer depth)  
 				0,											// No "stencil buffer"
 				0,											// No "auxiliary buffer"
 				PFD_MAIN_PLANE,								// Set as the main "drawing" layer
@@ -3796,7 +3796,7 @@ namespace OpenGLWinForms {
 			glMatrixMode(GL_PROJECTION);
 			// Reset the projection matrix
 			glLoadIdentity();
-			// Udregn vinduets aspect ratio
+			// Calculate the aspect ratio of the window
 			gluPerspective(60.0f, (GLfloat)TotalTextureWidth / (GLfloat)TotalTextureHeight, 0.1, 500.0); 
 			// Select the "model view" matrix
 			glMatrixMode(GL_MODELVIEW);
@@ -3815,7 +3815,7 @@ namespace OpenGLWinForms {
 			// Update the font list
 			BaseFont = glGenLists(96);
 
-			// Generer Strutureret Font Objekt
+			// Generate the structured font object
 			TextureFont = CreateFont(
 				-12,                            // nHeight
 				0,								// nWidth
@@ -3834,27 +3834,27 @@ namespace OpenGLWinForms {
 
 			// Set the FONT to the OpenGL object structure
 			SelectObject(m_hDC, TextureFont);
-			// Generer Bitmap Display FONT Liste
+			// Generate the bitmap display FONT list
 			wglUseFontBitmaps(m_hDC, 32, 96, BaseFont);
 
 		}
 
 		bool RMH_OpenGL_Init(GLvoid) {
 
-			// Routinen Initialisere OpenGL I Winforms C++/CLR
+			// This routine initializes OpenGL in WinForms C++/CLR
 
 			// Enable "flat shader" mode
 			glShadeModel(GL_FLAT);
-			// Default Baggrund farve
+			// Default background color
 			glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 			// Set up the "depth buffer"
 			glClearDepth(1.0f);
 			// Disable OpenGL "depth testing"
 			glDisable(GL_DEPTH_TEST);
-			// For perspektiv - Fortag "Very Nice" udregniner
+			// For perspective - use "very nice" calculations
 			glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
 
-			// Generer FONT Objekt
+			// Generate the FONT object
 			RMH_OpenGL_BuildFont();
 
 			// Return the "OpenGL setup" finished flag

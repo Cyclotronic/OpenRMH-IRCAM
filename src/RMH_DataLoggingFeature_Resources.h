@@ -3,7 +3,7 @@
  *  RMH_DataLoggingFeature_Resources.h
  *
  *  Author: Rune Mark Hansen
- *  Date: Januar 2024
+ *  Date: January 2024
  *
  */
 
@@ -13,7 +13,7 @@
 #ifndef RMH_DataLoggingFeature_Resources_H 
 #define RMH_DataLoggingFeature_Resources_H
 
-// Data Logging CSV Delimiter Index macroer
+// Data logging CSV delimiter index macros
 #define _DataLoggingDelimiterIndex_Comma           0       
 #define _DataLoggingDelimiterIndex_Semicolon       1          
 #define _DataLoggingDelimiterIndex_Colon           2            

@@ -3,7 +3,7 @@
  *  RMH_RecordingAnalysisMode_Routines.h
  *
  *  Author: Rune Mark Hansen
- *  Date: Juli 2023
+ *  Date: July 2023
  *
  */
 
@@ -16,10 +16,10 @@
 // Included libraries
 #include <opencv2/opencv.hpp>
 
-// RAW Optagning/Snapshot Identifikations Data Reference Macroer
+// RAW recording/snapshot identification data reference macros
 #define _RAWFileIDData_FileIDString                                      "IRCAM.RAM"
 
-// RAW Optagning Meta Data Index Reference Macroer
+// RAW recording metadata index reference macros
 #define _RAWRecordingFileMetaDataIndex_IDStringStop                      8
 #define _RAWRecordingFileMetaDataIndex_CameraPool                        9
 #define _RAWRecordingFileMetaDataIndex_MetaDataSizeMSB                   10
@@ -52,7 +52,7 @@
 #define _RAWRecordingFileMetaDataIndex_CameraDistanceLSB                 37      
 #define _RAWRecordingFileMetaDataIndex_DataEndChar                       38
 
-// Video fil skrivnings index reference macroer
+// Video file writing index reference macros
 #define _VideoFileWriteObject_RecordingAnalysisModeFile                  1
 #define _VideoFileWriteObject_LiveViewStreamFile                         2
 
@@ -62,7 +62,7 @@
 #define _ReadAVIFile_StatusCode_FrameNumberOutOfRange                    3
 #define _ReadAVIFile_StatusCode_FrameReadError                           4
 
-// --------------------------------------------------- Blbliotek Reference Klasser --------------------------------------------------- //
+// --------------------------------------------------- Library Reference Classes --------------------------------------------------- //
 
 // Read RAW video file information class structure
 struct RAWVideoFileInfo {
@@ -90,7 +90,7 @@ struct RAWSnapShotFileInfo {
 
 };
 
-// RAW Video Fil Identifikations Klasse struktur
+// RAW video file identification class structure
 struct RAWFileIDFormat {
 
     // RAW video file ID variables and objects

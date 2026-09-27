@@ -25,7 +25,7 @@ double MaxExecutionTime = 0.0;
 double MinExecutionTime = 1000.0;
 unsigned int RichTextBoxNumberOfLines = 0;
 
-// Globale namespaces
+// Global namespaces
 using namespace System;
 using namespace System::Windows::Forms;
 using namespace System::Diagnostics;
@@ -37,32 +37,32 @@ using namespace Microsoft::Win32;
 
 void RMH_Winforms_EnableTitleBarDarkMode(System::IntPtr FormHandle) {
 
-	// Routinen Aktiverer Winforms Applikationens TitelBars Dark Mode
+	// This routine enables the WinForms application title bar dark mode
 
 	// Local variables
 	BOOL UseDark = TRUE;
 	const int DWMWA_USE_IMMERSIVE_DARK_MODE = 20;
 
-	// Aktiverer Winforms Applikationens TitelBars Dark Mode
+	// Enable the WinForms application title bar dark mode
 	DwmSetWindowAttribute(static_cast<HWND>(FormHandle.ToPointer()), DWMWA_USE_IMMERSIVE_DARK_MODE, &UseDark, sizeof(UseDark));
 
 }
 
-// ----------------------------- Winform Benchmarkings Routiner ----------------------------- //
+// ----------------------------- WinForms Benchmarking Routines ----------------------------- //
 
 System::Diagnostics::Stopwatch^ RMH_Winforms_StartBenchMarkTimer() {
 
 	// This routine starts an internal timer for code benchmarking
 
 	/*
-	 *  Eksempel ->
+	 *  Example ->
 	 *  
-	 *   // Start Benchmark Timer
+	 *   // Start benchmark timer
 	 *   System::Diagnostics::Stopwatch^ BenchMarkTimer = RMH_Winforms_StartBenchMarkTimer();
 	 * 
-	 *   // ----- Benchmark Kode Her ----- //
+	 *   // ----- Benchmark code here ----- //
 	 * 
-	 *   // Stop Timer og display Benchmark Tid
+	 *   // Stop the timer and display the benchmark time
 	 *   RMH_Winforms_StopBenchmarkTimerAndDisplay(BenchMarkTimer);
 	 * 
 	 */
@@ -70,7 +70,7 @@ System::Diagnostics::Stopwatch^ RMH_Winforms_StartBenchMarkTimer() {
 	// Local objects and variables
 	System::Diagnostics::Stopwatch^ BenchmarkTimer;
 
-	// Start intern timer til code benchmarking
+	// Start the internal timer for code benchmarking
 	BenchmarkTimer = Stopwatch::StartNew();
 
 	// Return the timer object
@@ -83,27 +83,27 @@ void RMH_Winforms_StopBenchmarkTimerAndDisplay(System::Diagnostics::Stopwatch^ B
 	// This routine stops the internal benchmark timer, calculates and shows 
 	// the code execution time [in seconds], in the output window, since the timer was started
 
-	// Stil Benchmark Timer
+	// Stop the benchmark timer
 	BenchmarkTimer->Stop();
 
-	// Udregn eksikverings Benchmark tiderne
+	// Calculate the execution benchmark times
 	double TimerFrequency = double(BenchmarkTimer->Frequency);
 	double ElapsedTicks = double(BenchmarkTimer->ElapsedTicks);
 	double ExecutionTime = ElapsedTicks * (1.0 / TimerFrequency);
 
 	// Check the maximum execution time
 	if (ExecutionTime > MaxExecutionTime) {
-		// Lager maksimale eksikverings tid
+		// Store the maximum execution time
 		MaxExecutionTime = ExecutionTime;
 	}
 
 	// Check the minimum execution time
 	if (ExecutionTime < MinExecutionTime) {
-		// Lager minimale eksikverings tid
+		// Store the minimum execution time
 		MinExecutionTime = ExecutionTime;
 	}
 
-	// Display Benchmark tid i Output Vindue
+	// Display the benchmark time in the output window
 	cout << "Elapsed Time [Sec]:" << ExecutionTime << endl;
 	cout << "Max Execution Time [Sec]:" << MaxExecutionTime << endl;
 	cout << "Min Execution Time [Sec]:" << MinExecutionTime << endl;
@@ -119,14 +119,14 @@ void RMH_Winforms_StartMainApplicationGUI() {
 
 	// This routine configures the application parameters and starts the WinForms GUI
 
-	// Aktiver Applikationens Visual stil render
+	// Enable the visual style rendering of the application
 	Application::EnableVisualStyles();
-	// Applicationen Benytter den globale deafult Text render 
+	// The application uses the global default text rendering 
 	Application::SetCompatibleTextRenderingDefault(false);
 
 	// Show the start splash screen
 	Application::Run(gcnew SplashScreen());
-	// Start Main GUI applikation
+	// Start the main GUI application
 	Application::Run(gcnew MainGUI());
 
 }
@@ -149,7 +149,7 @@ void RMH_Winforms_OpenLinkURL(System::String^ LinkURL) {
 	// Handling for unsupported Windows versions (e.g. Windows 10 S)
 	try {
 
-		// Navigate Til givet URL addresse
+		// Navigate to the given URL address
 		System::Diagnostics::Process::Start(LinkURL);
 
 	}
@@ -160,7 +160,7 @@ void RMH_Winforms_OpenLinkURL(System::String^ LinkURL) {
 bool RMH_Winforms_OpenWindowsMicrosoftStoreApp(System::String^ PackageFamilyName) {
 
 	// This routine opens a selected external Microsoft Store application in a new process
-	// Relavant Information -> https://www.auslogics.com/en/articles/how-to-open-microsoft-store-apps-from-command-prompt/
+	// Relevant information -> https://www.auslogics.com/en/articles/how-to-open-microsoft-store-apps-from-command-prompt/
 
 	// Locally defined constants
 	bool AppProcessErrorFlag = false;
@@ -204,13 +204,13 @@ void RMH_Winforms_OpenExternalApplicationEXE(System::String^ ExternalEXENameStri
 	// Error handling
 	try {
 
-		// Start Applikations Processen
+		// Start the application process
 		Process::Start(targetExePath);
 
 	}
 	catch (Exception^ ex) {
 
-		// Display Statuss Meddelses Box
+		// Display status message box
 		MessageBox::Show("External Executable Not Found!");
 
 	}
@@ -255,7 +255,7 @@ WINMonitorSettings RMH_Winforms_ReadWindowsScreenSettings() {
 	CurrentMonitorSettings.MonitorPhysicalWidth = (unsigned short)DevMode.dmPelsWidth;
 	CurrentMonitorSettings.MonitorPhysicalHeight = (unsigned short)DevMode.dmPelsHeight;
 
-	// Udregn monitorens skallerings faktor
+	// Calculate the scaling factor of the monitor
 	CurrentMonitorSettings.MonitorHorizontalScaleSetting = (unsigned short)(((float)CurrentMonitorSettings.MonitorPhysicalWidth / (float)CurrentMonitorSettings.MonitorVirtualWidth) * 100.0);
 	CurrentMonitorSettings.MonitorVerticalScaleSetting = (unsigned short)(((float)CurrentMonitorSettings.MonitorPhysicalHeight / (float)CurrentMonitorSettings.MonitorVirtualHeight) * 100.0);
 
@@ -263,10 +263,10 @@ WINMonitorSettings RMH_Winforms_ReadWindowsScreenSettings() {
 	switch (CurrentMonitorSettings.MonitorHorizontalScaleSetting) {
 
 		// Read the DPI setting of the monitor
-		case 100: CurrentMonitorSettings.MonitorDPISetting = 96;  break; // DPI 96  -> 100 % Skala
-		case 125: CurrentMonitorSettings.MonitorDPISetting = 120; break; // DPI 120 -> 125 % Skala
-		case 150: CurrentMonitorSettings.MonitorDPISetting = 144; break; // DPI 144 -> 150 % Skala
-		case 175: CurrentMonitorSettings.MonitorDPISetting = 168; break; // DPI 168 -> 175 % Skala
+		case 100: CurrentMonitorSettings.MonitorDPISetting = 96;  break; // DPI 96  -> 100 % scale
+		case 125: CurrentMonitorSettings.MonitorDPISetting = 120; break; // DPI 120 -> 125 % scale
+		case 150: CurrentMonitorSettings.MonitorDPISetting = 144; break; // DPI 144 -> 150 % scale
+		case 175: CurrentMonitorSettings.MonitorDPISetting = 168; break; // DPI 168 -> 175 % scale
 
 	}
 
@@ -326,7 +326,7 @@ bool RMH_Winforms_NumericUpDown_ChangeNumber(System::Windows::Forms::NumericUpDo
 	if (CalculatedValue >= (float)Decimal::MinValue && CalculatedValue <= (float)Decimal::MaxValue && 
 		CalculatedValue >= (float)NumericUpDown->Minimum && CalculatedValue <= (float)NumericUpDown->Maximum) {
 
-		// Konverter og display givet nummer i NumericUpDown Komponent
+		// Convert and display the given number in the NumericUpDown component
 		NumericUpDown->Value = System::Convert::ToDecimal(CalculatedValue);
 
 		// Update the status
@@ -417,17 +417,17 @@ void RMH_Winforms_RichTextBox_WriteLine(System::Windows::Forms::RichTextBox^ Ric
 		// Reset the text box line count variable
 		RichTextBoxNumberOfLines = 0;
 
-		// Ryd Text Boksen
+		// Clear the text box
 		RichTextBox->Clear();
 
 	}
 
-	// Skriv givet string i tekst box
+	// Write the given string to the text box
 	RichTextBox->AppendText(RMH_Conversion_StdStringToSystemString(Text));
-	// Line Feed - Ny linje
+	// Line feed - new line
 	RichTextBox->AppendText("\n");
 
-	// Scroll ned i bunden af tekst boxen
+	// Scroll down to the bottom of the text box
 	RichTextBox->ScrollToCaret();
 
 	// Update the text box 
@@ -441,11 +441,11 @@ void RMH_Winforms_DataGridView_Display2ColumnDataGridView(System::Windows::Forms
 
 	// This routine adds a column to a given DataGridView 
 
-	// Indstil kolonne headerens text farve
+	// Set the text color of the column header
 	DataGridView->ColumnHeadersDefaultCellStyle->ForeColor = ColumnRowHeaderTextColor;
-	// Indstil kolonne headerens baggrunds farve
+	// Set the background color of the column header
 	DataGridView->ColumnHeadersDefaultCellStyle->BackColor = ColumnRowHeaderBackColor;
-	// Deaktiver Visual styles for column
+	// Disable visual styles for the column
 	DataGridView->EnableHeadersVisualStyles = false;
 
 	// Set the column header border style - no border
@@ -485,7 +485,7 @@ void RMH_Winforms_DataGridView_Display2ColumnDataGridView(System::Windows::Forms
 	DataGridView->RowHeadersDefaultCellStyle->ForeColor = ColumnRowHeaderTextColor;
 	// Set the background color of the row header
 	DataGridView->RowHeadersDefaultCellStyle->BackColor = ColumnRowHeaderBackColor;
-	// Deaktiver Visual styles for column
+	// Disable visual styles for the column
 	DataGridView->EnableHeadersVisualStyles = false;
 
 	// Set the border style of the row header - no border
@@ -528,9 +528,9 @@ void RMH_Winforms_PictureBox_UpdateImageBitmap(System::Windows::Forms::PictureBo
 	// Set the bitmap color palette
 	Bitmap->Palette = ColorPalette;
 
-	// Slet Picture Box unmanaged Memory
+	// Delete the unmanaged memory of the PictureBox
 	//delete PictureBox->Image;
-	// Opdater Picture Box Image frame data 
+	// Update the PictureBox image frame data 
 	PictureBox->Image = Bitmap;
 
 }
@@ -562,7 +562,7 @@ void RMH_Winforms_ToggleSubMenuPanel(System::Windows::Forms::Panel^ SubMenuPanel
 		// Make the sub-menu visible
 		SubMenuPanel->Visible = true;
 
-		// Opdater Menu knappens "Expanded" Karakter
+		// Update the "expanded" character of the menu button
 		MenuButton->Text = MenuButton->Text->Replace('+', '-');
 
 		// Refresh Sub-Menu Panel
@@ -574,7 +574,7 @@ void RMH_Winforms_ToggleSubMenuPanel(System::Windows::Forms::Panel^ SubMenuPanel
 		// Make the sub-menu invisible
 		SubMenuPanel->Visible = false;
 
-		// Opdater Menu knappens "Expanded" Karakter
+		// Update the "expanded" character of the menu button
 		MenuButton->Text = MenuButton->Text->Replace('-', '+');
 
 	}
@@ -601,7 +601,7 @@ void RMH_Winforms_OpenFormInSeperateWindow(System::Windows::Forms::Form^ FormObj
 
 	// This routine opens a given form in a separate window
 
-	// Konfigurer Formens Border Style 
+	// Configure the border style of the form 
 	FormObject->FormBorderStyle = System::Windows::Forms::FormBorderStyle::Sizable;
 	// Configure the start position of the form when opening/undocking
 	FormObject->StartPosition = FormStartPosition::CenterScreen;
@@ -654,13 +654,13 @@ void RMH_Winforms_OpenAndDockFormInParentPanel(System::Windows::Forms::Form^ For
 	// Set the "parent" of the form to the given "parent" panel
 	FormObject->Parent = ParentPanel;
 
-	// Konfigurer Formens Border Style 
+	// Configure the border style of the form 
 	FormObject->FormBorderStyle = System::Windows::Forms::FormBorderStyle::None;
 	// The form must fill the whole "parent" panel
 	FormObject->Size = ParentPanel->ClientSize;
 	FormObject->Dock = DockStyle::Fill;
 
-	// Vis Formen i "Parent" Panelet
+	// Show the form in the "parent" panel
 	FormObject->Show();
 	ParentPanel->PerformLayout();
 	FormObject->PerformLayout();
@@ -684,7 +684,7 @@ void RMH_Winforms_UndockFormFromParentPanel(System::Windows::Forms::Form^ FormOb
 	// Remove the form as a "control" from the given "parent" panel
 	ParentPanel->Controls->Clear();
 
-	// Konfigurer Formens Border Style
+	// Configure the border style of the form
 	FormObject->FormBorderStyle = FormBorderStyle;
 	// Configure the start position of the form when opening/undocking
 	FormObject->StartPosition = FormStartPosition::CenterScreen;
@@ -730,7 +730,7 @@ bool RMH_Winforms_ToggleChildFormInParentPanel(System::Windows::Forms::Form^ Chi
 
 		// The new child form is not a top-level form
 		ChildForm->TopLevel = false;
-		// Indstil Child Form uden "Border"
+		// Set the child form without a "border"
 		ChildForm->FormBorderStyle = System::Windows::Forms::FormBorderStyle::None;
 		// The shown child form must fill the whole parent panel
 		ChildForm->Dock = System::Windows::Forms::DockStyle::Fill;
@@ -761,7 +761,7 @@ bool RMH_Winforms_AddChildAsControlToParentPanel(System::Windows::Forms::Form^ C
 
 	// The child form is not a top-level form
 	ChildForm->TopLevel = false;
-	// Indstil Child Form uden "Border"
+	// Set the child form without a "border"
 	ChildForm->FormBorderStyle = System::Windows::Forms::FormBorderStyle::None;
 	// The shown child form must fill the whole parent panel
 	ChildForm->Dock = System::Windows::Forms::DockStyle::Fill;
@@ -775,7 +775,7 @@ bool RMH_Winforms_AddChildAsControlToParentPanel(System::Windows::Forms::Form^ C
 	// Set the tag of the parent panel to the child form
 	ParentPanel->Tag = ChildForm;
 
-	// Bring Child Form bagerest i Parent panelet
+	// Bring the child form to the back of the parent panel
 	ChildForm->SendToBack();
 
 	// Display and show the added child form
@@ -802,9 +802,9 @@ bool RMH_Winforms_BringChildFormTOFront(System::Windows::Forms::Form^ ChildForm)
 bool RMH_Winforms_SendChildFormToBack(System::Windows::Forms::Form^ ChildForm) {
 
 	// This routine sends a child form (shown in a parent form panel) 
-	// til bagereste position i parent panelet.
+	// to the back position in the parent panel.
 
-	// Send child form til bagereste position i parent panelet
+	// Send the child form to the back position in the parent panel
 	ChildForm->SendToBack();
 
 	// Return the status
@@ -823,7 +823,7 @@ System::Drawing::Color^ RMH_Winforms_ShowAndReadColorDialog(bool *DialogAbortedF
 	System::Drawing::Color^ SelectedColor;
 	ColorDialog^ MyDialog = gcnew ColorDialog;
 
-	// Tillad valg af custom farve.
+	// Allow selection of a custom color.
 	MyDialog->AllowFullOpen = true;
 	// Allow help functionality
 	MyDialog->ShowHelp = true;
@@ -876,13 +876,13 @@ void RMH_Winforms_WriteHeaderStringsToCSVFile(std::string FilePath, std::string 
 		// Do not write a comma after the last string
 		if (i < NmbOfHeaderStrings - 1) {
 
-			// Formater samlede write string - Med komma
+			// Format the total write string - with comma
 			CombinedHeaderString = CombinedHeaderString + HeaderStrings[i] + RMH_Conversion_SystemStringToStdString(DataDelimiter);
 
 		}
 		else {
 
-			// Formater samlede write string - Uden komma
+			// Format the total write string - without comma
 			CombinedHeaderString = CombinedHeaderString + HeaderStrings[i];
 
 		}
@@ -930,13 +930,13 @@ void RMH_Winforms_WriteDataArrayToCSVFile(std::string FilePath, std::string File
 		// Do not write a comma after the last string
 		if (i < NmbOfValues - 1) {
 
-			// Formater samlede write string - Med komma
+			// Format the total write string - with comma
 			CombinedCSVWriteString = CombinedCSVWriteString + DataStrings[i] + RMH_Conversion_SystemStringToStdString(DataDelimiter);
 
 		}
 		else {
 
-			// Formater samlede write string - Uden komma 
+			// Format the total write string - without comma 
 			CombinedCSVWriteString = CombinedCSVWriteString + DataStrings[i];
 
 		}
@@ -980,36 +980,36 @@ void RMH_Winforms_WriteDataArrayMatrixToCSVFile(std::string FilePath, std::strin
 	// Write the file date header string 
 	File << "Time And Data For Captured Data: " + RMH_Conversion_SystemStringToStdString(DateHeaderString);
 
-	// Ny Linje
+	// New line
 	File << std::endl;
 	File << std::endl;
 
 	// Loop through the rows of the array matrix
 	for (unsigned int Y = 0; Y < ArrayMatrixHeight; Y++) {
 
-		// Loop igennem array matricens kolonner
+		// Loop through the columns of the array matrix
 		for (unsigned int X = 0; X < ArrayMatrixWidth; X++) {
 
-			// Konverter matrice index til array index
+			// Convert the matrix index to an array index
 			MatrixArrayIndex = (Y * ArrayMatrixWidth) + X;
 
 			// Do not write a comma after the last string
 			if (X < ArrayMatrixWidth - 1) {
 
-				// Formater samlede write string - Med komma
+				// Format the total write string - with comma
 				File << RMH_Conversion_SystemStringToStdString(CSVData[MatrixArrayIndex].ToString("F5")) + RMH_Conversion_SystemStringToStdString(DataDelimiter);
 
 			}
 			else {
 
-				// Formater samlede write string - Uden komma 
+				// Format the total write string - without comma 
 				File << RMH_Conversion_SystemStringToStdString(CSVData[MatrixArrayIndex].ToString("F5"));
 
 			}
 
 		}
 
-		// Ny Linje
+		// New line
 		File << std::endl;
 
 	}
@@ -1077,7 +1077,7 @@ RMHWinformsLib::FileReadFormat RMH_Winforms_ReadLinesFromCSVFile(std::string Fil
 		// Reset the "file was read correctly" flag
 		// Due to a file read error
 		ReadFile.FileReadSuccess = false;
-		// Opdater "Zero Length" Status Flag
+		// Update the "zero length" status flag
 		ReadFile.FileZeroLengthFlag = true;
 		// Reset the number of lines read from the file
 		ReadFile.FileLineLength = 0;
@@ -1106,7 +1106,7 @@ RMHWinformsLib::FileReadFormat RMH_Winforms_ReadLinesFromCSVFile(std::string Fil
 		// Check that the file is not empty
 		if (FileNumbOfLines == 0) {
 
-			// Opdater "Zero Length" Status Flag
+			// Update the "zero length" status flag
 			ReadFile.FileZeroLengthFlag = true;
 
 		}
@@ -1123,7 +1123,7 @@ RMHWinformsLib::FileReadFormat RMH_Winforms_ReadLinesFromCSVFile(std::string Fil
 
 			}
 
-			// Nulstil "Zero Length" Status Flag
+			// Reset the "zero length" status flag
 			ReadFile.FileZeroLengthFlag = false;
 			// Update the "file was read correctly" flag
 			ReadFile.FileReadSuccess = true;
@@ -1158,7 +1158,7 @@ System::String^ RMH_Winforms_GetSaveFileDialogDirectory() {
 	SaveFilePathDialog->Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
 	// Look for all available file types
 	SaveFilePathDialog->FilterIndex = 2;
-	// Restorer tidligere valgt Directory
+	// Restore the previously selected directory
 	SaveFilePathDialog->RestoreDirectory = true;
 	// Set the default dummy file name
 	SaveFilePathDialog->FileName = "DefaultSavePath";
@@ -1185,7 +1185,7 @@ System::String^ RMH_Winforms_GetSaveFileDialogDirectory() {
 
 	}
 
-	// Fortag Garbage collection
+	// Perform garbage collection
 	GC::Collect();
 
 	// Return the selected file path string
@@ -1207,7 +1207,7 @@ System::String^ RMH_Winforms_GetOpenFileDialogDirectory() {
 	OpenFilePathDialog->Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
 	// Look for all available file types
 	OpenFilePathDialog->FilterIndex = 2;
-	// Restorer tidligere valgt Directory
+	// Restore the previously selected directory
 	OpenFilePathDialog->RestoreDirectory = true;
 	// Set the default dummy file name
 	OpenFilePathDialog->FileName = "DefaultOpenPath";
@@ -1229,7 +1229,7 @@ System::String^ RMH_Winforms_GetOpenFileDialogDirectory() {
 
 	}
 
-	// Fortag Garbage collection
+	// Perform garbage collection
 	GC::Collect();
 
 	// Return the selected file path string
@@ -1241,7 +1241,7 @@ System::String^ RMH_Winforms_GetOpenFileDialogDirectory() {
 
 void RMH_Winforms_Charts_ChangeXAxesLimits(System::Windows::Forms::DataVisualization::Charting::Chart^ Chart, unsigned int ChartArea1Index, double ChartXAxesMinimum, double ChartXAxesMaximum) {
 
-	// Routinen indstiller winforms chartets X-Akse begr nsninger
+	// This routine sets the X-axis limits of the WinForms chart
 
 	// Set the maximum and minimum X-axis limits of the chart
 	Chart->ChartAreas[ChartArea1Index]->Axes[0]->Maximum = ChartXAxesMaximum;
@@ -1251,16 +1251,16 @@ void RMH_Winforms_Charts_ChangeXAxesLimits(System::Windows::Forms::DataVisualiza
 
 void RMH_Winforms_Charts_ChangeXAxesTickInterval(System::Windows::Forms::DataVisualization::Charting::Chart^ Chart, unsigned int ChartArea1Index, double AxesInterval) {
 
-	// Routinen indstiller winforms chartets X-Akse tick interval
+	// This routine sets the X-axis tick interval of the WinForms chart
 
-	// Indstil intervallet for chartets X-Akse
+	// Set the interval of the X axis of the chart
 	Chart->ChartAreas[ChartArea1Index]->Axes[0]->Interval = AxesInterval;
 
 }
 
 void RMH_Winforms_Charts_ChangeYAxesLimits(System::Windows::Forms::DataVisualization::Charting::Chart^ Chart, unsigned int ChartArea1Index, double ChartYAxesMinimum, double ChartYAxesMaximum) {
 
-	// Routinen indstiller winforms chartets Y-Akse begr nsninger
+	// This routine sets the Y-axis limits of the WinForms chart
 
 	// Set the maximum and minimum Y-axis limits of the chart
 	Chart->ChartAreas[ChartArea1Index]->Axes[1]->Maximum = ChartYAxesMaximum;
@@ -1270,9 +1270,9 @@ void RMH_Winforms_Charts_ChangeYAxesLimits(System::Windows::Forms::DataVisualiza
 
 void RMH_Winforms_Charts_ChangeYAxesTickInterval(System::Windows::Forms::DataVisualization::Charting::Chart^ Chart, unsigned int ChartArea1Index, double AxesInterval) {
 
-	// Routinen indstiller winforms chartets Y-Akse tick interval
+	// This routine sets the Y-axis tick interval of the WinForms chart
 
-	// Indstil intervallet for chartets X-Akse
+	// Set the interval of the X axis of the chart
 	Chart->ChartAreas[ChartArea1Index]->Axes[1]->Interval = AxesInterval;
 
 }
@@ -1281,13 +1281,13 @@ void RMH_Winforms_Charts_AddDataArrayToChartSeries(System::Windows::Forms::DataV
 
 	// This routine writes an array of data to the selected chart data series
 
-	// Ryd Chartets data punkter
+	// Clear the data points of the chart
 	Chart->Series[ChartSeriesIndex]->Points->Clear();
 
 	// Loop up to and including the length of the given data array
 	for (unsigned int i = 0; i < SeriesDataArrayLength; i++) {
 
-		// Tilf j givet data array til chart serie data
+		// Add the given data array to the chart series data
 		Chart->Series[ChartSeriesIndex]->Points->AddXY(SeriesXDataArray[i], SeriesYDataArray[i]);
 
 	}
@@ -1307,7 +1307,7 @@ void RMH_Winforms_Charts_ClearChartDataPoints(System::Windows::Forms::DataVisual
 
 	// This routine resets and clears the data points of the selected chart index
 
-	// Ryd Chartets data punkter
+	// Clear the data points of the chart
 	Chart->Series[ChartSeriesIndex]->Points->Clear();
 
 }
@@ -1317,7 +1317,7 @@ void RMH_Winforms_Charts_ClearChartDataPoints(System::Windows::Forms::DataVisual
 bool RMH_Winforms_SavePanelSnapShotPNG(System::Windows::Forms::Panel^ SrcPanel, System::String^ SnapShotPath) {
 
 	// This routine saves a PNG snapshot from a given input graphics panel.
-	// input Fil Path Eksempel: C:\Users\User\Desktop
+	// input file path example: C:\Users\User\Desktop
 	// The routine returns "true" if the snapshot was saved correctly - otherwise "false"
 	// The saved file name is formatted as: Snapshot_HHmmssddMMyyyy
 
@@ -1329,16 +1329,16 @@ bool RMH_Winforms_SavePanelSnapShotPNG(System::Windows::Forms::Panel^ SrcPanel, 
 	WINMonitorSettings WindowsScreenSettings;
 	System::Drawing::Size CompensatedScreenSize = SrcPanel->Size;
 
-	// Formater Filens data identifikations string (Snapshot_HHmmssddMMyyyy)
+	// Format the data identification string of the file (Snapshot_HHmmssddMMyyyy)
 	System::String^ FileName = System::DateTime::Now.ToString("HHmmssfffddMMyyyy");
 
 	// Read the Windows screen parameters
 	WindowsScreenSettings = RMH_Winforms_ReadWindowsScreenSettings();
 
-	// Normaliser Windows skallerings indstillingen 
+	// Normalize the Windows scaling setting 
 	WinScaleSettingNormalized = (float)WindowsScreenSettings.MonitorHorizontalScaleSetting / 100.0;
 
-	// Udregn Panelets Top venstre X & Y pixel kordinater - Kompenser for windows Skallerings indstilling
+	// Calculate the top-left X & Y pixel coordinates of the panel - compensate for the Windows scaling setting
 	PanelUpperLeftSourceX = (float)SrcPanel->PointToScreen(System::Drawing::Point(0, 0)).X * (WinScaleSettingNormalized - 1.0);
 	PanelUpperLeftSourceY = (float)SrcPanel->PointToScreen(System::Drawing::Point(0, 0)).Y * (WinScaleSettingNormalized - 1.0);
 
@@ -1346,7 +1346,7 @@ bool RMH_Winforms_SavePanelSnapShotPNG(System::Windows::Forms::Panel^ SrcPanel, 
 	CompensatedScreenSize.Width = (float)SrcPanel->Size.Width * WinScaleSettingNormalized;
 	CompensatedScreenSize.Height = (float)SrcPanel->Size.Height * WinScaleSettingNormalized;
 
-	// Generer Reference Bitmap til Snapshot grafisk data
+	// Generate the reference bitmap for the snapshot graphics data
 	System::Drawing::Bitmap^ SnapShotBitMap = gcnew System::Drawing::Bitmap(CompensatedScreenSize.Width, CompensatedScreenSize.Height);
 
 	// Create a graphics reference object for storing the reference bitmap data
@@ -1372,7 +1372,7 @@ bool RMH_Winforms_SavePanelSnapShotPNG(System::Windows::Forms::Panel^ SrcPanel, 
 
 	}
 
-	// Fortag Garbage collection
+	// Perform garbage collection
 	GC::Collect();
 
 	// Return the status
@@ -1383,7 +1383,7 @@ bool RMH_Winforms_SavePanelSnapShotPNG(System::Windows::Forms::Panel^ SrcPanel, 
 bool RMH_Winforms_SaveRawImageDataAsSnapShotPNG(System::String^ SnapShotPath, unsigned int ImageDataWidth, unsigned int ImageDataHeight, unsigned char *ImageData) {
 
 	// This routine saves the raw input image data as a PNG snapshot.
-	// input Fil Path Eksempel: C:\Users\User\Desktop
+	// input file path example: C:\Users\User\Desktop
 	// The routine returns "true" if the snapshot was saved correctly - otherwise "false"
 	// The saved file name is formatted as: Snapshot_HHmmssddMMyyyy
 
@@ -1391,7 +1391,7 @@ bool RMH_Winforms_SaveRawImageDataAsSnapShotPNG(System::String^ SnapShotPath, un
 	bool ReturnStatus = false;
 	unsigned char* BGRImageData = new unsigned char[ImageDataWidth * ImageDataHeight * 3];
 
-	// Formater Filens data identifikations string (SnapshotRAW_HHmmssddMMyyyy)
+	// Format the data identification string of the file (SnapshotRAW_HHmmssddMMyyyy)
 	System::String^ FileName = System::DateTime::Now.ToString("HHmmssfffddMMyyyy");
 
 	// Convert the array data from RGB to BGR format
@@ -1435,7 +1435,7 @@ bool RMH_Winforms_SaveRawImageDataAsSnapShotPNG(System::String^ SnapShotPath, un
 
 	}
 
-	// Fortag Garbage collection
+	// Perform garbage collection
 	GC::Collect();
 
 	// Free the allocated memory of the buffer array  
@@ -1552,7 +1552,7 @@ void RMH_Winforms_OpenPDFInWebbrowser(System::Windows::Forms::WebBrowser^ WebBro
 		// Check whether the PDF file exists before it is loaded
 		if (File::Exists(pdfPath)) {
 
-			// Konverter filstien til URI-format
+			// Convert the file path to URI format
 			String^ pdfUri = "file:///" + pdfPath->Replace("\\", "/");
 
 			// Load the PDF file into the WebBrowser component
@@ -1579,7 +1579,7 @@ void RMH_Winforms_OpenPDFInWebbrowser(System::Windows::Forms::WebBrowser^ WebBro
                 </html>
             )";
 
-			// Display den custom error HTML meddelse i WebBrowser komponentet
+			// Display the custom error HTML message in the WebBrowser component
 			WebBrowserControl->DocumentText = errorHtml;
 
 		}
@@ -1605,7 +1605,7 @@ void RMH_Winforms_OpenPDFInWebbrowser(System::Windows::Forms::WebBrowser^ WebBro
                 </html>
             )";
 
-		// Display den custom error HTML meddelse i WebBrowser komponentet
+		// Display the custom error HTML message in the WebBrowser component
 		WebBrowserControl->DocumentText = errorHtml;
 
 	}

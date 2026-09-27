@@ -6,7 +6,7 @@
 
 // Included form headers
 
-// Klasse Namespace
+// Class namespace
 namespace IRCAMThermalViewer {
 
 	// Associated namespaces
@@ -23,7 +23,7 @@ namespace IRCAMThermalViewer {
 
 	public:
 
-		// ------------------------------------ Klasse Konstruktor ------------------------------------ //
+		// ------------------------------------ Class Constructor ------------------------------------ //
 
 		ColorPaletteCreator(void) {
 
@@ -34,7 +34,7 @@ namespace IRCAMThermalViewer {
 			
 		}
 
-		// ---------------------------- Diverse Specifikke Klasse Metoder ----------------------------- //
+		// ---------------------------- Miscellaneous Class-Specific Methods ----------------------------- //
 
 		void InitializeGlobalFormsObjects() {
 

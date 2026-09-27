@@ -21,7 +21,7 @@
 #include "RMH_2DPlotDataSetSources_Resources.h"
 
 // Saved application session data file line length
-#define _SavedSessionCSVFileLineLength          79 + 1 + 1 // Index nummer + Top Header + Bund Header 
+#define _SavedSessionCSVFileLineLength          79 + 1 + 1 // Index number + top header + bottom header 
 
 // ------------ Routines For Handling Saved Application Session Parameters ------------- //
 
@@ -33,9 +33,9 @@ void RMH_Application_SaveLastSessionConfigToFile() {
 
 	// Read the MyDocuments Windows path 
 	System::String^ Path = System::Environment::GetFolderPath(System::Environment::SpecialFolder::MyDocuments);
-	// Konverter Path System::String Til Std::String
+	// Convert the path System::String to std::string
 	std::string StdPathString = RMH_Conversion_SystemStringToStdString(Path);
-	// Restat karakter "\" med karekter "\" i Path String
+	// Replace the character "\" with the character "\" in the path string
 	std::replace(StdPathString.begin(), StdPathString.end(), '\\', '/');
 
 	// ------------- Data To Be Saved In The Application Preset CSV File -------------- //
@@ -53,7 +53,7 @@ void RMH_Application_SaveLastSessionConfigToFile() {
 
 		// ---------------------------- Color Palette ---------------------------- //
 
-		// Valgte Color Palette Index - Row Index 2
+		// Selected color palette index - row index 2
 		RMH_Conversion_IntToStdString(SelectedColorPaletteIndex),
 
 		// -------------------- Temperature Correction Value --------------------- //
@@ -68,7 +68,7 @@ void RMH_Application_SaveLastSessionConfigToFile() {
 
 		// ------------------------- Dual Color Palette -------------------------- //
 
-		// Valgte Color Palette Index - Row Index 5
+		// Selected color palette index - row index 5
 		RMH_Conversion_IntToStdString(SelectedDualColorPaletteIndex),
 
 		// ---------------------- Enhanced Resolution Flag ----------------------- //
@@ -100,12 +100,12 @@ void RMH_Application_SaveLastSessionConfigToFile() {
 		RMH_Conversion_SystemStringToStdString(Plot2DDataSetLineColorsR[_2DPlotDataSet_9].ToString()), RMH_Conversion_SystemStringToStdString(Plot2DDataSetLineColorsG[_2DPlotDataSet_9].ToString()), RMH_Conversion_SystemStringToStdString(Plot2DDataSetLineColorsB[_2DPlotDataSet_9].ToString()),    // Index 33 - 35
 		RMH_Conversion_SystemStringToStdString(Plot2DDataSetLineColorsR[_2DPlotDataSet_10].ToString()), RMH_Conversion_SystemStringToStdString(Plot2DDataSetLineColorsG[_2DPlotDataSet_10].ToString()), RMH_Conversion_SystemStringToStdString(Plot2DDataSetLineColorsB[_2DPlotDataSet_10].ToString()), // Index 36 - 38
 
-		// ------------------- Live View Farver Indstillinger -------------------- //
+		// ------------------- Live View Color Settings -------------------- //
 
-		// Gem live view label baggrunds indstillingen
+		// Save the live view label background setting
 		RMH_Conversion_SystemStringToStdString(EnableLabelBackgroundFlag.ToString()),		// Index 39
 
-		// Gem Live View Label, Baggrund, Crosshair mm. Farve data
+		// Save the live view label, background, crosshair etc. color data
 		RMH_Conversion_SystemStringToStdString(CommonLabelColorR.ToString()),				// Index 40
 		RMH_Conversion_SystemStringToStdString(CommonLabelColorG.ToString()),				// Index 41
 		RMH_Conversion_SystemStringToStdString(CommonLabelColorB.ToString()),				// Index 42
@@ -140,17 +140,17 @@ void RMH_Application_SaveLastSessionConfigToFile() {
 		RMH_Conversion_SystemStringToStdString(TempLinesPassiveColorG.ToString()),			// Index 71
 		RMH_Conversion_SystemStringToStdString(TempLinesPassiveColorB.ToString()),			// Index 72
 
-		// ----------------------- ColorBar Indstillinger ------------------------ //
+		// ----------------------- ColorBar Settings ------------------------ //
 
 		// Save the "full palette" range adjustment setting of the ColorBar
 		RMH_Conversion_SystemStringToStdString(AdaptFullColorBarPaletteRangeFlag.ToString()), // Index 73
 
-		// --------------------- Video Optagnings Save Path ---------------------- //
+		// --------------------- Video Recording Save Path ---------------------- //
 
 		// Save the snapshot file path string of the session - row index 74
 		RMH_Conversion_SystemStringToStdString(GlobalVariables::RecordingDefaultPath), // Index 74
 
-		// ------------------ Full Frame Data CSV Indstillinger ------------------ //
+		// ------------------ Full Frame Data CSV Settings ------------------ //
 
 		// Save the full frame CSV data delimiter index value of the session - row index 75
 		RMH_Conversion_SystemStringToStdString(SelectedFullFrameTempCSVDataDelimiterIndex.ToString()), // Index 75
@@ -160,14 +160,14 @@ void RMH_Application_SaveLastSessionConfigToFile() {
 		// Save the camera info pop-up "do not show" flag of the session - row index 76
 		RMH_Conversion_SystemStringToStdString(PopUpDialogDontShowFlag.ToString()),
 
-		// --------------------- Data Loggings Indstillinger --------------------- //
+		// --------------------- Data Logging Settings --------------------- //
 
 		// Save the data logging CSV data delimiter index value of the session - row index 77
 		RMH_Conversion_SystemStringToStdString(SelectedDataLoggingCSVDataDelimiterIndex.ToString()), // Index 77
 
-		// ------------------- Diverse Indstillings Parametere ------------------- //
+		// ------------------- Miscellaneous Settings Parameters ------------------- //
 
-		// Diverse Applikations Indstillings Parametere
+		// Miscellaneous application settings parameters
 		RMH_Conversion_SystemStringToStdString(UltraResolutionEnableFlag.ToString()),									// Index 78
 		RMH_Conversion_IntToStdString((unsigned int)GlobalVariables::GlobalRecordingFrameRateNumericUpDown->Value),		// Index 79
 
@@ -194,9 +194,9 @@ void RMH_Application_SetSavedSessionConfigToApplication(System::Windows::Forms::
 
 	// Read the MyDocuments Windows path 
 	System::String^ Path = System::Environment::GetFolderPath(System::Environment::SpecialFolder::MyDocuments);
-	// Konverter Path System::String Til Std::String
+	// Convert the path System::String to std::string
 	std::string StdPathString = RMH_Conversion_SystemStringToStdString(Path);
-	// Restat karakter "\" med karekter "\" i Path String
+	// Replace the character "\" with the character "\" in the path string
 	std::replace(StdPathString.begin(), StdPathString.end(), '\\', '/');
 
 	// Read the data from the application preset file
@@ -273,7 +273,7 @@ void RMH_Application_SetSavedSessionConfigToApplication(System::Windows::Forms::
 
 				}
 
-				// ------------------- Live View Farver Indstillinger -------------------- //
+				// ------------------- Live View Color Settings -------------------- //
 
 				// Read the live view label background setting
 				EnableLabelBackgroundFlag = RMH_Conversion_StdStringToBoolean(PresetFile.FileStrings[39]);
@@ -313,17 +313,17 @@ void RMH_Application_SetSavedSessionConfigToApplication(System::Windows::Forms::
 				TempLinesPassiveColorG = RMH_Conversion_StdStringToInt(PresetFile.FileStrings[71]);
 				TempLinesPassiveColorB = RMH_Conversion_StdStringToInt(PresetFile.FileStrings[72]);
 
-				// ----------------------- ColorBar Indstillinger ------------------------ //
+				// ----------------------- ColorBar Settings ------------------------ //
 
 				// Read the "full palette" range adjustment setting of the ColorBar
 				AdaptFullColorBarPaletteRangeFlag = RMH_Conversion_StdStringToBoolean(PresetFile.FileStrings[73]);
 
-				// --------------------- Video Optagnings Save Path ---------------------- //
+				// --------------------- Video Recording Save Path ---------------------- //
 
 				// Read the saved snapshot file path string
 				GlobalVariables::RecordingDefaultPath = RMH_Conversion_StdStringToSystemString(PresetFile.FileStrings[74]);
 
-				// ------------------ Full Frame Data CSV Indstillinger ------------------ //
+				// ------------------ Full Frame Data CSV Settings ------------------ //
 
 				// Read the saved full frame CSV data delimiter index value
 				SelectedFullFrameTempCSVDataDelimiterIndex = RMH_Conversion_StdStringToInt(PresetFile.FileStrings[75]);
@@ -333,14 +333,14 @@ void RMH_Application_SetSavedSessionConfigToApplication(System::Windows::Forms::
 				// Read the saved camera info pop-up "do not show" flag
 				PopUpDialogDontShowFlag = RMH_Conversion_StdStringToBoolean(PresetFile.FileStrings[76]);
 
-				// --------------------- Data Loggings Indstillinger --------------------- //
+				// --------------------- Data Logging Settings --------------------- //
 
 				// Read the saved data logging CSV data delimiter index value
 				SelectedDataLoggingCSVDataDelimiterIndex = RMH_Conversion_StdStringToInt(PresetFile.FileStrings[77]);
 
-				// ------------------- Diverse Indstillings Parametere ------------------- //
+				// ------------------- Miscellaneous Settings Parameters ------------------- //
 
-				// Diverse Applikations Indstillings Parametere
+				// Miscellaneous application settings parameters
 				UltraResolutionEnableFlag = RMH_Conversion_StdStringToBoolean(PresetFile.FileStrings[78]);
 				RecordingFrameRateSetValue = RMH_Conversion_StdStringToInt(PresetFile.FileStrings[79]);
 

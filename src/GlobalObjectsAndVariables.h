@@ -33,7 +33,7 @@ using namespace OpenGL2DPlot;
 
 // ------------------------------- Global "Normal" Variables ------------------------------- //
 
-// Gemte Applikations Parametere
+// Saved application parameters
 extern float SavedTempCorrectionSetting;
 extern unsigned char SelectedThermalCameraIndex;
 extern unsigned int SelectedColorPaletteIndex;
@@ -223,7 +223,7 @@ extern double* TempAlarm3DataSourcePointer;
 extern double* TempAlarm4DataSourcePointer;
 extern double* TempAlarm5DataSourcePointer;
 
-// Live view elementers Farve globale variable
+// Global variables for live view element colors
 extern bool EnableLabelBackgroundFlag;
 extern unsigned char CommonLabelColorR;
 extern unsigned char CommonLabelColorG;
@@ -306,7 +306,7 @@ extern unsigned int PeriodicEventTriggerCounter[_MaxNumberOfConfigurablePeriodic
 
 // --------------------- Global Managed Variables & Objects ---------------------- //
 
-// Globale Managed objekters reference struktur
+// Reference structure of global managed objects
 ref struct GlobalVariables {
 
 	// --------------------------- Cross-Form Objects And Variables ---------------------------- //

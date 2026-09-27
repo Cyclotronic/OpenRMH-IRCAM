@@ -15,17 +15,17 @@
 
 // ------------ Available General And Periodic Trigger Event Resource Data ------------ //
  
-// Maksimale antal konfigurerbare Periodiske Triggere
+// Maximum number of configurable periodic triggers
 #define _MaxNumberOfConfigurablePeriodicTriggerEvents         5
 
-// Periodiske Trigger Event Nummer Macroer
+// Periodic trigger event number macros
 #define _PeriodicTriggerEvent_1                               0
 #define _PeriodicTriggerEvent_2                               1
 #define _PeriodicTriggerEvent_3                               2
 #define _PeriodicTriggerEvent_4                               3
 #define _PeriodicTriggerEvent_5                               4
 
-// Periodiske Trigger Event Funktioners Index Macroer
+// Periodic trigger event function index macros
 #define _TriggerEventFunction_None							  0    
 #define _TriggerEventFunction_StartDataLogging                1                
 #define _TriggerEventFunction_StopDataLogging                 2      

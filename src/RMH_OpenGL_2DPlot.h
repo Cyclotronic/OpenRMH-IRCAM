@@ -4,7 +4,7 @@
  *  RMH_OpenGL_2DPlot.h
  *
  *  Author: Rune Mark Hansen
- *  Date: Marts 2023
+ *  Date: March 2023
  *
  */
 
@@ -22,40 +22,40 @@ using namespace System;
 using namespace System::Windows::Forms;
 using namespace std;
 
-// Generalle 2D Plot Konfigurations Macroer
+// General 2D plot configuration macros
 #define _2DPlotMaxNumberOfDataSets       10
 
-// 2D Plot X Akse konfigurations Macro
+// 2D plot X axis configuration macro
 #define _2DPlotXAxesLength               1000
 
-// 2D Plot Y Akse konfigurations Macro
+// 2D plot Y axis configuration macro
 #define _2DPlotYAxesMaximumRangeResetValue   -10000.0
 #define _2DPlotYAxesMinimumRangeResetValue    10000.0
 
-// 2D Plot Padding Konfigurations Macroer
+// 2D plot padding configuration macros
 #define _2DPlotTopPixelPadding           40
 #define _2DPlotBottomPixelPadding        10
 #define _2DPlotLeftPixelPadding          75
 #define _2DPlotRightPixelPadding         30
 
-// 2D Plot Yderligere Offset positions Macroer
+// 2D plot additional offset position macros
 #define _2DPlotTitleYOffsetValue         15
 #define _2DPlotTitleXOffsetValue         30
 #define _2DPlotXAxesLabelOffset          25
 #define _2DPlotYAxesLabelOffset          60
 
-// 2D Plot Linje Tykkelse Konfigurations Macroer
+// 2D plot line thickness configuration macros
 #define _2DPlotTickLinePixelLength       5
 #define _2DPlotAxesAndBoxLineWidth       1
 #define _2DPlotTickLineWidth             1
 
-// 2D Plot Data logging indicator konfiguration Macroer
+// 2D plot data logging indicator configuration macros
 #define _2DPlotIndicatorLabelYOffset     5
 
-// 2D Plot DataSet Struktur Format
+// 2D plot data set structure format
 struct PlotDataSet {
 
-	// 2D Plot DataSet Struktur
+	// 2D plot data set structure
 	GLfloat PlotDataPoints[_2DPlotXAxesLength];
 	GLfloat MaximumDataValue = _2DPlotYAxesMaximumRangeResetValue;
 	GLfloat MinimumDataValue = _2DPlotYAxesMinimumRangeResetValue;
@@ -73,7 +73,7 @@ static GLfloat PlotDataSetLineWidth[_2DPlotMaxNumberOfDataSets];
 static unsigned char PlotDataSetRenderingOrder[_2DPlotMaxNumberOfDataSets];
 static unsigned char DataLoggingDisplayStringChar[] = {'D','a','t','a',' ','L','o','g','g','i','n','g',' ', '-',' ','D','u','r','a','t','i','o','n',':',' ','0','0','0',':','0','0',':','0','0',':','0','0','0'};
 
-// OpenGL Klasse definition
+// OpenGL class definition
 namespace OpenGL2DPlot {
 
 	// ---------------------------------- Global Class Structure Objects --------------------------------- //
@@ -89,7 +89,7 @@ namespace OpenGL2DPlot {
 
 	};
 
-	// ------------------------- Privat Custom Winforms Gennemsigtigt Panel Klasse ------------------------- //
+	// ------------------------- Private Custom WinForms Transparent Panel Class ------------------------- //
 
 	// Associated local class namespace object
 	namespace NativeForm = System::Windows::Forms;
@@ -102,7 +102,7 @@ namespace OpenGL2DPlot {
 
 		protected: virtual property NativeForm::CreateParams^ CreateParams {
 
-			// Overskriv panelets konfigurations parametere
+			// Override the configuration parameters of the panel
 			NativeForm::CreateParams^ get() override {
 
 				// Read the control parameters of the panel
@@ -119,7 +119,7 @@ namespace OpenGL2DPlot {
 
 		public: TextureOverlayPanel() {
 
-			// Gennemsigtig overlay panel klasse konstruktor
+			// Transparent overlay panel class constructor
 
 		}
 
@@ -192,7 +192,7 @@ namespace OpenGL2DPlot {
 		private: GLfloat MouseCursorDataLabelXOffset = 12.0;
 		private: GLfloat MouseCursorDataLabelYOffset = -10.0;
 
-		// 2D Plot Farve konfigurations variabler 
+		// 2D plot color configuration variables 
 		private: unsigned char PlotAxesColorR = 100;
 		private: unsigned char PlotAxesColorG = 100;
 		private: unsigned char PlotAxesColorB = 100;
@@ -214,7 +214,7 @@ namespace OpenGL2DPlot {
 
 	public:
 
-		// ------------------------- 2D Plot Konstruktur Routiner -------------------------- //
+		// ------------------------- 2D Plot Constructor Routines -------------------------- //
 
 		RMHOpenGL2DPlot(System::Windows::Forms::Panel^ TexturePanel, unsigned char WidthScaleFactor, unsigned char HeightScaleFactor) {
 
@@ -228,7 +228,7 @@ namespace OpenGL2DPlot {
 			OpenGLWindowWidth = ControlParams->Width;
 			OpenGLWindowHeight = ControlParams->Height;
 
-			// Konfigurer Textur parent handler
+			// Configure the texture parent handler
 			ControlParams->Parent = TexturePanel->Handle;
 			// Create a "child" of the selected "parent" and make it OpenGL compliant
 			ControlParams->Style = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN;
@@ -242,11 +242,11 @@ namespace OpenGL2DPlot {
 			// Is this handle active
 			if (m_hDC) {
 
-				// Konfigurer Textur Pixel format
+				// Configure the texture pixel format
 				RMH_OpenGL_SetTexturePixelFormat(m_hDC);
 				// Configure the size of the texture
 				RMH_OpenGL_ResizeOpenGLWinformsScene(ControlParams->Width, ControlParams->Height);
-				// Initialisere OpenGL
+				// Initialize OpenGL
 				RMH_OpenGL_Init();
 
 			}
@@ -256,7 +256,7 @@ namespace OpenGL2DPlot {
 
 			// Reset the data set enable array of the 2D plot
 			RMH_OpenGL_ResetPlotDataSetEnableArray();
-			// Nulstil 2D plottets Linje tykkelses array 
+			// Reset the line thickness array of the 2D plot 
 			RMH_OpenGL_ResetPlotLineWidthArray();
 
 			// Set the default line colors of the data sets
@@ -320,7 +320,7 @@ namespace OpenGL2DPlot {
 
 		private: GLvoid RMH_OpenGL_UpdateTextureFieldOfView(unsigned int TextureWidth, unsigned int TextureHeight) {
 
-			// Routinen indstiller texturens syns vinkel for display i control handler komponentet
+			// This routine sets the viewing angle (field of view) of the texture for display in the control handler component
 
 			// Local variables
 			GLdouble PlaneXLook = 0.0;
@@ -335,10 +335,10 @@ namespace OpenGL2DPlot {
 			PlaneXLook = (GLdouble)TextureWidth * 0.5;
 			PlaneYLook = (GLdouble)TextureHeight * 0.5;
 
-			// Udregn textur Aspect ratio
+			// Calculate the texture aspect ratio
 			PlaneAspectRatio = ((GLdouble)TextureWidth / (GLdouble)TextureHeight);
 
-			// Udregn affstanden imellem Frame data planet og textur planet
+			// Calculate the distance between the frame data plane and the texture plane
 			PlaneDistance = (GLdouble)TextureHeight * TanHalfFieldOfView; 
 
 			// Update the viewing angle (field of view) of the texture
@@ -359,7 +359,7 @@ namespace OpenGL2DPlot {
 
 			// Add the font list properties
 			glPushAttrib(GL_LIST_BIT);
-			// Benyt FONT Base List
+			// Use the FONT base list
 			glListBase(BaseFont - 32);
 			// Execute and render the characters on the texture
 			glCallLists(strlen(CharArray), GL_UNSIGNED_BYTE, CharArray);
@@ -372,7 +372,7 @@ namespace OpenGL2DPlot {
 
 			// This routine renders a given string on an OpenGL texture
 
-			// Konfigurer Textens Farve
+			// Configure the text color
 			glColor3ub(ColorR, ColorG, ColorB);
 			// Set the position of the text on the texture
 			glRasterPos2f(StringX, StringY);
@@ -388,7 +388,7 @@ namespace OpenGL2DPlot {
 
 			// Add the font list properties
 			glPushAttrib(GL_LIST_BIT);
-			// Benyt FONT Base List
+			// Use the FONT base list
 			glListBase(BaseFont - 32);
 			// Execute and render the characters on the texture
 			glCallLists(CharArrayLength, GL_UNSIGNED_BYTE, CharArray);
@@ -401,7 +401,7 @@ namespace OpenGL2DPlot {
 
 			// This routine renders a given string on an OpenGL texture
 
-			// Konfigurer Textens Farve
+			// Configure the text color
 			glColor3ub(ColorR, ColorG, ColorB);
 			// Set the position of the text on the texture
 			glRasterPos2f(StringX, StringY);
@@ -430,7 +430,7 @@ namespace OpenGL2DPlot {
 			// Calculate the actual X pixel coordinate value
 			XYPixelCoords.YPixelCoordinate = (YAxesMaxRange - YCoordinate) / XYPixelCoords.YAxesPixelResolution;
 
-			// Konpenser for 3D Plottets Padding
+			// Compensate for the padding of the 3D plot
 			XYPixelCoords.XPixelCoordinate = (XYPixelCoords.XPixelCoordinate + _2DPlotLeftPixelPadding);
 			XYPixelCoords.YPixelCoordinate = (XYPixelCoords.YPixelCoordinate + _2DPlotTopPixelPadding);
 
@@ -455,7 +455,7 @@ namespace OpenGL2DPlot {
 
 		private: GLvoid RMH_OpenGL_ResetPlotLineWidthArray() {
 
-			// Routinen nulstiller 2D plottets Linje tykkelses array 
+			// This routine resets the line thickness array of the 2D plot 
 
 			// Loop up to and including the maximum number of 2D plot data sets
 			for (unsigned int i = 0; i < _2DPlotMaxNumberOfDataSets; i++) {
@@ -467,13 +467,13 @@ namespace OpenGL2DPlot {
 
 		}
 
-		// ----------------- 2D Plot Textur Rendererings Og Plot Routiner ------------------ //
+		// ----------------- 2D Plot Texture Rendering And Plot Routines ------------------ //
 
 		private: GLvoid RMH_OpenGL_ClearTextureBuffer() {
 
 			// This routine clears the associated texture buffers
 
-			// Ryd Textur farve og bit buffere
+			// Clear the texture color and bit buffers
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		}
@@ -497,7 +497,7 @@ namespace OpenGL2DPlot {
 			glVertex2f(LineX0, LineY0);
 			glVertex2f(LineX1, LineY1);
 
-			// Konfiguration Slut
+			// End of configuration
 			glEnd();
 			// Disable the 1D texture
 			glDisable(GL_TEXTURE_1D);
@@ -508,7 +508,7 @@ namespace OpenGL2DPlot {
 
 			// This routine renders the X and Y axis lines, ticks, grid lines, tick labels and axis descriptions of the 2D plot
 
-			// Indstil koordinaterne for 2D plottets X/Y akser 
+			// Set the coordinates of the X/Y axes of the 2D plot 
 			XAxesLineX0 = _2DPlotLeftPixelPadding;
 			XAxesLineY0 = PlotPanelHeight - _2DPlotBottomPixelPadding;
 			XAxesLineX1 = PlotPanelWidth - _2DPlotRightPixelPadding;
@@ -529,21 +529,21 @@ namespace OpenGL2DPlot {
 			XAxesTickSpacing = XAxesLinePixelLength / (GLfloat)NmbOfXAxesTicks;
 			YAxesTickSpacing = YAxesLinePixelLength / (GLfloat)NmbOfYAxesTicks;
 
-			// Udregn Y akse data fordelingen imellem hver Y ticks 
+			// Calculate the Y axis data distribution between each Y tick 
 			YDataMaxMinSpacing = (YAxesMaxRange - YAxesMinRange) / (GLdouble)NmbOfYAxesTicks;
 
 			// Render 2D plot title
 			RMH_OpenGL_RenderStringOnTexture((XAxesLinePixelLength / 2.0) - _2DPlotTitleXOffsetValue, _2DPlotTopPixelPadding - _2DPlotTitleYOffsetValue, PlotTitleString, PlotTitleColorR, PlotTitleColorG, PlotTitleColorB);
 
-			// Render 2D Plot X-Akse linje
+			// Render the 2D plot X-axis line
 			RMH_OpenGL_RenderLine(XAxesLineX0, XAxesLineY0, XAxesLineX1, XAxesLineY1, _2DPlotAxesAndBoxLineWidth, PlotAxesColorR, PlotAxesColorG, PlotAxesColorB);
-			// Render 2D Plot Y-Akse linje
+			// Render the 2D plot Y-axis line
 			RMH_OpenGL_RenderLine(YAxesLineX0, YAxesLineY0, YAxesLineX1, YAxesLineY1, _2DPlotAxesAndBoxLineWidth, PlotAxesColorR, PlotAxesColorG, PlotAxesColorB);
 
-			// Skal 2D plottets Box vises
+			// Should the box of the 2D plot be shown
 			if (Show2DPlorBox == true) {
 
-				// Renderer 2D Plot omsluttende box
+				// Render the surrounding box of the 2D plot
 				RMH_OpenGL_RenderLine(XAxesLineX1, XAxesLineY0, XAxesLineX1, _2DPlotTopPixelPadding, _2DPlotAxesAndBoxLineWidth, PlotBoxColorR, PlotBoxColorG, PlotBoxColorB);
 				RMH_OpenGL_RenderLine(_2DPlotLeftPixelPadding, _2DPlotTopPixelPadding, XAxesLineX1, _2DPlotTopPixelPadding, _2DPlotAxesAndBoxLineWidth, PlotBoxColorR, PlotBoxColorG, PlotBoxColorB);
 
@@ -571,20 +571,20 @@ namespace OpenGL2DPlot {
 				// Render up to and including the number of Y tick lines
 				if (i <= NmbOfYAxesTicks) {
 
-					// Render X-Akse Labels
+					// Render the X-axis labels
 					RMH_OpenGL_RenderStringOnTexture(YAxesLineX0 - _2DPlotYAxesLabelOffset, YAxesLineY0, RMH_Conversion_SystemStringToStdString(YDataLabelValue.ToString("F2") + " " + TempUnitString), PlotTitleColorR, PlotTitleColorG, PlotTitleColorB);
 
 					// Render each X-axis tick line with the calculated distance
 					YAxesLineY0 = YAxesLineY0 + YAxesTickSpacing;
 
-					// Formater Y label tick data fra data spacing differens
+					// Format the Y label tick data from the data spacing difference
 					YDataLabelValue = YDataLabelValue - YDataMaxMinSpacing;
 
 				}
 
 			}
 
-			// Gen-Indstil koordinaterne for 2D plottets X/Y akser 
+			// Reset the coordinates of the X/Y axes of the 2D plot 
 			XAxesLineX0 = _2DPlotLeftPixelPadding;
 			XAxesLineY0 = PlotPanelHeight - _2DPlotBottomPixelPadding;
 			XAxesLineX1 = PlotPanelWidth - _2DPlotRightPixelPadding;
@@ -594,7 +594,7 @@ namespace OpenGL2DPlot {
 			YAxesLineX1 = _2DPlotLeftPixelPadding;
 			YAxesLineY1 = PlotPanelHeight - _2DPlotBottomPixelPadding;
 
-			// ------------------------------------- Render 2D Plot Struktur ------------------------------------- //
+			// ------------------------------------- Render 2D Plot Structure ------------------------------------- //
 
 			// Enable OpenGL 1D texture
 			glEnable(GL_TEXTURE_1D);
@@ -611,7 +611,7 @@ namespace OpenGL2DPlot {
 				// Render up to and including the number of X tick lines
 				if (i <= NmbOfXAxesTicks) {
 
-					// Skal 2D Plottets Grid Vises
+					// Should the grid of the 2D plot be shown
 					if (Show2DPlotGrid == true && i > 0 && i < NmbOfXAxesTicks) {
 
 						// Set the color of the grid line
@@ -638,13 +638,13 @@ namespace OpenGL2DPlot {
 				// Render up to and including the number of Y tick lines
 				if (i <= NmbOfYAxesTicks) {
 
-					// Skal 2D Plottets Grid Vises
+					// Should the grid of the 2D plot be shown
 					if (Show2DPlotGrid == true && i > 0 && i < NmbOfYAxesTicks) {
 
 						// Set the color of the grid line
 						glColor3ub(PlotGridLinesColorR, PlotGridLinesColorG, PlotGridLinesColorB);
 
-						// Render X aksens Tick linjer
+						// Render the tick lines of the X axis
 						glVertex2f(XAxesLineX1, YAxesLineY0);
 						glVertex2f(YAxesLineX0 - _2DPlotTickLinePixelLength, YAxesLineY0);
 
@@ -653,7 +653,7 @@ namespace OpenGL2DPlot {
 					// Set the color of the tick line
 					glColor3ub(PlotTickLinesColorR, PlotTickLinesColorG, PlotTickLinesColorB);
 
-					// Render X aksens Tick linjer
+					// Render the tick lines of the X axis
 					glVertex2f(YAxesLineX0, YAxesLineY0);
 					glVertex2f(YAxesLineX0 - _2DPlotTickLinePixelLength, YAxesLineY0);
 
@@ -664,7 +664,7 @@ namespace OpenGL2DPlot {
 
 			}
 
-			// Konfiguration Slut
+			// End of configuration
 			glEnd();
 			// Disable the 1D texture
 			glDisable(GL_TEXTURE_1D);
@@ -683,7 +683,7 @@ namespace OpenGL2DPlot {
 			AxesToPixelCoordFormat FirstDataPointCoords;
 			AxesToPixelCoordFormat SecondDataPointCoords;
 
-			// Nulstil 2D Plottets Y-Akse Max/Min Range varaibler
+			// Reset the Y-axis max/min range variables of the 2D plot
 			PlotDataSets[DataSetIndex].MaximumDataValue = _2DPlotYAxesMaximumRangeResetValue;
 			PlotDataSets[DataSetIndex].MinimumDataValue = _2DPlotYAxesMinimumRangeResetValue;
 
@@ -698,7 +698,7 @@ namespace OpenGL2DPlot {
 				if (FirstDataValue > PlotDataSets[DataSetIndex].MaximumDataValue) { PlotDataSets[DataSetIndex].MaximumDataValue = FirstDataValue; }
 				if (FirstDataValue < PlotDataSets[DataSetIndex].MinimumDataValue) { PlotDataSets[DataSetIndex].MinimumDataValue = FirstDataValue; }
 
-				// Konverter Plot punkt data koordinater til pixel punkt koordinater
+				// Convert the plot point data coordinates to pixel point coordinates
 				FirstDataPointCoords = RMH_OpenGL_2DPLotConvertXYAxesCoordinatesToPixelCoordinates(i, FirstDataValue, XAxesMaxRange, XAxesMinRange, YAxesMaxRange, YAxesMinRange);
 				SecondDataPointCoords = RMH_OpenGL_2DPLotConvertXYAxesCoordinatesToPixelCoordinates(i + 1, SecondDataValue, XAxesMaxRange, XAxesMinRange, YAxesMaxRange, YAxesMinRange);
 
@@ -710,7 +710,7 @@ namespace OpenGL2DPlot {
 			// Check whether the value of the line rendering index offset is 0
 			if (PlotDataSets[DataSetIndex].PlotLineDataIndexRenderOffset != 0) {
 
-				// Inkrementer Linje rendering index offsettet
+				// Increment the line rendering index offset
 				PlotDataSets[DataSetIndex].PlotLineDataIndexRenderOffset = PlotDataSets[DataSetIndex].PlotLineDataIndexRenderOffset - 1;
 
 			}
@@ -736,7 +736,7 @@ namespace OpenGL2DPlot {
 					// Read the data set rendering order of the 2D plot
 					PlotDataSetRenderingOrder[RenderingOrderIndex] = i;
 
-					// Inkrementer Renderings Orden index
+					// Increment the rendering order index
 					RenderingOrderIndex = RenderingOrderIndex + 1;
 
 				}
@@ -779,26 +779,26 @@ namespace OpenGL2DPlot {
 				DataLoggingDisplayStringChar[36] = (MilliSecValue / 10) % 10 + 48;
 				DataLoggingDisplayStringChar[37] = MilliSecValue % 10 + 48;
 
-				// Render aktiv data logging label
+				// Render the active data logging label
 				RMH_OpenGL_RenderStringOnTextureChar(LabelX, LabelY, DataLoggingDisplayStringChar, 38, 50, 205, 50);
 
 			}
 			else {
 
-				// Render inaktiv data logging label
+				// Render the inactive data logging label
 				RMH_OpenGL_RenderStringOnTextureChar(LabelX, LabelY, DataLoggingDisplayStringChar, 38, 60, 60, 60);
 
 			}
 
 		}
 
-		// ----------------- Samlede 2D Plot Grafiske Rendererings Routine ----------------- //
+		// ----------------- Combined 2D Plot Graphics Rendering Routine ----------------- //
 
 		public: GLvoid RMH_OpenGL_Enable2DPlotBox(bool BoxLinesEnableFlag) {
 
 			// This routine enables or disables the box lines of the 2D plot
 
-			// Opdater 2D Plottets Box linjers flag
+			// Update the box lines flag of the 2D plot
 			Show2DPlotBoxFlag = BoxLinesEnableFlag;
 
 		}
@@ -807,7 +807,7 @@ namespace OpenGL2DPlot {
 
 			// This routine enables or disables the grid lines of the 2D plot
 
-			// Opdater 2D Plottets Grid linjers flag
+			// Update the grid lines flag of the 2D plot
 			Show2DPlotGridFlag = GridLinesEnableFlag;
 
 		}
@@ -816,7 +816,7 @@ namespace OpenGL2DPlot {
 
 			// This routine sets the number of X ticks of the 2D plot
 
-			// Cast Sender objekt som Forms Tool Strip objekt
+			// Cast the sender object as a WinForms ToolStrip object
 			System::Windows::Forms::ToolStripMenuItem^ NumberOfXticks = (System::Windows::Forms::ToolStripMenuItem^)sender;
 
 			// Read the sub context menu identification tag
@@ -831,7 +831,7 @@ namespace OpenGL2DPlot {
 
 			// This routine sets the number of Y ticks of the 2D plot
 
-			// Cast Sender objekt som Forms Tool Strip objekt
+			// Cast the sender object as a WinForms ToolStrip object
 			System::Windows::Forms::ToolStripMenuItem^ NumberOfYticks = (System::Windows::Forms::ToolStripMenuItem^)sender;
 
 			// Read the sub context menu identification tag
@@ -920,7 +920,7 @@ namespace OpenGL2DPlot {
 		public: GLvoid RMH_OpenGL_ReadDataSetsMaxMinDataRangeValues() {
 
 			// This routine reads the maximum and minimum values of all active data sets and sets the Y-axis range variables of the plot
-			// Kan kaldes i seperat process...
+			// Can be called in a separate process...
 
 			// Reset the Y-axis range variables of the 2D plot to start values
 			PlotYAxesMaximumRangeValue = _2DPlotYAxesMaximumRangeResetValue;
@@ -1023,7 +1023,7 @@ namespace OpenGL2DPlot {
 
 		public: GLvoid RMH_OpenGL_SetDataLoggingLabelStateAndTimer(bool DataLoggingActiveFlag, unsigned long MilliSecondsValue) {
 
-			// Routinen opdaterer stadiet for 2D Plottets data logging label
+			// This routine updates the state of the data logging label of the 2D plot
 			// Whether active data logging is enabled or disabled
 
 			// Update the data logging flag
@@ -1038,7 +1038,7 @@ namespace OpenGL2DPlot {
 
 			// This routine enables or disables the mouse cursor plot point data
 
-			// Cast Sender objekt som Forms Tool Strip objekt
+			// Cast the sender object as a WinForms ToolStrip object
 			System::Windows::Forms::ToolStripMenuItem^ EnableDisableTagValue = (System::Windows::Forms::ToolStripMenuItem^)sender;
 			// Read the sub context menu identification tag
 			unsigned int MouseCursorDataFlag = Convert::ToInt32(EnableDisableTagValue->Tag);
@@ -1059,7 +1059,7 @@ namespace OpenGL2DPlot {
 			GLfloat MouseCursorPlotYCoordinate = 0.0;
 			GLfloat PlotYAxesPixelTemperatureStep = 0.0;
 			
-			// Skal Mus Cursorens Plot punkt data rendereres
+			// Should the mouse cursor plot point data be rendered
 			if (EnablePlotMouseCursorDataFlag == true) {
 
 				// Check whether the mouse cursor is within the limits of the X axis
@@ -1072,7 +1072,7 @@ namespace OpenGL2DPlot {
 						PlotAreaPixelHeight = (PlotPanelHeight - _2DPlotBottomPixelPadding) - _2DPlotTopPixelPadding;
 						// Calculate the pixel temperature step resolution value of the Y axis of the 2D plot
 						PlotYAxesPixelTemperatureStep = (PlotYAxesMaximumRangeValue - PlotYAxesMinimumRangeValue) / PlotAreaPixelHeight;
-						// Udregn Mus Cursorens Aktuelle 2D Plot Y-Akse Pixel Koordinat
+						// Calculate the actual 2D plot Y-axis pixel coordinate of the mouse cursor
 						MouseCursorPlotYCoordinate = (PlotPanelHeight - MousePointerYPosition) - _2DPlotBottomPixelPadding;
 						// Calculate the temperature value of the current plot Y position of the mouse cursor 
 						MouseCursorYTemperature = (MouseCursorPlotYCoordinate * PlotYAxesPixelTemperatureStep) + PlotYAxesMinimumRangeValue;
@@ -1083,7 +1083,7 @@ namespace OpenGL2DPlot {
 					}
 					else {
 
-						// Opdater Rendereret String (Udenfor plot arealet)
+						// Update the rendered string (outside the plot area)
 						LabelString = "Temperature: N/A " + TempUnitString;
 
 					}
@@ -1091,12 +1091,12 @@ namespace OpenGL2DPlot {
 				}
 				else {
 
-					// Opdater Rendereret String (Udenfor plot arealet)
+					// Update the rendered string (outside the plot area)
 					LabelString = "Temperature: N/A " + TempUnitString;
 
 				}
 
-				// Renderer Mus Cursorens Plot punkt data label
+				// Render the mouse cursor plot point data label
 				RMH_OpenGL_RenderStringOnTexture(MousePointerXPosition + MouseCursorDataLabelXOffset, MousePointerYPosition + MouseCursorDataLabelYOffset, RMH_Conversion_SystemStringToStdString(LabelString), MouseCursorDataLabelColorR, MouseCursorDataLabelColorG, MouseCursorDataLabelColorB);
 
 			}
@@ -1117,9 +1117,9 @@ namespace OpenGL2DPlot {
 
 			// Make the associated render context the current render context
 			RMH_OpenGL_MakeRenderContextCurrent();
-			// Ryd Textur farve og bit buffere
+			// Clear the texture color and bit buffers
 			RMH_OpenGL_ClearTextureBuffer();
-			// Opdater Textur Field Of View
+			// Update the texture field of view
 			RMH_OpenGL_UpdateTextureFieldOfView(CurrentTexturePanelWidth, CurrentTexturePanelHeight);
 
 			// Update the texture viewport to the center of the surface plot
@@ -1137,7 +1137,7 @@ namespace OpenGL2DPlot {
 			// Plot the enabled data sets
 			RMH_OpenGL_PlotDataSets();
 
-			// Render Data Logging indikator label
+			// Render the data logging indicator label
 			RMH_OpenGL_RenderDataLoggingIndicatorLabelWithTimer(_2DPlotLeftPixelPadding, (_2DPlotTopPixelPadding / 2.0) + _2DPlotIndicatorLabelYOffset, LoggingTimerLabelMilliSecValue, DataLoggingFLag);
 
 			// Render the mouse cursor plot point data as a label
@@ -1150,17 +1150,17 @@ namespace OpenGL2DPlot {
 
 		}
 
-		// ------------ Textur Panel Interaktions Cursor Event Callback Routiner ----------- //
+		// ------------ Texture Panel Interaction Cursor Event Callback Routines ----------- //
 
 		private: GLvoid TexturePanel_MouseDown(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e) {
 
-			// Opdater overlay panel click flag
+			// Update the overlay panel click flag
 			OverlayPanelIsClick = true;
 
 			// Check whether the left mouse button has been pressed
 			if (e->Button == System::Windows::Forms::MouseButtons::Left) {
 
-				// Toggel Mus Cursorens Plot punkt datae rendereringen
+				// Toggle the rendering of the mouse cursor plot point data
 				EnablePlotMouseCursorDataFlag = EnablePlotMouseCursorDataFlag ^ 1;
 
 			}
@@ -1169,7 +1169,7 @@ namespace OpenGL2DPlot {
 
 		private: GLvoid TexturePanel_MouseUp(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e) {
 
-			// Opdater overlay panel click flag
+			// Update the overlay panel click flag
 			OverlayPanelIsClick = false;
 
 		}
@@ -1196,7 +1196,7 @@ namespace OpenGL2DPlot {
 
 		}
 
-		// -------------------- OpenGL Renderering Slut Punkts Routiner -------------------- //
+		// -------------------- OpenGL Rendering Endpoint Routines -------------------- //
 
 		private: GLvoid RMH_OpenGL_SwapOpenGLBuffers(GLvoid) {
 
@@ -1212,7 +1212,7 @@ namespace OpenGL2DPlot {
 			// This routine marks the end of an OpenGL rendering sequence
 			// and must always be called last, when all object renderings have been executed
 
-			// Swap Textur buffere
+			// Swap the texture buffers
 			RMH_OpenGL_SwapOpenGLBuffers();
 
 		}
@@ -1228,7 +1228,7 @@ namespace OpenGL2DPlot {
 			// Delete the OpenGL context
 			DeleteOpenGL();
 
-			// Destruer OpenGL Handler objekt
+			// Destroy the OpenGL handler object
 			this->DestroyHandle();
 
 			// Garbage Collect managed data
@@ -1238,7 +1238,7 @@ namespace OpenGL2DPlot {
 
 		private: GLvoid DeleteOpenGL(GLvoid) {
 
-			// Routinen sletter alt OpenGL Context
+			// This routine deletes the whole OpenGL context
 
 			// Read the temporary array data and sort the kernel array
 			HGLRC hglrc;
@@ -1250,7 +1250,7 @@ namespace OpenGL2DPlot {
 			hdc = wglGetCurrentDC();
 			// Make the render context the current context
 			wglMakeCurrent(NULL, NULL);
-			// Frigiv Device context
+			// Release the device context
 			ReleaseDC(NULL, hdc);
 			// Delete the render context
 			wglDeleteContext(hglrc);
@@ -1263,16 +1263,16 @@ namespace OpenGL2DPlot {
 
 		private: bool RMH_OpenGL_SetTexturePixelFormat(HDC hdc) {
 
-			// Routinen konfigurerer Texturens Pixel format
+			// This routine configures the pixel format of the texture
 
 			// The format tells Windows how the texture data should be interpreted
 			PIXELFORMATDESCRIPTOR pfd = {
 
 				sizeof(PIXELFORMATDESCRIPTOR),				// Size of this pixel format descriptor
-				1,											// Formatets Versions Nummer 
+				1,											// Version number of the format 
 				PFD_DRAW_TO_WINDOW |						// The format must support Windows
 				PFD_SUPPORT_OPENGL |						// The format must support OpenGL
-				PFD_DOUBLEBUFFER,							// Formatet skal supporterer "Double Buffering"
+				PFD_DOUBLEBUFFER,							// The format must support "double buffering"
 				PFD_TYPE_RGBA,								// Request an RGBA format
 				16,										    // Select the "color depth" (16-bit)
 				0, 0, 0, 0, 0, 0,							// Color bits are to be ignored
@@ -1280,7 +1280,7 @@ namespace OpenGL2DPlot {
 				0,											// Shift bit is to be ignored
 				0,											// No "accumulation buffer"
 				0, 0, 0, 0,									// Accumulator bits are to be ignored
-				16,											// 16Bit Z-Buffer (Buffer dybde)  
+				16,											// 16-bit Z-buffer (buffer depth)  
 				0,											// No "stencil buffer"
 				0,											// No "auxiliary buffer"
 				PFD_MAIN_PLANE,								// Set as the main "drawing" layer
@@ -1339,7 +1339,7 @@ namespace OpenGL2DPlot {
 			glMatrixMode(GL_PROJECTION);
 			// Reset the projection matrix
 			glLoadIdentity();
-			// Udregn vinduets aspect ratio
+			// Calculate the aspect ratio of the window
 			gluPerspective(60.0f, (GLfloat)TotalTextureWidth / (GLfloat)TotalTextureHeight, 0.01f, 10000.0f);
 			// Select the "model view" matrix
 			glMatrixMode(GL_MODELVIEW);
@@ -1358,7 +1358,7 @@ namespace OpenGL2DPlot {
 			// Update the font list
 			BaseFont = glGenLists(96);
 
-			// Generer Strutureret Font Objekt
+			// Generate the structured font object
 			TextureFont = CreateFont(
 				-12,                            // nHeight
 				0,								// nWidth
@@ -1377,27 +1377,27 @@ namespace OpenGL2DPlot {
 
 			// Set the FONT to the OpenGL object structure
 			SelectObject(m_hDC, TextureFont);
-			// Generer Bitmap Display FONT Liste
+			// Generate the bitmap display FONT list
 			wglUseFontBitmaps(m_hDC, 32, 96, BaseFont);
 
 		}
 
 		private: bool RMH_OpenGL_Init(GLvoid) {
 
-			// Routinen Initialisere OpenGL I Winforms C++/CLR
+			// This routine initializes OpenGL in WinForms C++/CLR
 
 			// Enable "flat shader" mode
 			glShadeModel(GL_SMOOTH);
-			// Default Baggrund farve
+			// Default background color
 			glClearColor(0.13725f, 0.13725f, 0.13725f, 1.0f);
 			// Set up the "depth buffer"
 			glClearDepth(1.0f);
 			// Disable OpenGL "depth testing"
 			glDisable(GL_DEPTH_TEST);
-			// For perspektiv - Fortag "Very Nice" udregniner
+			// For perspective - use "very nice" calculations
 			glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
 
-			// Generer FONT Objekt
+			// Generate the FONT object
 			RMH_OpenGL_BuildFont();
 
 			// Return the "OpenGL setup" finished flag

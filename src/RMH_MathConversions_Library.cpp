@@ -19,7 +19,7 @@
 using namespace System;
 using namespace std;
 
-// --------------------------------- Konverterings Routiner --------------------------------- //
+// --------------------------------- Conversion Routines --------------------------------- //
 
 void RMH_Conversion_IntToUnsignedCharArray(unsigned int InputInteger, unsigned short TargetStringLength, unsigned char *OutputCharArray) {
 
@@ -31,7 +31,7 @@ void RMH_Conversion_IntToUnsignedCharArray(unsigned int InputInteger, unsigned s
 	// Loop up to and including the maximum string length
 	for (unsigned int i = 0; i < TargetStringLength; i++) {
 
-		// Udregn digit skallerings faktoren
+		// Calculate the digit scaling factor
 		CharacterDigitMultiplier = pow(10, i);
 
 		// Convert the integer to unsigned char and write it to the pointer array
@@ -48,7 +48,7 @@ System::String^ RMH_Conversion_StdStringToSystemString(std::string InputString) 
 	// Local objects
 	System::String^ SystemString;
 
-	// Konverter std::string til System::String
+	// Convert std::string to System::String
 	SystemString = gcnew System::String(InputString.c_str());
 
 	// Return the converted System::String
@@ -63,7 +63,7 @@ std::string RMH_Conversion_SystemStringToStdString(System::String^ InputString) 
 	// Local objects
 	std::string StdString;
 
-	// Konverter System::String til std::string
+	// Convert System::String to std::string
 	StdString = msclr::interop::marshal_as<std::string>(InputString);
 
 	// Return the converted std::string
@@ -118,7 +118,7 @@ std::string RMH_Conversion_FloatToStdString(float Inputvalue, unsigned char Prec
 	// Write the string to the stringstream
 	out << std::fixed << Inputvalue;
 
-	// Retuner konverterede Float -> std::string
+	// Return the converted float -> std::string
 	return out.str();
 
 }
@@ -127,7 +127,7 @@ float RMH_Conversion_StdStringToFloat(std::string inputString) {
 
 	// This routine converts a std::string to float
 
-	// Retuner konverterede std::string -> float
+	// Return the converted std::string -> float
 	return std::stof(inputString);
 
 }
@@ -136,7 +136,7 @@ double RMH_Conversion_StdStringToDouble(std::string inputString) {
 
 	// This routine converts a std::string to double
 
-	// Retuner konverterede std::string -> double
+	// Return the converted std::string -> double
 	return std::stod(inputString);
 
 }
@@ -145,13 +145,13 @@ bool RMH_Conversion_ReplaceCharOrStringInString(std::string& InputString, std::s
 
 	// This routine replaces a given character or string ""
 
-	// Find Start Opsitionen Af "From" string
+	// Find the start position of the "From" string
 	size_t start_pos = InputString.find(From);
 
 	// If the string start position has an overflow
 	if (start_pos == std::string::npos) return false;
 
-	// Erstat String "From" i "InputString" med "To" String 
+	// Replace the string "From" in "InputString" with the "To" string 
 	InputString.replace(start_pos, From.length(), To);
 
 	// Return the status
@@ -190,7 +190,7 @@ float RMH_Conversion_UnsignedCharToSinglePrecisionFloat(unsigned char* InputValu
 	// Reset the baseline integer value
 	unsigned int IntValue = 0;
 
-	// Formater samlede 32Bit integer
+	// Format the combined 32-bit integer
 	IntValue |= (static_cast<unsigned int>(InputValues[0]) << 24);
 	IntValue |= (static_cast<unsigned int>(InputValues[1]) << 16);
 	IntValue |= (static_cast<unsigned int>(InputValues[2]) << 8);
@@ -210,7 +210,7 @@ float RMH_Conversion_UnsignedCharToSinglePrecisionFloat2(unsigned char Input1, u
 	// Reset the baseline integer value
 	unsigned int IntValue = 0;
 
-	// Formater samlede 32Bit integer
+	// Format the combined 32-bit integer
 	IntValue |= (static_cast<unsigned int>(Input1) << 24);
 	IntValue |= (static_cast<unsigned int>(Input2) << 16);
 	IntValue |= (static_cast<unsigned int>(Input3) << 8);
@@ -228,7 +228,7 @@ float RMH_Conversion_uint16x2ToSinglePrecisionFloat(unsigned short HighValue, un
 	// This routine converts two 16-bit unsigned integers to a single-precision float
 	// The converted single-precision number is returned as a float
 
-	// Kombiner de to 16bit integer til 32Bit
+	// Combine the two 16-bit integers into 32-bit
 	unsigned int Combined32Bit = ((unsigned int)HighValue << 16) | LowValue;
 
 	// Return the 2x16-bit integer as a type-converted single-precision float
@@ -258,7 +258,7 @@ System::Decimal RMH_Conversion_FloatToSystemDecimal(float InputValue) {
 
 	// This routine converts a given float to System::Decimal
 
-	// Retuner konverterede Float -> System:Decimal
+	// Return the converted float -> System::Decimal
 	return System::Convert::ToDecimal(InputValue);
 
 }
@@ -267,7 +267,7 @@ System::Decimal RMH_Conversion_DoubleToSystemDecimal(double InputValue) {
 
 	// This routine converts a given double to System::Decimal
 
-	// Retuner konverterede double -> System:Decimal
+	// Return the converted double -> System::Decimal
 	return System::Convert::ToDecimal(InputValue);
 
 }
@@ -301,9 +301,9 @@ const char* RMH_Conversion_SystemStringToCharPtr(System::String^ str) {
 
 	// This routine converts a System::String to a const char pointer
 
-	// Konverter string til Std::String
+	// Convert string to std::string
 	std::string stdStr = msclr::interop::marshal_as<std::string>(str);
-	// Konverter Std::String til const char pointer
+	// Convert std::string to const char pointer
 	const char* charPtr = stdStr.c_str();
 
 	// Return the const char pointer
@@ -315,10 +315,10 @@ System::String^ RMH_Conversion_UnsignedCharArrayToSystemString(unsigned char* In
 
 	// This routine converts an unsigned char array to a System::String
 
-	// Konverter unsigned char array til std::string
+	// Convert unsigned char array to std::string
 	std::string stdString(reinterpret_cast<char*>(InputArray), ArrayLength);
 
-	// Konverter Std::String til System::String
+	// Convert std::string to System::String
 	System::String^ ConvertedSystemString = msclr::interop::marshal_as<System::String^>(stdString);
 
 	// Return the converted System::String
@@ -342,7 +342,7 @@ cv::String RMH_VideoRecording_ConvertSystemStringToCVString(System::String^ sysS
 
 }
 
-// -------------------- Matematiske Udregnings & Konverterings Routiner --------------------- //
+// -------------------- Mathematical Calculation & Conversion Routines --------------------- //
 
 unsigned int RMH_Math_Round(double InputValue) {
 

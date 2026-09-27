@@ -24,10 +24,10 @@ namespace IRCAMThermalViewer {
 			// Init GUI components and objects
 			InitializeComponent();
 
-			// Aktiver Applikationens TitelBars Dark Mode
+			// Enable dark mode for the application title bar
 			RMH_Winforms_EnableTitleBarDarkMode(this->Handle);
 
-			// Opdaterer Teksten i toppen af Dialogen
+			// Update the text at the top of the dialog
 			RMH_Winforms_ChangeFormTitleBarText(this, "Set ColorBar Temperature Ranges:");
 
 			// Update the associated form active flag
@@ -48,7 +48,7 @@ namespace IRCAMThermalViewer {
 				this->ColorBarMaxRangeUpDown->Value = (System::Decimal)MaximumTemperature;
 				this->ColorBarMinRangeUpDown->Value = (System::Decimal)MinimumTemperature;
 
-				// Opdater numeriske UpDown Enheds string
+				// Update the unit string of the numeric UpDowns
 				this->MaxRangeUnitString->Text = DefaultTempUnitString;
 				this->MinRangeUnitString->Text = DefaultTempUnitString;
 
@@ -85,7 +85,7 @@ namespace IRCAMThermalViewer {
 
 			}
 
-			// Ryd op i managed objekter i RAM
+			// Clean up managed objects in RAM
 			System::GC::Collect();
 
 		}

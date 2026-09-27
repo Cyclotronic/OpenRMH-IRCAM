@@ -18,17 +18,17 @@ namespace IRCAMThermalViewer {
 
 	public:
 		
-		// ------------------------------------ Klasse Konstruktor ------------------------------------ //
+		// ------------------------------------ Class Constructor ------------------------------------ //
 
 		StatisticsWindow(void) {
 
 			// Init GUI components and objects
 			InitializeComponent();
 
-			// Aktiver Applikationens TitelBars Dark Mode
+			// Enable dark mode for the application title bar
 			RMH_Winforms_EnableTitleBarDarkMode(this->Handle);
 
-			// Opdaterer Teksten i toppen af Dialogen
+			// Update the text at the top of the dialog
 			RMH_Winforms_ChangeFormTitleBarText(this, "Live View Statistics:");
 			
 			// Set global objects from this form for global use
@@ -42,7 +42,7 @@ namespace IRCAMThermalViewer {
 
 		}
 
-		// ---------------------------- Diverse Specifikke Klasse Metoder ----------------------------- //
+		// ---------------------------- Miscellaneous Class-Specific Methods ----------------------------- //
 
 		void UpdateConstantStatisticsValueLabels() {
 
@@ -112,7 +112,7 @@ namespace IRCAMThermalViewer {
 
 			}
 
-			// Ryd op i managed objekter i RAM
+			// Clean up managed objects in RAM
 			System::GC::Collect();
 
 		}
@@ -840,7 +840,7 @@ namespace IRCAMThermalViewer {
 
 #pragma endregion
 
-		// -------------------------- Statistik Vindue GUI Callback Routiner -------------------------- //
+		// -------------------------- Statistics Window GUI Callback Routines -------------------------- //
 		
 		// Live view statistics window max peak value click callback routine ->
 		private: System::Void MaxPeakLabel_Click(System::Object^ sender, System::EventArgs^ e) {
