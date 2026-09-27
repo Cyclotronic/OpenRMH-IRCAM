@@ -17,7 +17,7 @@ from the tagged source. Unzip anywhere and run `IRCAM Thermal Viewer.exe`.
 Current: **v3.0.0-community.1**, a community build of IRCAM Thermal Viewer 3.0.0 (September 2026).
 
 Requirements: Windows 10/11 x64 and .NET Framework 4.7.2 or later (included in current Windows). The
-[Microsoft Visual C++ Redistributable 2015-2022 (x64)](https://aka.ms/vc14/vc_redist.x64.exe) **may also be required**
+[Microsoft Visual C++ Redistributable (x64)](https://aka.ms/vc14/vc_redist.x64.exe) **may also be required**
 - the program uses the dynamic C++ runtime - but this has **not been tested** on a machine without it. If the program
 does not start and reports a missing DLL (for example `VCRUNTIME140.dll`), install the redistributable ([Microsoft's page on it](https://learn.microsoft.com/cpp/windows/latest-supported-vc-redist)).
 The executable is unsigned, so Windows SmartScreen may warn on first run; the release notes give the zip's SHA-256.
