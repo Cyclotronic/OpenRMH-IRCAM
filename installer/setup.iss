@@ -51,7 +51,7 @@ Source: "{#BuildOut}\IRCAM Thermal Viewer.exe"; DestDir: "{app}"; Flags: ignorev
 Source: "{#BuildOut}\*.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\LICENSE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\NOTICE.md"; DestDir: "{app}"; Flags: ignoreversion
-; User manual (scripts\build-manual.py); the User Guide window opens it from the program folder
+; User manual (scripts\build-manual.py); the User Guide button opens it from the program folder
 Source: "..\build\manual\IRCAMSoftwareManual.pdf"; DestDir: "{app}"; Flags: ignoreversion skipifsourcedoesntexist
 Source: "..\deps\opencv\LICENSE.txt"; DestDir: "{app}\licenses"; DestName: "OpenCV-LICENSE.txt"; Flags: ignoreversion skipifsourcedoesntexist
 Source: "..\deps\opencv\LICENSE_FFMPEG.txt"; DestDir: "{app}\licenses"; DestName: "OpenCV-FFmpeg-LGPL-LICENSE.txt"; Flags: ignoreversion skipifsourcedoesntexist
