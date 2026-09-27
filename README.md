@@ -14,7 +14,7 @@ analysis (CSV, with MATLAB examples).
 
 **[Latest release](https://github.com/Cyclotronic/OpenRMH-IRCAM/releases/latest)** - a Windows x64 zip built by GitHub Actions
 from the tagged source. Unzip anywhere and run `IRCAM Thermal Viewer.exe`.
-Current: **v3.0.0-community.1**, a community build of IRCAM Thermal Viewer 3.0.0 (September 2026).
+Current: **v3.0.0-community.2**, a community build of IRCAM Thermal Viewer 3.0.0 (September 2026).
 
 Requirements: Windows 10/11 x64 and .NET Framework 4.7.2 or later (included in current Windows). The
 [Microsoft Visual C++ Redistributable (x64)](https://aka.ms/vc14/vc_redist.x64.exe) **may also be required**
