@@ -36,7 +36,7 @@ namespace DirectShowCamera
         virtual bool stop() = 0;
         virtual bool isCapturing() = 0;
 
-        virtual bool getFrame(unsigned char* pixels, unsigned long* frameIndex, int* numOfBytes, bool copyNewFrameOnly, unsigned long previousFrameIndex) = 0;
+        virtual bool getFrame(unsigned char* pixels, unsigned long* frameIndex, int* numOfBytes, bool copyNewFrameOnly, unsigned long previousFrameIndex, int maxBytes = 0) = 0;
         virtual void setMinimumPFS(double minimumFPS) = 0;
         virtual double getFPS() = 0;
         virtual long getFrameTotalSize() = 0;

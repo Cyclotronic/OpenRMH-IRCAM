@@ -297,9 +297,13 @@ void RMH_Winforms_CombiBox_AddArrayOfItemStrings(System::Windows::Forms::ComboBo
 
 }
 
-void RMH_Winforms_CombiBox_SetSellectedItemPosition(System::Windows::Forms::ComboBox^ CombiBox, unsigned char ItemIndex) {
+void RMH_Winforms_CombiBox_SetSellectedItemPosition(System::Windows::Forms::ComboBox^ CombiBox, int ItemIndex) {
 
 	// This routine sets the ComboBox to the selected item position
+	// An index outside the item list (for example from an old or edited saved session) leaves the selection unchanged
+
+	// Check that the item index is inside the item list
+	if (ItemIndex < 0 || ItemIndex >= CombiBox->Items->Count) { return; }
 
 	// Set the ComboBox position to the item index
 	CombiBox->SelectedIndex = ItemIndex;

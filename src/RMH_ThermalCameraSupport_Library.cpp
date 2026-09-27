@@ -598,6 +598,23 @@ ThermalCameraDevice::IRCameraDeviceFormat RMH_IRThermalCamera_ConnectToThermalCa
 			// Update the camera device info - frame height
 			CameraStatus.FrameHeight = IRThermalCamera.getHeight();
 
+			// Refuse a video format that does not fit the frame buffers (for example an ordinary webcam matched by the generic name "USB Camera")
+			if (RMH_FrameBuffer_IsFrameSizeSupported(CameraStatus.FrameWidth, CameraStatus.FrameHeight) == false) {
+
+				// Stop video capture and close the camera
+				RMH_IRThermalCamera_CloseIRCameraDevice();
+				// Reset the camera "isStreaming" status flag
+				CameraStatus.isStreaming = false;
+				// Update the camera connected status flag
+				CameraStatus.ConnectedFlag = false;
+				// Update the camera status message
+				CameraStatus.StatusMessage = "Error: The Selected Camera's Video Format Is Not Supported (" + std::to_string(CameraStatus.FrameWidth) + " x " + std::to_string(CameraStatus.FrameHeight) + ")!";
+
+				// Return the camera status
+				return CameraStatus;
+
+			}
+
 			// Read the supported camera pool associated with the thermal camera 
 			switch (CameraStatus.ThermalCameraSupportPool) {
 
@@ -673,7 +690,7 @@ double RMH_IRThermalCamera_ConvertYUY2To14BitThermalDataArray(ThermalCameraDevic
 	unsigned short PixelXCoordinate = 0;
 	unsigned short PixelYCoordinate = 0;
 	unsigned short CenterPixelValue = 0;
-	unsigned short CenterPixelIndex = 0;
+	unsigned int CenterPixelIndex = 0;
 	unsigned short MaximumPixelValue = 0;
 	unsigned short MaximumPixelXCoord = 0;
 	unsigned short MaximumPixelYCoord = 0;
@@ -687,6 +704,15 @@ double RMH_IRThermalCamera_ConvertYUY2To14BitThermalDataArray(ThermalCameraDevic
 	bool PerformNonUniformityCorrection = false;
 	unsigned long long int ThermalDataAverageValue = 0;
 	unsigned long FrameSizeMinusMeta = IRCamera->FrameWidth * (IRCamera->FrameHeight - IRCamera->FrameMetadataSize);
+
+	// Refuse frame geometry that would read or write outside the frame buffers (the values can come from a file)
+	if (RMH_FrameBuffer_IsFrameSizeSupported(IRCamera->FrameWidth, IRCamera->FrameHeight) == false || IRCamera->FrameMetadataSize >= IRCamera->FrameHeight ||
+		((unsigned long long)IRCamera->FrameHeightPixelOffset * IRCamera->FrameWidth + IRCamera->FrameWidthPixelOffset + (unsigned long long)IRCamera->FrameWidth * IRCamera->FrameHeight) * 2 + 8 > MaximumFrameDataArraySize) {
+
+		// Return: no data converted
+		return 0.0;
+
+	}
 
 	// Check which thermal camera pool has been selected
 	switch (IRCamera->ThermalCameraSupportPool) {
@@ -1102,15 +1128,24 @@ ROIAreaPixelInfoFormat RMH_IRThermalCamera_ReadROIAreaPixelInfoInsideFrameArea(T
 bool RMH_IRThermalCamera_ReadFrameRaw(unsigned char* ImageData, unsigned int* ImageSize) {
 
 	// This routine reads and returns a raw data frame from the camera
+	// ImageData must be one of the global frame buffers (MaximumFrameDataArraySize bytes); a larger frame is refused
 
 	// Return the camera data frame
-	return IRThermalCamera.getFrame(ImageData, (int*)ImageSize, true);
+	return IRThermalCamera.getFrame(ImageData, (int*)ImageSize, true, MaximumFrameDataArraySize);
 
 }
 
 void RMH_IRThermalCamera_ReadCalFrameMetaData(unsigned short* ThermalData, ThermalCameraDevice::IRCameraDeviceFormat* IRCamera, unsigned short SupportedCameraPool) {
 
 	// This routine reads the frame metadata of the IR camera and calculates the internal IR sensor temperatures
+
+	// Refuse metadata positions outside the frame buffers (the frame geometry can come from a file)
+	if (IRCamera->FrameMetadataSize >= IRCamera->FrameHeight || IRCamera->MetaData1Index + 16 >= MaximumFrameDataArraySize || IRCamera->MetaData2Index + 16 >= MaximumFrameDataArraySize) {
+
+		// Return: no metadata read
+		return;
+
+	}
 
 	// Which supported camera pool is selected
 	switch (SupportedCameraPool) {
@@ -2703,7 +2738,7 @@ void RMH_IRThermalCamera_ConnectToThermalCameraOrAnalysisMode() {
 		GlobalVariables::SnapShotAnalysisModeRAWFilePath = RMH_Winforms_GetOpenFileDialogDirectory();
 
 		// Read the information parameters of the selected snapshot file 
-		SnapShotAnalysisModeFileInfo = RMH_AnalysisMode_ReadAndLoadPNGImage(GlobalVariables::SnapShotAnalysisModeRAWFilePath, &IRCameraFrameData[0]);
+		SnapShotAnalysisModeFileInfo = RMH_AnalysisMode_ReadAndLoadPNGImage(GlobalVariables::SnapShotAnalysisModeRAWFilePath, &IRCameraFrameData[0], MaximumFrameDataArraySize);
 
 		// Were any errors registered while reading the snapshot file 
 		if (SnapShotAnalysisModeFileInfo.FileErrorFlag == false) {
@@ -2768,6 +2803,16 @@ void RMH_IRThermalCamera_ConnectToThermalCameraOrAnalysisMode() {
 							// ----------------------------------------------------------------------------------------------------------------------------------------------- // 
 							//                                    Check Whether The Metadata Of The Opened File Contains The Correct ID String                                        // 
 							// ----------------------------------------------------------------------------------------------------------------------------------------------- //
+
+							// Is the metadata of the snapshot file consistent with the frame (the values come from the file)
+							if (RAWFileIDStringMatchFlag == true && RMH_AnalysisMode_IsRAWMetaDataValid(&SnapShotAnalysisModeFileMetaData, IRCamera.FrameWidth, IRCamera.FrameHeight) == false) {
+
+								// Write GUI status message - the metadata is invalid
+								RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "Error: The Snapshot File Metadata Is Invalid Or Corrupt.", _StatusMessageType_Error);
+								// Reset the RAW file ID string match flag - the file can not be used
+								RAWFileIDStringMatchFlag = false;
+
+							}
 
 							// Was the ID string of the snapshot file a match
 							if (RAWFileIDStringMatchFlag == true) {
@@ -2963,13 +3008,13 @@ void RMH_IRThermalCamera_ConnectToThermalCameraOrAnalysisMode() {
 				RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "File Extension Is: .avi.", _StatusMessageType_Normal);
 
 				// Check the frame width of the file read
-				if (RecordingAnalysisModeFileInfo.FrameWidth > 0) {
+				if (RecordingAnalysisModeFileInfo.FrameWidth > 0 && RecordingAnalysisModeFileInfo.FrameWidth <= _MaximumSupportedFrameDimension) {
 
 					// Write GUI status message - frame width of the file
 					RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "File Frame Width: " + RMH_Conversion_IntToStdString(RecordingAnalysisModeFileInfo.FrameWidth) + " Pixels", _StatusMessageType_Normal);
 
-					// Check the frame height of the file read
-					if (RecordingAnalysisModeFileInfo.FrameHeight > 0) {
+					// Check the frame height of the file read (the whole frame must fit the frame buffers)
+					if (RMH_FrameBuffer_IsFrameSizeSupported(RecordingAnalysisModeFileInfo.FrameWidth, RecordingAnalysisModeFileInfo.FrameHeight) == true) {
 
 						// Write GUI status message - frame height of the file
 						RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "File Frame Height: " + RMH_Conversion_IntToStdString(RecordingAnalysisModeFileInfo.FrameHeight) + " Pixels", _StatusMessageType_Normal);
@@ -3002,7 +3047,7 @@ void RMH_IRThermalCamera_ConnectToThermalCameraOrAnalysisMode() {
 									IRCamera.FrameRate = RecordingAnalysisModeFileInfo.FrameRate;
 
 									// Read the first frame of data from the opened video file
-									RMH_VideoFileReading_ReadVideoFileFrame(1, RecordingAnalysisModeFileInfo.NumberOfFrames, &IRCameraFrameData[0]);
+									unsigned int FirstFrameReadStatus = RMH_VideoFileReading_ReadVideoFileFrame(1, RecordingAnalysisModeFileInfo.NumberOfFrames, &IRCameraFrameData[0], MaximumFrameDataArraySize);
 
 									// Read the identification and metadata of the video file
 									RecordingAnalysisModeFileMetaData = RMH_AnalysisMode_ReadRAWMetaData(IRCamera.FrameWidth, IRCamera.FrameHeight, &IRCameraFrameData[0]);
@@ -3034,6 +3079,16 @@ void RMH_IRThermalCamera_ConnectToThermalCameraOrAnalysisMode() {
 									// ----------------------------------------------------------------------------------------------------------------------------------------------- // 
 									//                                    Check Whether The Metadata Of The Opened File Contains The Correct ID String                                        // 
 									// ----------------------------------------------------------------------------------------------------------------------------------------------- //
+
+									// Was the first frame read, and is the metadata consistent with the frame (the values come from the file)
+									if (RAWFileIDStringMatchFlag == true && (FirstFrameReadStatus != _ReadAVIFile_StatusCode_FrameReadOK || RMH_AnalysisMode_IsRAWMetaDataValid(&RecordingAnalysisModeFileMetaData, IRCamera.FrameWidth, IRCamera.FrameHeight) == false)) {
+
+										// Write GUI status message - the file can not be used
+										RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "Error: The Video File Frame Or Metadata Is Invalid Or Corrupt.", _StatusMessageType_Error);
+										// Reset the RAW file ID string match flag - the file can not be used
+										RAWFileIDStringMatchFlag = false;
+
+									}
 
 									// Was the ID string of the video file a match
 									if (RAWFileIDStringMatchFlag == true) {

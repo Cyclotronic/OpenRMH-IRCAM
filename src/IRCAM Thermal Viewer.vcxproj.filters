@@ -156,6 +156,9 @@
     <ClInclude Include="RMH_EmissivityTable_Resources.h">
       <Filter>Resource Files</Filter>
     </ClInclude>
+    <ClInclude Include="RMH_FrameBufferLimits.h">
+      <Filter>Header Files\RMH Video Recording And Analysis Mode</Filter>
+    </ClInclude>
     <ClInclude Include="RMH_TemperatureAlarms_Resources.h">
       <Filter>Resource Files</Filter>
     </ClInclude>

@@ -223,6 +223,7 @@
     <ClInclude Include="RMH_Application_ThermalViewer.h" />
     <ClInclude Include="RMH_DataLoggingFeature_Resources.h" />
     <ClInclude Include="RMH_EmissivityTable_Resources.h" />
+    <ClInclude Include="RMH_FrameBufferLimits.h" />
     <ClInclude Include="RMH_FullFrameTempData_Resources.h" />
     <ClInclude Include="RMH_GeneralTriggerEvent_Resources.h" />
     <ClInclude Include="RMH_LiveView_ZoomWindow.h" />

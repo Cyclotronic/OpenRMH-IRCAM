@@ -92,7 +92,7 @@ WINMonitorSettings RMH_Winforms_ReadWindowsScreenSettings();
 // -------------------------- WinForms ComboBox Handling Routines ------------------------- //
 
 void RMH_Winforms_CombiBox_AddArrayOfItemStrings(System::Windows::Forms::ComboBox^ CombiBox, std::vector<std::string> StringArray);
-void RMH_Winforms_CombiBox_SetSellectedItemPosition(System::Windows::Forms::ComboBox^ CombiBox, unsigned char ItemIndex);
+void RMH_Winforms_CombiBox_SetSellectedItemPosition(System::Windows::Forms::ComboBox^ CombiBox, int ItemIndex);
 
 // ----------------------- WinForms NumericUpDown Handling Routines ----------------------- //
 

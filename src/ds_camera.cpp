@@ -559,12 +559,12 @@ namespace DirectShowCamera
      * @param[in] previousFrameIndex The previous frame index, use to idendify whether a new frame. This variable work with copyNewFrameOnly. Default as 0.
      * @return Return true if success.
     */
-    bool DirectShowCamera::getFrame(unsigned char* frame, unsigned long* frameIndex, int* numOfBytes, bool copyNewFrameOnly, unsigned long previousFrameIndex)
+    bool DirectShowCamera::getFrame(unsigned char* frame, unsigned long* frameIndex, int* numOfBytes, bool copyNewFrameOnly, unsigned long previousFrameIndex, int maxBytes)
     {
         if (m_isCapturing && frame)
         {
-            m_sampleGrabberCallback->getFrame(frame, frameIndex, numOfBytes, copyNewFrameOnly, previousFrameIndex);
-            return true;
+            // Return false if the frame was not copied (no new frame, or larger than maxBytes)
+            return m_sampleGrabberCallback->getFrame(frame, frameIndex, numOfBytes, copyNewFrameOnly, previousFrameIndex, maxBytes);
         }
         else
         {

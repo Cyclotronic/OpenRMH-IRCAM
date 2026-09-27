@@ -70,7 +70,7 @@ namespace DirectShowCamera
         bool isCapturing();
 
         void setGetFrameFunction(GetFrameFunc func);
-        bool getFrame(unsigned char* pixels, unsigned long* frameIndex = NULL, int* numOfBytes = NULL, bool copyNewFrameOnly = false, unsigned long previousFrameIndex = 0);
+        bool getFrame(unsigned char* pixels, unsigned long* frameIndex = NULL, int* numOfBytes = NULL, bool copyNewFrameOnly = false, unsigned long previousFrameIndex = 0, int maxBytes = 0);
         void setMinimumPFS(double minimumFPS);
         double getFPS();
         long getFrameTotalSize();

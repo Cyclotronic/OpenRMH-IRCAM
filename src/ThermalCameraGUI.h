@@ -58,8 +58,9 @@ namespace IRCAMThermalViewer {
 			// Initialize the pop-up GUI form
 			ManagedLocals::PopUpDialogForm = gcnew IRCAMThermalViewer::PopUpDialog("Information", GlobalVariables::TOPDONCameraInformationString);
 
-			// Set the saved session application parameters
-			GlobalVariables::GlobalRecordingFrameRateNumericUpDown->Value = RecordingFrameRateSetValue;
+			// Set the saved session application parameters (clamped to the range of the control, the value comes from the saved session file)
+			GlobalVariables::GlobalRecordingFrameRateNumericUpDown->Value = System::Math::Max(GlobalVariables::GlobalRecordingFrameRateNumericUpDown->Minimum,
+				System::Math::Min(GlobalVariables::GlobalRecordingFrameRateNumericUpDown->Maximum, System::Decimal(RecordingFrameRateSetValue)));
 
 			// Update the default snapshot file path string 
 			this->DefaultSnapshotSavePathString->Text = "Default Save File Path:  " + GlobalVariables::SnapShotDefaultPath;

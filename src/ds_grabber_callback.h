@@ -61,7 +61,7 @@ namespace DirectShowCamera
             void setBufferSize(int numOfBytes);
             int getBufferSize();
 
-            bool getFrame(unsigned char* frame, unsigned long* frameIndex = NULL, int* numOfBytes = NULL, bool copyNewFrameOnly = false, unsigned long previousFrameIndex = 0);
+            bool getFrame(unsigned char* frame, unsigned long* frameIndex = NULL, int* numOfBytes = NULL, bool copyNewFrameOnly = false, unsigned long previousFrameIndex = 0, int maxBytes = 0);
             double getFPS();
             std::chrono::system_clock::time_point getLastFrameCaptureTime();
 
