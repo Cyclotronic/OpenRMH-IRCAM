@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: MIT
+# Copyright (c) 2026 Cyclotronic
+
 <#
 .SYNOPSIS
   Downloads the third-party dependencies OpenRMH-IRCAM builds against.

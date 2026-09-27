@@ -18,6 +18,19 @@ licences, and it does not cover files whose origin is still to be confirmed (fir
 
 If the author prefers a different licence, this can be changed by him; contact the maintainers.
 
+## Who holds the copyright
+
+Everything is offered under the MIT licence in [`LICENSE`](LICENSE); the table says whose copyright each part is.
+Git history is the detailed record (`git log`, `git blame`).
+
+| Part | Copyright |
+|---|---|
+| `src/*.h`, `src/*.cpp`, `src/*.resx`, solution and project, `examples/matlab/` (the original program) | Rune Mark Hansen. Files carry `Author: Rune Mark Hansen` where the author added a header. |
+| Changes made for this repository to those files: `src/*.vcxproj` (dependency paths, no TurboActivate, runtime-DLL copy step), `src/*.rc` (relative icon path), `examples/matlab/` (removed personal paths) | Cyclotronic, contributed under the same MIT licence. The files remain principally the author's. |
+| `scripts/`, `.github/`, `src/OpenRMH-IRCAM.deps.props`, `docs/`, `README.md`, `NOTICE.md` | Cyclotronic (files created for this repository carry an SPDX header). |
+| DirectShow camera layer and other files listed below | Not yet attributed - see the next section. |
+| Libraries downloaded by `scripts/fetch-deps.ps1` (not in this repository) | Their own authors and licences - see the table further below. |
+
 ## Components in this repository that were not written by the author — provenance to confirm
 
 | Path | What it is | Note |

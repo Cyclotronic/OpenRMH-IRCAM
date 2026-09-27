@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: MIT
+# Copyright (c) 2026 Cyclotronic
+
 <#
 .SYNOPSIS
   Builds OpenRMH-IRCAM (Release|x64) with MSBuild from Visual Studio 2022 (or newer).
