@@ -46,7 +46,7 @@ Or open `src\IRCAM Thermal Viewer.sln` in Visual Studio, choose **Release | x64*
 ## Building the user manual (optional)
 
 The user manual is written in Markdown (`docs/manual/manual.md`) and built into `build\manual\IRCAMSoftwareManual.pdf`,
-the file the program's User Guide window opens. GitHub Actions builds it on every push. To build it locally (Python 3.9+):
+the file the program's User Guide button opens. GitHub Actions builds it on every push. To build it locally (Python 3.9+):
 
 ```powershell
 python -m pip install -r docs\manual\requirements.txt   # pinned pandoc (pypandoc_binary) and typst

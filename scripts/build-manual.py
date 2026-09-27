@@ -8,7 +8,7 @@
 Pandoc (from pypandoc_binary) converts the Markdown to Typst; the typst package compiles that to PDF. Both are pinned in
 docs/manual/requirements.txt, so the local build and the GitHub Actions build use the same tools.
 
-Output: build/manual/IRCAMSoftwareManual.pdf - the file name the program's User Guide window opens from the program
+Output: build/manual/IRCAMSoftwareManual.pdf - the file name the program's User Guide button opens from the program
 folder.
 """
 import pathlib

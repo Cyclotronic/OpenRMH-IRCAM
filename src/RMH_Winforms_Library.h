@@ -82,6 +82,7 @@ void RMH_Winforms_ChangeFormTitleBarText(System::Windows::Forms::Form^ Winform, 
 // --------------------- WinForms External Process Handling Routines -------------------- //
 
 void RMH_Winforms_OpenLinkURL(System::String^ LinkURL);
+bool RMH_Winforms_OpenPDFWithDefaultViewer(System::String^ PDFFileName);
 bool RMH_Winforms_OpenWindowsMicrosoftStoreApp(System::String^ PackageFamilyName);
 void RMH_Winforms_OpenExternalApplicationEXE(System::String^ ExternalEXENameString);
 

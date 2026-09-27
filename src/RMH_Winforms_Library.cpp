@@ -157,6 +157,38 @@ void RMH_Winforms_OpenLinkURL(System::String^ LinkURL) {
 
 }
 
+bool RMH_Winforms_OpenPDFWithDefaultViewer(System::String^ PDFFileName) {
+
+	// This routine opens a PDF file, located in the same path as the application .exe, in the system's default PDF viewer.
+	// The routine returns false if the file does not exist or no application is associated with PDF files.
+
+	// Construct the full path to the PDF file
+	String^ PDFPath = Path::Combine(Application::StartupPath, PDFFileName);
+
+	// Check whether the PDF file exists
+	if (File::Exists(PDFPath) == false) { return false; }
+
+	// Handle the error thrown when no application is associated with PDF files
+	try {
+
+		// Open the PDF file with the application associated with PDF files
+		ProcessStartInfo^ StartInfo = gcnew ProcessStartInfo(PDFPath);
+		StartInfo->UseShellExecute = true;
+		Process::Start(StartInfo);
+
+	}
+	catch (System::Exception^) {
+
+		// Return: the PDF file could not be opened
+		return false;
+
+	}
+
+	// Return: the PDF file was opened
+	return true;
+
+}
+
 bool RMH_Winforms_OpenWindowsMicrosoftStoreApp(System::String^ PackageFamilyName) {
 
 	// This routine opens a selected external Microsoft Store application in a new process

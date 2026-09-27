@@ -147,7 +147,7 @@ jobs:
           admin rights, but install the [VC++ Redistributable (x64)](https://aka.ms/vc14/vc_redist.x64.exe) yourself if the
           program reports a missing DLL.
 
-          **User manual:** \`${manual_name}\` (also in the installer and the zip; the program's *User Guide* button shows it when Adobe Reader is installed).
+          **User manual:** \`${manual_name}\` (also in the installer and the zip; the program's *User Guide* button opens it in the default PDF viewer).
 
           In the camera list choose your exact model (Thermal Master P2 Pro: *InfiRay Or Thermal Master P2Pro*).
           See docs/SUPPORTED-CAMERAS.md.
