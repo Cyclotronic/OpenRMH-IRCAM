@@ -97,8 +97,8 @@ namespace IRCAMThermalViewer {
 			ManagedLocals::LiveViewStreamForm = gcnew IRCAMThermalViewer::LiveViewStream();
 			// Initialize the welcome screen form
 			ManagedLocals::WelcomeScreenForm = gcnew IRCAMThermalViewer::WelcomeScreen();
-			// Initialize the user guide GUI form
-			ManagedLocals::UserGuideViewerGUIForm = gcnew IRCAMThermalViewer::UserGuideViewerGUI();
+			// The user guide GUI form (embedded PDF viewer, Adobe Reader only) is not created: the user guide button
+			// opens the manual in the system's default PDF viewer instead
 			// Initialize the thermal camera GUI form
 			ManagedLocals::ThermalCameraGUIForm = gcnew IRCAMThermalViewer::ThermalCameraGUI();
 			// Initialize the surface plot GUI form
@@ -895,8 +895,14 @@ namespace IRCAMThermalViewer {
 		// User guide menu button callback ->
 		private: System::Void UserGuideButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Handle docking of the form GUI in the main view panel of the main GUI
-			HandleFormsOpeningDockingAndUndocking(ManagedLocals::UserGuideViewerGUIForm, this->MainViewTopPanel, &isUserGuideFormOpen, &isUserGuideFormDocked, &isUserGuideFormUndocked, _FormDockingState_DockForm);
+			// Open the user manual in the system's default PDF viewer
+			if (RMH_Winforms_OpenPDFWithDefaultViewer("IRCAMSoftwareManual.pdf") == false) {
+
+				// Write GUI status message - the user manual could not be opened
+				RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "Error: The User Manual (IRCAMSoftwareManual.pdf In The Program Folder) Could Not Be Opened - The File Is Missing Or No PDF Viewer Is Installed.", _StatusMessageType_Error);
+				RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "The User Manual Is Also Available At: https://github.com/Cyclotronic/OpenRMH-IRCAM/tree/main/docs/manual", _StatusMessageType_Normal);
+
+			}
 
 		}
 

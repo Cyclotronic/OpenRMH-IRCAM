@@ -8,7 +8,7 @@
  */
 
 // Maximum frame data array size
-#define MaximumFrameDataArraySize       (1600 * 1200 * 3) // Width * height * bands
+#include "RMH_FrameBufferLimits.h"        // MaximumFrameDataArraySize: width * height * bands
 
 // Included resources
 #include "GlobalObjectsAndVariables.h"

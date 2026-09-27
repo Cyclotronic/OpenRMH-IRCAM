@@ -16,6 +16,7 @@
 // Included libraries
 #include <string>
 #include <vector>
+#include "RMH_FrameBufferLimits.h"
 
 // ------------------------------ Library Reference Classes ------------------------------- //
 

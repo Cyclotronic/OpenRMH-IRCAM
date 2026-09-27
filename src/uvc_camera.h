@@ -66,7 +66,7 @@ namespace DirectShowCamera
 
         // ------Frame------
 
-        bool getFrame(unsigned char* frame, int* numOfBytes = NULL, bool onlyGetNewFrame = false);
+        bool getFrame(unsigned char* frame, int* numOfBytes = NULL, bool onlyGetNewFrame = false, int maxBytes = 0);
         long getFrameIndex();
 
         double getFPS();

@@ -59,7 +59,7 @@ Author: Rune Mark Hansen - <https://rmg-engineering.com/>
 [`docs/manual/manual.md`](docs/manual/manual.md) - the author's user manual, updated for 3.0.0 as a community edition.
 GitHub Actions builds it into a PDF on every push; the installer and the portable zip include it as
 `IRCAMSoftwareManual.pdf` (the installer also adds a Start Menu shortcut), and each release attaches it. The program's
-**User Guide** button shows it inside the program only when Adobe Reader is installed; any PDF viewer can open the file.
+**User Guide** button opens it in your default PDF viewer.
 
 ## Supported cameras
 

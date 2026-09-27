@@ -253,7 +253,7 @@ namespace DirectShowCamera
      * @param[in] previousFrameIndex The previous frame index, use to idendify whether a new frame. This variable work with copyNewFrameOnly. Default as 0.
      * @return Return true if success.
     */
-    bool DirectShowCameraStub::getFrame(unsigned char* frame, unsigned long* frameIndex, int* numOfBytes, bool copyNewFrameOnly, unsigned long previousFrameIndex)
+    bool DirectShowCameraStub::getFrame(unsigned char* frame, unsigned long* frameIndex, int* numOfBytes, bool copyNewFrameOnly, unsigned long previousFrameIndex, int maxBytes)
     {
         if (m_isCapturing && frame)
         {

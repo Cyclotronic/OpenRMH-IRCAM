@@ -82,6 +82,7 @@ void RMH_Winforms_ChangeFormTitleBarText(System::Windows::Forms::Form^ Winform, 
 // --------------------- WinForms External Process Handling Routines -------------------- //
 
 void RMH_Winforms_OpenLinkURL(System::String^ LinkURL);
+bool RMH_Winforms_OpenPDFWithDefaultViewer(System::String^ PDFFileName);
 bool RMH_Winforms_OpenWindowsMicrosoftStoreApp(System::String^ PackageFamilyName);
 void RMH_Winforms_OpenExternalApplicationEXE(System::String^ ExternalEXENameString);
 
@@ -92,7 +93,7 @@ WINMonitorSettings RMH_Winforms_ReadWindowsScreenSettings();
 // -------------------------- WinForms ComboBox Handling Routines ------------------------- //
 
 void RMH_Winforms_CombiBox_AddArrayOfItemStrings(System::Windows::Forms::ComboBox^ CombiBox, std::vector<std::string> StringArray);
-void RMH_Winforms_CombiBox_SetSellectedItemPosition(System::Windows::Forms::ComboBox^ CombiBox, unsigned char ItemIndex);
+void RMH_Winforms_CombiBox_SetSellectedItemPosition(System::Windows::Forms::ComboBox^ CombiBox, int ItemIndex);
 
 // ----------------------- WinForms NumericUpDown Handling Routines ----------------------- //
 

@@ -223,6 +223,7 @@
     <ClInclude Include="RMH_Application_ThermalViewer.h" />
     <ClInclude Include="RMH_DataLoggingFeature_Resources.h" />
     <ClInclude Include="RMH_EmissivityTable_Resources.h" />
+    <ClInclude Include="RMH_FrameBufferLimits.h" />
     <ClInclude Include="RMH_FullFrameTempData_Resources.h" />
     <ClInclude Include="RMH_GeneralTriggerEvent_Resources.h" />
     <ClInclude Include="RMH_LiveView_ZoomWindow.h" />
@@ -346,7 +347,7 @@
       <RuntimeDll Include="$(OpenRMHDepsDir)glfw\lib-vc2022\glfw3.dll" />
     </ItemGroup>
     <Copy SourceFiles="@(RuntimeDll)" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" />
-    <!-- User manual opened by the User Guide window; present once scripts\build-manual.py has run -->
+    <!-- User manual opened by the User Guide button; present once scripts\build-manual.py has run -->
     <Copy SourceFiles="..\build\manual\IRCAMSoftwareManual.pdf" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" Condition="Exists('..\build\manual\IRCAMSoftwareManual.pdf')" />
   </Target>
   <ImportGroup Label="ExtensionTargets">

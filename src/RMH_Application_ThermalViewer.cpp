@@ -3837,7 +3837,7 @@ void RMH_ThermalViewer_ImageProcessingSequence() {
 		if (InRecordingAnalysisModeFlag == true) {
 
 			// Read the selected raw video frame from the open RAW file
-			RMH_VideoFileReading_ReadVideoFileFrame(CurrentPlayBackFrameValue, RecordingAnalysisModeFileInfo.NumberOfFrames, &IRCameraFrameData[0]);
+			RMH_VideoFileReading_ReadVideoFileFrame(CurrentPlayBackFrameValue, RecordingAnalysisModeFileInfo.NumberOfFrames, &IRCameraFrameData[0], MaximumFrameDataArraySize);
 
 			// Every frame read is a new frame
 			IsCapturedFrameNewFlag = true;

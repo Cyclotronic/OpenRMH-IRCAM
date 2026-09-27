@@ -2535,16 +2535,17 @@ namespace DirectShowCamera
      * @param[out] frame Frame bytes (BGR)
      * @param[out] numOfBytes (Option) Number of bytes of the frame. Default as NULL
      * @param[in] onlyGetNewFrame (Option) Set it as true if you only want to get the new frame. Default as false
+     * @param[in] maxBytes (Option) Size of the frame buffer in bytes. A larger frame is not copied. 0 means no limit. Default as 0
      * @return Return true if success
     */
-    bool UVCCamera::getFrame(unsigned char* frame, int* numOfBytes, bool onlyGetNewFrame)
+    bool UVCCamera::getFrame(unsigned char* frame, int* numOfBytes, bool onlyGetNewFrame, int maxBytes)
     {
         bool result = false;
 
         if (m_directShowCamera->isCapturing())
         {
             unsigned long frameIndex;
-            bool success = m_directShowCamera->getFrame(frame, &frameIndex, numOfBytes, onlyGetNewFrame, m_lastFrameIndex);
+            bool success = m_directShowCamera->getFrame(frame, &frameIndex, numOfBytes, onlyGetNewFrame, m_lastFrameIndex, maxBytes);
 
             if (onlyGetNewFrame && frameIndex == m_lastFrameIndex)
             {

@@ -57,9 +57,10 @@ namespace DirectShowCamera
      * @param[out] numOfBytes (Option) Number of the byte of the frame. It will change if the size is change in 5 frame. Default as NULL.
      * @param[in] copyNewFrameOnly (Option) Set as true if only interesting on new frame and it will not copy the frame. It should be used with previousFrameIndex. Default as false.
      * @param[in] previousFrameIndex (Option) The previous frame index. It use to identify whether the current frame is a new frame. Default as 0.
+     * @param[in] maxBytes (Option) Size of the frame buffer in bytes. A larger frame is not copied and false is returned. 0 means no limit. Default as 0.
      * @return Return true if the current is copied. If a new frame is required and the frame doesn't change, it will returns false. If eroor occurred, it return false.
     */
-    bool SampleGrabberCallback::getFrame(unsigned char* frame, unsigned long* frameIndex, int* numOfBytes, bool copyNewFrameOnly, unsigned long previousFrameIndex)
+    bool SampleGrabberCallback::getFrame(unsigned char* frame, unsigned long* frameIndex, int* numOfBytes, bool copyNewFrameOnly, unsigned long previousFrameIndex, int maxBytes)
     {
         int currentframeIndex = m_frameIndex;
         bool result = false;
@@ -71,6 +72,22 @@ namespace DirectShowCamera
             {
                 // Lock mutex
                 m_bufferMutex.lock();
+
+                // Refuse a frame that is larger than the destination buffer (the frame size is set by the device)
+                if (maxBytes > 0 && m_bufferSize > maxBytes)
+                {
+                    // Report the frame size
+                    if (numOfBytes)
+                    {
+                        *numOfBytes = m_bufferSize;
+                    }
+
+                    // Unlock mutex
+                    m_bufferMutex.unlock();
+
+                    // Return failure
+                    return false;
+                }
 
                 // Copy
                 memcpy(frame, m_pixelsBuffer, m_bufferSize);

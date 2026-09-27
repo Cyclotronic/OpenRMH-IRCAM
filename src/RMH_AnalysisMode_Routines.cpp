@@ -170,6 +170,30 @@ RAWFileIDFormat RMH_AnalysisMode_ReadRAWMetaData(unsigned int FrameWidth, unsign
 
 }
 
+bool RMH_AnalysisMode_IsRAWMetaDataValid(RAWFileIDFormat* MetaData, unsigned int FrameWidth, unsigned int FrameHeight) {
+
+    // This routine checks that the metadata read from a RAW file is consistent with the frame it describes.
+    // The values come from the file, so they are checked before they are used to index the frame buffers.
+    // The routine returns true if the metadata can be used safely.
+
+    // The frame itself must fit the frame buffers
+    if (RMH_FrameBuffer_IsFrameSizeSupported(FrameWidth, FrameHeight) == false) { return false; }
+
+    // The camera pool must be one of the supported pools (1 - 4)
+    if (MetaData->CameraPoolID < 1 || MetaData->CameraPoolID > 4) { return false; }
+
+    // The metadata rows must be fewer than the frame rows
+    if (MetaData->FileMetaDataSizeID >= FrameHeight) { return false; }
+
+    // The pixel offsets must lie inside the frame
+    if (MetaData->FileFrameWidthPixelOffsetID >= FrameWidth) { return false; }
+    if (MetaData->FileFrameHeightPixelOffsetID >= FrameHeight) { return false; }
+
+    // Return: the metadata is valid
+    return true;
+
+}
+
 // ---------------------------- Video File Recording, Configuration, Setting And Writing Routines ---------------------------- //
 
 bool RMH_VideoFileRecording_SetupRecordingAnalysisModeVideoFile(System::String^ FileSavePath, System::String^ FileName, unsigned int FrameWidth, unsigned int FrameHeight, double FrameRate) {
@@ -506,7 +530,7 @@ RAWVideoFileInfo RMH_VideoFileReading_SetupRecordingAnalysisModeVideoFileReader(
 
 }
 
-unsigned int RMH_VideoFileReading_ReadVideoFileFrame(unsigned long TargetFrameNumber, unsigned long FileTotalNumOfFrames, unsigned char *ReadFrameData) {
+unsigned int RMH_VideoFileReading_ReadVideoFileFrame(unsigned long TargetFrameNumber, unsigned long FileTotalNumOfFrames, unsigned char *ReadFrameData, size_t ReadFrameDataCapacity) {
 
     // This routine reads a video frame from the open "Recording Analysis" mode RAW video file
     
@@ -518,6 +542,7 @@ unsigned int RMH_VideoFileReading_ReadVideoFileFrame(unsigned long TargetFrameNu
      *   #define _ReadAVIFile_StatusCode_FileIsNotOpen            2
      *   #define _ReadAVIFile_StatusCode_FrameNumberOutOfRange    3
      *   #define _ReadAVIFile_StatusCode_FrameReadError           4
+     *   #define _ReadAVIFile_StatusCode_FrameTooLarge            5
      * 
      */
 
@@ -539,6 +564,14 @@ unsigned int RMH_VideoFileReading_ReadVideoFileFrame(unsigned long TargetFrameNu
 
                 // Convert the frame read from BGR to RGB
                 cv::cvtColor(ReadFrame, ReadFrameRGB, cv::COLOR_BGR2RGB);
+
+                // Refuse a frame that is larger than the destination buffer (the frame size comes from the file)
+                if (ReadFrameRGB.total() * ReadFrameRGB.elemSize() > ReadFrameDataCapacity) {
+
+                    // Return status - the frame is too large for the buffer
+                    return _ReadAVIFile_StatusCode_FrameTooLarge;
+
+                }
 
                 // Write the frame data to the pointer 
                 memcpy(ReadFrameData, ReadFrameRGB.data, ReadFrameRGB.total() * ReadFrameRGB.elemSize());
@@ -598,7 +631,7 @@ bool RMH_VideoFileReading_CloseRecordingAnalysisModeFile() {
 
 // --------------------------- Snapshot File Reading, Configuration, Setting And Writing Routines ---------------------------- //
 
-RAWSnapShotFileInfo RMH_AnalysisMode_ReadAndLoadPNGImage(System::String^ ImageFilePath, unsigned char* ImageData) {
+RAWSnapShotFileInfo RMH_AnalysisMode_ReadAndLoadPNGImage(System::String^ ImageFilePath, unsigned char* ImageData, size_t ImageDataCapacity) {
 
     // This routine opens and reads a PNG image file at the selected path, where the pixel data of the image can be read as: 
     // unsigned char RED = ImageData[3 * (Y * Width + X)];
@@ -608,7 +641,8 @@ RAWSnapShotFileInfo RMH_AnalysisMode_ReadAndLoadPNGImage(System::String^ ImageFi
     // Local variables
     unsigned int ImgWidth = 0;
     unsigned int ImgHeight = 0;
-    unsigned int BufferSize = 0;
+    size_t BufferSize = 0;
+    WICPixelFormatGUID PixelFormat;
     System::String^ FileTypeExtension;
     RAWSnapShotFileInfo SnapShotAnalysisModeFileInfo;
 
@@ -733,19 +767,44 @@ RAWSnapShotFileInfo RMH_AnalysisMode_ReadAndLoadPNGImage(System::String^ ImageFi
 
     }
 
+    // Read the pixel format of the PNG image
+    hr = pFrame->GetPixelFormat(&PixelFormat);
+
+    // Calculate the buffer size for the pixel data of the PNG image (3 bands RGB) - in 64-bit to avoid overflow
+    BufferSize = (size_t)ImgWidth * (size_t)ImgHeight * 3;
+
+    // The image must be a 24-bit RGB snapshot that fits the frame buffers (the size and format come from the file)
+    if (FAILED(hr) || PixelFormat != GUID_WICPixelFormat24bppBGR || RMH_FrameBuffer_IsFrameSizeSupported(ImgWidth, ImgHeight) == false || BufferSize > ImageDataCapacity) {
+
+        // Release the image size structure
+        pFrame->Release();
+        // Release the image decoder
+        pDecoder->Release();
+        // Release the "WIC factory"
+        pFactory->Release();
+        // Uninitialize the COM library
+        CoUninitialize();
+
+        // Reset the "the file is not ready" flag
+        SnapShotAnalysisModeFileInfo.IsFileReady = false;
+        // Reset the file error flag
+        SnapShotAnalysisModeFileInfo.FileErrorFlag = true;
+
+        // Return the info structure
+        return SnapShotAnalysisModeFileInfo;
+
+    }
+
     // Read and return, to pointers, the height and width of the PNG image read
     SnapShotAnalysisModeFileInfo.FrameWidth = static_cast<unsigned int>(ImgWidth);
     SnapShotAnalysisModeFileInfo.FrameHeight = static_cast<unsigned int>(ImgHeight);
-
-    // Calculate the buffer size for the pixel data of the PNG image (3 bands RGB)
-    BufferSize = ImgWidth * ImgHeight * 3;
 
     // Allocate memory for the pixel data of the image
     unsigned char* Buffer = new unsigned char[BufferSize];
 
     // Read the PNG image pixel data RGB
     WICRect Rect = { 0, 0, static_cast<unsigned int>(ImgWidth), static_cast<unsigned int>(ImgHeight) };
-    hr = pFrame->CopyPixels(&Rect, ImgWidth * 3, BufferSize, Buffer);
+    hr = pFrame->CopyPixels(&Rect, ImgWidth * 3, static_cast<UINT>(BufferSize), Buffer);
 
     // Check the handler error
     if (FAILED(hr)) {

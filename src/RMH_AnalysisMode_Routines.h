@@ -15,6 +15,7 @@
 
 // Included libraries
 #include <opencv2/opencv.hpp>
+#include "RMH_FrameBufferLimits.h"
 
 // RAW recording/snapshot identification data reference macros
 #define _RAWFileIDData_FileIDString                                      "IRCAM.RAM"
@@ -61,6 +62,7 @@
 #define _ReadAVIFile_StatusCode_FileIsNotOpen                            2
 #define _ReadAVIFile_StatusCode_FrameNumberOutOfRange                    3
 #define _ReadAVIFile_StatusCode_FrameReadError                           4
+#define _ReadAVIFile_StatusCode_FrameTooLarge                            5
 
 // --------------------------------------------------- Library Reference Classes --------------------------------------------------- //
 
@@ -115,6 +117,7 @@ void RMH_AnalysisMode_AddIDAndMetaDataToFrameArray(unsigned int FrameWidth, unsi
     float CameraTempCorrectionSetting, float CameraAmbientTempSetting, float CameraReflectedTempSetting, float CameraHumiditySetting, float CameraEmissivitySetting, unsigned int CameraDistanceSetting);
 
 RAWFileIDFormat RMH_AnalysisMode_ReadRAWMetaData(unsigned int FrameWidth, unsigned int FrameHeight, unsigned char* RAWFrameDataArray);
+bool RMH_AnalysisMode_IsRAWMetaDataValid(RAWFileIDFormat* MetaData, unsigned int FrameWidth, unsigned int FrameHeight);
 
 // ---------------------------- Video File Recording, Configuration, Setting And Writing Routines ---------------------------- //
 
@@ -128,12 +131,12 @@ bool RMH_VideoFileRecording_CloseVideoFileWriting(unsigned short FileIndex);
 
 bool RMH_VideoFileReading_IsRECAnalysisModeFileOpen();
 RAWVideoFileInfo RMH_VideoFileReading_SetupRecordingAnalysisModeVideoFileReader(System::String^ AVIFilePath);
-unsigned int RMH_VideoFileReading_ReadVideoFileFrame(unsigned long TargetFrameNumber, unsigned long FileTotalNumOfFrames, unsigned char* ReadFrameData);
+unsigned int RMH_VideoFileReading_ReadVideoFileFrame(unsigned long TargetFrameNumber, unsigned long FileTotalNumOfFrames, unsigned char* ReadFrameData, size_t ReadFrameDataCapacity);
 bool RMH_VideoFileReading_CloseRecordingAnalysisModeFile();
 
 // --------------------------- Snapshot File Reading, Configuration, Setting And Writing Routines ---------------------------- //
 
-RAWSnapShotFileInfo RMH_AnalysisMode_ReadAndLoadPNGImage(System::String^ ImageFilePath, unsigned char* ImageData);
+RAWSnapShotFileInfo RMH_AnalysisMode_ReadAndLoadPNGImage(System::String^ ImageFilePath, unsigned char* ImageData, size_t ImageDataCapacity);
 
 // ----------------------------------------------------------------------------------------------------------------------------------- //
 
