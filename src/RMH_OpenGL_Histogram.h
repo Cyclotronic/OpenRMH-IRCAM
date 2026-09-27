@@ -9,7 +9,7 @@
  *
  */
 
-// Inkluderede Biblioteker
+// Included libraries
 #include <windows.h>
 #include <GL/GLU.h>
 #include <GL/GL.h>
@@ -17,11 +17,11 @@
 #include "RMH_ThermalCameraSupport_Library.h"
 #include "RMH_Winforms_Library.h"
 
- // Tilhørende Name spaces
+ // Associated namespaces
 using namespace System::Windows::Forms;
 using namespace std;
 
-// Statiske Globale Klasse variabler
+// Static global class variables
 static unsigned int HistDistributionData[16384];
 
 // OpenGL Klasse definition
@@ -36,7 +36,7 @@ namespace OpenGLHistogram {
 		private: unsigned int HistgramColorPaletteResolution = 16384;
 		private: unsigned int HistgramColorPaletteResolutionRange = 65535;
 
-		// Private Globale klasse objekter og variabler
+		// Private global class objects and variables
 		private: HDC m_hDC;
 		private: HGLRC m_hglrc;
 		private: GLuint BaseFont;
@@ -50,7 +50,7 @@ namespace OpenGLHistogram {
 		private: GLdouble TextureToPanelScaleHeightFactor;
 		private: CreateParams^ ControlParams = gcnew CreateParams;
 
-		// Diverse Histogram variabler
+		// Miscellaneous histogram variables
 		private: unsigned int TexturePanelTopButMargin = 22;
 		private: unsigned int RefLineRightPanelOffset = 12;
 		private: unsigned int HistogramX0 = 0;
@@ -70,7 +70,7 @@ namespace OpenGLHistogram {
 
 		RMHOpenGLHistogram(System::Windows::Forms::Panel^ TexturePanel, unsigned char HeightScaleFactor) {
 
-			// Sæt positionen af kontrol klassen
+			// Set the position of the control class
 			ControlParams->X = 0;
 			ControlParams->Y = 0;
 			ControlParams->Width = (GLdouble)TexturePanel->Width;
@@ -78,68 +78,68 @@ namespace OpenGLHistogram {
 
 			// Konfigurer Textur parent handler
 			ControlParams->Parent = TexturePanel->Handle;
-			// Skab "Child" af valgte "parent" og gør denne OpenGL compliant
+			// Create a "child" of the selected "parent" and make it OpenGL compliant
 			ControlParams->Style = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN;
 
-			// Generer tekstur vindue handler
+			// Generate the texture window handle
 			this->CreateHandle(ControlParams);
 
-			// Pointer til textur handler
+			// Pointer to the texture handle
 			m_hDC = GetDC((HWND)this->Handle.ToPointer());
 
-			// Er denne handler aktiv
+			// Is this handle active
 			if (m_hDC) {
 
 				// Konfigurer Textur Pixel format
 				RMH_OpenGL_SetTexturePixelFormat(m_hDC);
-				// Konfigurer texturens størrelse
+				// Configure the size of the texture
 				RMH_OpenGL_ResizeOpenGLWinformsScene(ControlParams->Width, ControlParams->Height);
 				// Initialisere OpenGL for Winforms C++
 				RMH_OpenGL_Init();
 
 			}
 
-			// Opsæt Histogram textur området til grafisk renderering
+			// Set up the histogram texture area for graphics rendering
 			RMH_OpenGL_InitHistogramTexture(ControlParams->Width, ControlParams->Height);
 
 		}
 
-		// ----------------- Textur Initiliserings Og Håndterings Routiner ----------------- //
+		// ----------------- Texture Initialization And Handling Routines ----------------- //
 
 		private: GLvoid RMH_OpenGL_MakeRenderContextCurrent() {
 
-			// Routinen Gør Tilhørende Render kontekst det nuværende render kontekst
+			// This routine makes the associated render context the current render context
 
-			// Gør Tilhørende Render kontekst det nuværende render kontekst
+			// Make the associated render context the current render context
 			wglMakeCurrent(m_hDC, m_hglrc);
 
 		}
 
 		private: GLvoid RMH_OpenGL_MakeRenderContextNULL() {
 
-			// Routinen nulstiller tilhørende Render kontekst
+			// This routine resets the associated render context
 
-			// Nulstil Render kontekst
+			// Reset the render context
 			wglMakeCurrent(NULL, NULL);
 
 		}
 
 		private: GLvoid RMH_OpenGL_InitHistogramTexture(unsigned int HistogramTextureWidth, unsigned int HistogramTextureHeight) {
 
-			// Routinen benyttes til at opsætte en OpenGL textur til grafisk renderering
+			// This routine is used to set up an OpenGL texture for graphics rendering
 
-			// Sæt Textur Parameter2
+			// Set the texture parameters
 			HistogramTexture = new GLuint[1];
 			TextureWidth = HistogramTextureWidth;
 			TextureHeight = HistogramTextureHeight;
 
-			// Brug Texturen som skal rendererer Histogrammets data
+			// Use the texture that renders the histogram data
 			glGenTextures(1, HistogramTexture);
 
-			// Aktiver OpenGL 2D Texture
+			// Enable OpenGL 2D texture
 			glEnable(GL_TEXTURE_2D);
 
-			// Bind Texturen som et 2D textur
+			// Bind the texture as a 2D texture
 			glBindTexture(GL_TEXTURE_2D, HistogramTexture[0]);
 
 			// Konfigurer Textur parametere
@@ -150,7 +150,7 @@ namespace OpenGLHistogram {
 			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
 
-			// Deaktiver Texture
+			// Disable the texture
 			glDisable(GL_TEXTURE_2D);
 
 		}
@@ -159,7 +159,7 @@ namespace OpenGLHistogram {
 
 			// Routinen indstiller texturens syns vinkel for display i control handler komponentet
 
-			// Lokale Variabler
+			// Local variables
 			GLdouble PlaneXLook = 0.0;
 			GLdouble PlaneYLook = 0.0;
 			GLdouble PlaneFieldOfView = 60.0;
@@ -168,7 +168,7 @@ namespace OpenGLHistogram {
 			GLdouble PlaneDistance = 0.0;
 			GLdouble PlaneAspectRatio = 0.0;
 
-			// Læs data framens højde og bredde
+			// Read the height and width of the data frame
 			PlaneXLook = (GLdouble)TextureWidth * 0.5;
 			PlaneYLook = (GLdouble)TextureHeight * 0.5;
 
@@ -178,7 +178,7 @@ namespace OpenGLHistogram {
 			// Udregn affstanden imellem Frame data planet og textur planet
 			PlaneDistance = (GLdouble)TextureHeight * TanHalfFieldOfView;
 
-			// Opdater Texturens syns vinkel
+			// Update the viewing angle (field of view) of the texture
 			glMatrixMode(GL_PROJECTION);
 			glLoadIdentity();
 			gluPerspective(PlaneFieldOfView, PlaneAspectRatio, 0.01f, 2250.0);
@@ -188,33 +188,33 @@ namespace OpenGLHistogram {
 
 		}
 
-		// ------------------ Label Rendererings Og Håndterings Routiner ------------------- //
+		// ------------------ Label Rendering And Handling Routines ------------------- //
 
 		private: GLvoid RMH_OpenGL_glPrint(const char* CharArray) {
 
-			// Routinen Renderer et sæt karakterer på et OpenGL textur 
+			// This routine renders a set of characters on an OpenGL texture 
 
-			// Tilføj FONT Liste Egenskaber
+			// Add the font list properties
 			glPushAttrib(GL_LIST_BIT);
 			// Benyt FONT Base List
 			glListBase(BaseFont - 32);
-			// Eksikver og renderer karakterer på textur
+			// Execute and render the characters on the texture
 			glCallLists(strlen(CharArray), GL_UNSIGNED_BYTE, CharArray);
-			// Genopret Liste Egenskaber
+			// Restore the list properties
 			glPopAttrib();
 
 		}
 
 		private: GLvoid RMH_OpenGL_RenderStringOnTexture(GLfloat StringX, GLfloat StringY, std::string DisplayString, GLubyte ColorR, GLubyte ColorG, GLubyte ColorB) {
 
-			// Routinen rendererer et givet string på et OpenGL Textur
+			// This routine renders a given string on an OpenGL texture
 
 			// Konfigurer Textens Farve
 			glColor3ub(ColorR, ColorG, ColorB);
-			// Indstil textens position på textur
+			// Set the position of the text on the texture
 			glRasterPos2f(StringX, StringY);
 
-			// Render givet string på textur
+			// Render the given string on the texture
 			RMH_OpenGL_glPrint(DisplayString.c_str());
 
 		}
@@ -223,7 +223,7 @@ namespace OpenGLHistogram {
 
 		private: GLvoid RMH_OpenGL_ClearTextureBuffer() {
 
-			// Routinen rydder tilhørende textur buffere
+			// This routine clears the associated texture buffers
 
 			// Ryd Textur farve og bit buffere
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -232,9 +232,9 @@ namespace OpenGLHistogram {
 
 		private: GLvoid RMH_OpenGL_StartHistogramRender() {
 
-			// Routinen er start tilstande af OpenGL Histogram Rendereringen
+			// This routine is the start state of the OpenGL histogram rendering
 
-			// Roter Textur Til at matche korrekt billede orientation
+			// Rotate the texture to match the correct image orientation
 			glTranslatef(0.0f, (GLdouble)TextureHeight, 0.0f);
 			glRotatef(180.0f, 1.0f, 0.0f, 0.0f);
 
@@ -242,44 +242,44 @@ namespace OpenGLHistogram {
 
 		private: GLvoid RMH_OpenGL_RenderLine(GLfloat LineX0, GLfloat LineY0, GLfloat LineX1, GLfloat LineY1, GLfloat LineWidth, GLfloat ColorR, GLfloat ColorG, GLfloat ColorB) {
 
-			// Routinen rendererer en simpel linje med givet input parametere
+			// This routine renders a simple line with the given input parameters
 
-			// Aktiver OpenGL 1D Texture
+			// Enable OpenGL 1D texture
 			glEnable(GL_TEXTURE_1D);
 
-			// Indstil pilens Farve
+			// Set the color of the arrow
 			glColor3ub(ColorR, ColorG, ColorB);
-			// Indstil pilens Linjens tykkelse
+			// Set the line thickness of the arrow
 			glLineWidth(LineWidth);
 
-			// Render linjer på textur
+			// Render lines on the texture
 			glBegin(GL_LINES);
 
-			// Render pilens primære linje
+			// Render the primary line of the arrow
 			glVertex2f(LineX0, LineY0);
 			glVertex2f(LineX1, LineY1);
 
 			// Konfiguration Slut
 			glEnd();
-			// Deaktiver 1D Texture
+			// Disable the 1D texture
 			glDisable(GL_TEXTURE_1D);
 
 		}
 
 		private: GLvoid RMH_OpenGL_RenderHistogramBin(GLfloat BinX0, GLfloat BinY0, GLfloat BinHeight, GLfloat BinLength, GLfloat ColorR, GLfloat ColorG, GLfloat ColorB) {
 			   
-			// Routinen renderer et histogram bin rektangel
+			// This routine renders a histogram bin rectangle
 
-			// Aktiver OpenGL 1D Texture
+			// Enable OpenGL 1D texture
 			glEnable(GL_TEXTURE_1D);
 
-			// Indstil polygon Farve
+			// Set the polygon color
 			glColor3f(ColorR / (GLfloat)HistgramColorPaletteResolutionRange, ColorG / (GLfloat)HistgramColorPaletteResolutionRange, ColorB / (GLfloat)HistgramColorPaletteResolutionRange);
 
-			// Indstil polygon Linjens tykkelse
+			// Set the polygon line thickness
 			glLineWidth(1);
 
-			// Render Polygon på textur
+			// Render the polygon on the texture
 			glBegin(GL_POLYGON);
 
 			// Render Polygon rektangel linjer
@@ -307,16 +307,16 @@ namespace OpenGLHistogram {
 			glVertex2f(BinX0, BinY0 + BinHeight);
 			glEnd();*/
 
-			// Deaktiver 1D Texture
+			// Disable the 1D texture
 			glDisable(GL_TEXTURE_1D);
   
 		}
 		
 		private: GLvoid RMH_OpenGL_RenderHistogramBins(unsigned int *BinData) {
 
-			// Routinen Renderer Histrogrammets forskellige Bins fra givet input parametre
+			// This routine renders the different bins of the histogram from the given input parameters
 
-			// Lokale variabler
+			// Read the temporary array data and sort the kernel array
 			GLfloat HistogramBinHeight = 0.0;
 			register GLfloat HistogramNextBinPos1 = 0.0;
 			register GLfloat HistogramNextBinPos2 = 0.0;
@@ -335,16 +335,16 @@ namespace OpenGLHistogram {
 			register unsigned int ColorPaletteBinIndexValue3 = 0;
 			register unsigned int ColorPaletteBinIndexValue4 = 0;
 
-			// Udregn Histogram Bin Højden for hvert Bin
+			// Calculate the histogram bin height for each bin
 			HistogramBinHeight = (GLfloat)HistogramHeight / (GLfloat)NumberOfHistogramBins;
 
-			// Udregn Histogrammets Colorpalette Index Offset Værdi
+			// Calculate the color palette index offset value of the histogram
 			ColorPaletteBinIndexOffsetValue = (GLfloat)HistgramColorPaletteResolution / (GLfloat)NumberOfHistogramBins;
 
-			// Loop til og med antallet af histogram bins
+			// Loop up to and including the number of histogram bins
 			for (unsigned int i = 0; i < NumberOfHistogramBins; i += 4) {
 
-				// Læs histogram bin længde dataen
+				// Read the histogram bin length data
 				HistogramBinLengthData1 = *(BinData + ((NumberOfHistogramBins - 1) - (i + 0)));
 				HistogramBinLengthData2 = *(BinData + ((NumberOfHistogramBins - 1) - (i + 1)));
 				HistogramBinLengthData3 = *(BinData + ((NumberOfHistogramBins - 1) - (i + 2)));
@@ -356,19 +356,19 @@ namespace OpenGLHistogram {
 				HistogramBinLengthData3 = HistogramBinLengthData3 * HistBinDataFitScaleFactor;
 				HistogramBinLengthData4 = HistogramBinLengthData4 * HistBinDataFitScaleFactor;
 
-				// Udregn Næste Histogram Bin Position
+				// Calculate the next histogram bin position
 				HistogramNextBinPos1 = (GLfloat)HistogramY0 + (HistogramBinHeight * (GLfloat)(i + 0));
 				HistogramNextBinPos2 = (GLfloat)HistogramY0 + (HistogramBinHeight * (GLfloat)(i + 1));
 				HistogramNextBinPos3 = (GLfloat)HistogramY0 + (HistogramBinHeight * (GLfloat)(i + 2));
 				HistogramNextBinPos4 = (GLfloat)HistogramY0 + (HistogramBinHeight * (GLfloat)(i + 3));
 
-				// Udregn den aktuelle Colorpalette Index Værdi Til Histogrammet Bin
+				// Calculate the actual color palette index value for the histogram bin
 				ColorPaletteBinIndexValue1 = (unsigned int)((ColorPaletteBinIndexOffsetValue * ((GLfloat)(i + 0) + 1.0)) - 1.0);
 				ColorPaletteBinIndexValue2 = (unsigned int)((ColorPaletteBinIndexOffsetValue * ((GLfloat)(i + 1) + 1.0)) - 1.0);
 				ColorPaletteBinIndexValue3 = (unsigned int)((ColorPaletteBinIndexOffsetValue * ((GLfloat)(i + 2) + 1.0)) - 1.0);
 				ColorPaletteBinIndexValue4 = (unsigned int)((ColorPaletteBinIndexOffsetValue * ((GLfloat)(i + 3) + 1.0)) - 1.0);
 
-				// Indstil Histogramets Minimale Bin Størrelse
+				// Set the minimum bin size of the histogram
 				if (HistogramBinLengthData1 <= 1) { HistogramBinLengthData1 = 1; }
 				if (HistogramBinLengthData2 <= 1) { HistogramBinLengthData2 = 1; }
 				if (HistogramBinLengthData3 <= 1) { HistogramBinLengthData3 = 1; }
@@ -408,7 +408,7 @@ namespace OpenGLHistogram {
 
 		public: GLvoid RMH_OpenGL_LoadHistogramColorPalette(unsigned short (*HistogramPalette)[16384]) {
 
-			// Routinen loader en givet histogram color palette
+			// This routine loads a given histogram color palette
 
 			// Opdater histogram color palette pointer
 			HistogramPalettePtr = HistogramPalette;
@@ -426,18 +426,18 @@ namespace OpenGLHistogram {
 
 		public: void RMH_OpenGL_FormatHistogramBinDataRaw(unsigned short* RawThermalData, unsigned int DataLength, unsigned short MaxBinVal, unsigned short MinBinVal) {
 
-			// Routinen fordeler givet input data til tilhørende histogram data bins
+			// This routine distributes the given input data into the associated histogram data bins
 
-			// Lokale variabler
+			// Read the temporary array data and sort the kernel array
 			GLfloat BinWidth, BinIndex;
 
-			// Nulstil Højeste Histogram Bin variabel
+			// Reset the highest histogram bin variable
 			HistHighestBinValue = 0;
 
-			// Nulstil histogram fordelings værdier inden næste iteration
+			// Reset the histogram distribution values before the next iteration
 			for (unsigned int i = 0; i < NumberOfHistogramBins; i++) {
 
-				// Nulstil histogram fordelings værdier
+				// Reset the histogram distribution values
 				HistDistributionData[i] = 0;
 
 			}
@@ -445,24 +445,24 @@ namespace OpenGLHistogram {
 			// Udregn Histogram Bin data bredden
 			BinWidth = ((GLfloat)MaxBinVal - (GLfloat)MinBinVal) / ((GLfloat)NumberOfHistogramBins - 1.0);
 
-			// Fordel Givet Data Til tilhørende Histogram Bins 
+			// Distribute the given data into the associated histogram bins 
 			for (unsigned int i = 0; i < DataLength; i++) {
 
-				// Udregn Dataens Histogram Bin Indeks værdi
+				// Calculate the histogram bin index value of the data
 				BinIndex = (RawThermalData[i] - MinBinVal) / BinWidth;
 
-				// Begræns Histogram bin indeks værdien
-				// Til at matche den rækkevidden af antal Histogram Bins
+				// Limit the histogram bin index value
+				// to match the range of the number of histogram bins
 				if (BinIndex > NumberOfHistogramBins - 1 || BinIndex < 0) {}
 				else {
 
-					// Inkrementer histogram Bin indeks fordelings værdi
+					// Increment the histogram bin index distribution value
 					HistDistributionData[(unsigned int)BinIndex] = HistDistributionData[(unsigned int)BinIndex] + 1;
 
-					// Læs værdien af den største histogram Bin 
+					// Read the value of the largest histogram bin 
 					if (HistDistributionData[(unsigned int)BinIndex] > HistHighestBinValue) {
 
-						// Opdater Højeste Histogram Bin værdi
+						// Update the highest histogram bin value
 						HistHighestBinValue = HistDistributionData[(unsigned int)BinIndex];
 
 					}
@@ -471,26 +471,26 @@ namespace OpenGLHistogram {
 
 			}
 
-			// Udregn Bin data skallerings faktoren, til at fitte dataen til histogram Y aksen
+			// Calculate the bin data scaling factor, to fit the data to the histogram Y axis
 			HistBinDataFitScaleFactor = ((GLfloat)HistogramMaxBinLength / (GLfloat)HistHighestBinValue);
 
 		}
 
 		public: void RMH_OpenGL_FormatHistogramBinDataTemp(ThermalCameraDevice::IRCameraDeviceFormat* IRCamera, unsigned short* RawThermalData, unsigned int DataLength, GLfloat MaxBinVal, GLfloat MinBinVal, GLfloat TempUnitScaleFactor , GLfloat TempUnitOffsetFactor, unsigned short SupportedCameraPool) {
 
-			// Routinen fordeler givet input data til tilhørende histogram data bins
+			// This routine distributes the given input data into the associated histogram data bins
 
-			// Lokale variabler
+			// Read the temporary array data and sort the kernel array
 			GLfloat BinWidth, BinIndex;
 			GLfloat PixlTemperatureValue = 0.0f;
 
-			// Nulstil Højeste Histogram Bin variabel
+			// Reset the highest histogram bin variable
 			HistHighestBinValue = 0;
 
-			// Nulstil histogram fordelings værdier inden næste iteration
+			// Reset the histogram distribution values before the next iteration
 			for (unsigned int i = 0; i < NumberOfHistogramBins; i++) {
 
-				// Nulstil histogram fordelings værdier
+				// Reset the histogram distribution values
 				HistDistributionData[i] = 0;
 
 			}
@@ -498,30 +498,30 @@ namespace OpenGLHistogram {
 			// Udregn Histogram Bin data bredden
 			BinWidth = (MaxBinVal - MinBinVal) / ((GLfloat)NumberOfHistogramBins - 1.0);
 
-			// Fordel Givet Data Til tilhørende Histogram Bins 
+			// Distribute the given data into the associated histogram bins 
 			for (unsigned int i = 0; i < DataLength; i++) {
 
-				// Læs Pixel data temperatur værdien
+				// Read the pixel data temperature value
 				PixlTemperatureValue = RMH_IRThermalCamera_ReadPixelTemperature(IRCamera, RawThermalData[i], SupportedCameraPool);
 
-				// Kompenser for temperatur enhed
+				// Compensate for the temperature unit
 				PixlTemperatureValue = (PixlTemperatureValue * TempUnitScaleFactor) + TempUnitOffsetFactor;
 
-				// Udregn Dataens Histogram Bin Indeks værdi
+				// Calculate the histogram bin index value of the data
 				BinIndex = (PixlTemperatureValue - MinBinVal) / BinWidth;
 
-				// Begræns Histogram bin indeks værdien
-				// Til at matche den rækkevidden af antal Histogram Bins
+				// Limit the histogram bin index value
+				// to match the range of the number of histogram bins
 				if (BinIndex > NumberOfHistogramBins - 1 || BinIndex < 0) {}
 				else {
 
-					// Inkrementer histogram Bin indeks fordelings værdi
+					// Increment the histogram bin index distribution value
 					HistDistributionData[(unsigned int)BinIndex] = HistDistributionData[(unsigned int)BinIndex] + 1;
 
-					// Læs værdien af den største histogram Bin 
+					// Read the value of the largest histogram bin 
 					if (HistDistributionData[(unsigned int)BinIndex] > HistHighestBinValue) {
 
-						// Opdater Højeste Histogram Bin værdi
+						// Update the highest histogram bin value
 						HistHighestBinValue = HistDistributionData[(unsigned int)BinIndex];
 
 					}
@@ -530,26 +530,26 @@ namespace OpenGLHistogram {
 
 			}
 
-			// Udregn Bin data skallerings faktoren, til at fitte dataen til histogram Y aksen
+			// Calculate the bin data scaling factor, to fit the data to the histogram Y axis
 			HistBinDataFitScaleFactor = ((GLfloat)HistogramMaxBinLength / (GLfloat)HistHighestBinValue);
 
 		}
 
 		public: void RMH_OpenGL_FormatHistogramBinDataLine(ThermalCameraDevice::IRCameraDeviceFormat* IRCamera, unsigned short* RawThermalData, GLfloat *LineXCordinates, GLfloat *LineYCordinates, unsigned int LineLength, GLfloat MaxBinVal, GLfloat MinBinVal, GLfloat TempUnitScaleFactor, GLfloat TempUnitOffsetFactor) {
 
-			// Routinen fordeler givet input data til tilhørende histogram data bins
+			// This routine distributes the given input data into the associated histogram data bins
 
-			// Lokale variabler
+			// Read the temporary array data and sort the kernel array
 			GLfloat BinWidth, BinIndex;
 			GLfloat PixlTemperatureValue = 0.0f;
 
-			// Nulstil Højeste Histogram Bin variabel
+			// Reset the highest histogram bin variable
 			HistHighestBinValue = 0;
 
-			// Nulstil histogram fordelings værdier inden næste iteration
+			// Reset the histogram distribution values before the next iteration
 			for (unsigned int i = 0; i < NumberOfHistogramBins; i++) {
 
-				// Nulstil histogram fordelings værdier
+				// Reset the histogram distribution values
 				HistDistributionData[i] = 0;
 
 			}
@@ -557,30 +557,30 @@ namespace OpenGLHistogram {
 			// Udregn Histogram Bin data bredden
 			BinWidth = (MaxBinVal - MinBinVal) / ((GLfloat)NumberOfHistogramBins - 1.0);
 
-			// Fordel Givet Data Til tilhørende Histogram Bins 
+			// Distribute the given data into the associated histogram bins 
 			for (unsigned int i = 0; i < LineLength; i++) {
 
-				// Læs Pixel data temperatur værdien
+				// Read the pixel data temperature value
 				PixlTemperatureValue = RMH_IRThermalCamera_ReadFramePixelTemperature(IRCamera, RawThermalData, LineXCordinates[i], LineYCordinates[i], IRCamera->ThermalCameraSupportPool);
 
-				// Kompenser for temperatur enhed
+				// Compensate for the temperature unit
 				PixlTemperatureValue = (PixlTemperatureValue * TempUnitScaleFactor) + TempUnitOffsetFactor;
 
-				// Udregn Dataens Histogram Bin Indeks værdi
+				// Calculate the histogram bin index value of the data
 				BinIndex = (PixlTemperatureValue - MinBinVal) / BinWidth;
 
-				// Begræns Histogram bin indeks værdien
-				// Til at matche den rækkevidden af antal Histogram Bins
+				// Limit the histogram bin index value
+				// to match the range of the number of histogram bins
 				if (BinIndex > NumberOfHistogramBins - 1 || BinIndex < 0) {}
 				else {
 
-					// Inkrementer histogram Bin indeks fordelings værdi
+					// Increment the histogram bin index distribution value
 					HistDistributionData[(unsigned int)BinIndex] = HistDistributionData[(unsigned int)BinIndex] + 1;
 
-					// Læs værdien af den største histogram Bin 
+					// Read the value of the largest histogram bin 
 					if (HistDistributionData[(unsigned int)BinIndex] > HistHighestBinValue) {
 
-						// Opdater Højeste Histogram Bin værdi
+						// Update the highest histogram bin value
 						HistHighestBinValue = HistDistributionData[(unsigned int)BinIndex];
 
 					}
@@ -589,41 +589,41 @@ namespace OpenGLHistogram {
 
 			}
 
-			// Udregn Bin data skallerings faktoren, til at fitte dataen til histogram Y aksen
+			// Calculate the bin data scaling factor, to fit the data to the histogram Y axis
 			HistBinDataFitScaleFactor = ((GLfloat)HistogramMaxBinLength / (GLfloat)HistHighestBinValue);
 
 		}
 
 		public: void RMH_OpenGL_SetHistogramNumberOfBins(System::Object^ sender) {
 
-			// Routinen indstiller histogrammets rendereret antal bins
+			// This routine sets the number of bins rendered by the histogram
 
 			// Cast Sender objekt som Forms Tool Strip objekt
 			System::Windows::Forms::ToolStripMenuItem^ BinsTagValue = (System::Windows::Forms::ToolStripMenuItem^)sender;
-			// Læs Sub Context Menu identifikations tag
+			// Read the sub context menu identification tag
 			unsigned int NumberOfBins = Convert::ToInt32(BinsTagValue->Tag);
 
-			// Indstil antal af rendereret Bins
+			// Set the number of bins rendered
 			NumberOfHistogramBins = NumberOfBins;
 
 		}
 
 		public: GLvoid RMH_OpenGL_RenderHistogram(unsigned int TexturePanelWidth, unsigned int TexturePanelHeight) {
 
-			// Routinen Rendererer alle grafiske objekter som Histogrammet består af
+			// This routine renders all graphical objects that the histogram consists of
 
-			// Læs Nuværende textur Panels pixel højde og bredde
+			// Read the current pixel height and width of the texture panel
 			CurrentTexturePanelWidth = (GLdouble)TexturePanelWidth;
 			CurrentTexturePanelHeight = (GLdouble)TexturePanelHeight;
 
-			// Udregn Histogrammets start positioner og tilhørende textur parametre
+			// Calculate the start positions of the histogram and the associated texture parameters
 			HistogramX0 = CurrentTexturePanelWidth - RefLineRightPanelOffset;
 			HistogramY0 = TexturePanelTopButMargin;
 			HistogramY1 = CurrentTexturePanelHeight - TexturePanelTopButMargin;
 			HistogramMaxBinLength = HistogramX0;
 			HistogramHeight = HistogramY1 - HistogramY0;
 
-			// Gør Tilhørende Render kontekst det nuværende render kontekst
+			// Make the associated render context the current render context
 			RMH_OpenGL_MakeRenderContextCurrent();
 			// Ryd Textur farve og bit buffere
 			RMH_OpenGL_ClearTextureBuffer();
@@ -643,7 +643,7 @@ namespace OpenGLHistogram {
 
 			// ---------------------------------------------------------------------------------------- //
 
-			// Marker enden på en OpenGL rendererins sekvens
+			// Mark the end of an OpenGL rendering sequence
 			RMH_OpenGL_RenderingFinishedMark();
 
 		}
@@ -652,22 +652,22 @@ namespace OpenGLHistogram {
 
 		private: GLvoid RMH_OpenGL_SwapOpenGLBuffers(GLvoid) {
 
-			// Routinen bytter rundt på Front/Backend bufferene
+			// This routine swaps the front/back buffers
 
-			// Byt Rundt på buffere
+			// Swap the buffers
 			SwapBuffers(m_hDC);
 
 		}
 
 		private: GLvoid RMH_OpenGL_RenderingFinishedMark(GLvoid) {
 
-			// Routinen markerer enden på en OpenGL rendererins sekvens
-			// Og skal altid kaldes til sidst, når alle objekt rendereringer er blevet eksikverede
+			// This routine marks the end of an OpenGL rendering sequence
+			// and must always be called last, when all object renderings have been executed
 
 			// Swap Textur buffere
 			RMH_OpenGL_SwapOpenGLBuffers();
 
-			// Nulstil Render kontekst
+			// Reset the render context
 			//this->RMH_OpenGL_MakeRenderContextNULL();
 
 		}
@@ -676,11 +676,11 @@ namespace OpenGLHistogram {
 
 	private:
 
-		// ------------- Yderligerer OpenGL Håndterings Og Opsætnings Routiner ------------- //
+		// ------------- Additional OpenGL Handling And Setup Routines ------------- //
 
 		~RMHOpenGLHistogram(GLvoid) {
 
-			// Slet OpenGL Context
+			// Delete the OpenGL context
 			DeleteOpenGL();
 
 			// Destruer OpenGL Handler objekt
@@ -695,22 +695,22 @@ namespace OpenGLHistogram {
 
 			// Routinen sletter alt OpenGL Context
 
-			// Lokale variabler
+			// Read the temporary array data and sort the kernel array
 			HGLRC hglrc;
 			HDC  hdc;
 
-			// Læs Thread Context
+			// Read the thread context
 			hglrc = wglGetCurrentContext();
-			// Læs tilhørende Device Context 
+			// Read the associated device context 
 			hdc = wglGetCurrentDC();
-			// Gør render contexten den nuværende context
+			// Make the render context the current context
 			wglMakeCurrent(NULL, NULL);
 			// Frigiv Device context
 			ReleaseDC(NULL, hdc);
-			// Slet Render Context
+			// Delete the render context
 			wglDeleteContext(hglrc);
 
-			// Nulstil Context variabler
+			// Reset the context variables
 			m_hglrc = nullptr;
 			m_hDC = nullptr;
 
@@ -720,97 +720,97 @@ namespace OpenGLHistogram {
 
 			// Routinen konfigurerer Texturens Pixel format
 
-			// Formatet fortæller windows hvordan textur dataen skal oversættes
+			// The format tells Windows how the texture data should be interpreted
 			PIXELFORMATDESCRIPTOR pfd = {
 
-				sizeof(PIXELFORMATDESCRIPTOR),				// Størrelse af denne pixel format beskrivelse
+				sizeof(PIXELFORMATDESCRIPTOR),				// Size of this pixel format descriptor
 				1,											// Formatets Versions Nummer 
-				PFD_DRAW_TO_WINDOW |						// Formatet skal supporterer Windows
-				PFD_SUPPORT_OPENGL |						// Formatet skal supporterer OpenGL
+				PFD_DRAW_TO_WINDOW |						// The format must support Windows
+				PFD_SUPPORT_OPENGL |						// The format must support OpenGL
 				PFD_DOUBLEBUFFER,							// Formatet skal supporterer "Double Buffering"
-				PFD_TYPE_RGBA,								// Anmod om et RGBa Format
-				16,										    // Vælg "Color Depth" (16Bit)
-				0, 0, 0, 0, 0, 0,							// Farve Bits skal Ignoreres
-				0,											// Ingen "Alpha Buffer"
-				0,											// Shift Bit skal Ignoreres
-				0,											// Ingen "Accumulation Buffer"
-				0, 0, 0, 0,									// Accumulator Bits skal Ignoreres
+				PFD_TYPE_RGBA,								// Request an RGBA format
+				16,										    // Select the "color depth" (16-bit)
+				0, 0, 0, 0, 0, 0,							// Color bits are to be ignored
+				0,											// No "alpha buffer"
+				0,											// Shift bit is to be ignored
+				0,											// No "accumulation buffer"
+				0, 0, 0, 0,									// Accumulator bits are to be ignored
 				16,											// 16Bit Z-Buffer (Buffer dybde)  
-				0,											// Ingen "Stencil Buffer"
-				0,											// Ingen "Auxiliary Buffer"
-				PFD_MAIN_PLANE,								// Sæt som det primære "Drawing" lag
+				0,											// No "stencil buffer"
+				0,											// No "auxiliary buffer"
+				PFD_MAIN_PLANE,								// Set as the main "drawing" layer
 				0,											// Reserved
-				0, 0, 0										// Lag "Masks" skal Ignoreres
+				0, 0, 0										// Layer "masks" are to be ignored
 
 			};
 
-			// Vælg pixel formatet til control handler
+			// Select the pixel format for the control handler
 			if ((iPixelFormat = ChoosePixelFormat(hdc, &pfd)) == 0) {
-				// Skriv fejl meddelse - hvis fejl er registreret
+				// Write error message - if an error is registered
 				MessageBox::Show("ChoosePixelFormat Failed");
-				// Retuner Fejl
+				// Return error
 				return false;
 			}
 
-			// Sæt pixel formatet til control handler 
+			// Set the pixel format for the control handler 
 			if (SetPixelFormat(hdc, iPixelFormat, &pfd) == FALSE) {
-				// Skriv fejl meddelse - hvis fejl er registreret
+				// Write error message - if an error is registered
 				MessageBox::Show("SetPixelFormat Failed");
-				// Retuner Fejl
+				// Return error
 				return false;
 			}
 
 			if ((m_hglrc = wglCreateContext(hdc)) == NULL) {
-				// Skriv fejl meddelse - hvis fejl er registreret
+				// Write error message - if an error is registered
 				MessageBox::Show("wglCreateContext Failed");
-				// Retuner Fejl
+				// Return error
 				return false;
 			}
 
 			if ((wglMakeCurrent(hdc, m_hglrc)) == NULL) {
-				// Skriv fejl meddelse - hvis fejl er registreret
+				// Write error message - if an error is registered
 				MessageBox::Show("wglMakeCurrent Failed");
-				// Retuner Fejl
+				// Return error
 				return false;
 			}
 
-			// Retuner Status OK
+			// Return status OK
 			return true;
 		}
 
 		private: GLvoid RMH_OpenGL_ResizeOpenGLWinformsScene(unsigned int TotalTextureWidth, unsigned int TotalTextureHeight) {
 
-			// Formater Størrelsen og Initialisere OpenGL Vinduet i Winforms
+			// Format the size and initialize the OpenGL window in WinForms
 
-			// Forhindre division med '0'
+			// Prevent division by '0'
 			if (TotalTextureHeight == 0) {
-				// Piel højden er altid mindst '1'
+				// The pixel height is always at least '1'
 				TotalTextureHeight = 1;
 			}
 
-			// Nulstil nuværende "Viewport"
+			// Reset the current "viewport"
 			glViewport(0, 0, TotalTextureWidth, TotalTextureHeight);
-			// Vælg Projektions matricen
+			// Select the projection matrix
 			glMatrixMode(GL_PROJECTION);
-			// Nulstil Projektions matricen
+			// Reset the projection matrix
 			glLoadIdentity();
 			// Udregn vinduets aspect ratio
 			gluPerspective(60.0f, (GLfloat)TotalTextureWidth / (GLfloat)TotalTextureHeight, 0.01f, 10000.0f);
-			// Vælg "Model View" matricen
+			// Select the "model view" matrix
 			glMatrixMode(GL_MODELVIEW);
-			// Nulstil "Model View" matricen
+			// Reset the "model view" matrix
 			glLoadIdentity();
 
 		}
 
 		private: GLvoid RMH_OpenGL_BuildFont(GLvoid) {
 
-			// Routinen Generer FONT til display i OpenGL Textur
+			// This routine generates the FONT for display in the OpenGL texture
 
-			// Lokale variabler
+			// Read the temporary array data and sort the kernel array
 			HFONT TextureFont;
 
-			// Opdater Font Liste
+			// Update the font list
 			BaseFont = glGenLists(96);
 
 			// Generer Strutureret Font Objekt
@@ -830,7 +830,7 @@ namespace OpenGLHistogram {
 				FF_ROMAN | DEFAULT_PITCH,		// nPitchAndFamily
 				L"Arial");				        // lpszFacename
 
-			// Indstil FONT Til OpenGL Objekt Struktur
+			// Set the FONT to the OpenGL object structure
 			SelectObject(m_hDC, TextureFont);
 			// Generer Bitmap Display FONT Liste
 			wglUseFontBitmaps(m_hDC, 32, 96, BaseFont);
@@ -841,13 +841,13 @@ namespace OpenGLHistogram {
 
 			// Routinen Initialisere OpenGL I Winforms C++/CLR
 
-			// Aktiver "Flat Shader" Mode
+			// Enable "flat shader" mode
 			glShadeModel(GL_SMOOTH);
 			// Default Baggrund farve
 			glClearColor(0.13725f, 0.13725f, 0.13725f, 1.0f);
-			// Opsætning af "Depth Buffer"
+			// Set up the "depth buffer"
 			glClearDepth(1.0f);
-			// Deaktiver OpenGL "Depth Testing"
+			// Disable OpenGL "depth testing"
 			glDisable(GL_DEPTH_TEST);
 			// For perspektiv - Fortag "Very Nice" udregniner
 			glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
@@ -855,7 +855,7 @@ namespace OpenGLHistogram {
 			// Generer FONT Objekt
 			RMH_OpenGL_BuildFont();
 
-			// Retuner "OpenGl Opsætning" Færdig flag
+			// Return the "OpenGL setup" finished flag
 			return true;
 
 		}

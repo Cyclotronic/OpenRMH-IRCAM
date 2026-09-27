@@ -13,7 +13,7 @@
 #ifndef RMH_GeneralTriggerEvent_Resources_H 
 #define RMH_GeneralTriggerEvent_Resources_H
 
-// ------------ Tilgængelige Generalle Og Periodiske Trigger Event Resource Data ------------ //
+// ------------ Available General And Periodic Trigger Event Resource Data ------------ //
  
 // Maksimale antal konfigurerbare Periodiske Triggere
 #define _MaxNumberOfConfigurablePeriodicTriggerEvents         5
@@ -34,7 +34,7 @@
 #define _TriggerEventFunction_SaveSnapshot                    5 
 #define _TriggerEventFunction_SaveFullFrameTempData           6
 
-// Periodiske Trigger Event Funktion Type Navne Strings ->
+// Periodic trigger event function type name strings ->
 static std::vector<std::string> PeriodicTriggerEventFuncStrings = { "None",
 																    "Start Data Logging",
 																    "Stop Data Logging",

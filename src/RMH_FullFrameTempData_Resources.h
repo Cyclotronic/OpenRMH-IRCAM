@@ -20,7 +20,7 @@
 #define _FullFrameTempCSVDataDelimiterIndex_Space           3       
 #define _FullFrameTempCSVDataDelimiterIndex_Tab             4 
 
-// Tilgængelige Temperatur CSV Data Delimiter ->
+// Available temperature CSV data delimiters ->
 static std::vector<std::string> FullFrameTempCSVDataDelimiters = { "Comma", "Semicolon", "Colon", "Space", "Tab"};
 
 #endif /* RMH_FullFrameTempData_Resources_H */

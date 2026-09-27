@@ -13,7 +13,7 @@
 #ifndef RMH_Application_ColorBarAndPalette_H 
 #define RMH_Application_ColorBarAndPalette_H
 
-// --------------------------- Color Palette Håndterings Routiner --------------------------- //
+// --------------------------- Color Palette Handling Routines --------------------------- //
 
 void RMH_ColorPalette_LoadColorPalettesToCombiBox(System::Windows::Forms::ComboBox^ ColorPaletteComboBox);
 void RMH_ColorPalette_ChangeColorPalette(System::Windows::Forms::ComboBox^ ColorPaletteComboBox);
@@ -23,7 +23,7 @@ void RMH_ColorPalette_EnableDualColorPalettes(System::Windows::Forms::Button^ Du
 void RMH_ColorPalette_UpdateHistogramColorPaletteInvertionState();
 void RMH_ColorPalette_InvertColorPalettes(System::Object^ sender);
 
-// -------------------------- Color Bar Panel Håndterings Routiner -------------------------- //
+// -------------------------- Color Bar Panel Handling Routines --------------------------- //
 
 void RMH_ColorBar_ChangeManualRangeMouseWheelStepSize(System::Object^ sender);
 void RMH_ColorBar_ChangeColorBarAmountOfTemperatureTick(System::Object^ sender);

@@ -1,6 +1,6 @@
 #pragma once
 
-// Inkluderede Blblioteker
+// Included libraries
 #include "GlobalObjectsAndVariables.h"
 #include "RMH_Application_ColorBarAndPalette.h"
 #include "RMH_OpenGL_ColorBar.h"
@@ -14,7 +14,7 @@
 // Klasse Namespace
 namespace IRCAMThermalViewer {
 
-	// Tilhørende namespaces
+	// Associated namespaces
 	using namespace System;
 	using namespace System::ComponentModel;
 	using namespace System::Collections;
@@ -25,9 +25,9 @@ namespace IRCAMThermalViewer {
 	// Summary for Form - LiveViewTools
 	public ref class LiveViewTools : public System::Windows::Forms::Form {
 
-		// ------------------------------ Lokale Form Reference Struktur ------------------------------ //
+		// ------------------------------ Local Form Reference Structure ------------------------------ //
 	
-		// Lokale og Globale klasse form objekter og strukturer
+		// Local and global class form objects and structures
 		public: IRCAMThermalViewer::ColorBarRangeDialog^ ColorBarRangeDialogForm;
 		public: IRCAMThermalViewer::InputValueDialog^ InputValueDialogForm;
 		public: IRCAMThermalViewer::StatisticsWindow^ StatisticsWindowForm;
@@ -40,9 +40,9 @@ namespace IRCAMThermalViewer {
 
 		LiveViewTools(void) {
 
-			// Init GUI komponenter og objekter
+			// Init GUI components and objects
 			InitializeComponent();
-			// Formater arrays Og Objekter af winform komponenter til global brug
+			// Format arrays and objects of WinForms components for global use
 			InitializeComponentArraysAndGlobalObjects();
 
 			// Aktiver Applikationens TitelBars Dark Mode
@@ -57,9 +57,9 @@ namespace IRCAMThermalViewer {
 
 		void InitializeComponentArraysAndGlobalObjects(void) {
 
-			// Routinen formaterer arrays af winform komponenter til global brug
+			// This routine formats arrays of WinForms components for global use
 
-			// Initiliser globale form objekter
+			// Initialize global form objects
 			GlobalVariables::GlobalLiveViewRunStopButton = this->LiveViewRunStopButton;
 			GlobalVariables::TempUnitButtons = gcnew cli::array<System::Windows::Forms::Button^>(12) {
 				this->TempUnitCButton,
@@ -93,27 +93,27 @@ namespace IRCAMThermalViewer {
 
 		void ShowInputValueDialogForm(System::String^ InfoLabel1String, System::String^ InfoLabel2String, float UpDownMaxRangeVal, float UpDownMinRangeVal, float* DialogOutputVal, bool* NewValueReadyFlag) {
 
-			// Routinen indstiller og viser input værdi dialogen
+			// This routine sets up and shows the input value dialog
 
-			// Kontroller at dialogen ikke allerede er åben
+			// Check that the dialog is not already open
 			if (InputValueDialogIsShownFlag == false) {
 
-				// Initiliser input værdi dialog formen
+				// Initialize the input value dialog form
 				InputValueDialogForm = gcnew IRCAMThermalViewer::InputValueDialog(InfoLabel1String, InfoLabel2String, UpDownMaxRangeVal, UpDownMinRangeVal, DialogOutputVal, NewValueReadyFlag);
 
-				// Åben input værdi dialog formen
+				// Open the input value dialog form
 				InputValueDialogForm->Show();
 
 			}
 			else {
 
-				// Luk input værdi dialog formen
+				// Close the input value dialog form
 				InputValueDialogForm->Close();
 
-				// Initiliser input værdi dialog formen
+				// Initialize the input value dialog form
 				InputValueDialogForm = gcnew IRCAMThermalViewer::InputValueDialog(InfoLabel1String, InfoLabel2String, UpDownMaxRangeVal, UpDownMinRangeVal, DialogOutputVal, NewValueReadyFlag);
 
-				// Åben input værdi dialog formen
+				// Open the input value dialog form
 				InputValueDialogForm->Show();
 
 			}
@@ -122,21 +122,21 @@ namespace IRCAMThermalViewer {
 
 		void ShowColorbarTemperatureRangeDialogForm() {
 
-			// Routinen Initiliser og viser Colorbarens temperatur range dialog formen
+			// This routine initializes and shows the temperature range dialog form of the colorbar
 
-			// Kontroller at Colorbar range dialogen ikke allerede er åben
+			// Check that the colorbar range dialog is not already open
 			if (ColorBarDialogIsShownFlag == false) {
 
 				// Initiliser ColorBar Temperatur Range Dialog Form
 				ColorBarRangeDialogForm = gcnew IRCAMThermalViewer::ColorBarRangeDialog();
 
-				// Åben Colorbarens temperatur range dialog formen
+				// Open the temperature range dialog form of the colorbar
 				ColorBarRangeDialogForm->Show();
 
 			}
 			else {
 
-				// Skriv GUI status meddelse
+				// Write GUI status message
 				RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "Colorbar Range Dialog Is Already Open!", _StatusMessageType_Normal);
 
 			}
@@ -145,21 +145,21 @@ namespace IRCAMThermalViewer {
 
 		void ShowLiveViewStatisticsWindowForm() {
 
-			// Routinen Initiliser og viser Live View Statistik Vindue formen
+			// This routine initializes and shows the live view statistics window form
 
-			// Kontroller at Live View Statistik Vinduet ikke allerede er åben
+			// Check that the live view statistics window is not already open
 			if (LiveViewStatisticsWindowIsShownFlag == false) {
 
 				// Initiliser Live View Statistik Vindue Formen
 				StatisticsWindowForm = gcnew IRCAMThermalViewer::StatisticsWindow();
 
-				// Åben Live View Statistik Vindue formen
+				// Open the live view statistics window form
 				StatisticsWindowForm->Show();
 
 			}
 			else {
 
-				// Skriv GUI status meddelse
+				// Write GUI status message
 				RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "Live View Statistics Window Is Already Open!", _StatusMessageType_Normal);
 
 			}
@@ -177,7 +177,7 @@ namespace IRCAMThermalViewer {
 
 			if (components) {
 
-				// Slet alle Form Komponenter
+				// Delete all form components
 				delete components;
 
 			}
@@ -944,32 +944,32 @@ namespace IRCAMThermalViewer {
 		// Live View Tools Form Opstartnings Callback Routine -> 
 		private: System::Void LiveViewTools_Shown(System::Object^ sender, System::EventArgs^ e) {
 
-			// Indsæt listen over de tilgængelige Color Palettes i "Color Palette" ComboBox
+			// Insert the list of available color palettes into the "Color Palette" ComboBox
 			RMH_ColorPalette_LoadColorPalettesToCombiBox(this->ColorPaletteComboBox);
-			// Indstil "Default" valgte Color Palette 
+			// Set the "default" selected color palette 
 			RMH_Winforms_CombiBox_SetSellectedItemPosition(this->ColorPaletteComboBox, SelectedColorPaletteIndex);
 
-			// Indsæt listen over de tilgængelige Color Palettes i "Dual Color Palette" ComboBox
+			// Insert the list of available color palettes into the "Dual Color Palette" ComboBox
 			RMH_ColorPalette_LoadColorPalettesToCombiBox(this->DualColorPaletteComboBox);
-			// Indstil "Default" valgte Dual Color Palette 
+			// Set the "default" selected dual color palette 
 			RMH_Winforms_CombiBox_SetSellectedItemPosition(this->DualColorPaletteComboBox, SelectedDualColorPaletteIndex);
 
-			// Indsæt listen over de tilgængelige Color Palettes i "ColorBar Background Palette" ComboBox
+			// Insert the list of available color palettes into the "ColorBar Background Palette" ComboBox
 			RMH_ColorPalette_LoadColorPalettesToCombiBox(this->ColorBarBackPaletteComboBox);
-			// Indstil "Default" valgte ColorBar Background Palette
+			// Set the "default" selected colorbar background palette
 			RMH_Winforms_CombiBox_SetSellectedItemPosition(this->ColorBarBackPaletteComboBox, 10);
 
-			// Opdater Aspect Ratio Knap border farve, fra Gemt Sessions indstilling
+			// Update the aspect ratio button border color, from the saved session setting
 			RMH_ThermalViewer_UpdateAspectRatioButtonBorderColor();
 
-			// Opdater Aktivering eller deaktivering af label baggrunden - fra læst sessions data
+			// Update the enabling or disabling of the label background - from the session data read
 			GlobalVariables::OpenGLRender->RMH_OpenGL_EnableLabelBackground(EnableLabelBackgroundFlag);
-			// Opdater Live view labels farve - fra læst sessions data
+			// Update the live view label color - from the session data read
 			GlobalVariables::OpenGLRender->RMH_OpenGL_ChangeRenderedLabelsColor(CommonLabelColorR, CommonLabelColorG, CommonLabelColorB);
-			// Opdater Live view labels baggrunds farve - fra læst sessions data
+			// Update the live view label background color - from the session data read
 			GlobalVariables::OpenGLRender->RMH_OpenGL_ChangeLabelBackgroundColor(CommonLabelBackgroundColorR, CommonLabelBackgroundColorG, CommonLabelBackgroundColorB);
 
-			// Opdater tilhørende form Flag
+			// Update the associated form flag
 			isLiveViewToolsFormOpen = true;
 
 		}
@@ -977,21 +977,21 @@ namespace IRCAMThermalViewer {
 		// Live View Tools Form Nedluknings Callback Routine -> 
 		private: System::Void LiveViewTools_FormClosing(System::Object^ sender, System::Windows::Forms::FormClosingEventArgs^ e) {
 
-			// Opdater tilhørende form Flag
+			// Update the associated form flag
 			isLiveViewToolsFormOpen = false;
 			isLiveViewToolsFormDocked = false;
 			isLiveViewToolsFormUndocked = false;
 
-			// Når Formen lukkes - Gem Formen
+			// When the form is closed - hide the form
 			this->Hide();
-			// Deaktiver "Disposing" Af Form Objektet
+			// Disable "disposing" of the form object
 			e->Cancel = true;
 
 		}
 
-		// --------------------- Live View Run/Stop Knap Event & Callback Routine -------------------- //
+		// --------------------- Live View Run/Stop Button Event & Callback Routine -------------------- //
 		
-		// Live View Stream Run/Stop Knap Callback Routine ->
+		// Live view stream run/stop button callback routine ->
 		public: System::Void LiveViewRunStopButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
 			// Toggle Live View Streamen Run/Stop Stadie
@@ -1001,29 +1001,29 @@ namespace IRCAMThermalViewer {
 
 		// ------------------------- Color Palette ComboBox Callback Routine -------------------------- //
 		
-		// Color Palette DropDown List Ændret Callback Routine ->
+		// Color palette drop-down list changed callback routine ->
 		public: System::Void ColorPaletteComboBox_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
 
 			// Opdater Live View Color Palette
 			RMH_ColorPalette_ChangeColorPalette(this->ColorPaletteComboBox);
 
-			// Lager Valgte Color Palette til globale variabel til gemt sessions parameter
+			// Store the selected color palette in the global variable for the saved session parameter
 			SelectedColorPaletteIndex = GlobalVariables::GlobalColorPaletteComboBox->SelectedIndex;
 
 		}
 
-		// Dual Color Palette DropDown List Ændret Callback Routine ->
+		// Dual color palette drop-down list changed callback routine ->
 		public: System::Void DualColorPaletteComboBox_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
 
 			// Opdater Live View Dual Color Palette
 			RMH_ColorPalette_ChangeDualColorPalette(this->DualColorPaletteComboBox);
 
-			// Lager Valgte Dual Color Palette til globale variabel til gemt sessions parameter
+			// Store the selected dual color palette in the global variable for the saved session parameter
 			SelectedDualColorPaletteIndex = GlobalVariables::GlobalDualColorPaletteComboBox->SelectedIndex;
 
 		}
 
-		// Baggrund Color Palette DropDown List Ændret Callback Routine ->
+		// Background color palette drop-down list changed callback routine ->
 		public: System::Void ColorBarBackPaletteComboBox_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
 
 			// Opdater Colorbarens Baggrunds Color Palette
@@ -1031,29 +1031,29 @@ namespace IRCAMThermalViewer {
 
 		}
 
-		// --------------------- Kamera Kalibrerings Knap Event & Callback Routine -------------------- //
+		// --------------------- Camera Calibration Button Event & Callback Routine -------------------- //
 
-		// Kamera kalibrerings knap Callback Routine ->
+		// Camera calibration button callback routine ->
 		public: System::Void CalibrateCameraButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Kalibrer forbundet Termiske Kamera
+			// Calibrate the connected thermal camera
 			RMH_IRThermalCamera_CalibrateThermalCamera();
 
 		}
 
-		// -------------------- Kamera Temperatur Range Knap Event Callback Routine ------------------- //
+		// -------------------- Camera Temperature Range Button Event Callback Routine ------------------- //
 
-		// Kamera Temperatur Range Knap Callback Routine ->
+		// Camera temperature range button callback routine ->
 		public: System::Void TempRangeButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Skift Kamera Temperatur Range
+			// Switch the camera temperature range
 			RMH_IRThermalCamera_ChangeThermalCameraTemperatureRange();
 
 		}
 
-		// -------------------- Max/Min Og Center Temp Track Knap Callback Routiner ------------------- //
+		// -------------------- Max/Min And Center Temp Track Button Callback Routines ------------------- //
 
-		// Maximum Temperatur Tracking Knap Callback Routine ->
+		// Maximum temperature tracking button callback routine ->
 		public: System::Void MaxTempTrackButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
 			// Toggel live view maximum temperatur tracking
@@ -1061,7 +1061,7 @@ namespace IRCAMThermalViewer {
 
 		}
 
-		// Minimum Temperatur Tracking Knap Callback Routine ->
+		// Minimum temperature tracking button callback routine ->
 		public: System::Void MinTempTrackButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
 			// Toggel live view minimum temperatur tracking
@@ -1069,7 +1069,7 @@ namespace IRCAMThermalViewer {
 
 		}
 
-		// Center Temperatur Tracking Knap Callback Routine ->
+		// Center temperature tracking button callback routine ->
 		public: System::Void CenterTempTrackButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
 			// Toggel live view center temperatur tracking
@@ -1077,49 +1077,49 @@ namespace IRCAMThermalViewer {
 
 		}
 		
-		// ------------------------ Add Temp Measurement Knap Callback Routine ------------------------ //
+		// ------------------------ Add Temp Measurement Button Callback Routine ------------------------ //
 
-		// Tilføj Temperatur Measurement Label Knap Callback Routine ->
+		// Add temperature measurement label button callback routine ->
 		public: System::Void AddTempMeasButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Aktiver temperatur måling til renderering på Live View streamen
+			// Enable the temperature measurement for rendering on the live view stream
 			RMH_ThermalViewer_AddTemperatureMeasurementToLiveView();
 
 		}
 
-		// ----------------------- Add Temp Spectrum Line Knap Callback Routine ----------------------- //
+		// ----------------------- Add Temp Spectrum Line Button Callback Routine ----------------------- //
 		
-		// Tilføj Temperatur Linje Knap Callback Routine ->
+		// Add temperature line button callback routine ->
 		public: System::Void AddTempSpecLineButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Aktiver temperatur linje til renderering på Live View streamen
+			// Enable the temperature line for rendering on the live view stream
 			RMH_ThermalViewer_AddTemperatureLineToLiveView();
 
 		}
 
-		// --------------------- Live View Histogram Knap Event & Callback Routine -------------------- //
+		// --------------------- Live View Histogram Button Event & Callback Routine -------------------- //
 
-		// Vis live view histogram Knap Callback Routine ->
+		// Show live view histogram button callback routine ->
 		public: System::Void ShowLineHistButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Aktiver live view streamens Histogram feature for linjer og frame data
+			// Enable the histogram feature of the live view stream for lines and frame data
 			RMH_ThermalViewer_EnableLiveViewHistogram();
 
 		}
 
-		// -------------------------- Add Live ROI Box Knap Callback Routine -------------------------- //
+		// -------------------------- Add Live ROI Box Button Callback Routine -------------------------- //
 		
-		// Tilføj ROI Box Knap Callback Routine ->
+		// Add ROI box button callback routine ->
 		public: System::Void AddROIMeasButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Aktiver ROI til renderering på Live View streamen
+			// Enable the ROI for rendering on the live view stream
 			RMH_ThermalViewer_AddRegionOfInterestBoxToLiveView();
 
 		}
 		
-		// -------------------- Mus Punkt Temperatur Tracking Knap Callback Routine ------------------- //
+		// -------------------- Mouse Point Temperature Tracking Button Callback Routine ------------------- //
 		
-		// Mus Temperatur Tracking Knap Callback Routine ->
+		// Mouse temperature tracking button callback routine ->
 		public: System::Void CursorTempTrackButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
 			// Toggel live view Mus Cursor temperatur tracking
@@ -1127,21 +1127,21 @@ namespace IRCAMThermalViewer {
 
 		}
 		
-		// ------------------------- Dual Color Palette Knap Callback Routine ------------------------- //
+		// ------------------------- Dual Color Palette Button Callback Routine ------------------------- //
 		
-		// Dual Color Palette Knap Callback Routine ->
+		// Dual color palette button callback routine ->
 		public: System::Void DualColorPaletteButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
 			// Toggle Dual Color palette aktiverings flag
 			DualColorPaletteEnableFlag = !DualColorPaletteEnableFlag;
 
-			// Håndter event ved aktivering af Dual live View Color Palettes
+			// Handle the event when dual live view color palettes are enabled
 			RMH_ColorPalette_EnableDualColorPalettes(this->DualColorPaletteButton);
 
 			// Resize Dual Color Palette panel
 			this->DualColorPaletteComboBox_SelectedIndexChanged(nullptr, nullptr);
 
-			// Aktiver eller deaktiver Histogram Context sub menu hvis dual palette er aktiv
+			// Enable or disable the histogram context sub menu if the dual palette is active
 			if (DualColorPaletteEnableFlag == true) {
 
 				// Aktiver relavant Histogram Context sub menu
@@ -1157,33 +1157,33 @@ namespace IRCAMThermalViewer {
 
 		}
 
-		// -------------------- Live View Enhanced Opløsnings Knap Callback Routine ------------------- //
+		// -------------------- Live View Enhanced Resolution Button Callback Routine ------------------- //
 
-		// Enhanced Opløsnings Knap Callback Routine ->
+		// Enhanced resolution button callback routine ->
 		public: System::Void EnhancedResButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
 			// Toggle Enable Flag
 			EnhancedResEnableFlag = !EnhancedResEnableFlag;
 
-			// Toggel Live view enhanced billed opløsnings mode
+			// Toggle the live view enhanced image resolution mode
 			RMH_ThermalViewer_ToggleEnhancedLiveViewResolution();
 
 		}
 		
-		// Ultra Opløsnings Feature Knap Callback Routine ->
+		// Ultra resolution feature button callback routine ->
 		public: System::Void UltraResolutionButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Toggle live view Ultra Opløsnings aktiverings flaget
+			// Toggle the live view ultra resolution enable flag
 			UltraResolutionEnableFlag = !UltraResolutionEnableFlag;
 
-			// Toggel Live view Ultra opløsnings mode
+			// Toggle the live view ultra resolution mode
 			RMH_ThermalViewer_ToggleLiveViewUltraResolution();
 
 		}
 		
-		// --------------------- Live View Image Sharpening Knap Callback Routine --------------------- //
+		// --------------------- Live View Image Sharpening Button Callback Routine --------------------- //
 
-		// Image Sharpening Knap Callback Routine ->
+		// Image sharpening button callback routine ->
 		public: System::Void ImageSharpButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
 			// Toggel Live view Image Sharpening feature
@@ -1191,45 +1191,45 @@ namespace IRCAMThermalViewer {
 
 		}
 
-		// ------------------- Live View Aspect Ratio Knap Event & Callback Routine ------------------- //
+		// ------------------- Live View Aspect Ratio Button Event & Callback Routine ------------------- //
 		
-		// Fast Aspect Ratio Knap Callback Routine ->
+		// Fixed aspect ratio button callback routine ->
 		public: System::Void FixedAspectRatioButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
 			// Toggle Aspect Ratio parameter
 			FixedLiveViewAspectRatio = !FixedLiveViewAspectRatio;
 
-			// Opdater Aspect Ratio Knap border farve
+			// Update the aspect ratio button border color
 			RMH_ThermalViewer_UpdateAspectRatioButtonBorderColor();
 
 		}
 
-		// ----------------------- Take SnapShot Knap Event & Callback Routine ------------------------ //
+		// ----------------------- Take Snapshot Button Event & Callback Routine ------------------------ //
 
-		// Tag et Snapshot Knap Callback Routine ->
+		// Take a snapshot button callback routine ->
 		public: System::Void SnapshotButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Gem et live view snapshot
+			// Save a live view snapshot
 			RMH_ThermalViewer_SaveLiveViewSnapshot();
 
 		}
 
-		// ----------------------- Video Capture Knap Event & Callback Routine ------------------------ //
+		// ----------------------- Video Capture Button Event & Callback Routine ------------------------ //
 		
-		// Optag Applikations video knap Callback Routine ->
+		// Record application video button callback routine ->
 		public: System::Void RecordButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Åben valgte Default Video Capturing Program
+			// Open the selected default video capturing program
 			RMH_ThermalViewer_OpenDefaultVideoCapturingApp();
 
 		}
 
-		// ------------------------ Optag Video Knap Event & Callback Routine ------------------------- //
+		// ------------------------ Record Video Button Event & Callback Routine ------------------------- //
 
-		// Start Eller Stop Data Optagning knap Callback Routine ->
+		// Start or stop data recording button callback routine ->
 		private: System::Void RecordingButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Opdater Video optagnings flag
+			// Update the video recording flag
 			VideoRecordingStartedFlag = !VideoRecordingStartedFlag;
 
 			// Start eller Stop Video Optagning
@@ -1239,63 +1239,63 @@ namespace IRCAMThermalViewer {
 
 		// ------------------- Temperatur Enheds Knappers Event & Callback Routiner ------------------- //
 
-		// Nested Temperatur Enheds Kanppernes Event Callback routine ->
+		// Nested temperature unit buttons event callback routine ->
 		public: System::Void TempUnitCButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Ændre Temperatur Målingernes Enhed
+			// Change the unit of the temperature measurements
 			RMH_ThermalViewer_ChangeTemperatureUnit(sender);
 
-			// Læs Maximum, Minimum Og Center Temperaturer
+			// Read the maximum, minimum and center temperatures
 			RMH_ThermalViewer_ReadMaxMinCentTemperatures();
 
-			// Opdater Colorbarens start Manuelle Temperatur range værdier til frame Max/Min Temperaturerne ved Range Skift 
+			// Update the start manual temperature range values of the colorbar to the frame max/min temperatures on range change 
 			ColorBarInitialManualRangeMaxTemp = MaximumTemperature;
 			ColorBarInitialManualRangeMinTemp = MinimumTemperature;
 
-			// Kontroller om ColorBar Temp Ranges Dialog Vinduet er åbent
+			// Check whether the ColorBar temp ranges dialog window is open
 			if (ColorBarDialogIsShownFlag == true) {
 
-				// Opdater ColorBar Range Dialogen med relavante værdier og indstiller temperatur enheds stringet
+				// Update the ColorBar range dialog with relevant values and set the temperature unit string
 				ColorBarRangeDialogForm->UpdateColorBarTempRangeDialogValues(MaximumTemperature, MinimumTemperature, GlobalVariables::DefaultTempUnitString);
 
 			}
 
 		}
 
-		// ----------- Gem Fuld Frame Temperatur Data Til CSV Knap Event & Callback Routiner ----------- //
+		// ----------- Save Full Frame Temperature Data To CSV Button Event & Callback Routines ----------- //
 
-		// Gem Fuld Frame Temperatur Data Til CSV Knap Callback routine ->
+		// Save full frame temperature data to CSV button callback routine ->
 		private: System::Void SaveTempFrameDataButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Generer og Gem en Fuld Frame Temperatur Data CSV fil
+			// Generate and save a full-frame temperature data CSV file
 			RMH_ThermalViewer_SaveFullFrameTemperatureDataToCSVFile();
 
 		}
 
-		// -------------- Vis Live View Statistik Vindue Knap Event & Callback Routiner --------------- //
+		// -------------- Show Live View Statistics Window Button Event & Callback Routines --------------- //
 
-		// Vis Live View Statistik Vindue Knap Callback routine ->
+		// Show live view statistics window button callback routine ->
 		private: System::Void ShowLiveViewStatisticsButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Åben Live View Statistik Vinduet
+			// Open the live view statistics window
 			ShowLiveViewStatisticsWindowForm();
 
 		}
 		
 		// --------------- Start Periodisk Trigger Timer Knap Event & Callback Routiner --------------- //
 
-		// Start Periodisk Trigger Timer Knap Callback routine ->
+		// Start periodic trigger timer button callback routine ->
 		public: System::Void PeriodicTimerTriggerButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Hvis Live View streamen er i STOP Mode
+			// If the live view stream is in STOP mode
 			if (LiveViewRunStopFlag == false) {
 
-				// Skriv GUI status meddelse
+				// Write GUI status message
 				RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "The Periodic Trigger Timer Is Disabled. (Can Only Be Enabled In Live View Start/RUN Mode)", _StatusMessageType_Warning);
 
 			}
 
-			// Toggle Aktiveringen af den periodiske trigger timer
+			// Toggle the enabling of the periodic trigger timer
 			RMH_ThermalViewer_TogglePeriodicTriggerTimer();
 
 		}

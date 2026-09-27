@@ -1,11 +1,11 @@
 #pragma once
 
-// Inkluderede Blblioteker
+// Included libraries
 
 // Klasse Namespace
 namespace IRCAMThermalViewer {
 	
-	// Tilhørende namespaces
+	// Associated namespaces
 	using namespace System;
 	using namespace System::ComponentModel;
 	using namespace System::Collections;
@@ -24,15 +24,15 @@ namespace IRCAMThermalViewer {
 
 		UserGuideViewerGUI(void) {
 
-			// Init GUI komponenter og objekter
+			// Init GUI components and objects
 			InitializeComponent();
-			// Indstil globale objekter fra denne Form til global brug
+			// Set global objects from this form for global use
 			InitializeGlobalFormsObjects();
 
 			// Aktiver Applikationens TitelBars Dark Mode
 			RMH_Winforms_EnableTitleBarDarkMode(this->Handle);
 
-			// Åben Software Manual PDF filen I Webbrowser Vinduet
+			// Open the software manual PDF file in the web browser window
 			RMH_Winforms_OpenPDFInWebbrowser(this->webBrowser1, "IRCAMSoftwareManual.pdf");
 
 		}
@@ -41,8 +41,8 @@ namespace IRCAMThermalViewer {
 
 		void InitializeGlobalFormsObjects() {
 
-			// Routinen indstiller globale objekter fra denne form
-			// Så disse kan blive tilgået fra andre Forms
+			// This routine sets global objects from this form
+			// so that these can be accessed from other forms
 
 
 			
@@ -59,7 +59,7 @@ namespace IRCAMThermalViewer {
 
 			if (components) {
 
-				// Slet alle Form Komponenter
+				// Delete all form components
 				delete components;
 
 			}
@@ -120,7 +120,7 @@ namespace IRCAMThermalViewer {
 		// User Guide Form Opstartnings Callback Routine ->
 		private: System::Void UserGuideViewerGUI_Shown(System::Object^ sender, System::EventArgs^ e) {
 
-			// Opdater tilhørende form Flag
+			// Update the associated form flag
 			isUserGuideFormOpen = true;
 			
 		}
@@ -128,14 +128,14 @@ namespace IRCAMThermalViewer {
 		// User Guide Form Nedluknings Callback Routine -> 
 		private: System::Void UserGuideViewerGUI_FormClosing(System::Object^ sender, System::Windows::Forms::FormClosingEventArgs^ e) {
 
-			// Opdater tilhørende form Flag
+			// Update the associated form flag
 			isUserGuideFormOpen = false;
 			isUserGuideFormDocked = false;
 			isUserGuideFormUndocked = false;
 
-			// Når Formen lukkes - Gem Formen
+			// When the form is closed - hide the form
 			this->Hide();
-			// Deaktiver "Disposing" Af Form Objektet
+			// Disable "disposing" of the form object
 			e->Cancel = true;
 
 		}

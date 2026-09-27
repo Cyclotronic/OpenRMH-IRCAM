@@ -13,7 +13,7 @@
 #ifndef GlobalObjectsAndVariables_H 
 #define GlobalObjectsAndVariables_H
 
-// Inkluderede biblioteker
+// Included libraries
 #include "RMH_OpenGL_Winforms.h"
 #include "RMH_OpenGL_ColorBar.h"
 #include "RMH_OpenGL_Histogram.h"
@@ -25,13 +25,13 @@
 #include "RMH_ImageProcessing_Library.h"
 #include "RMH_GeneralTriggerEvent_Resources.h"
 
-// tilhørende name spaces
+// associated namespaces
 using namespace ThermalCameraDevice;
 using namespace OpenGLWinForms;
 using namespace OpenGLColorBar;
 using namespace OpenGL2DPlot;
 
-// ------------------------------- Globale "Normale" Variabler ------------------------------- //
+// ------------------------------- Global "Normal" Variables ------------------------------- //
 
 // Gemte Applikations Parametere
 extern float SavedTempCorrectionSetting;
@@ -39,7 +39,7 @@ extern unsigned char SelectedThermalCameraIndex;
 extern unsigned int SelectedColorPaletteIndex;
 extern unsigned int SelectedDualColorPaletteIndex;
 
-// Diverse Globale statiske/extern Objekter og variabler
+// Miscellaneous global static/extern objects and variables
 extern IRCameraDeviceFormat IRCamera;
 static ColorBarManualRangeTemps ManualTempRangeSetValues;
 static ColorBarTagPosition ColorBarMaxMinTagPositions;
@@ -67,7 +67,7 @@ static RAWSnapShotFileInfo SnapShotAnalysisModeFileInfo;
 static RAWFileIDFormat RecordingAnalysisModeFileMetaData;
 static RAWFileIDFormat SnapShotAnalysisModeFileMetaData;
 
-// Diverse Globale Variabler
+// Miscellaneous global variables
 extern unsigned int VideoFrameSize;
 extern bool CameraConnectErrorFlag; 
 extern unsigned char TempUnitState;
@@ -188,7 +188,7 @@ extern bool LiveViewSplitViewEnableFlag;
 extern unsigned int RecordingFrameRateSetValue;
 extern unsigned int RecordingFrameRateTimeOutCounter;
 
-// Data Logging Objekter og variabler
+// Data logging objects and variables
 extern bool DataLoggingIsRunningFlag;
 extern unsigned char DataLoggingNumberOfActiveSets;
 extern unsigned long DataLoggingIntervalMilliSec;
@@ -206,7 +206,7 @@ extern double* DataLoggingDataSet8SourcePointer;
 extern double* DataLoggingDataSet9SourcePointer;
 extern double* DataLoggingDataSet10SourcePointer;
 
-// Temperatur Alarm Variabler og Objekter
+// Temperature alarm variables and objects
 extern bool TempAlarmsConfigMenuIsOpen;
 extern bool TempAlarmTriggerSoundFlag;
 extern bool TempAlarmsTriggerEventsEnableFlag;
@@ -285,7 +285,7 @@ extern bool isLiveViewToolsFormOpen;
 extern bool isLiveViewToolsFormDocked;
 extern bool isLiveViewToolsFormUndocked;
 
-// 2D Plot Data Sæt Source Pointers
+// 2D plot data set source pointers
 extern unsigned char Plot2DDataSetLineColorsR[_2DPlotMaxNumberOfDataSets];
 extern unsigned char Plot2DDataSetLineColorsG[_2DPlotMaxNumberOfDataSets];
 extern unsigned char Plot2DDataSetLineColorsB[_2DPlotMaxNumberOfDataSets];
@@ -300,21 +300,21 @@ extern double *Plot2DDataSet8SourcePointer;
 extern double *Plot2DDataSet9SourcePointer;
 extern double *Plot2DDataSet10SourcePointer;
 
-// Generalle Og Periodiske Trigger Event Timer Objekter og variabler
+// General and periodic trigger event timer objects and variables
 extern bool PeriodicTriggerEventEnableFlags[_MaxNumberOfConfigurablePeriodicTriggerEvents];
 extern unsigned int PeriodicEventTriggerCounter[_MaxNumberOfConfigurablePeriodicTriggerEvents];
 
-// --------------------- Globale Managed Variabler & Objekter Variabler ---------------------- //
+// --------------------- Global Managed Variables & Objects ---------------------- //
 
 // Globale Managed objekters reference struktur
 ref struct GlobalVariables {
 
-	// --------------------------- Tværform Objekter Og Variabler ---------------------------- //
+	// --------------------------- Cross-Form Objects And Variables ---------------------------- //
 
-	// Fælles Globale Reference Strings
+	// Common global reference strings
 	static System::String^ TOPDONCameraInformationString = "PLEASE NOTE!\r\nIf You Are Connecting To A TOPDON Or P2/Pro Camera And Have The TCView\r\nSoftware Drivers Installed, You Will Need To Uninstall The TOPDON Drivers\r\nTo Use Your TOPDON Or P2/Pro Camera With This Software!\r\n The Driver Can Be Uninstalled From Windows Device Manager.";
 
-	// Fælles Globale statiske objekter & variabler
+	// Common global static objects & variables
 	static System::Windows::Forms::Form^ ActiveForm = nullptr;
 	static System::String^ DefaultTempUnitString = "°C";
 	static System::String^ TemperaturePrecision = "F3";
@@ -324,14 +324,14 @@ ref struct GlobalVariables {
 	static System::String^ SnapShotAnalysisModeRAWFilePath = "";
 	static System::Threading::AutoResetEvent^ ThreadDataReadyEvent = gcnew System::Threading::AutoResetEvent(false);
 
-	// Fil Path Lokerings strings, Navn Strings Og diverse Applikations strings
+	// File path location strings, name strings and miscellaneous application strings
 	static System::String^ SnapShotDefaultPath = System::Environment::GetFolderPath(System::Environment::SpecialFolder::Desktop);
 	static System::String^ RecordingDefaultPath = System::Environment::GetFolderPath(System::Environment::SpecialFolder::Desktop);
 	static System::String^ LoggingCSVDefaultPath = System::Environment::GetFolderPath(System::Environment::SpecialFolder::Desktop);
 	static System::String^ DataLoggingSessionFileNameString = nullptr;
 	static System::String^ DefaultCapturingAppPackageFamilyNameString = nullptr;
 
-	// Globale objekter fra MainGUI Formen
+	// Global objects from the MainGUI form
 	static System::Windows::Forms::RichTextBox^ GlobalGUIInfoTextArea = nullptr;
 	static System::ComponentModel::BackgroundWorker^ GlobalVideoStreamThread = nullptr;
 	static System::ComponentModel::BackgroundWorker^ GlobalSecondaryProcessingThread = nullptr;
@@ -340,7 +340,7 @@ ref struct GlobalVariables {
 	static System::Windows::Forms::Button^ GlobalSurfacePlotMenuButton = nullptr;
 	static cli::array<System::Windows::Forms::Button^>^ MainGUILeftMenuButtons = nullptr;
 
-	// Globale objekter fra ThermalCameraGUI Formen
+	// Global objects from the ThermalCameraGUI form
 	static System::Windows::Forms::ComboBox^ GlobalCameraSourceDropList = nullptr;
 	static System::Windows::Forms::Button^ GlobalConnectButton = nullptr;
 	static System::Windows::Forms::Button^ GlobalDisconnectButton = nullptr;
@@ -398,7 +398,7 @@ ref struct GlobalVariables {
 	static System::Windows::Forms::NumericUpDown^ GlobalRecordingFrameRateNumericUpDown = nullptr;
 
 
-	// Globale objekter fra LiveViewStream & LiveViewTools Formen
+	// Global objects from the LiveViewStream & LiveViewTools form
 	static LiveViewZoomWindow::RMHLiveViewZoomWindow^ LiveViewZoomWindowRender;
 	static OpenGLWinForms::RMHOpenGLWF^ OpenGLRender;
 	static OpenGLColorBar::RMHOpenGLColorBar^ OpenGLColorBar;
@@ -462,16 +462,16 @@ ref struct GlobalVariables {
 	static System::Windows::Forms::ToolStripMenuItem^ GlobalLiveViewSplitViewToolStripMenuItem = nullptr;
 	static System::Windows::Forms::Panel^ GlobalColorBarMainPanel = nullptr;
 
-	// Globale objekter fra SurfacePlotGUI Formen
+	// Global objects from the SurfacePlotGUI form
 	static OpenGLSurfacePlot::RMHOpenGLSurfacePlot^ OpenGLSurfacePlot;
 	static System::Windows::Forms::Panel^ GlobalSurfacePlotPanel = nullptr;
 
-	// Globale objekter fra TempMeasGUI Formen
+	// Global objects from the TempMeasGUI form
 	static OpenGL2DPlot::RMHOpenGL2DPlot^ OpenGL2DPlot;
 	static cli::array<System::Windows::Forms::Label^>^ Plot2DLegendLabels = nullptr;
 	static System::ComponentModel::BackgroundWorker^ GlobalDataLoggingThread = nullptr;
 
-	// Globale objekter fra VideoPlayBackTools Formen
+	// Global objects from the VideoPlayBackTools form
 	static System::Windows::Forms::Label^ VideoPlaybackTempCorrectionLabel = nullptr;
 	static System::Windows::Forms::Label^ VideoPlaybackAmbientTempLabel = nullptr;
 	static System::Windows::Forms::Label^ VideoPlaybackReflectedTempLabel = nullptr;
@@ -479,7 +479,7 @@ ref struct GlobalVariables {
 	static System::Windows::Forms::Button^ VideoPlaybackBackwardStepButton = nullptr;
 	static System::Windows::Forms::Button^ VideoPlaybackPlayStopButton = nullptr; 
 
-	// Globale objekter fra Live View Statistik Formen
+	// Global objects from the live view statistics form
 	static System::Windows::Forms::Label^ GlobalFrameRateLabel = nullptr;
 	static System::Windows::Forms::Label^ GlobalNumberOfFramesLabel = nullptr;
 	static System::Windows::Forms::Label^ GlobalSpanLabel = nullptr;

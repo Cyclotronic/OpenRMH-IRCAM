@@ -6,7 +6,7 @@
  *
  */
 
-// Inkluderede Blblioteker
+// Included libraries
 #include <string>
 #include <vector>
 #include <fstream>
@@ -20,7 +20,7 @@
 #include <dwmapi.h>
 #pragma comment(lib, "dwmapi.lib")
 
-// Globale Variabler og objekter
+// Global variables and objects
 double MaxExecutionTime = 0.0;
 double MinExecutionTime = 1000.0;
 unsigned int RichTextBoxNumberOfLines = 0;
@@ -33,13 +33,13 @@ using namespace IRCAMThermalViewer;
 using namespace std;
 using namespace Microsoft::Win32;
 
-// ------------------------- Winform Titlebar Håndterings Routiner -------------------------- //
+// ------------------------- WinForms Title Bar Handling Routines -------------------------- //
 
 void RMH_Winforms_EnableTitleBarDarkMode(System::IntPtr FormHandle) {
 
 	// Routinen Aktiverer Winforms Applikationens TitelBars Dark Mode
 
-	// Lokale Varaibler
+	// Local variables
 	BOOL UseDark = TRUE;
 	const int DWMWA_USE_IMMERSIVE_DARK_MODE = 20;
 
@@ -52,7 +52,7 @@ void RMH_Winforms_EnableTitleBarDarkMode(System::IntPtr FormHandle) {
 
 System::Diagnostics::Stopwatch^ RMH_Winforms_StartBenchMarkTimer() {
 
-	// Routinen Starter en intern timer til code benchmarking
+	// This routine starts an internal timer for code benchmarking
 
 	/*
 	 *  Eksempel ->
@@ -67,21 +67,21 @@ System::Diagnostics::Stopwatch^ RMH_Winforms_StartBenchMarkTimer() {
 	 * 
 	 */
 
-	// Lokale objekter og variabler
+	// Local objects and variables
 	System::Diagnostics::Stopwatch^ BenchmarkTimer;
 
 	// Start intern timer til code benchmarking
 	BenchmarkTimer = Stopwatch::StartNew();
 
-	// Retuner Timer Objekt
+	// Return the timer object
 	return BenchmarkTimer;
 
 }
 
 void RMH_Winforms_StopBenchmarkTimerAndDisplay(System::Diagnostics::Stopwatch^ BenchmarkTimer) {
 
-	// Routinen stopper interne Benchmark Timer, udregner og viser 
-	// Kode eksikverings tiden [i sekundter], i Output Vindue, siden timeren blev startet
+	// This routine stops the internal benchmark timer, calculates and shows 
+	// the code execution time [in seconds], in the output window, since the timer was started
 
 	// Stil Benchmark Timer
 	BenchmarkTimer->Stop();
@@ -91,13 +91,13 @@ void RMH_Winforms_StopBenchmarkTimerAndDisplay(System::Diagnostics::Stopwatch^ B
 	double ElapsedTicks = double(BenchmarkTimer->ElapsedTicks);
 	double ExecutionTime = ElapsedTicks * (1.0 / TimerFrequency);
 
-	// Kontroller maksimale eksikverings tid
+	// Check the maximum execution time
 	if (ExecutionTime > MaxExecutionTime) {
 		// Lager maksimale eksikverings tid
 		MaxExecutionTime = ExecutionTime;
 	}
 
-	// Kontroller minimale eksikverings tid
+	// Check the minimum execution time
 	if (ExecutionTime < MinExecutionTime) {
 		// Lager minimale eksikverings tid
 		MinExecutionTime = ExecutionTime;
@@ -113,18 +113,18 @@ void RMH_Winforms_StopBenchmarkTimerAndDisplay(System::Diagnostics::Stopwatch^ B
 
 }
 
-// ---------------------------- Winform GUI Håndterings Routiner ---------------------------- //
+// ---------------------------- WinForms GUI Handling Routines ---------------------------- //
 
 void RMH_Winforms_StartMainApplicationGUI() {
 
-	// Routinen Konfigurerer Applikations parameter og starter winform GUI
+	// This routine configures the application parameters and starts the WinForms GUI
 
 	// Aktiver Applikationens Visual stil render
 	Application::EnableVisualStyles();
 	// Applicationen Benytter den globale deafult Text render 
 	Application::SetCompatibleTextRenderingDefault(false);
 
-	// Vis Start Splash Screen
+	// Show the start splash screen
 	Application::Run(gcnew SplashScreen());
 	// Start Main GUI applikation
 	Application::Run(gcnew MainGUI());
@@ -133,20 +133,20 @@ void RMH_Winforms_StartMainApplicationGUI() {
 
 void RMH_Winforms_ChangeFormTitleBarText(System::Windows::Forms::Form^ Winform, std::string Text) {
 
-	// Routinen opdaterer texten i toppen af Winform GUIen
+	// This routine updates the text at the top of the WinForms GUI
 
-	// Opdater texten i toppen af Winform GUIen
+	// Update the text at the top of the WinForms GUI
 	Winform->Text = RMH_Conversion_StdStringToSystemString(Text);
 
 }
 
-// --------------------- Winform Eksterne Processer Håndterings Routiner -------------------- //
+// --------------------- WinForms External Process Handling Routines -------------------- //
 
 void RMH_Winforms_OpenLinkURL(System::String^ LinkURL) {
 
-	// Routinen starter en process som åbner et givet link URL
+	// This routine starts a process that opens a given link URL
 
-	// Håndtering for ikke supporterede windows versionen (Fx Windows 10 S)
+	// Handling for unsupported Windows versions (e.g. Windows 10 S)
 	try {
 
 		// Navigate Til givet URL addresse
@@ -159,49 +159,49 @@ void RMH_Winforms_OpenLinkURL(System::String^ LinkURL) {
 
 bool RMH_Winforms_OpenWindowsMicrosoftStoreApp(System::String^ PackageFamilyName) {
 
-	// Routinen åbner en valgt ekstern Microsoft Store Applikation i en ny process
+	// This routine opens a selected external Microsoft Store application in a new process
 	// Relavant Information -> https://www.auslogics.com/en/articles/how-to-open-microsoft-store-apps-from-command-prompt/
 
-	// Lokale variabler og objekter
+	// Locally defined constants
 	bool AppProcessErrorFlag = false;
 	System::Diagnostics::Process^ AppProcess = gcnew System::Diagnostics::Process();
 
-	// Håndtering af fejl ved åbning af App process
+	// Handling of errors when opening the app process
 	try {
 
-		// Skriv eksikverings kommando til Shell terminal
+		// Write the execution command to the shell terminal
 		AppProcess->StartInfo->FileName = "CMD.exe";
-		// Eksikver "Åben MS Store App" Shell Terminal string kommando
+		// Execute the "Open MS Store App" shell terminal string command
 		AppProcess->StartInfo->Arguments = "/c explorer.exe shell:AppsFolder\\" + PackageFamilyName + "!App";
-		// Åben ikke for Shell terminal vinduet
+		// Do not open the shell terminal window
 		AppProcess->StartInfo->WindowStyle = System::Diagnostics::ProcessWindowStyle::Hidden;
 
-		// Eksikver Kommando
+		// Execute the command
 		AppProcess->Start();
 
-		// Bring Applikations process vinduet til fronten af skærmen
+		// Bring the application process window to the front of the screen
 		BringWindowToTop(static_cast<HWND>(AppProcess->MainWindowHandle.ToPointer()));
 
 	}
 	catch (System::Exception^ Ex) { AppProcessErrorFlag = true; }
 
-	// Retuner Process status
+	// Return the process status
 	return AppProcessErrorFlag;
 
 }
 
 void RMH_Winforms_OpenExternalApplicationEXE(System::String^ ExternalEXENameString) {
 
-	// Routinen starter en ekstern process til åbning af en ekstern .exe executabel
+	// This routine starts an external process to open an external .exe executable
 
-	// Hent primære applikationens aktuelle mappe og .exe sti
+	// Get the current folder and .exe path of the main application
 	String^ ExePath = Process::GetCurrentProcess()->MainModule->FileName;
 	String^ Directory = System::IO::Path::GetDirectoryName(ExePath);
 
-	// Formater Stien til applikationens .exe fil
+	// Format the path of the application .exe file
 	String^ targetExePath = System::IO::Path::Combine(Directory, ExternalEXENameString);
 
-	// Error Håndtering
+	// Error handling
 	try {
 
 		// Start Applikations Processen
@@ -217,38 +217,38 @@ void RMH_Winforms_OpenExternalApplicationEXE(System::String^ ExternalEXENameStri
 
 }
 
-// ------------ Winform Windows Skærm Width/Height/Scaling/DPI Læsnings Routiner ------------ //
+// ------------ WinForms Windows Screen Width/Height/Scaling/DPI Reading Routines ------------ //
 
 WINMonitorSettings RMH_Winforms_ReadWindowsScreenSettings() {
 
-	// Routinen læser Skærm bredden og højden i pixels, samt Skalaen og DPI indstillings værdierne
-	// De retunerede værdier for er skærmen hvor applikationen er placeret.
+	// This routine reads the screen width and height in pixels, as well as the scale and DPI setting values
+	// The returned values are for the screen where the application is placed.
 
-	// Lokale objekter og Variabler
+	// Local objects and variables
 	DEVMODE DevMode;
 	MONITORINFOEX MonitorInfoEx;
 	WINMonitorSettings CurrentMonitorSettings;
 	HWND activeWindow = GetActiveWindow();
 	HMONITOR Monitor = MonitorFromWindow(activeWindow, MONITOR_DEFAULTTONEAREST);
 
-	// Nulstil antallet af aktive Monitorer
+	// Reset the number of active monitors
 	CurrentMonitorSettings.NumberOfConnectedMonitors = 0;
 
-	// Loop igennem antallet af aktive skærme
+	// Loop through the number of active screens
 	for (unsigned int i = 0; i < System::Windows::Forms::Screen::AllScreens->Length; i++) {
 
-		// Inkrementer antal aktive monitorer i windows
+		// Increment the number of active monitors in Windows
 		CurrentMonitorSettings.NumberOfConnectedMonitors = CurrentMonitorSettings.NumberOfConnectedMonitors + 1;
 
 	}
 
-	// Læs den Visuelle bredde og højde af nuværende Monitor
+	// Read the visual width and height of the current monitor
 	MonitorInfoEx.cbSize = sizeof(MonitorInfoEx);
 	GetMonitorInfo(Monitor, &MonitorInfoEx);
 	CurrentMonitorSettings.MonitorVirtualWidth = (unsigned short)(MonitorInfoEx.rcMonitor.right - MonitorInfoEx.rcMonitor.left);
 	CurrentMonitorSettings.MonitorVirtualHeight = (unsigned short)(MonitorInfoEx.rcMonitor.bottom - MonitorInfoEx.rcMonitor.top);
 
-	// Læs den Fysiske bredde og højde af nuværende Monitor
+	// Read the physical width and height of the current monitor
 	DevMode.dmSize = sizeof(DevMode);
 	DevMode.dmDriverExtra = 0;
 	EnumDisplaySettings(MonitorInfoEx.szDevice, ENUM_CURRENT_SETTINGS, &DevMode);
@@ -259,10 +259,10 @@ WINMonitorSettings RMH_Winforms_ReadWindowsScreenSettings() {
 	CurrentMonitorSettings.MonitorHorizontalScaleSetting = (unsigned short)(((float)CurrentMonitorSettings.MonitorPhysicalWidth / (float)CurrentMonitorSettings.MonitorVirtualWidth) * 100.0);
 	CurrentMonitorSettings.MonitorVerticalScaleSetting = (unsigned short)(((float)CurrentMonitorSettings.MonitorPhysicalHeight / (float)CurrentMonitorSettings.MonitorVirtualHeight) * 100.0);
 
-	// Læs tilsvarende Monitor DPI indstilling Fra Skallerings indstilling
+	// Read the corresponding monitor DPI setting from the scaling setting
 	switch (CurrentMonitorSettings.MonitorHorizontalScaleSetting) {
 
-		// Læs Monitorens DPI indstilling
+		// Read the DPI setting of the monitor
 		case 100: CurrentMonitorSettings.MonitorDPISetting = 96;  break; // DPI 96  -> 100 % Skala
 		case 125: CurrentMonitorSettings.MonitorDPISetting = 120; break; // DPI 120 -> 125 % Skala
 		case 150: CurrentMonitorSettings.MonitorDPISetting = 144; break; // DPI 144 -> 150 % Skala
@@ -270,91 +270,91 @@ WINMonitorSettings RMH_Winforms_ReadWindowsScreenSettings() {
 
 	}
 
-	// Retuner Windows Skærm indstillings Parameter struktur
+	// Return the Windows screen settings parameter structure
 	return CurrentMonitorSettings;
 
 }
 
-// -------------------------- Winform ComboBox Håndterings Routiner ------------------------- //
+// -------------------------- WinForms ComboBox Handling Routines ------------------------- //
 
 void RMH_Winforms_CombiBox_AddArrayOfItemStrings(System::Windows::Forms::ComboBox^ CombiBox, std::vector<std::string> StringArray) {
 
-	// Routinen tilføjer et array af std::string til Items i valgte ComboBox
+	// This routine adds an array of std::string to the items of the selected ComboBox
 
-	// Lokale objekter
+	// Local objects
 	cli::array<System::Object^>^ ItemObjects = gcnew cli::array<System::Object^ >(StringArray.size());
 
-    // Loop til og med størrelsen af Input arrayet
+    // Loop up to and including the size of the input array
 	for (int i = 0; i < StringArray.size(); i++) {
 
-		// Tilføj Objekters string navne til item objekt array
+		// Add the string names of the objects to the item object array
 		ItemObjects[i] = RMH_Conversion_StdStringToSystemString(StringArray[i]);
 
 	}
 
-	// Tilføj objekt array til ComboBox Liste
+	// Add the object array to the ComboBox list
 	CombiBox->Items->AddRange(ItemObjects);
 
 }
 
 void RMH_Winforms_CombiBox_SetSellectedItemPosition(System::Windows::Forms::ComboBox^ CombiBox, unsigned char ItemIndex) {
 
-	// Routinen sætter CombiBoxen til valgte item position
+	// This routine sets the ComboBox to the selected item position
 
-	// Sæt ComboBox position til Item Index
+	// Set the ComboBox position to the item index
 	CombiBox->SelectedIndex = ItemIndex;
 
 }
 
-// ----------------------- Winform NumericUpDown Håndterings Routiner ----------------------- //
+// ----------------------- WinForms NumericUpDown Handling Routines ----------------------- //
 
 bool RMH_Winforms_NumericUpDown_ChangeNumber(System::Windows::Forms::NumericUpDown^ NumericUpDown, float InputNumber, float ScaleFactor, float Offset, float DefaultValue) {
 
-	// Routinen Sætter det givet "InputNumber" til numericUpDown control
-	// Input argumenterne "ScaleFactor" og "Offset" er givet til valgfri Konvertering af "Number" 
-	// "DefaultValue" er givet som den default værdi ved overflow. (Skal være indenfor maximum/Minimum værdien af NumericUpDown Komponent)
-	// Routinen retunerer "True" hvis værdien var indenfor rækkevidden og ->
-	// "False" hvis den var uden for rækkevidden og at default værdien er blevet brugt i stedet for.
+	// This routine sets the given "InputNumber" to the numericUpDown control
+	// The input arguments "ScaleFactor" and "Offset" are given for optional conversion of "Number" 
+	// "DefaultValue" is given as the default value on overflow. (Must be within the maximum/minimum value of the NumericUpDown component)
+	// The routine returns "True" if the value was within range and ->
+	// "False" if it was out of range and the default value has been used instead.
 
-	// Lokale Variabler
+	// Local variables
 	bool ReturnStatus = false;
 	float CalculatedValue = InputNumber * ScaleFactor + Offset;
 	float CalculatedDefault = DefaultValue * ScaleFactor + Offset;
 
-	// Kontroller om den udregnede værdi er indenform rækkevidden af et "System::Decimal"
-	// og at værdien er indenfor værdien af den numeriske UpDowns maximum og minimum værdi.
+	// Check whether the calculated value is within the range of a "System::Decimal"
+	// and that the value is within the maximum and minimum value of the NumericUpDown.
 	if (CalculatedValue >= (float)Decimal::MinValue && CalculatedValue <= (float)Decimal::MaxValue && 
 		CalculatedValue >= (float)NumericUpDown->Minimum && CalculatedValue <= (float)NumericUpDown->Maximum) {
 
 		// Konverter og display givet nummer i NumericUpDown Komponent
 		NumericUpDown->Value = System::Convert::ToDecimal(CalculatedValue);
 
-		// Opdater status
+		// Update the status
 		ReturnStatus = true;
 
 	}
 	else {
 
-		// Værdien er uden for rækkevidden - skriv Default værdi til NumericUpDown
+		// The value is out of range - write the default value to the NumericUpDown
 		NumericUpDown->Value = System::Convert::ToDecimal(CalculatedDefault);
 
 	}
 
-	// Retuner Status
+	// Return the status
 	return ReturnStatus;
 
 }
 
-// ------------------------ Winform RichTextBox Håndterings Routiner ------------------------ //
+// ------------------------ WinForms RichTextBox Handling Routines ------------------------ //
 
 void RMH_Winforms_RichTextBox_WriteLine(System::Windows::Forms::RichTextBox^ RichTextBox, std::string Text, unsigned int MessageType) {
 
-	// Routinen skriver en givet string til tekst box (RichTextBox) 
+	// This routine writes a given string to a text box (RichTextBox) 
 
 	/*
-	 *  Tilhørende Macroer ->
+	 *  Associated macros ->
 	 *
-	 *  // Status Meddelses typer macroer
+	 *  // Status message type macros
 	 *  #define _StatusMessageType_Normal      1
 	 *  #define _StatusMessageType_Success     2
 	 *  #define _StatusMessageType_Warning     3
@@ -363,58 +363,58 @@ void RMH_Winforms_RichTextBox_WriteLine(System::Windows::Forms::RichTextBox^ Ric
 	 */
 
 
-	// Ændre text farven afhængigt af meddelses typen
+	// Change the text color depending on the message type
 	switch (MessageType) {
 
-		// Meddelsen er en Normal status meddelse
+		// The message is a normal status message
 		case _StatusMessageType_Normal:
 
-			// Indstil meddelses farven
+			// Set the message color
 			RichTextBox->SelectionColor = System::Drawing::Color::White;
 
 		break;
 
-		// Meddelsen er en Success status meddelse
+		// The message is a success status message
 		case _StatusMessageType_Success:
 
-			// Indstil meddelses farven
+			// Set the message color
 			RichTextBox->SelectionColor = System::Drawing::Color::Lime;
 
 		break;
 
-		// Meddelsen er en Warning status meddelse
+		// The message is a warning status message
 		case _StatusMessageType_Warning:
 
-			// Indstil meddelses farven
+			// Set the message color
 			RichTextBox->SelectionColor = System::Drawing::Color::Yellow;
 
 		break;
 
-		// Meddelsen er en Error status meddelse
+		// The message is an error status message
 		case _StatusMessageType_Error:
 
-			// Indstil meddelses farven
+			// Set the message color
 			RichTextBox->SelectionColor = System::Drawing::Color::Red;
 
 		break;
 
 	}
 
-	// Kontroller om text boxen er tox for text
+	// Check whether the text box is full of text
 	if (String::IsNullOrEmpty(RichTextBox->Text)) {
 		
-		// Nulstil antal Text Box Linjer variablet
+		// Reset the text box line count variable
 		RichTextBoxNumberOfLines = 0; 
 
 	}
 
-	// Inkrementer antallet af viste linjer varaiblet
+	// Increment the shown lines count variable
 	RichTextBoxNumberOfLines = RichTextBoxNumberOfLines + 1;
 
-	// Hvis antallet af viste linjer har nået et maksimum
+	// If the number of shown lines has reached a maximum
 	if (RichTextBoxNumberOfLines >= 35) {
 
-		// Nulstil antal Text Box Linjer variablet
+		// Reset the text box line count variable
 		RichTextBoxNumberOfLines = 0;
 
 		// Ryd Text Boksen
@@ -430,16 +430,16 @@ void RMH_Winforms_RichTextBox_WriteLine(System::Windows::Forms::RichTextBox^ Ric
 	// Scroll ned i bunden af tekst boxen
 	RichTextBox->ScrollToCaret();
 
-	// Opdater Text Box 
+	// Update the text box 
 	RichTextBox->Update();
 
 }
 
-// ----------------------- Winform DataGridView Håndterings Routiner ------------------------ //
+// ----------------------- WinForms DataGridView Handling Routines ------------------------ //
 
 void RMH_Winforms_DataGridView_Display2ColumnDataGridView(System::Windows::Forms::DataGridView^ DataGridView, std::vector<std::string> ColumnsHeaderText, System::String^ RowHeaderText, float ColumnHeaderTextSize, float RowHeaderTextSize, float CellTextSize, System::Drawing::Color ColumnRowHeaderTextColor, System::Drawing::Color ColumnRowHeaderBackColor, unsigned int ColumnHeaderHeight, unsigned int RowHeaderWidth, std::vector<std::string> Column1Strings, float *Column2Data) {
 
-	// Routinen tilføjer en kolonne til et givet DataGridView 
+	// This routine adds a column to a given DataGridView 
 
 	// Indstil kolonne headerens text farve
 	DataGridView->ColumnHeadersDefaultCellStyle->ForeColor = ColumnRowHeaderTextColor;
@@ -448,69 +448,69 @@ void RMH_Winforms_DataGridView_Display2ColumnDataGridView(System::Windows::Forms
 	// Deaktiver Visual styles for column
 	DataGridView->EnableHeadersVisualStyles = false;
 
-	// Indstil kolonne Header border Style - Ingen Border
+	// Set the column header border style - no border
 	DataGridView->ColumnHeadersBorderStyle = System::Windows::Forms::DataGridViewHeaderBorderStyle::None;
 
-	// Indstil kolonne Header Font Størrelse
+	// Set the column header font size
 	DataGridView->ColumnHeadersDefaultCellStyle->Font = gcnew System::Drawing::Font("Arial", ColumnHeaderTextSize, FontStyle::Bold);
 
-	// Indstil kolonne Header højden
+	// Set the column header height
 	DataGridView->ColumnHeadersHeight = ColumnHeaderHeight;
 
-	// Deaktiver Resizing af Headeren
+	// Disable resizing of the header
 	DataGridView->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::DisableResizing;
 
-	// Tilføj antal kolonner
+	// Add the number of columns
 	for (unsigned char i = 0; i < ColumnsHeaderText.size(); i++) {
 
-		// Tilføj kolonne til Data Grid View
+		// Add the column to the data grid view
 		DataGridView->Columns->Add(i.ToString(), RMH_Conversion_StdStringToSystemString(ColumnsHeaderText[i]));
 
-		// Indstil kolonnens text farve
+		// Set the text color of the column
 		DataGridView->Columns[i.ToString()]->DefaultCellStyle->ForeColor = ColumnRowHeaderTextColor;
-		// Indstil kolonne baggrunds farve
+		// Set the background color of the column
 		DataGridView->Columns[i.ToString()]->DefaultCellStyle->BackColor = ColumnRowHeaderBackColor;
 
-		// Kolonnen skal fylde hele Data Grid Viewet
+		// The column must fill the whole data grid view
 		DataGridView->Columns[i.ToString()]->AutoSizeMode = DataGridViewAutoSizeColumnMode::Fill;
 
-		// Deaktiver Column soterings feature
+		// Disable the column sorting feature
 		DataGridView->Columns[i.ToString()]->SortMode = System::Windows::Forms::DataGridViewColumnSortMode::NotSortable;
 
 	}
 
-	// ---------------------------------- Tilføj Row Data Til Oprettede Kolonne ---------------------------------- // 
+	// ---------------------------------- Add Row Data To The Created Column ---------------------------------- // 
 	
-	// Indstil rækkens headerens text farve
+	// Set the text color of the row header
 	DataGridView->RowHeadersDefaultCellStyle->ForeColor = ColumnRowHeaderTextColor;
-	// Indstil rækkens headerens baggrunds farve
+	// Set the background color of the row header
 	DataGridView->RowHeadersDefaultCellStyle->BackColor = ColumnRowHeaderBackColor;
 	// Deaktiver Visual styles for column
 	DataGridView->EnableHeadersVisualStyles = false;
 
-	// Indstil rækkens Header border Style - Ingen Border
+	// Set the border style of the row header - no border
 	DataGridView->RowHeadersBorderStyle = System::Windows::Forms::DataGridViewHeaderBorderStyle::None;
-	// Indstil rækkens cellernes border Style - Ingen Border
+	// Set the border style of the row cells - no border
 	DataGridView->CellBorderStyle = System::Windows::Forms::DataGridViewCellBorderStyle::None;
 
-	// Indstil rækkens Header Font Størrelse
+	// Set the font size of the row header
 	DataGridView->RowHeadersDefaultCellStyle->Font = gcnew System::Drawing::Font("Arial", RowHeaderTextSize, FontStyle::Bold);
-	// Indstil rækkens Celle Font Størrelse
+	// Set the font size of the row cells
 	DataGridView->DefaultCellStyle->Font = gcnew System::Drawing::Font("Arial", CellTextSize, FontStyle::Bold);
 
-	// Indstil rækkens Header bredde
+	// Set the width of the row header
 	DataGridView->RowHeadersWidth = RowHeaderWidth;
 
-	// Loop igennem hele det givet string array
+	// Loop through the whole given string array
 	for (unsigned int i = 0; i < Column1Strings.size(); i++) {
 
-		// Tilføj række til Data grid view
+		// Add the row to the data grid view
 		DataGridView->Rows->Add(RMH_Conversion_StdStringToSystemString(Column1Strings[i]), RMH_Conversion_FloatToSystemString(Column2Data[i]));
 
-		// Tilfæj Række header text
+		// Add the row header text
 		DataGridView->Rows[i]->HeaderCell->Value = String::Format(RowHeaderText + " {0}", i + 1);
 
-		// Indstil Rækkens Tag
+		// Set the tag of the row
 		DataGridView->Rows[i]->Tag = i;
 
 	}
@@ -519,13 +519,13 @@ void RMH_Winforms_DataGridView_Display2ColumnDataGridView(System::Windows::Forms
 
 }
 
-// --------------------------- Winforms Billede Visnings Routiner --------------------------- //
+// --------------------------- WinForms Image Display Routines --------------------------- //
 
 void RMH_Winforms_PictureBox_UpdateImageBitmap(System::Windows::Forms::PictureBox^ PictureBox, System::Drawing::Bitmap^ Bitmap, System::Drawing::Imaging::ColorPalette^ ColorPalette) {
 
-	// Routinen viser et givet Bitmap objekt, i en valgt "PictureBox" control handler
+	// This routine shows a given bitmap object in a selected "PictureBox" control handler
 
-	// Sæt Bitmap Color Palette
+	// Set the bitmap color palette
 	Bitmap->Palette = ColorPalette;
 
 	// Slet Picture Box unmanaged Memory
@@ -535,15 +535,15 @@ void RMH_Winforms_PictureBox_UpdateImageBitmap(System::Windows::Forms::PictureBo
 
 }
 
-// --------------------- Winforms Menu Og Sub-Menu Håndterings Routiner --------------------- //
+// --------------------- WinForms Menu And Sub-Menu Handling Routines --------------------- //
 
 void RMH_Winforms_HideSubMenuPanel(System::Windows::Forms::Panel^ SubMenuPanel) {
 
-	// Routinen lukker valgte Sub-Menu Panel
+	// This routine closes the selected sub-menu panel
 
-	// Kontroller om Sub-Menuen er synlig
+	// Check whether the sub-menu is visible
 	if (SubMenuPanel->Visible == true) {
-		// Gør Sub-Menu usynlige
+		// Make the sub-menu invisible
 		SubMenuPanel->Visible = false;
 	}
 
@@ -551,15 +551,15 @@ void RMH_Winforms_HideSubMenuPanel(System::Windows::Forms::Panel^ SubMenuPanel) 
 
 void RMH_Winforms_ToggleSubMenuPanel(System::Windows::Forms::Panel^ SubMenuPanel, System::Windows::Forms::Button^ MenuButton) {
 
-	// Routinen Toggler valgte Sub-Menu Panel og opdaterer Menu Knappens "Expanded" karakter (+/-)
+	// This routine toggles the selected sub-menu panel and updates the "expanded" character (+/-) of the menu button
 
-	// Kontroller om Sub-Menuen er usynlig
+	// Check whether the sub-menu is invisible
 	if (SubMenuPanel->Visible == false) {
 
-		// Luk valgte Sub-Menu Panel
+		// Close the selected sub-menu panel
 		RMH_Winforms_HideSubMenuPanel(SubMenuPanel);
 
-		// Gør Sub-Menu synlige
+		// Make the sub-menu visible
 		SubMenuPanel->Visible = true;
 
 		// Opdater Menu knappens "Expanded" Karakter
@@ -571,7 +571,7 @@ void RMH_Winforms_ToggleSubMenuPanel(System::Windows::Forms::Panel^ SubMenuPanel
 	}
 	else {
 
-		// Gør Sub-Menu usynlige
+		// Make the sub-menu invisible
 		SubMenuPanel->Visible = false;
 
 		// Opdater Menu knappens "Expanded" Karakter
@@ -581,16 +581,16 @@ void RMH_Winforms_ToggleSubMenuPanel(System::Windows::Forms::Panel^ SubMenuPanel
 
 }
 
-// ---------------- Winforms Form Dockings & Undockings Håndterings Routiner ---------------- //
+// ---------------- WinForms Form Docking & Undocking Handling Routines ---------------- //
 
 void RMH_Winforms_CloseForm(System::Windows::Forms::Form^ FormObject, bool *FormOpenedFlag, bool *FormDockedFlag, bool *FormUndockedFlag) {
 
-	// Routinen lukker en givet form
+	// This routine closes a given form
 
-	// Luk form Objektet
+	// Close the form object
 	FormObject->Close();
 
-	// Opdater formens status flag
+	// Update the status flag of the form
 	*FormOpenedFlag = false;
 	*FormDockedFlag = false;
 	*FormUndockedFlag = false;
@@ -599,20 +599,20 @@ void RMH_Winforms_CloseForm(System::Windows::Forms::Form^ FormObject, bool *Form
 
 void RMH_Winforms_OpenFormInSeperateWindow(System::Windows::Forms::Form^ FormObject, bool *FormOpenedFlag, bool *FormDockedFlag, bool *FormUndockedFlag) {
 
-	// Routinen åbner en givet Form i et seperat vindue
+	// This routine opens a given form in a separate window
 
 	// Konfigurer Formens Border Style 
 	FormObject->FormBorderStyle = System::Windows::Forms::FormBorderStyle::Sizable;
-	// Konfigurer Formens Start position ved Åbning/Undocking
+	// Configure the start position of the form when opening/undocking
 	FormObject->StartPosition = FormStartPosition::CenterScreen;
 
-	// Konfigurer Formen som en "Top Level" Form
+	// Configure the form as a "top level" form
 	FormObject->TopLevel = true;
 
-	// Vis Formen
+	// Show the form
 	FormObject->Show();
 
-	// Opdater formens status flag
+	// Update the status flag of the form
 	*FormOpenedFlag = true;
 	*FormDockedFlag = false;
 	*FormUndockedFlag = true;
@@ -621,19 +621,19 @@ void RMH_Winforms_OpenFormInSeperateWindow(System::Windows::Forms::Form^ FormObj
 
 void RMH_Winforms_OpenAndDockFormInParentPanel(System::Windows::Forms::Form^ FormObject, System::Windows::Forms::Panel^ ParentPanel, bool *FormOpenedFlag, bool *FormDockedFlag, bool *FormUndockedFlag) {
 
-	// Routinen åbner og "Docker" en givet Form i et givet "Parent" Panel
+	// This routine opens and "docks" a given form in a given "parent" panel
 
 	/*
-	*  Tilhørende Form "FormClosing" Overwrite Funktion ->
+	*  Associated form "FormClosing" override function ->
 	* 
 	*	private: System::Void ThermalCameraGUI_FormClosing(System::Object^ sender, System::Windows::Forms::FormClosingEventArgs^ e) {
 	*
-	*		// Ved lukning skal formen gemmes
+	*		// On closing, the form is hidden instead
 	*		this->Hide();
-	*		// Deaktiver "Dispose" Af Formen
+	*		// Disable "Dispose" of the form
 	*		e->Cancel = true;
 	*
-	*		// Opdater Formens "Er Åben" Flag
+	*		// Update the form "is open" flag
 	*       FormOpenedFlag = false;
 	*		FormDockedFlag = false;
 	*		isFormUndocked = false;
@@ -642,21 +642,21 @@ void RMH_Winforms_OpenAndDockFormInParentPanel(System::Windows::Forms::Form^ For
 	*  
 	*/
 
-	// Sikre at form objektet ikke er maximerede før at den dockes
+	// Make sure the form object is not maximized before it is docked
 	if (FormObject->WindowState == FormWindowState::Maximized) {
 		FormObject->WindowState = FormWindowState::Normal;
 	}
 
-	// Indstil Formen som en Top-Level Form
+	// Set the form as a top-level form
 	FormObject->TopLevel = false;
 	FormObject->Parent = ParentPanel;
 
-	// Indstil Formens "Parent" som givet "Parent" Panel
+	// Set the "parent" of the form to the given "parent" panel
 	FormObject->Parent = ParentPanel;
 
 	// Konfigurer Formens Border Style 
 	FormObject->FormBorderStyle = System::Windows::Forms::FormBorderStyle::None;
-	// Formen skal fylde hele "Parent" Panelet
+	// The form must fill the whole "parent" panel
 	FormObject->Size = ParentPanel->ClientSize;
 	FormObject->Dock = DockStyle::Fill;
 
@@ -665,7 +665,7 @@ void RMH_Winforms_OpenAndDockFormInParentPanel(System::Windows::Forms::Form^ For
 	ParentPanel->PerformLayout();
 	FormObject->PerformLayout();
 
-	// Opdater formens status flag
+	// Update the status flag of the form
 	*FormOpenedFlag = true;
 	*FormDockedFlag = true;
 	*FormUndockedFlag = false;
@@ -674,81 +674,81 @@ void RMH_Winforms_OpenAndDockFormInParentPanel(System::Windows::Forms::Form^ For
 
 void RMH_Winforms_UndockFormFromParentPanel(System::Windows::Forms::Form^ FormObject, System::Windows::Forms::Panel^ ParentPanel, bool *FormOpenedFlag, bool *FormDockedFlag, bool *FormUndockedFlag, System::Windows::Forms::FormBorderStyle FormBorderStyle) {
 
-	// Routinen åbner en givet Form. Hvis formen er "Docked" i et "Parent" Panel, så bliver Formen "Undocked" fra panelet og åbnet i et separat vindue.
+	// This routine opens a given form. If the form is "docked" in a "parent" panel, the form is "undocked" from the panel and opened in a separate window.
 
-	// Nulstil Formens Dockings Style
+	// Reset the docking style of the form
 	FormObject->Dock = DockStyle::None;
-	// Nulstil Formens Parent 
+	// Reset the parent of the form 
 	FormObject->Parent = nullptr;
 
-	// Fjern Formen som en "Control" fra givet "Parent" Panel
+	// Remove the form as a "control" from the given "parent" panel
 	ParentPanel->Controls->Clear();
 
 	// Konfigurer Formens Border Style
 	FormObject->FormBorderStyle = FormBorderStyle;
-	// Konfigurer Formens Start position ved Åbning/Undocking
+	// Configure the start position of the form when opening/undocking
 	FormObject->StartPosition = FormStartPosition::CenterScreen;
 
-	// Konfigurere Formen som en "Top Most" Form
+	// Configure the form as a "top most" form
 	FormObject->TopMost = true;
-	// Konfigurer Formen som en "Top Level" Form
+	// Configure the form as a "top level" form
 	FormObject->TopLevel = true;
 
-	// Vis Formen
+	// Show the form
 	FormObject->Show();
 
-	// Opdater formens status flag
+	// Update the status flag of the form
 	*FormOpenedFlag = true;
 	*FormDockedFlag = false;
 	*FormUndockedFlag = true;
 
 }
 
-// ------------ Winforms Display Child Form I Parent Panel Håndterings Routiner ------------- //
+// ------------ WinForms Display Child Form In Parent Panel Handling Routines ------------- //
 
 bool RMH_Winforms_ToggleChildFormInParentPanel(System::Windows::Forms::Form^ ChildForm, cli::interior_ptr<System::Windows::Forms::Form^> CurrentActiveForm, System::Windows::Forms::Panel^ ParentPanel) {
 
-	// Routinen åbner den valgte Child Form i et givet parent Form panel
-	// Retunerede status indikerer som givet Form er åbem eller lukket
+	// This routine opens the selected child form in a given parent form panel
+	// The returned status indicates whether the given form is open or closed
 
-	// Hvis en Aktive View Form er aktiv i Parent panelet
+	// If an active view form is active in the parent panel
 	if ((*CurrentActiveForm) != nullptr) {
 
-		// Luk den Nuværende aktive Form
+		// Close the currently active form
 		(*CurrentActiveForm)->Close();
-		// Nulstil Nuværende aktive Form til NULL
+		// Reset the currently active form to NULL
 		(*CurrentActiveForm) = nullptr;
 
-		// Retuner Form status
+		// Return the form status
 		return false;
 
 	}
 	else {
 
-		// Opdater aktive form til Child Form
+		// Update the active form to the child form
 		(*CurrentActiveForm) = ChildForm;
 
-		// Ny Child Form er ikke en Top-Level Form
+		// The new child form is not a top-level form
 		ChildForm->TopLevel = false;
 		// Indstil Child Form uden "Border"
 		ChildForm->FormBorderStyle = System::Windows::Forms::FormBorderStyle::None;
-		// Den viste Child Form skal udfylde hele Parent Panelet
+		// The shown child form must fill the whole parent panel
 		ChildForm->Dock = System::Windows::Forms::DockStyle::Fill;
-		// Indstil Child formens størrelse til parent panel størrelsen - Undgå flikker
+		// Set the size of the child form to the parent panel size - avoids flicker
 		ChildForm->Size.Width = ParentPanel->Size.Width;
 		ChildForm->Size.Height = ParentPanel->Size.Height;
 
-		// Tilføj Valgte Child Form Til parent Panelet, som en control komponent
+		// Add the selected child form to the parent panel, as a control component
 		ParentPanel->Controls->Add(ChildForm);
-		// Indstil parent Panelets Tag til Child Form
+		// Set the tag of the parent panel to the child form
 		ParentPanel->Tag = ChildForm;
 
-		// Bring Child formen til fronten af parent panelet
+		// Bring the child form to the front of the parent panel
 		ChildForm->BringToFront();
-		// Display og vis Child formen i parent panelet
+		// Display and show the child form in the parent panel
 		ChildForm->Show();
 
-		// Retuner Form status
+		// Return the form status
 		return true;
 
 	}
@@ -757,123 +757,123 @@ bool RMH_Winforms_ToggleChildFormInParentPanel(System::Windows::Forms::Form^ Chi
 
 bool RMH_Winforms_AddChildAsControlToParentPanel(System::Windows::Forms::Form^ ChildForm, System::Windows::Forms::Panel^ ParentPanel) {
 
-	// Routinen tilføjer den valgte Form som en "control" i givet parent form panel
+	// This routine adds the selected form as a "control" in the given parent form panel
 
-	// Child Form er ikke en Top-Level Form
+	// The child form is not a top-level form
 	ChildForm->TopLevel = false;
 	// Indstil Child Form uden "Border"
 	ChildForm->FormBorderStyle = System::Windows::Forms::FormBorderStyle::None;
-	// Den viste Child Form skal udfylde hele parent Panelet
+	// The shown child form must fill the whole parent panel
 	ChildForm->Dock = System::Windows::Forms::DockStyle::Fill;
-	// Indstil Child Formens størrelse til panel størrelsen - Undgå flikker
+	// Set the size of the child form to the panel size - avoids flicker
 	ChildForm->Size.Width = ParentPanel->Size.Width;
 	ChildForm->Size.Height = ParentPanel->Size.Height;
 
-	// Tilføj Valgte Child Form Til Panelet, som en control komponent
+	// Add the selected child form to the panel, as a control component
 	ParentPanel->Controls->Add(ChildForm);
 
-	// Indstil Parent Panelets Tag til Child Form
+	// Set the tag of the parent panel to the child form
 	ParentPanel->Tag = ChildForm;
 
 	// Bring Child Form bagerest i Parent panelet
 	ChildForm->SendToBack();
 
-	// Display og vis den tilføjet Child form
+	// Display and show the added child form
 	ChildForm->Show();
 
-	// Retuner status
+	// Return the status
 	return true;
 
 }
 
 bool RMH_Winforms_BringChildFormTOFront(System::Windows::Forms::Form^ ChildForm) {
 
-	// Routinen sender en Child Form (vist i en parent form panel) 
-	// til front positionen i et parent panel.
+	// This routine sends a child form (shown in a parent form panel) 
+	// to the front position in a parent panel.
 
-	// Send child form til fronten af parent panelet
+	// Send the child form to the front of the parent panel
 	ChildForm->BringToFront();
 
-	// Retuner status
+	// Return the status
 	return true;
 
 }
 
 bool RMH_Winforms_SendChildFormToBack(System::Windows::Forms::Form^ ChildForm) {
 
-	// Routinen sender en Child Form (vist i en parent form panel) 
+	// This routine sends a child form (shown in a parent form panel) 
 	// til bagereste position i parent panelet.
 
 	// Send child form til bagereste position i parent panelet
 	ChildForm->SendToBack();
 
-	// Retuner status
+	// Return the status
 	return true;
 
 }
 
-// ------------------------ Winform Color Dialog Vælg Farve Routiner ------------------------ //
+// ------------------------ WinForms Color Dialog Select Color Routines ------------------------ //
 
 System::Drawing::Color^ RMH_Winforms_ShowAndReadColorDialog(bool *DialogAbortedFlag) {
 
-	// Routinen åbner en Color dialog, og retunerer den valgte farve
-	// Hvis dialogen er blevet lukket, uden at en farve er blevet valgt, da bliver "DialogAbortedFlag" sat til true.
+	// This routine opens a color dialog and returns the selected color
+	// If the dialog has been closed without a color being selected, "DialogAbortedFlag" is set to true.
 
-	// Lokale variabler
+	// Read the temporary array data and sort the kernel array
 	System::Drawing::Color^ SelectedColor;
 	ColorDialog^ MyDialog = gcnew ColorDialog;
 
 	// Tillad valg af custom farve.
 	MyDialog->AllowFullOpen = true;
-	// Tillad hjælpe funktionalitet
+	// Allow help functionality
 	MyDialog->ShowHelp = true;
 
-	// Opdater Dialog Abort Flag
+	// Update the dialog abort flag
 	*DialogAbortedFlag = false;
 
 	// Update the text box color if the user clicks OK 
 	if (MyDialog->ShowDialog() == ::System::Windows::Forms::DialogResult::OK) {
 
-		// Læs valgte farve fra dialog
+		// Read the selected color from the dialog
 		SelectedColor = MyDialog->Color;
 
-		// Opdater Dialog Abort Flag
+		// Update the dialog abort flag
 		*DialogAbortedFlag = false;
 
 	}
 	else {
 
-		// Retuner hvid ved dialog abort
+		// Return white on dialog abort
 		SelectedColor = System::Drawing::Color::FromArgb(255, 255, 255, 255);
 
-		// Opdater Dialog Abort Flag
+		// Update the dialog abort flag
 		*DialogAbortedFlag = true;
 
 	}
 
-	// Retuner valgte farve fra dialog
+	// Return the selected color from the dialog
 	return SelectedColor;
 
 }
 
-// ------------------------ Winform CSV Skrivnings/Læsnings Routiner ------------------------ //
+// ------------------------ WinForms CSV Write/Read Routines ------------------------ //
 
 void RMH_Winforms_WriteHeaderStringsToCSVFile(std::string FilePath, std::string FileName, std::vector<std::string> HeaderStrings, unsigned int NmbOfHeaderStrings, System::String^ DataDelimiter) {
 
-	// Routinen skriver header beskrivelses strings til CSV fil path
+	// This routine writes header description strings to the CSV file path
 
-	// Lokale objekter og variabler
+	// Local objects and variables
 	std::ofstream File;
 	std::string CSVFilePath = FilePath + "/" + FileName;
 	std::string CombinedHeaderString;
 
-	// Åben csv fil - append til fil (Generer Fil hvis ingen fil er på stien)
+	// Open the csv file - append to the file (creates the file if there is no file at the path)
 	File.open(CSVFilePath, std::ios_base::app);
 
-	// Loop til og med antallet af header strings
+	// Loop up to and including the number of header strings
 	for (unsigned int i = 0; i < NmbOfHeaderStrings; i++) {
 
-		// Skriv ikke et komma efter sidste string
+		// Do not write a comma after the last string
 		if (i < NmbOfHeaderStrings - 1) {
 
 			// Formater samlede write string - Med komma
@@ -889,45 +889,45 @@ void RMH_Winforms_WriteHeaderStringsToCSVFile(std::string FilePath, std::string 
 
 	}
 
-	// Append string til CSV fil 
+	// Append the string to the CSV file 
 	File << CombinedHeaderString << std::endl;
 
-	// Luk Åbnede CSV file
+	// Close the opened CSV file
 	File.close();
 
 }
 
 void RMH_Winforms_WriteDataArrayToCSVFile(std::string FilePath, std::string FileName, std::string RowIDString, std::string RowHeaderString, double *CSVData, unsigned int NmbOfValues, System::String^ DataDelimiter) {
 
-	// Routinen Skriver et array af data til en CSV Fil
+	// This routine writes an array of data to a CSV file
 
-	// Lokale objekter og variabler
+	// Local objects and variables
 	std::ofstream File;
 	std::string CSVFilePath = FilePath + "/" + FileName;
 	std::string DataStrings[10];
 	std::string CombinedCSVWriteString;
 
-	// Åben csv fil - append til fil (Generer Fil hvis ingen fil er på stien)
+	// Open the csv file - append to the file (creates the file if there is no file at the path)
 	File.open(CSVFilePath, std::ios_base::app);
 
-	// Kontroller om filen allerede er åben
+	// Check whether the file is already open
 	if (File.is_open() == true) {
 
-		// Luk filen før den kan åbnes
+		// Close the file before it can be opened
 		File.close();
 
 	}
 
-	// Åben csv fil - append til fil (Generer Fil hvis ingen fil er på stien)
+	// Open the csv file - append to the file (creates the file if there is no file at the path)
 	File.open(CSVFilePath, std::ios_base::app);
 
-	// Loop til og med antallet af array data punkter
+	// Loop up to and including the number of array data points
 	for (unsigned int i = 0; i < NmbOfValues; i++) {
 
-		// Formater data til string til CSV skrivning
+		// Format the data to a string for CSV writing
 		DataStrings[i] = RMH_Conversion_SystemStringToStdString(CSVData[i].ToString("F5"));
 
-		// Skriv ikke et komma efter sidste string
+		// Do not write a comma after the last string
 		if (i < NmbOfValues - 1) {
 
 			// Formater samlede write string - Med komma
@@ -943,19 +943,19 @@ void RMH_Winforms_WriteDataArrayToCSVFile(std::string FilePath, std::string File
 
 	}
 
-	// Append string til CSV fil 
+	// Append the string to the CSV file 
 	File << RowIDString + RMH_Conversion_SystemStringToStdString(DataDelimiter) + RowHeaderString + RMH_Conversion_SystemStringToStdString(DataDelimiter) + CombinedCSVWriteString << std::endl;
 
-	// Luk Åbnede CSV file
+	// Close the opened CSV file
 	File.close();
 
 }
 
 void RMH_Winforms_WriteDataArrayMatrixToCSVFile(std::string FilePath, std::string FileName, double* CSVData, unsigned int ArrayMatrixWidth, unsigned int ArrayMatrixHeight, System::String^ DataDelimiter) {
 
-	// Routinen Skriver et array af data til en CSV Fil
+	// This routine writes an array of data to a CSV file
 
-	// Lokale objekter og variabler
+	// Local objects and variables
 	std::ofstream File;
 	std::string CSVFilePath = FilePath + "/" + FileName;
 	std::string DataStrings[10];
@@ -963,28 +963,28 @@ void RMH_Winforms_WriteDataArrayMatrixToCSVFile(std::string FilePath, std::strin
 	unsigned int MatrixArrayIndex = 0;
 	System::String^ DateHeaderString = System::DateTime::Now.ToString("HH:mm:ss.fff dd-MM-yyyy");
 
-	// Åben csv fil - append til fil (Generer Fil hvis ingen fil er på stien)
+	// Open the csv file - append to the file (creates the file if there is no file at the path)
 	File.open(CSVFilePath, std::ios_base::app);
 
-	// Kontroller om filen allerede er åben
+	// Check whether the file is already open
 	if (File.is_open() == true) {
 
-		// Luk filen før den kan åbnes
+		// Close the file before it can be opened
 		File.close();
 
 	}
 
-	// Åben csv fil - append til fil (Generer Fil hvis ingen fil er på stien)
+	// Open the csv file - append to the file (creates the file if there is no file at the path)
 	File.open(CSVFilePath, std::ios_base::app);
 
-	// Skriv Fil Dato header string 
+	// Write the file date header string 
 	File << "Time And Data For Captured Data: " + RMH_Conversion_SystemStringToStdString(DateHeaderString);
 
 	// Ny Linje
 	File << std::endl;
 	File << std::endl;
 
-	// Loop igennem array matricens rækker
+	// Loop through the rows of the array matrix
 	for (unsigned int Y = 0; Y < ArrayMatrixHeight; Y++) {
 
 		// Loop igennem array matricens kolonner
@@ -993,7 +993,7 @@ void RMH_Winforms_WriteDataArrayMatrixToCSVFile(std::string FilePath, std::strin
 			// Konverter matrice index til array index
 			MatrixArrayIndex = (Y * ArrayMatrixWidth) + X;
 
-			// Skriv ikke et komma efter sidste string
+			// Do not write a comma after the last string
 			if (X < ArrayMatrixWidth - 1) {
 
 				// Formater samlede write string - Med komma
@@ -1014,52 +1014,52 @@ void RMH_Winforms_WriteDataArrayMatrixToCSVFile(std::string FilePath, std::strin
 
 	}
 
-	// Luk Åbnede CSV file
+	// Close the opened CSV file
 	File.close();
 
 }
 
 void RMH_Winforms_GenerateAndWriteCSVFile(std::string FilePath, std::string FileName, std::vector<std::string> AppendString) {
 
-	// Routinen skriver et string array til en CSV fil med giver fil path
+	// This routine writes a string array to a CSV file with the given file path
 
-	// Lokale objekter og variabler
+	// Local objects and variables
 	std::ofstream File;
 	std::string RemovefilePath = FilePath + "/" + FileName;
 
-	// Slet eksisterende CSV fil i Path
+	// Delete the existing CSV file at the path
 	std::remove(RemovefilePath.c_str());
 
-	// Kontroller om filen allerede er åben
+	// Check whether the file is already open
 	if (File.is_open() == true) {
 
-		// Luk filen før den kan åbnes
+		// Close the file before it can be opened
 		File.close();
 
 	}
 
-	// Åben csv fil - append til fil (Generer Fil hvis ingen fil er på stien)
+	// Open the csv file - append to the file (creates the file if there is no file at the path)
 	File.open(RemovefilePath, std::ios_base::app);
 
-	// Skriv String vector Data Til CSV fil
+	// Write the string vector data to the CSV file
 	for (unsigned int i = 0; i < AppendString.size(); i++) {
 
-		// Append string til CSV fil 
+		// Append the string to the CSV file 
 		File << AppendString[i] << std::endl;
 
 	}
 
-	// Luk Åbnede CSV file
+	// Close the opened CSV file
 	File.close();
 
 }
 
 RMHWinformsLib::FileReadFormat RMH_Winforms_ReadLinesFromCSVFile(std::string FilePath, std::string FileName) {
 
-	// Routinen læser og retunerer et Std::String array Fra givet input Fil Path
-	// som indholder alle læste linjer fra valgte Fil
+	// This routine reads and returns a std::string array from the given input file path
+	// which contains all lines read from the selected file
 
-	// Lokale Variabler og Objekter
+	// Local variables and objects
 	std::ifstream File;
 	unsigned long i = 0;
 	std::string ReadStringLine;
@@ -1067,43 +1067,43 @@ RMHWinformsLib::FileReadFormat RMH_Winforms_ReadLinesFromCSVFile(std::string Fil
 	std::string FullPath = FilePath + "/" + FileName;
 	RMHWinformsLib::FileReadFormat ReadFile;
 
-	// Åben Valgte input Fil Path
+	// Open the selected input file path
 	File.open(FullPath);
 
-	// Kontroller Om filen blev åbnet
-	// Hvis Filens Path lokation er forkert - Fejl
+	// Check whether the file was opened
+	// If the path location of the file is wrong - error
 	if (!File) {
 		
-		// Nulstil "Fil Blev Læst Korrekt" Flaget
-		// Grundet fil læsnings fejl
+		// Reset the "file was read correctly" flag
+		// Due to a file read error
 		ReadFile.FileReadSuccess = false;
 		// Opdater "Zero Length" Status Flag
 		ReadFile.FileZeroLengthFlag = true;
-		// Nulstil antallet af læste linjer fra filen
+		// Reset the number of lines read from the file
 		ReadFile.FileLineLength = 0;
 
 	}
 	else {
 
-		// Nulstil Antal læste linjer 
+		// Reset the number of lines read 
 		FileNumbOfLines = 0;
 
-		// Loop igennem alle filens linjer
+		// Loop through all lines of the file
 		while (File.good()) {
 
-			// Læs filens String linjer
+			// Read the string lines of the file
 			std::getline(File, ReadStringLine, '\n');
 
-			// Inkrementer Antal læste linjer 
+			// Increment the number of lines read 
 			FileNumbOfLines++;
 
 		}
 
-		// Nulstil Fil pointere
+		// Reset the file pointers
 		File.clear();
 		File.seekg(0);
 
-		// Kontroller at filen ikke er Tom
+		// Check that the file is not empty
 		if (FileNumbOfLines == 0) {
 
 			// Opdater "Zero Length" Status Flag
@@ -1112,73 +1112,73 @@ RMHWinformsLib::FileReadFormat RMH_Winforms_ReadLinesFromCSVFile(std::string Fil
 		}
 		else {
 
-			// Indlæs fil strings til lokalt vector string
+			// Load the file strings into the local vector string
 			for (i = 0; i < FileNumbOfLines - 1; i++) {
 
-				// Læs filens String linjer
+				// Read the string lines of the file
 				std::getline(File, ReadStringLine, '\n');
 
-				// Skriv læste string til format vector array 
+				// Write the string read to the format vector array 
 				ReadFile.FileStrings[i] = ReadStringLine;
 
 			}
 
 			// Nulstil "Zero Length" Status Flag
 			ReadFile.FileZeroLengthFlag = false;
-			// Opdater "Fil Blev Læst Korrekt" Flaget
+			// Update the "file was read correctly" flag
 			ReadFile.FileReadSuccess = true;
-			// Lager antallet af læste linjer fra filen
+			// Store the number of lines read from the file
 			ReadFile.FileLineLength = FileNumbOfLines - 1;
 
 		}
 
 	}
 
-	// Luk Åbnede CSV file
+	// Close the opened CSV file
 	File.close();
 
-	// Retuner Fil Data og status Flag
+	// Return the file data and status flag
 	return ReadFile;
 
 }
 
-// -------------------- Winform Fil åben/Gem Dialog Håndterings Routiner -------------------- //
+// -------------------- WinForms File Open/Save Dialog Handling Routines -------------------- //
 
 System::String^ RMH_Winforms_GetSaveFileDialogDirectory() {
 
-	// Routinen åbner en fil explorer, som benyttes til at indstille et path til hvor en fil skal gemmes til.
-	// Routinen retunerer path lokations stringet
+	// This routine opens a file explorer, which is used to set a path for where a file should be saved.
+	// The routine returns the path location string
 
-	// Lokale objekter og variabler
+	// Local objects and variables
 	System::String^ FilePathNameString;
 	System::String^ FilePathString = "None";
 	System::Windows::Forms::SaveFileDialog^ SaveFilePathDialog = gcnew System::Windows::Forms::SaveFileDialog;
 
-	// Konfigurer fil type filtre
+	// Configure the file type filters
 	SaveFilePathDialog->Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
-	// Kik efter alle tilgængelige fil typer
+	// Look for all available file types
 	SaveFilePathDialog->FilterIndex = 2;
 	// Restorer tidligere valgt Directory
 	SaveFilePathDialog->RestoreDirectory = true;
-	// Indstil default dummy filnavn
+	// Set the default dummy file name
 	SaveFilePathDialog->FileName = "DefaultSavePath";
 
-	// Åben "Save File Dialog" og vent på et korrekt valgt path
+	// Open the "Save File Dialog" and wait for a valid selected path
 	if (SaveFilePathDialog->ShowDialog() == ::DialogResult::OK) {
 
-		// Læs valgte filnavn path 
+		// Read the selected file name path 
 		FilePathNameString = SaveFilePathDialog->FileName;
 
-		// Håndtering hvis en fil lokering ikke blev valgt
+		// Handling if a file location was not selected
 		try {
 
-			// Læs valgte fil Directory path string uden filnavn
+			// Read the selected file directory path string without the file name
 			FilePathString = System::IO::Path::GetDirectoryName(FilePathNameString);
 
 		}
 		catch (System::Exception^ Ex) {
 
-			// Dialog exploreren blev lukket og intet path blev valgt
+			// The dialog explorer was closed and no path was selected
 			FilePathString = "None";
 
 		}
@@ -1188,43 +1188,43 @@ System::String^ RMH_Winforms_GetSaveFileDialogDirectory() {
 	// Fortag Garbage collection
 	GC::Collect();
 
-	// Retuner Valgte fil path string
+	// Return the selected file path string
 	return FilePathString;
 
 }
 
 System::String^ RMH_Winforms_GetOpenFileDialogDirectory() {
 
-	// Routinen åbner en fil explorer, som benyttes til at læse et path fra hvor en fil skal åbnes.
-	// Routinen retunerer path lokations stringet
+	// This routine opens a file explorer, which is used to read a path from where a file should be opened.
+	// The routine returns the path location string
 
-	// Lokale objekter og variabler
+	// Local objects and variables
 	System::String^ FilePathNameString;
 	System::String^ FilePathString = "None";
 	System::Windows::Forms::OpenFileDialog^ OpenFilePathDialog = gcnew System::Windows::Forms::OpenFileDialog;
 
-	// Konfigurer fil type filtre
+	// Configure the file type filters
 	OpenFilePathDialog->Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
-	// Kik efter alle tilgængelige fil typer
+	// Look for all available file types
 	OpenFilePathDialog->FilterIndex = 2;
 	// Restorer tidligere valgt Directory
 	OpenFilePathDialog->RestoreDirectory = true;
-	// Indstil default dummy filnavn
+	// Set the default dummy file name
 	OpenFilePathDialog->FileName = "DefaultOpenPath";
 
-	// Åben dialogen
+	// Open the dialog
 	DialogResult DResult = OpenFilePathDialog->ShowDialog();
 
-	// Vent på et korrekt valgt path
+	// Wait for a valid selected path
 	if (DResult == DialogResult::OK) {
 
-		// Læs valgte filnavn path 
+		// Read the selected file name path 
 		FilePathNameString = OpenFilePathDialog->FileName;
 
 	}
 	else if (DResult == DialogResult::Cancel) {
 
-		// Dialog exploreren blev lukket og intet path blev valgt
+		// The dialog explorer was closed and no path was selected
 		FilePathNameString = "None";
 
 	}
@@ -1232,18 +1232,18 @@ System::String^ RMH_Winforms_GetOpenFileDialogDirectory() {
 	// Fortag Garbage collection
 	GC::Collect();
 
-	// Retuner Valgte fil path string
+	// Return the selected file path string
 	return FilePathNameString;
 
 }
 
-// --------------------------- Winform Chart Håndterings Routiner --------------------------- //
+// --------------------------- WinForms Chart Handling Routines --------------------------- //
 
 void RMH_Winforms_Charts_ChangeXAxesLimits(System::Windows::Forms::DataVisualization::Charting::Chart^ Chart, unsigned int ChartArea1Index, double ChartXAxesMinimum, double ChartXAxesMaximum) {
 
 	// Routinen indstiller winforms chartets X-Akse begr nsninger
 
-	// Indstil chats maximum og minimum X-Akse gr nser
+	// Set the maximum and minimum X-axis limits of the chart
 	Chart->ChartAreas[ChartArea1Index]->Axes[0]->Maximum = ChartXAxesMaximum;
 	Chart->ChartAreas[ChartArea1Index]->Axes[0]->Minimum = ChartXAxesMinimum;
 
@@ -1262,7 +1262,7 @@ void RMH_Winforms_Charts_ChangeYAxesLimits(System::Windows::Forms::DataVisualiza
 
 	// Routinen indstiller winforms chartets Y-Akse begr nsninger
 
-	// Indstil chats maximum og minimum Y-Akse gr nser
+	// Set the maximum and minimum Y-axis limits of the chart
 	Chart->ChartAreas[ChartArea1Index]->Axes[1]->Maximum = ChartYAxesMaximum;
 	Chart->ChartAreas[ChartArea1Index]->Axes[1]->Minimum = ChartYAxesMinimum;
 
@@ -1279,12 +1279,12 @@ void RMH_Winforms_Charts_ChangeYAxesTickInterval(System::Windows::Forms::DataVis
 
 void RMH_Winforms_Charts_AddDataArrayToChartSeries(System::Windows::Forms::DataVisualization::Charting::Chart^ Chart, unsigned int ChartSeriesIndex, double* SeriesXDataArray, double* SeriesYDataArray, unsigned int SeriesDataArrayLength) {
 
-	// Routinen skriver et array af data til valgte chart data serie
+	// This routine writes an array of data to the selected chart data series
 
 	// Ryd Chartets data punkter
 	Chart->Series[ChartSeriesIndex]->Points->Clear();
 
-	// Loop til og med l ngden af givet data array
+	// Loop up to and including the length of the given data array
 	for (unsigned int i = 0; i < SeriesDataArrayLength; i++) {
 
 		// Tilf j givet data array til chart serie data
@@ -1296,32 +1296,32 @@ void RMH_Winforms_Charts_AddDataArrayToChartSeries(System::Windows::Forms::DataV
 
 void RMH_Winforms_Charts_AddDataPointToChartSeries(System::Windows::Forms::DataVisualization::Charting::Chart^ Chart, unsigned int ChartSeriesIndex, double PointXData, double PointYData) {
 
-	// Routinen skriver et givet data punkt til valgte chart data serie
+	// This routine writes a given data point to the selected chart data series
 
-	// Tilføj givet data point til chart serie data
+	// Add the given data point to the chart series data
 	Chart->Series[ChartSeriesIndex]->Points->AddXY(PointXData, PointYData);
 
 }
 
 void RMH_Winforms_Charts_ClearChartDataPoints(System::Windows::Forms::DataVisualization::Charting::Chart^ Chart, unsigned int ChartSeriesIndex) {
 
-	// Routinen nulstiller og rydder valgte Chart indexets data punkter
+	// This routine resets and clears the data points of the selected chart index
 
 	// Ryd Chartets data punkter
 	Chart->Series[ChartSeriesIndex]->Points->Clear();
 
 }
 
-// -------------------------- Winform Billede Og SnapShot Routiner -------------------------- //
+// -------------------------- WinForms Image And Snapshot Routines -------------------------- //
 
 bool RMH_Winforms_SavePanelSnapShotPNG(System::Windows::Forms::Panel^ SrcPanel, System::String^ SnapShotPath) {
 
-	// Routinen gemmer et PNG snapshot fra et givet input grafisk panel.
+	// This routine saves a PNG snapshot from a given input graphics panel.
 	// input Fil Path Eksempel: C:\Users\User\Desktop
-	// Routinen retunerer "true" hvis snapshot er blevet korrekt gemt - ellers "false"
-	// Det gemte fil navn er formaterede på formen: Snapshot_HHmmssddMMyyyy
+	// The routine returns "true" if the snapshot was saved correctly - otherwise "false"
+	// The saved file name is formatted as: Snapshot_HHmmssddMMyyyy
 
-	// Lokale variabler
+	// Read the temporary array data and sort the kernel array
 	bool ReturnStatus = false;
 	float PanelUpperLeftSourceX = 0;
 	float PanelUpperLeftSourceY = 0;
@@ -1332,7 +1332,7 @@ bool RMH_Winforms_SavePanelSnapShotPNG(System::Windows::Forms::Panel^ SrcPanel, 
 	// Formater Filens data identifikations string (Snapshot_HHmmssddMMyyyy)
 	System::String^ FileName = System::DateTime::Now.ToString("HHmmssfffddMMyyyy");
 
-	// Læs Windows skærm parametere
+	// Read the Windows screen parameters
 	WindowsScreenSettings = RMH_Winforms_ReadWindowsScreenSettings();
 
 	// Normaliser Windows skallerings indstillingen 
@@ -1342,32 +1342,32 @@ bool RMH_Winforms_SavePanelSnapShotPNG(System::Windows::Forms::Panel^ SrcPanel, 
 	PanelUpperLeftSourceX = (float)SrcPanel->PointToScreen(System::Drawing::Point(0, 0)).X * (WinScaleSettingNormalized - 1.0);
 	PanelUpperLeftSourceY = (float)SrcPanel->PointToScreen(System::Drawing::Point(0, 0)).Y * (WinScaleSettingNormalized - 1.0);
 
-	// Udregn snapshot kompenserede højde og bredde fra læste skærm skallerings faktor
+	// Calculate the snapshot-compensated height and width from the screen scaling factor read
 	CompensatedScreenSize.Width = (float)SrcPanel->Size.Width * WinScaleSettingNormalized;
 	CompensatedScreenSize.Height = (float)SrcPanel->Size.Height * WinScaleSettingNormalized;
 
 	// Generer Reference Bitmap til Snapshot grafisk data
 	System::Drawing::Bitmap^ SnapShotBitMap = gcnew System::Drawing::Bitmap(CompensatedScreenSize.Width, CompensatedScreenSize.Height);
 
-	// Generer Grafisk reference objekt til lagering af Reference Bitmap data
+	// Create a graphics reference object for storing the reference bitmap data
 	System::Drawing::Graphics^ PanelGraphics = System::Drawing::Graphics::FromImage(SnapShotBitMap);
 
-	// Kopier panelets grafiske data til Grafisk reference objekt (Indenfor panalets grænser)
+	// Copy the graphics data of the panel to the graphics reference object (within the panel bounds)
 	PanelGraphics->CopyFromScreen(SrcPanel->PointToScreen(System::Drawing::Point(RMH_Math_Round(PanelUpperLeftSourceX), RMH_Math_Round(PanelUpperLeftSourceY))), System::Drawing::Point(0, 0), CompensatedScreenSize);
 
-	// Håndtering ved Path string fejl
+	// Handling of path string errors
 	try {
 
-		// Gem Snashot billede på valge fil lokation
+		// Save the snapshot image at the selected file location
 		SnapShotBitMap->Save(SnapShotPath + "/SnapShot_" + FileName + ".png", System::Drawing::Imaging::ImageFormat::Png);
 
-		// Opdater Retunerede status
+		// Update the returned status
 		ReturnStatus = true;
 
 	}
 	catch (System::Exception^ Ex) {
 
-		// Opdater Retunerede status
+		// Update the returned status
 		ReturnStatus = false;
 
 	}
@@ -1375,36 +1375,36 @@ bool RMH_Winforms_SavePanelSnapShotPNG(System::Windows::Forms::Panel^ SrcPanel, 
 	// Fortag Garbage collection
 	GC::Collect();
 
-	// Retuner Status
+	// Return the status
 	return ReturnStatus;
 
 }
 
 bool RMH_Winforms_SaveRawImageDataAsSnapShotPNG(System::String^ SnapShotPath, unsigned int ImageDataWidth, unsigned int ImageDataHeight, unsigned char *ImageData) {
 
-	// Routinen gemmer Rå input Billede data som et PNG snapshot.
+	// This routine saves the raw input image data as a PNG snapshot.
 	// input Fil Path Eksempel: C:\Users\User\Desktop
-	// Routinen retunerer "true" hvis snapshot er blevet korrekt gemt - ellers "false"
-	// Det gemte fil navn er formaterede på formen: Snapshot_HHmmssddMMyyyy
+	// The routine returns "true" if the snapshot was saved correctly - otherwise "false"
+	// The saved file name is formatted as: Snapshot_HHmmssddMMyyyy
 
-	// Lokale variabler
+	// Read the temporary array data and sort the kernel array
 	bool ReturnStatus = false;
 	unsigned char* BGRImageData = new unsigned char[ImageDataWidth * ImageDataHeight * 3];
 
 	// Formater Filens data identifikations string (SnapshotRAW_HHmmssddMMyyyy)
 	System::String^ FileName = System::DateTime::Now.ToString("HHmmssfffddMMyyyy");
 
-	// Konverter array data fra RGB Til BGR format
+	// Convert the array data from RGB to BGR format
 	for (unsigned int Y = 0; Y < ImageDataHeight; Y++) {
 
-		// Loop i gennem alle array matricens rækker
+		// Loop through all rows of the array matrix
 		for (unsigned int X = 0; X < ImageDataWidth; X++) {
 
-			// Læs source og destinations indexerne
+			// Read the source and destination indices
 			unsigned int SrcIndex = (Y * ImageDataWidth + X) * 3;
 			unsigned int DstIndex = (Y * ImageDataWidth + X) * 3;
 
-			// Om arranger RGB Data Til BGR format
+			// Rearrange the RGB data to BGR format
 			BGRImageData[DstIndex + 2] = ImageData[SrcIndex + 0];
 			BGRImageData[DstIndex + 1] = ImageData[SrcIndex + 1];
 			BGRImageData[DstIndex + 0] = ImageData[SrcIndex + 2];
@@ -1412,25 +1412,25 @@ bool RMH_Winforms_SaveRawImageDataAsSnapShotPNG(System::String^ SnapShotPath, un
 		}
 	}
 
-	// Generer Bitmap fra givet billede data til Snapshot grafisk data
+	// Create a bitmap from the given image data for the snapshot graphics data
 	System::Drawing::Bitmap^ SnapShotBitMap = gcnew System::Drawing::Bitmap(
 		ImageDataWidth, ImageDataHeight, 3 * ImageDataWidth, 
 		System::Drawing::Imaging::PixelFormat::Format24bppRgb,
 		System::IntPtr(&BGRImageData[0]));
 
-	// Håndtering ved Path string fejl
+	// Handling of path string errors
 	try {
 
-		// Gem Snashot billede på valge fil lokation
+		// Save the snapshot image at the selected file location
 		SnapShotBitMap->Save(SnapShotPath + "/SnapShotRAW_" + FileName + ".png", System::Drawing::Imaging::ImageFormat::Png);
 
-		// Opdater Retunerede status
+		// Update the returned status
 		ReturnStatus = true;
 
 	}
 	catch (System::Exception^ Ex) {
 
-		// Opdater Retunerede status
+		// Update the returned status
 		ReturnStatus = false;
 
 	}
@@ -1438,21 +1438,21 @@ bool RMH_Winforms_SaveRawImageDataAsSnapShotPNG(System::String^ SnapShotPath, un
 	// Fortag Garbage collection
 	GC::Collect();
 
-	// Frigør allokerede hukommelse for buffer array  
+	// Free the allocated memory of the buffer array  
 	delete[] BGRImageData;
 
-	// Retuner Status
+	// Return the status
 	return ReturnStatus;
 
 }
 
-// ------------------------ Winform Web Browser Håndterings Routiner ------------------------ //
+// ------------------------ WinForms Web Browser Handling Routines ------------------------ //
 
 bool RMH_Winforms_IsAdobeReaderInstalled() {
 
-	// Routinen Kontroller om "Adobe Reader" er installerede på brugerens computer
+	// This routine checks whether "Adobe Reader" is installed on the user's computer
 
-	// String array af mulige Registry nøgle Stier
+	// String array of possible registry key paths
 	cli::array<String^>^ PossibleRegistryKeys = {
 		"SOFTWARE\\Adobe\\Acrobat Reader",
 		"SOFTWARE\\WOW6432Node\\Adobe\\Acrobat Reader",
@@ -1460,58 +1460,58 @@ bool RMH_Winforms_IsAdobeReaderInstalled() {
 		"SOFTWARE\\WOW6432Node\\Adobe\\Adobe Acrobat"
 	};
 
-	// Kontroller hver Key i Registry
+	// Check each key in the registry
 	for each (String ^ KeyPath in PossibleRegistryKeys) {
 
-		// Håndter Exception
+		// Handle exception
 		try {
 
 			// Open the registry key
 			RegistryKey^ Key = Registry::LocalMachine->OpenSubKey(KeyPath);
 
-			// Hvis registry nøglen ikke er en nul pointer
+			// If the registry key is not a null pointer
 			if (Key != nullptr) {
 
-				// Læs registry nøglen navn
+				// Read the registry key name
 				cli::array<String^>^ SubKeyNames = Key->GetSubKeyNames();
 
-				// Hvis Nøglens Sub navn string længde er over 0
+				// If the length of the subkey name string is above 0
 				if (SubKeyNames->Length > 0) {
 
-					// Prøv på at finde Adode Reader Executablen (.exe)
+					// Try to find the Adobe Reader executable (.exe)
 					for each (String ^ Version in SubKeyNames) {
 
-						// Læs Registry Nøglens Version
+						// Read the version of the registry key
 						RegistryKey^ VersionKey = Key->OpenSubKey(Version + "\\InstallPath");
 
-						// Hvis registry nøglen versionen ikke er en nul pointer
+						// If the registry key version is not a null pointer
 						if (VersionKey != nullptr) {
 
-							// Læs executable stien
+							// Read the executable path
 							String^ InstallPath = static_cast<String^>(VersionKey->GetValue(""));
 
-							// Kontroller at executable stien faktisk er et string
+							// Check that the executable path is actually a string
 							if (!String::IsNullOrEmpty(InstallPath)) {
 
 								// Construct the full path to the executable
 								String^ ReaderExePath = Path::Combine(InstallPath, "Acrobat.exe");
 
-								// Kontroller/Check om Adobe Reader executable eksisterer
+								// Check whether the Adobe Reader executable exists
 								if (File::Exists(ReaderExePath)) {
 
-									// Luk for registry Versions nøglen
+									// Close the registry version key
 									VersionKey->Close();
-									// Luk for registry nøglen
+									// Close the registry key
 									Key->Close();
 
-									// Adobe Reader executable Blev Fundet (Adobe Reader Er Installerede På Computeren)
+									// The Adobe Reader executable was found (Adobe Reader is installed on the computer)
 									return true; 
 
 								}
 
 							}
 
-							// Luk for registry Versions nøglen
+							// Close the registry version key
 							VersionKey->Close();
 
 						}
@@ -1520,7 +1520,7 @@ bool RMH_Winforms_IsAdobeReaderInstalled() {
 
 				}
 
-				// Luk for registry nøglen
+				// Close the registry key
 				Key->Close();
 
 			}
@@ -1530,38 +1530,38 @@ bool RMH_Winforms_IsAdobeReaderInstalled() {
 
 	}
 
-	// Adobe Reader executable Blev IKKE Fundet (Adobe Reader Er IKKE Installerede På Computeren)
+	// The Adobe Reader executable was NOT found (Adobe Reader is NOT installed on the computer)
 	return false; 
 
 }
 
 void RMH_Winforms_OpenPDFInWebbrowser(System::Windows::Forms::WebBrowser^ WebBrowserControl, System::String^ PDFFileName) {
 
-	// Routinen åbner en PDF fil i givet Webbrowser Komponent.
-	// PDF filen skal likke på samme sti som applikationens .exe
+	// This routine opens a PDF file in the given web browser component.
+	// The PDF file must be located in the same path as the application .exe
 
-	// Kontroller om Adobe Reader er installerede på computeren
+	// Check whether Adobe Reader is installed on the computer
 	if (RMH_Winforms_IsAdobeReaderInstalled() == true) {
 
-		// Hent stien til for applikations .exe fil
+		// Get the path to the application .exe file
 		String^ exePath = Application::StartupPath;
 
-		// Konstruer den fulde sti til PDF-filen
+		// Construct the full path to the PDF file
 		String^ pdfPath = Path::Combine(exePath, PDFFileName);
 
-		// Tjek om PDF-filen eksisterer, før den indlæses
+		// Check whether the PDF file exists before it is loaded
 		if (File::Exists(pdfPath)) {
 
 			// Konverter filstien til URI-format
 			String^ pdfUri = "file:///" + pdfPath->Replace("\\", "/");
 
-			// Indlæs PDF-filen i WebBrowser komponentet
+			// Load the PDF file into the WebBrowser component
 			WebBrowserControl->Navigate(pdfUri);
 
 		}
 		else {
 
-			// Konstruer custom HTML til en error meddelse
+			// Construct custom HTML for an error message
 			String^ errorHtml = R"(
                 <html>
                 <head>
@@ -1587,7 +1587,7 @@ void RMH_Winforms_OpenPDFInWebbrowser(System::Windows::Forms::WebBrowser^ WebBro
 	}
 	else {
 
-		// Konstruer custom HTML til en error meddelse
+		// Construct custom HTML for an error message
 		String^ errorHtml = R"(
                 <html>
                 <head>

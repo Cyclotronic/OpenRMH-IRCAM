@@ -6,7 +6,7 @@
  *
  */
 
-// Inkluderede biblioteker
+// Included libraries
 #include "RMH_Application_ThermalViewer.h"
 #include "RMH_MathConversions_Library.h"
 #include "RMH_ImageProcessing_Library.h"
@@ -15,7 +15,7 @@
 #include "RMH_OpenGL_Winforms.h"
 #include "VideoPlayBackTools.h"
 
-// Inkluderede Resourcer
+// Included resources
 #include "GlobalObjectsAndVariables.h"
 #include "RMH_SupportedIRCameras_Resources.h"
 #include "RMH_2DPlotDataSetSources_Resources.h"
@@ -47,13 +47,13 @@ static bool ActiveTempMeasEnableFlags[_MaxNumberOfMovableCrosshairs] = { false,f
 static unsigned short ActiveTempLineRenderingOrder[_MaxNumberOfMovableLines] = { 0,0,0,0,0 };
 static bool ActiveTempLineEnableFlags[_MaxNumberOfMovableLines] = { false,false,false,false,false };
 
-// ----------------- Applikation Features Aktiverings Håndterings Routiner ------------------ //
+// ----------------- Application Feature Enable Handling Routines ------------------ //
 
 void RMH_Application_DisableMainGUIMenuButtons() {
 
-	// Routinen aktiverer eller deaktiverer et givet applikations feature sæt.
+	// This routine enables or disables a given application feature set.
 
-	// Loop igennem hele arrayet af Menu knapper
+	// Loop through the whole array of menu buttons
 	for (unsigned int i = 0; i < GlobalVariables::MainGUILeftMenuButtons->Length; i++) {
 
 		// Deaktiver Main Menu Feature knapperne
@@ -65,16 +65,16 @@ void RMH_Application_DisableMainGUIMenuButtons() {
 
 void RMH_Application_EnableApplicationFeatures() {
 
-	// Routinen aktiverer applikations features afhængigt af om applikationen er i Trial eller Full feature mode
+	// This routine enables application features depending on whether the application is in trial or full feature mode
 
-	// Aktiver Tilhørende Applikations Feature Sæt
-	// Blev et kamera korrekt forbundet, eller er Recording/Snapshot Analysis mode valgt
+	// Enable the associated application feature set
+	// Was a camera connected correctly, or is Recording/Snapshot Analysis mode selected
 	if (IRCamera.ConnectedFlag == true || GlobalVariables::GlobalCameraSourceDropList->SelectedIndex == _SnapShotAnalysisMode || GlobalVariables::GlobalCameraSourceDropList->SelectedIndex == _RecordingAnalysisMode) {
 
-		// Skriv GUI Status Meddelse
+		// Write GUI status message
 		RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "Genuine License Check Successful!", _StatusMessageType_Success);
 
-		// Tilhørende Feature Mode Aktiverede Feature Sæt
+		// Feature set enabled for the associated feature mode
 		GlobalVariables::GlobalCursorTempTrackButton->Enabled = true;
 		GlobalVariables::GlobalAddTempMeasButton->Enabled = true;
 		GlobalVariables::GlobalAddROIMeasButton->Enabled = true;
@@ -92,16 +92,16 @@ void RMH_Application_EnableApplicationFeatures() {
 		// Aktiver Dual Color Palette Combobox
 		GlobalVariables::GlobalDualColorPaletteComboBox->Enabled = true;
 
-		// Aktiver Gem Full-Frame Temperatur Data Featuren
+		// Enable the save full-frame temperature data feature
 		GlobalVariables::GlobalSaveTempFrameDataButton->Enabled = true;
 
-		// Aktiver SnapShot Featuren
+		// Enable the snapshot feature
 		GlobalVariables::GlobalSnapshotButton->Enabled = true;
 
 		// Aktiver Live View Dual Color Palette Featuren
 		GlobalVariables::GlobalDualColorPaletteButton->Enabled = true;
 
-		// Aktiver Diverse Kamera Konfigurations Menu Features
+		// Enable various camera configuration menu features
 		GlobalVariables::GlobalAutoCalMenuButton->Enabled = true;
 		GlobalVariables::GlobalSnapshotConfigMenuButton->Enabled = true;
 		GlobalVariables::GlobalVideoRecordingMenuButton->Enabled = true;
@@ -130,7 +130,7 @@ void RMH_Application_EnableApplicationFeatures() {
 		GlobalVariables::GlobalenableFullPaletteRangeAdjustmentToolStripMenuItem->Enabled = true;
 		GlobalVariables::GlobaladjustDualPaletteRangeToolStripMenuItem->Enabled = true;
 
-		// Loop igennem hele arrayet af Menu knapper
+		// Loop through the whole array of menu buttons
 		for (unsigned int i = 0; i < GlobalVariables::MainGUILeftMenuButtons->Length; i++) {
 
 			// Aktiver Main Menu Feature knapperne
@@ -142,21 +142,21 @@ void RMH_Application_EnableApplicationFeatures() {
 
 }
 
-// ----------------------- Kamera Konfigurations Håndterings Routiner ----------------------- //
+// ----------------------- Camera Configuration Handling Routines ----------------------- //
 
 void RMH_ThermalViewer_EnableCameraConfigurationControls(bool EnableState) {
 
-	// Routinen aktiverer eller deaktiverer Kamera konfigurations GUI komponenter
+	// This routine enables or disables the camera configuration GUI components
 
-	// Aktiver Kamera konfigurations NumericUpDowns
+	// Enable the camera configuration NumericUpDowns
 	for (unsigned int i = 0; i < (unsigned int)GlobalVariables::CameraConfigNumericUpDowns->Length; i++) {
 
-		// Aktiver Kamera konfigurations NumericUpDowns
+		// Enable the camera configuration NumericUpDowns
 		GlobalVariables::CameraConfigNumericUpDowns[i]->Enabled = EnableState;
 
 	}
 
-	// Aktiver Read/Set/Recover Kamera konfigurations knapper
+	// Enable the Read/Set/Recover camera configuration buttons
 	GlobalVariables::GlobalReadCameraConfigButton->Enabled = EnableState;
 	GlobalVariables::GlobalSetCameraConfigButton->Enabled = EnableState;
 	GlobalVariables::GlobalRecoverDefaultCameraSettingsButton->Enabled = EnableState;
@@ -165,25 +165,25 @@ void RMH_ThermalViewer_EnableCameraConfigurationControls(bool EnableState) {
 
 void RMH_ThermalViewer_ReadAndDisplayCameraConfigParameters() {
 
-	// Routinen læser og viser de læste interne camera konfigurations parametere
+	// This routine reads and shows the internal camera configuration parameters read
 
-	// Lokale Variabler
+	// Local variables
 	bool ConfigurationValuesOKFlag[6] = { false, false, false, false, false, false };
 
-	// Kontroller om et kamera er forbundet
+	// Check whether a camera is connected
 	if (IRCamera.ConnectedFlag == true) {
 
-		// Læs En enkelt data frame fra det termisk kamera
+		// Read a single data frame from the thermal camera
 		RMH_IRThermalCamera_ReadFrameRaw(&IRCameraFrameData[0], &VideoFrameSize);
-		// Formater Rå YUY2 Data til 16Bit termisk data array
+		// Format the raw YUY2 data to a 16-bit thermal data array
 		RMH_IRThermalCamera_ConvertYUY2To14BitThermalDataArray(&IRCamera, &IRCameraFrameData[0], &FrameThermalDataRaw[0]);
-		// Læs IR kameraets frame Meta Data og Udregn Interne IR Sensor Temperaturer
+		// Read the frame metadata of the IR camera and calculate the internal IR sensor temperatures
 		RMH_IRThermalCamera_ReadCalFrameMetaData(&FrameThermalDataRaw[0], &IRCamera, IRCamera.ThermalCameraSupportPool);
 
-		// Læs kameraets interne konfigurations parametere
+		// Read the internal configuration parameters of the camera
 		RMH_IRThermalCamera_ReadCameraConfigParameters(&FrameThermalDataRaw[0], &IRCamera, IRCamera.ThermalCameraSupportPool);
 
-		// Skriv læste interne kamera konfigurations parametere til Kamera konfigurations panel
+		// Write the internal camera configuration parameters read to the camera configuration panel
 		//RMH_Winforms_NumericUpDown_ChangeNumber(NumericUpDowns[0], IRCamera.TemperatureCorrectionSetting, TemperatureUnitScaleFactor, TemperatureUnitOffsetFactor); - Ikke Benyttet
 		ConfigurationValuesOKFlag[1] = RMH_Winforms_NumericUpDown_ChangeNumber(GlobalVariables::CameraConfigNumericUpDowns[1], IRCamera.AmbientTemperatureSetting, TemperatureUnitScaleFactor, TemperatureUnitOffsetFactor, _IRThermalCameraDefault_AmbientTemperatureValue);
 		ConfigurationValuesOKFlag[2] = RMH_Winforms_NumericUpDown_ChangeNumber(GlobalVariables::CameraConfigNumericUpDowns[2], IRCamera.ReflectedTemperatureSetting, TemperatureUnitScaleFactor, TemperatureUnitOffsetFactor, _IRThermalCameraDefault_ReflectedTemperatureValue);
@@ -191,55 +191,55 @@ void RMH_ThermalViewer_ReadAndDisplayCameraConfigParameters() {
 		ConfigurationValuesOKFlag[4] = RMH_Winforms_NumericUpDown_ChangeNumber(GlobalVariables::CameraConfigNumericUpDowns[4], IRCamera.EmissivitySetting, 1, 0, _IRThermalCameraDefault_ObjectEmissivityValue);
 		ConfigurationValuesOKFlag[5] = RMH_Winforms_NumericUpDown_ChangeNumber(GlobalVariables::CameraConfigNumericUpDowns[5], IRCamera.DistanceSetting, 1, 0, _IRThermalCameraDefault_ObjectDistanceValue);
 
-		// Kontroller om konfigurations værdierne var uden for rækkevidde
+		// Check whether the configuration values were out of range
 		if (ConfigurationValuesOKFlag[1] == false) {
 
-			// Skriv GUI status meddelse
+			// Write GUI status message
 			RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "Reflected Temperature Setting Was Out Of Range - Using Default Value.", _StatusMessageType_Error);
-			// Opdater tilhørende konfigurations værdi til default værdi
+			// Update the associated configuration value to the default value
 			IRCamera.ReflectedTemperatureSetting = _IRThermalCameraDefault_ReflectedTemperatureValue;
 
 		}
 		if (ConfigurationValuesOKFlag[2] == false) {
 
-			// Skriv GUI status meddelse
+			// Write GUI status message
 			RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "Ambient Temperature Setting Was Out Of Range - Using Default Value.", _StatusMessageType_Error);
-			// Opdater tilhørende konfigurations værdi til default værdi
+			// Update the associated configuration value to the default value
 			IRCamera.AmbientTemperatureSetting = _IRThermalCameraDefault_AmbientTemperatureValue;
 
 		}
 		if (ConfigurationValuesOKFlag[3] == false) {
 
-			// Skriv GUI status meddelse
+			// Write GUI status message
 			RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "Humidity Setting Was Out Of Range - Using Default Value.", _StatusMessageType_Error);
-			// Opdater tilhørende konfigurations værdi til default værdi
+			// Update the associated configuration value to the default value
 			IRCamera.HumiditySetting = _IRThermalCameraDefault_SurroundingHumidityValue;
 
 		}
 		if (ConfigurationValuesOKFlag[4] == false) {
 
-			// Skriv GUI status meddelse
+			// Write GUI status message
 			RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "Emissivity Setting Was Out Of Range - Using Default Value.", _StatusMessageType_Error);
-			// Opdater tilhørende konfigurations værdi til default værdi
+			// Update the associated configuration value to the default value
 			IRCamera.EmissivitySetting = _IRThermalCameraDefault_ObjectEmissivityValue;
 
 		}
 		if (ConfigurationValuesOKFlag[5] == false) {
 
-			// Skriv GUI status meddelse
+			// Write GUI status message
 			RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "Distance Setting Was Out Of Range - Using Default Value.", _StatusMessageType_Error);
-			// Opdater tilhørende konfigurations værdi til default værdi
+			// Update the associated configuration value to the default value
 			IRCamera.DistanceSetting = _IRThermalCameraDefault_ObjectDistanceValue;
 
 		}
 
-		// Skriv GUI Start Meddelse
+		// Write GUI start message
 		RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "The Thermal Camera Configuration Has Been Read And Displayed.", _StatusMessageType_Success);
 
 	}
 	else {
 
-		// Skriv GUI Start Meddelse
+		// Write GUI start message
 		RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "Please Connect To A Thermal Camera Before Reading The Configuration!", _StatusMessageType_Normal);
 
 	}
@@ -248,10 +248,10 @@ void RMH_ThermalViewer_ReadAndDisplayCameraConfigParameters() {
 
 void RMH_ThermalViewer_ReadAndDisplayRAWVideoFileCameraConfigParameters() {
 
-	// Routinen læser og viser de læste interne camera konfigurations parametere
-	// Disse er for den læste video RAW fil i "Recording Analysis" Mode
+	// This routine reads and shows the internal camera configuration parameters read
+	// These are for the video RAW file read in "Recording Analysis" mode
 
-	// Skriv læste interne kamera konfigurations parametere til Kamera konfigurations panel
+	// Write the internal camera configuration parameters read to the camera configuration panel
 	RMH_Winforms_NumericUpDown_ChangeNumber(GlobalVariables::CameraConfigNumericUpDowns[0], IRCamera.TemperatureCorrectionSetting, 1, 0, _IRThermalCameraDefault_TemperatureCorrectionValue);
 	RMH_Winforms_NumericUpDown_ChangeNumber(GlobalVariables::CameraConfigNumericUpDowns[1], IRCamera.AmbientTemperatureSetting, TemperatureUnitScaleFactor, TemperatureUnitOffsetFactor, _IRThermalCameraDefault_AmbientTemperatureValue);
 	RMH_Winforms_NumericUpDown_ChangeNumber(GlobalVariables::CameraConfigNumericUpDowns[2], IRCamera.ReflectedTemperatureSetting, TemperatureUnitScaleFactor, TemperatureUnitOffsetFactor, _IRThermalCameraDefault_ReflectedTemperatureValue);
@@ -259,17 +259,17 @@ void RMH_ThermalViewer_ReadAndDisplayRAWVideoFileCameraConfigParameters() {
 	RMH_Winforms_NumericUpDown_ChangeNumber(GlobalVariables::CameraConfigNumericUpDowns[4], IRCamera.EmissivitySetting, 1, 0, _IRThermalCameraDefault_ObjectEmissivityValue);
 	RMH_Winforms_NumericUpDown_ChangeNumber(GlobalVariables::CameraConfigNumericUpDowns[5], IRCamera.DistanceSetting, 1, 0, _IRThermalCameraDefault_ObjectDistanceValue);
 
-	// Skriv GUI Start Meddelse
+	// Write GUI start message
 	RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "The Thermal Camera Configuration Has Been Read From The Video File And Displayed In The Settings Menu", _StatusMessageType_Success);
 
 }
 
 void RMH_ThermalViewer_ReadAndDisplayRAWSnapShotFileCameraConfigParameters() {
 
-	// Routinen læser og viser de læste interne camera konfigurations parametere
-	// Disse er for den læste SnapShot RAW fil i "SnapShot Analysis" Mode
+	// This routine reads and shows the internal camera configuration parameters read
+	// These are for the snapshot RAW file read in "Snapshot Analysis" mode
 
-	// Skriv læste interne kamera konfigurations parametere til Kamera konfigurations panel
+	// Write the internal camera configuration parameters read to the camera configuration panel
 	RMH_Winforms_NumericUpDown_ChangeNumber(GlobalVariables::CameraConfigNumericUpDowns[0], IRCamera.TemperatureCorrectionSetting, 1, 0, _IRThermalCameraDefault_TemperatureCorrectionValue);
 	RMH_Winforms_NumericUpDown_ChangeNumber(GlobalVariables::CameraConfigNumericUpDowns[1], IRCamera.AmbientTemperatureSetting, TemperatureUnitScaleFactor, TemperatureUnitOffsetFactor, _IRThermalCameraDefault_AmbientTemperatureValue);
 	RMH_Winforms_NumericUpDown_ChangeNumber(GlobalVariables::CameraConfigNumericUpDowns[2], IRCamera.ReflectedTemperatureSetting, TemperatureUnitScaleFactor, TemperatureUnitOffsetFactor, _IRThermalCameraDefault_ReflectedTemperatureValue);
@@ -277,40 +277,40 @@ void RMH_ThermalViewer_ReadAndDisplayRAWSnapShotFileCameraConfigParameters() {
 	RMH_Winforms_NumericUpDown_ChangeNumber(GlobalVariables::CameraConfigNumericUpDowns[4], IRCamera.EmissivitySetting, 1, 0, _IRThermalCameraDefault_ObjectEmissivityValue);
 	RMH_Winforms_NumericUpDown_ChangeNumber(GlobalVariables::CameraConfigNumericUpDowns[5], IRCamera.DistanceSetting, 1, 0, _IRThermalCameraDefault_ObjectDistanceValue);
 
-	// Skriv GUI Start Meddelse
+	// Write GUI start message
 	RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "The Thermal Camera Configuration Has Been Read From The SnapShot File And Displayed In The Settings Menu", _StatusMessageType_Success);
 
 }
 
 void RMH_ThermalViewer_SetCameraConfigParameters() {
 
-	// Routinen skiver de indstillede konfigurations parameter til kameraet
+	// This routine writes the configured configuration parameters to the camera
 
-	// Kontroller og kompenser for Temperatur Enheds indstilling
+	// Check and compensate for the temperature unit setting
 	switch (TempUnitState) {
 
-		// Temperatur Enhed: Celsius
+		// Temperature unit: Celsius
 		case 1:
 
-			// Tilbage konverter til Celsius og opdater kamera konfigurations parameter
+			// Convert back to Celsius and update the camera configuration parameter
 			IRCamera.AmbientTemperatureSetting = RMH_Conversion_SystemDecimalToFloat(GlobalVariables::CameraConfigNumericUpDowns[1]->Value);
 			IRCamera.ReflectedTemperatureSetting = RMH_Conversion_SystemDecimalToFloat(GlobalVariables::CameraConfigNumericUpDowns[2]->Value);
 
 		break;
 
-		// Temperatur Enhed: Fahrenheit
+		// Temperature unit: Fahrenheit
 		case 2:
 
-			// Tilbage konverter til Celsius og opdater kamera konfigurations parameter
+			// Convert back to Celsius and update the camera configuration parameter
 			IRCamera.AmbientTemperatureSetting = 0.55556f * (RMH_Conversion_SystemDecimalToFloat(GlobalVariables::CameraConfigNumericUpDowns[1]->Value) - 32.0f);
 			IRCamera.ReflectedTemperatureSetting = 0.55556f * (RMH_Conversion_SystemDecimalToFloat(GlobalVariables::CameraConfigNumericUpDowns[2]->Value) - 32.0f);
 
 		break;
 
-		// Temperatur Enhed: Kelvin
+		// Temperature unit: Kelvin
 		case 3:
 
-			// Tilbage konverter til Celsius og opdater kamera konfigurations parameter
+			// Convert back to Celsius and update the camera configuration parameter
 			IRCamera.AmbientTemperatureSetting = RMH_Conversion_SystemDecimalToFloat(GlobalVariables::CameraConfigNumericUpDowns[1]->Value) - 273.15f;
 			IRCamera.ReflectedTemperatureSetting = RMH_Conversion_SystemDecimalToFloat(GlobalVariables::CameraConfigNumericUpDowns[2]->Value) - 273.15f;
 
@@ -318,37 +318,37 @@ void RMH_ThermalViewer_SetCameraConfigParameters() {
 
 	}
 
-	// Opdater kamera konfigurations parameter i "IRCamera" Objektet fra tilhørende GUI NumericUpDowns
+	// Update the camera configuration parameter in the "IRCamera" object from the associated GUI NumericUpDowns
 	IRCamera.TemperatureCorrectionSetting = RMH_Conversion_SystemDecimalToFloat(GlobalVariables::CameraConfigNumericUpDowns[0]->Value);
 	IRCamera.HumiditySetting = RMH_Conversion_SystemDecimalToFloat(GlobalVariables::CameraConfigNumericUpDowns[3]->Value);
 	IRCamera.EmissivitySetting = RMH_Conversion_SystemDecimalToFloat(GlobalVariables::CameraConfigNumericUpDowns[4]->Value);
 	IRCamera.DistanceSetting = RMH_Conversion_SystemDecimalToFloat(GlobalVariables::CameraConfigNumericUpDowns[5]->Value);
 
-	// Skriv de indstillede kamera konfigurations parameter fra objekt "IRcamera" Til kameraets interne hukommelse.
+	// Write the configured camera configuration parameters from the "IRcamera" object to the internal memory of the camera.
 	RMH_IRThermalCamera_SaveConfigParametersToCamera(&IRCamera, IRCamera.ThermalCameraSupportPool);
 
-	// Skriv GUI Start Meddelse
+	// Write GUI start message
 	RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "New Thermal Camera Configuration Has Been Set.", _StatusMessageType_Success);
 
-	// Generer/Opdater Temperatur Loop-Up Tabel
+	// Generate/update the temperature look-up table
 	RMH_IRThermalCamera_GenerateThermoGrapicLookUpTable(&IRCamera, IRCamera.ThermalCameraSupportPool);
 
 }
 
 void RMH_ThermalViewer_SetCameraConfigUpDownRanges(float TemperatureUnitScaleFactor, float TemperatureUnitOffsetFactor) {
 
-	// Routinen indstiller Kamera konfigurations panelets NumericUpDowns Maksimale og Minimale
-	// rækkevidder som et resultat af temperatur endheds konfigurations skift.
+	// This routine sets the maximum and minimum ranges of the NumericUpDowns of the camera configuration panel
+	// as a result of a change of the temperature unit setting.
 
-	// Konfigurer Temperatur Korrektion Max/Min NumericUpDown begrænsninger
+	// Configure the temperature correction max/min NumericUpDown limits
 	GlobalVariables::CameraConfigNumericUpDowns[0]->Maximum = RMH_Conversion_FloatToSystemDecimal(_TempCorrectionUpDown_DefaultMaxValue);
 	GlobalVariables::CameraConfigNumericUpDowns[0]->Minimum = RMH_Conversion_FloatToSystemDecimal(_TempCorrectionUpDown_DefaultMinValue);
 
-	// Konfigurer Ambiente Temperatur Max/Min NumericUpDown begrænsninger
+	// Configure the ambient temperature max/min NumericUpDown limits
 	GlobalVariables::CameraConfigNumericUpDowns[1]->Maximum = RMH_Conversion_FloatToSystemDecimal((_AmbientTempUpDown_DefaultMaxValue * TemperatureUnitScaleFactor) + TemperatureUnitOffsetFactor);
 	GlobalVariables::CameraConfigNumericUpDowns[1]->Minimum = RMH_Conversion_FloatToSystemDecimal((_AmbientTempUpDown_DefaultMinValue * TemperatureUnitScaleFactor) + TemperatureUnitOffsetFactor);
 
-	// Konfigurer Reflecterede Temperatur Max/Min NumericUpDown begrænsninger
+	// Configure the reflected temperature max/min NumericUpDown limits
 	GlobalVariables::CameraConfigNumericUpDowns[2]->Maximum = RMH_Conversion_FloatToSystemDecimal((_ReflectedTempUpDown_DefaultMaxValue * TemperatureUnitScaleFactor) + TemperatureUnitOffsetFactor);
 	GlobalVariables::CameraConfigNumericUpDowns[2]->Minimum = RMH_Conversion_FloatToSystemDecimal((_ReflectedTempUpDown_DefaultMinValue * TemperatureUnitScaleFactor) + TemperatureUnitOffsetFactor);
 
@@ -356,28 +356,28 @@ void RMH_ThermalViewer_SetCameraConfigUpDownRanges(float TemperatureUnitScaleFac
 
 void RMH_ThermalViewer_RecoverDefaultCameraTempConfiguration() {
 
-	// Routinen indstiller default temperatur konfigurationen for forbundet termisk kamera
+	// This routine sets the default temperature configuration for the connected thermal camera
 
-	// Indstil/skirv default temperagur konfigurations værdier til tilhørende UpDowns 
+	// Set/write the default temperature configuration values to the associated UpDowns 
 	GlobalVariables::CameraConfigNumericUpDowns[0]->Value = (System::Decimal)_IRThermalCameraDefault_TemperatureCorrectionValue;                                                                // Temperator Korrektion
-	GlobalVariables::CameraConfigNumericUpDowns[1]->Value = (System::Decimal)((_IRThermalCameraDefault_AmbientTemperatureValue * TemperatureUnitScaleFactor) + TemperatureUnitOffsetFactor);    // Ambiente Temperatur
-	GlobalVariables::CameraConfigNumericUpDowns[2]->Value = (System::Decimal)((_IRThermalCameraDefault_ReflectedTemperatureValue * TemperatureUnitScaleFactor) + TemperatureUnitOffsetFactor);  // Reflekterede Temperatur
+	GlobalVariables::CameraConfigNumericUpDowns[1]->Value = (System::Decimal)((_IRThermalCameraDefault_AmbientTemperatureValue * TemperatureUnitScaleFactor) + TemperatureUnitOffsetFactor);    // Ambient temperature
+	GlobalVariables::CameraConfigNumericUpDowns[2]->Value = (System::Decimal)((_IRThermalCameraDefault_ReflectedTemperatureValue * TemperatureUnitScaleFactor) + TemperatureUnitOffsetFactor);  // Reflected temperature
 	GlobalVariables::CameraConfigNumericUpDowns[3]->Value = (System::Decimal)_IRThermalCameraDefault_SurroundingHumidityValue;                                                                  // Humidity 
 	GlobalVariables::CameraConfigNumericUpDowns[4]->Value = (System::Decimal)_IRThermalCameraDefault_ObjectEmissivityValue;                                                                     // Emissivity
 	GlobalVariables::CameraConfigNumericUpDowns[5]->Value = (System::Decimal)_IRThermalCameraDefault_ObjectDistanceValue;                                                                       // Afstand
 
 }
 
-// ---------------- 2D Temperatur Plot Håndterings & Konfigurations Routiner ---------------- //
+// ---------------- 2D Temperature Plot Handling & Configuration Routines ---------------- //
 
 void RMH_ThermalViewer_Set2DPlotDataSetSource(double **Plot2DDataSetSourcePointer, unsigned char DataSource) {
 
-	// Routinen indstiller 2D Plottets Data Sæt pointere til valgte Data Source
+	// This routine sets the data set pointers of the 2D plot to the selected data source
 
 	// Hvilket data source er valgt
 	switch (DataSource) {
 
-		// Indstil Data Source pointer
+		// Set the data source pointer
 		case _2DPlotDataSource_MaximumTemp:			*Plot2DDataSetSourcePointer = &MaximumTemperature;				break;
 		case _2DPlotDataSource_MinimumTemp:			*Plot2DDataSetSourcePointer = &MinimumTemperature;				break;
 		case _2DPlotDataSource_AverageTemp:			*Plot2DDataSetSourcePointer = &AverageTemperature;				break;
@@ -446,35 +446,35 @@ void RMH_ThermalViewer_Set2DPlotDataSetSource(double **Plot2DDataSetSourcePointe
 
 void RMH_ThermalViewer_Enable2DPlotDataSet(System::Object^ sender) {
 
-	// Routinen aktiverer et 2D Plot Data Set til plotning
+	// This routine enables a 2D plot data set for plotting
 
 	// Cast Sender objekt som Forms CheckBox objekt
 	System::Windows::Forms::CheckBox^ CheckBox = (System::Windows::Forms::CheckBox^)sender;
 
-	// Læs Forms CheckBox objekt identifikations tag
+	// Read the identification tag of the form CheckBox object
 	unsigned char CheckBoxTag = Convert::ToInt16(CheckBox->Tag);
 
-	// Kontroller CheckBox Stadie
+	// Check the CheckBox state
 	if ((bool)CheckBox->Checked == false) {
 
-		// Nulstil data sæt linje data rendererings index offset værdi
+		// Reset the data set line data rendering index offset value
 		GlobalVariables::OpenGL2DPlot->RMH_OpenGL_ResetDataSetLineDataIndexRenderOffset(CheckBoxTag);
 
 	}
 
-	// Aktiver Plot af en valgt DataSæt index
+	// Enable plotting of a selected data set index
 	GlobalVariables::OpenGL2DPlot->RMH_OpenGL_EnablePlotOfDataSetx(CheckBoxTag, (bool)CheckBox->Checked);
 
 }
 
 void RMH_ThermalViewer_Load2DPlotLineColorDataToGlobalArrays() {
 
-	// Routinen loader 2D Plot linje farve data til globale Arrays
+	// This routine loads the 2D plot line color data into the global arrays
 
-	// Loop til og med det maksimale antal 2D Plot Data Sæts
+	// Loop up to and including the maximum number of 2D plot data sets
 	for (unsigned int i = 0; i < _2DPlotMaxNumberOfDataSets; i++) {
 
-		// Load 2D Plot Data linjernes farve værdier til globale arrays
+		// Load the color values of the 2D plot data lines into the global arrays
 		Plot2DDataSetLineColorsR[i] = GlobalVariables::Plot2DDataSetColorPanels[i]->BackColor.R;
 		Plot2DDataSetLineColorsG[i] = GlobalVariables::Plot2DDataSetColorPanels[i]->BackColor.G;
 		Plot2DDataSetLineColorsB[i] = GlobalVariables::Plot2DDataSetColorPanels[i]->BackColor.B;
@@ -487,13 +487,13 @@ void RMH_ThermalViewer_Load2DPlotSavedSessionLineColorData() {
 
 	// Routinen indstiller de gemte sessions 2D Plot linje farve data
 
-	// Loop til og med det maksimale antal 2D Plot Data Sæts
+	// Loop up to and including the maximum number of 2D plot data sets
 	for (unsigned int i = 0; i < _2DPlotMaxNumberOfDataSets; i++) {
 
-		// Indstil 2D Plot linje farve data til visuelle paneler
+		// Set the 2D plot line color data on the visual panels
 		GlobalVariables::Plot2DDataSetColorPanels[i]->BackColor = System::Drawing::Color::FromArgb(255, Plot2DDataSetLineColorsR[i], Plot2DDataSetLineColorsG[i], Plot2DDataSetLineColorsB[i]);
 
-		// Indstil Plot data sættets linje farve
+		// Set the plot data set line color
 		GlobalVariables::OpenGL2DPlot->RMH_OpenGL_SetDataSetLineColor(i, Plot2DDataSetLineColorsR[i], Plot2DDataSetLineColorsG[i], Plot2DDataSetLineColorsB[i]);
 
 	}
@@ -502,7 +502,7 @@ void RMH_ThermalViewer_Load2DPlotSavedSessionLineColorData() {
 
 void RMH_ThermalViewer_Change2DPlotDataSetAndSettingsPanelColor(System::Object^ sender) {
 
-	// Routinen opdaterer og indstiller 2D Plot Data sæt farve, samt indstillings panelets farve
+	// This routine updates and sets the color of a 2D plot data set, as well as the color of the settings panel
 
 	// Lokalt fare variabel
 	bool ColorDialogAbortFlag = false;
@@ -511,19 +511,19 @@ void RMH_ThermalViewer_Change2DPlotDataSetAndSettingsPanelColor(System::Object^ 
 	// Cast Sender objekt som Forms Panel objekt
 	System::Windows::Forms::Panel^ PanelObject = (System::Windows::Forms::Panel^)sender;
 
-	// Læs Forms Panel objekt identifikations tag
+	// Read the identification tag of the form Panel object
 	unsigned char ColorPanelTag = Convert::ToInt16(PanelObject->Tag);
 
-	// Åben Farve dialog og læs valgte farve
+	// Open the color dialog and read the selected color
 	SelectedColor = RMH_Winforms_ShowAndReadColorDialog(&ColorDialogAbortFlag);
 
 	// Kontroller farve dialog abort flag
 	if (ColorDialogAbortFlag == false) {
 
-		// Indstil Farve paneles nye valgte farve
+		// Set the new selected color of the color panel
 		PanelObject->BackColor = System::Drawing::Color::FromArgb(255, SelectedColor->R, SelectedColor->G, SelectedColor->B);
 
-		// Indstil Plot data sættets linje farve
+		// Set the plot data set line color
 		GlobalVariables::OpenGL2DPlot->RMH_OpenGL_SetDataSetLineColor(ColorPanelTag, SelectedColor->R, SelectedColor->G, SelectedColor->B);
 
 	}
@@ -532,33 +532,33 @@ void RMH_ThermalViewer_Change2DPlotDataSetAndSettingsPanelColor(System::Object^ 
 
 void RMH_ThermalViewer_Change2DPlotDataSetLineWidth(System::Object^ sender) {
 
-	// Routinen indstiller et 2D Plots Data Sæts linje tykkelse
+	// This routine sets the line thickness of a 2D plot data set
 
 	// Cast Sender objekt som Forms NumericUpDown objekt
 	System::Windows::Forms::NumericUpDown^ NumericUpDownObject = (System::Windows::Forms::NumericUpDown^)sender;
 
-	// Læs Forms NumericUpDown objekt identifikations tag
+	// Read the identification tag of the form NumericUpDown object
 	unsigned char NumericUpDownTag = Convert::ToInt16(NumericUpDownObject->Tag);
 
-	// Indstil Plot Data sættets linje tykkelse
+	// Set the line thickness of the plot data set
 	GlobalVariables::OpenGL2DPlot->RMH_OpenGL_SetDataSetLineWidth(NumericUpDownTag, (float)NumericUpDownObject->Value);
 
 }
 
 void RMH_ThermalViewer_Change2DPlotDataSetSource(System::Object^ sender) {
 
-	// Routinen indstiller et nyt valgt 2D Plot data sæt source til valgte ComboBox Index
+	// This routine sets a newly selected 2D plot data set source to the selected ComboBox index
 
 	// Cast Sender objekt som Forms ComboBox objekt
 	System::Windows::Forms::ComboBox^ ComboBox = (System::Windows::Forms::ComboBox^)sender;
 
-	// Læs Forms ComboBox objekt identifikations tag
+	// Read the identification tag of the form ComboBox object
 	unsigned char ComboBoxTag = Convert::ToInt16(ComboBox->Tag);
 
-	// Valg Af 2D Plot Data Sæt Fra ComboBox Tag ID
+	// Selection of the 2D plot data set from the ComboBox tag ID
 	switch (ComboBoxTag) {
 
-		// Indstil valgte Data Sæt
+		// Set the selected data set
 		case _2DPlotDataSet_1:  RMH_ThermalViewer_Set2DPlotDataSetSource(&Plot2DDataSet1SourcePointer, ComboBox->SelectedIndex); break;
 		case _2DPlotDataSet_2:  RMH_ThermalViewer_Set2DPlotDataSetSource(&Plot2DDataSet2SourcePointer, ComboBox->SelectedIndex); break;
 		case _2DPlotDataSet_3:  RMH_ThermalViewer_Set2DPlotDataSetSource(&Plot2DDataSet3SourcePointer, ComboBox->SelectedIndex); break;
@@ -576,15 +576,15 @@ void RMH_ThermalViewer_Change2DPlotDataSetSource(System::Object^ sender) {
 
 void RMH_ThermalViewer_Update2DPlotLegendLabels() {
 
-	// Rotinen opdaterer og indstiller 2D Plottets Legend labels med Data Sættets navn og farve
+	// This routine updates and sets the legend labels of the 2D plot with the name and color of the data set
 
-	// Lokale variabler
+	// Read the temporary array data and sort the kernel array
 	unsigned int DataSetCheckedIndex = 0;
 
-	// Loop til og med det maksimale antal 2D Plot Data Sæts
+	// Loop up to and including the maximum number of 2D plot data sets
 	for (unsigned int i = 0; i < _2DPlotMaxNumberOfDataSets; i++) {
 
-		// Gør 2D Plot Legend label synlig
+		// Make the 2D plot legend label visible
 		GlobalVariables::Plot2DLegendLabels[DataSetCheckedIndex]->Visible = false;
 
 		// Inkrementer Data set index 
@@ -592,19 +592,19 @@ void RMH_ThermalViewer_Update2DPlotLegendLabels() {
 
 	}
 
-	// Nulstil Data set index 
+	// Reset the data set index 
 	DataSetCheckedIndex = 0;
 
-	// Loop til og med det maksimale antal 2D Plot Data Sæts
+	// Loop up to and including the maximum number of 2D plot data sets
 	for (unsigned int i = 0; i < _2DPlotMaxNumberOfDataSets; i++) {
 
-		// Kontroller hvilke 2D Plot data sæt er aktive
+		// Check which 2D plot data sets are active
 		if (GlobalVariables::Plot2DDataSetCheckBoxs[i]->Checked == true) {
 
-			// Gør 2D Plot Legend label synlig
+			// Make the 2D plot legend label visible
 			GlobalVariables::Plot2DLegendLabels[DataSetCheckedIndex]->Visible = true;
 
-			// Indstil 2D Plot Legend Text til ComboBox Data Set Text
+			// Set the 2D plot legend text to the ComboBox data set text
 			GlobalVariables::Plot2DLegendLabels[DataSetCheckedIndex]->Text = GlobalVariables::Plot2DDataSetComboBoxs[i]->Text;
 
 			// Opdater 2D Plot Legend Text farven
@@ -616,7 +616,7 @@ void RMH_ThermalViewer_Update2DPlotLegendLabels() {
 		}
 		else {
 
-			// Gør 2D Plot Legend label usynlig
+			// Make the 2D plot legend label invisible
 			GlobalVariables::Plot2DLegendLabels[DataSetCheckedIndex]->Visible = false;
 
 			// Nulstil 2D Plot Legend Text farven
@@ -628,16 +628,16 @@ void RMH_ThermalViewer_Update2DPlotLegendLabels() {
 
 }
 
-// --------------------------- Data Logging Håndterings Routiner ---------------------------- //
+// --------------------------- Data Logging Handling Routines ---------------------------- //
 
 void RMH_ThermalViewer_SetDataLoggingSourcePointer(double** DataLoggingSourcePointer, unsigned char DataSource) {
 
-	// Routinen indstiller den givet Data loggings data source pointer
+	// This routine sets the given data logging data source pointer
 
 	// Hvilket data source er valgt
 	switch (DataSource) {
 
-		// Indstil Data Source pointer
+		// Set the data source pointer
 		case _2DPlotDataSource_MaximumTemp:			*DataLoggingSourcePointer = &MaximumTemperature;				break;
 		case _2DPlotDataSource_MinimumTemp:			*DataLoggingSourcePointer = &MinimumTemperature;				break;
 		case _2DPlotDataSource_CenterTemp:			*DataLoggingSourcePointer = &CenterTemperature;					break;
@@ -705,12 +705,12 @@ void RMH_ThermalViewer_SetDataLoggingSourcePointer(double** DataLoggingSourcePoi
 
 void RMH_ThermalViewer_ChangeDataLoggingDataSetSource(unsigned char DataSetIndex, unsigned char DataSourceIndex) {
 
-	// Routinen indstiller et data loggings pointer til et valgt data set source
+	// This routine sets a data logging pointer to a selected data set source
 
 	// Valg af Data loggings data set
 	switch (DataSetIndex) {
 
-		// Indstil data loggings data set til givet data source
+		// Set the data logging data set to the given data source
 		case _2DPlotDataSet_1:  RMH_ThermalViewer_SetDataLoggingSourcePointer(&DataLoggingDataSet1SourcePointer, DataSourceIndex);  break;
 		case _2DPlotDataSet_2:  RMH_ThermalViewer_SetDataLoggingSourcePointer(&DataLoggingDataSet2SourcePointer, DataSourceIndex);  break;
 		case _2DPlotDataSet_3:  RMH_ThermalViewer_SetDataLoggingSourcePointer(&DataLoggingDataSet3SourcePointer, DataSourceIndex);  break;
@@ -728,15 +728,15 @@ void RMH_ThermalViewer_ChangeDataLoggingDataSetSource(unsigned char DataSetIndex
 
 double* RMH_ThermalViewer_GetDataLoggingSourcePointerFromIndex(unsigned char DataSourceIndex) {
 
-	// Routinen retunerer en valgt data logging data source pointer
+	// This routine returns a selected data logging data source pointer
 
-	// Lokale variabler
+	// Read the temporary array data and sort the kernel array
 	double* ReturnPointer;
 
 	// Valg af data source pointer index
 	switch (DataSourceIndex) {
 
-		// Indstil retunerings pointer til aktuel data loggings source pointer
+		// Set the return pointer to the current data logging source pointer
 		case _2DPlotDataSet_1:   ReturnPointer = DataLoggingDataSet1SourcePointer;   break;
 		case _2DPlotDataSet_2:   ReturnPointer = DataLoggingDataSet2SourcePointer;   break;
 		case _2DPlotDataSet_3:   ReturnPointer = DataLoggingDataSet3SourcePointer;   break;
@@ -757,18 +757,18 @@ double* RMH_ThermalViewer_GetDataLoggingSourcePointerFromIndex(unsigned char Dat
 
 void RMH_ThermalViewer_UpdateDataLoggingDefaultSaveFilePath(System::Windows::Forms::Label^ DefaultPathString) {
 
-	// Routinen opdaterer fil lokationen hvor Data Logging CSV filen skal gemmes
+	// This routine updates the file location where the data logging CSV file is saved
 
-	// Lokale variabler
+	// Read the temporary array data and sort the kernel array
 	System::String^ SaveFilePathString;
 
-	// Læs valgte Data logging default save fil path 
+	// Read the selected default save file path for data logging 
 	SaveFilePathString = RMH_Winforms_GetSaveFileDialogDirectory();
 
-	// Kontroller om et path blev valgt, eller om dialogen blev lukket
+	// Check whether a path was selected, or whether the dialog was closed
 	if (SaveFilePathString == "None") {
 
-		// Skriv GUI status meddelse
+		// Write GUI status message
 		RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "No New Default Data Logging File Path Was Choosen!", _StatusMessageType_Warning);
 
 	}
@@ -777,21 +777,21 @@ void RMH_ThermalViewer_UpdateDataLoggingDefaultSaveFilePath(System::Windows::For
 		// Opdater Data logging default path
 		GlobalVariables::LoggingCSVDefaultPath = SaveFilePathString;
 
-		// Skriv GUI status meddelse
+		// Write GUI status message
 		RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "New Default Data Logging File Path Was Choosen.", _StatusMessageType_Success);
 
 	}
 
-	// Opdater Data logging default Fil path stringet 
+	// Update the default data logging file path string 
 	DefaultPathString->Text = "Default Save File Path:  " + GlobalVariables::LoggingCSVDefaultPath;
 
 }
 
 void RMH_ThermalViewer_StartDataLogging() {
 
-	// Routinen konfigurerer Data logging sessionen og starter data logging
+	// This routine configures the data logging session and starts data logging
 
-	// Lokalr variabler
+	// Local variables
 	unsigned int SelectedSourceIndex = 0;
 	unsigned char DataLoggingDataSetIndex = 0;
 	unsigned short DataLoggingDurationHoursValue = 0;
@@ -805,15 +805,15 @@ void RMH_ThermalViewer_StartDataLogging() {
 		// Nulstil Data Logging duration timer variabel
 		DataLoggingDurationTimerMilliSec = 0;
 
-		// Nulstil antallet af aktive data logging sæt
+		// Reset the number of active data logging sets
 		DataLoggingNumberOfActiveSets = 0;
 
-		// Læs Data Loggings sessionens varigheds parametere
+		// Read the duration parameters of the data logging session
 		DataLoggingDurationHoursValue = System::Decimal::ToInt16(GlobalVariables::GlobalDataLoggingDurationHourUpDown->Value);
 		DataLoggingDurationMinutesValue = System::Decimal::ToInt16(GlobalVariables::GlobalDataLoggingDurationMinuteUpDown->Value);
 		DataLoggingDurationSedundsValue = System::Decimal::ToInt16(GlobalVariables::GlobalDataLoggingDurationSecondsUpDown->Value);
 
-		// Udregn data logging sessionens længde i Millisekundter
+		// Calculate the length of the data logging session in milliseconds
 		DataLoggingSessionDurationMilliSec = (DataLoggingDurationHoursValue * 3600000) + (DataLoggingDurationMinutesValue * 60000) + (DataLoggingDurationSedundsValue * 1000);
 
 		// Indstil Data Logging thread eksikverings intervals variabel
@@ -821,16 +821,16 @@ void RMH_ThermalViewer_StartDataLogging() {
 
 		// ----------------------------------- Formater Data Logging Plot Data Set Pointers ----------------------------------- //
 
-		// Loop til og med det maksimale antal 2D Plot data sæts
+		// Loop up to and including the maximum number of 2D plot data sets
 		for (unsigned int i = 0; i < _2DPlotMaxNumberOfDataSets; i++) {
 
-			// Kontroller om data set er aktivt for data logging
+			// Check whether the data set is active for data logging
 			if (GlobalVariables::Plot2DDataSetCheckBoxs[i]->Checked == true) {
 
-				// Læs det aktive data sets combobox data source index
+				// Read the combobox data source index of the active data set
 				SelectedSourceIndex = GlobalVariables::Plot2DDataSetComboBoxs[i]->SelectedIndex;
 
-				// Indstil Data logging data set til valgte combobox data source
+				// Set the data logging data set to the selected combobox data source
 				RMH_ThermalViewer_ChangeDataLoggingDataSetSource(DataLoggingDataSetIndex, SelectedSourceIndex);
 
 				// Lager Data set source beskrivelse i CSV header string array
@@ -839,22 +839,22 @@ void RMH_ThermalViewer_StartDataLogging() {
 				// Inkrementer data loggings data set index variabel
 				DataLoggingDataSetIndex = DataLoggingDataSetIndex + 1;
 
-				// Inkrementer antallet af aktive data logging sæt tæller variabel
+				// Increment the counter variable of the number of active data logging sets
 				DataLoggingNumberOfActiveSets = DataLoggingNumberOfActiveSets + 1;
 
 			}
 
 		}
 
-		// -------------------------------- Generer Og Formater Data Logging Sessionens CSV Fil -------------------------------- //
+		// -------------------------------- Generate And Format The Data Logging Session CSV File -------------------------------- //
 
 		// Formater Filens data identifikations string (DataLogSession_HHmmssddMMyyyy)
 		System::String^ FileName = System::DateTime::Now.ToString("HHmmssfffddMMyyyy");
 
-		// Formater Data logging sessionens Fil navn
+		// Format the file name of the data logging session
 		GlobalVariables::DataLoggingSessionFileNameString = "DataLogSession_" + FileName + ".txt";
 
-		// Generer Data logging CSV fil med tilhørende Fil header
+		// Generate the data logging CSV file with the associated file header
 		RMH_Winforms_WriteHeaderStringsToCSVFile(RMH_Conversion_SystemStringToStdString(GlobalVariables::LoggingCSVDefaultPath), 
 			RMH_Conversion_SystemStringToStdString(GlobalVariables::DataLoggingSessionFileNameString), CSVFileHeaderStrings, DataLoggingNumberOfActiveSets + 2, GlobalVariables::DataLoggingCSVDelimiterString);
 
@@ -866,13 +866,13 @@ void RMH_ThermalViewer_StartDataLogging() {
 		// Start Data Logging Thread Process
 		GlobalVariables::GlobalDataLoggingThread->RunWorkerAsync();
 
-		// Skriv GUI status meddelse
+		// Write GUI status message
 		RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "Data Logging Has Started.", _StatusMessageType_Success);
 
 	}
 	else {
 
-		// Skriv GUI status meddelse
+		// Write GUI status message
 		RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "Data Logging Is Already Running!", _StatusMessageType_Warning);
 
 	}
@@ -881,22 +881,22 @@ void RMH_ThermalViewer_StartDataLogging() {
 
 void RMH_ThermalViewer_StopDataLogging() {
 
-	// Kontroller data logging status
+	// Check the data logging status
 	if (DataLoggingIsRunningFlag == true) {
 
 		// Opdater Data logging is running flag
 		DataLoggingIsRunningFlag = false;
 
-		// Opdater 2D Plot Data Logging indikator string med timer - Inaktiv stadie
+		// Update the 2D plot data logging indicator string with timer - inactive state
 		GlobalVariables::OpenGL2DPlot->RMH_OpenGL_SetDataLoggingLabelStateAndTimer(DataLoggingIsRunningFlag, DataLoggingDurationTimerMilliSec);
 
-		// Skriv GUI status meddelse
+		// Write GUI status message
 		RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "Data Logging Session Has Stopped.", _StatusMessageType_Warning);
 
 	}
 	else {
 
-		// Skriv GUI status meddelse
+		// Write GUI status message
 		RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "No Data Logging Session Is Running...", _StatusMessageType_Normal);
 
 	}
@@ -905,21 +905,21 @@ void RMH_ThermalViewer_StopDataLogging() {
 
 void RMH_ThermalViewer_UpdateDataLoggingCSVDataDelimiter() {
 
-	// Routinen opdaterer hvilken Data delimiter som benyttes når der gemmes en data logging CSV fil
+	// This routine updates which data delimiter is used when saving a data logging CSV file
 
-	// Lokale variabler
+	// Read the temporary array data and sort the kernel array
 	unsigned char DataDelimiterIndex = 0;
 
-	// Læs den valgte Data delimiter fra tilhørende CombiBox
+	// Read the selected data delimiter from the associated ComboBox
 	DataDelimiterIndex = GlobalVariables::GlobalDataLoggingCSVDelimiterCombiBox->SelectedIndex;
 
-	// Lager og opdater læste CSV Data delimiter i globalt variabel
+	// Store and update the CSV data delimiter read in the global variable
 	SelectedDataLoggingCSVDataDelimiterIndex = DataDelimiterIndex;
 
-	// Hvilken Delimiter index er blevet valgt
+	// Which delimiter index has been selected
 	switch (SelectedDataLoggingCSVDataDelimiterIndex) {
 
-		// Opdater tilhørende globale delimiter string
+		// Update the associated global delimiter string
 		case _DataLoggingDelimiterIndex_Comma:		GlobalVariables::DataLoggingCSVDelimiterString = ",";  break;
 		case _DataLoggingDelimiterIndex_Semicolon:	GlobalVariables::DataLoggingCSVDelimiterString = ";";  break;
 		case _DataLoggingDelimiterIndex_Colon:		GlobalVariables::DataLoggingCSVDelimiterString = ":";  break;
@@ -932,41 +932,41 @@ void RMH_ThermalViewer_UpdateDataLoggingCSVDataDelimiter() {
 
 void RMH_ThermalViewer_DataLoggingThreadProcess() {
 
-	// Routinen er den tilhørende Data Logging processor thread
+	// This routine is the associated data logging processor thread
 
-	// Lokale variabler
+	// Read the temporary array data and sort the kernel array
 	unsigned long NumberOfSampels = 0;
 
-	// Eksikver thread process Loop hvis data logging er aktivt 
+	// Execute the thread process loop if data logging is active 
 	while (DataLoggingIsRunningFlag == true) {
 
 		// Eksikverings intervallet for thread er data logging intervallet
 		System::Threading::Thread::Sleep(DataLoggingIntervalMilliSec);
 
-		// Opdater Data loggings varigheds tæller variabel
+		// Update the data logging duration counter variable
 		DataLoggingDurationTimerMilliSec = DataLoggingDurationTimerMilliSec + DataLoggingIntervalMilliSec;
 
-		// Opdater 2D Plot Data Logging indikator string med timer
+		// Update the 2D plot data logging indicator string with timer
 		GlobalVariables::OpenGL2DPlot->RMH_OpenGL_SetDataLoggingLabelStateAndTimer(DataLoggingIsRunningFlag, DataLoggingDurationTimerMilliSec);
 
-		// Indlæs data loggings source data til data array
+		// Load the data logging source data into the data array
 		for (unsigned int i = 0; i < DataLoggingNumberOfActiveSets; i++) {
 
-			// Indlæs data til Source data array
+			// Load the data into the source data array
 			DataLoggingSourceDataArray[i] = *RMH_ThermalViewer_GetDataLoggingSourcePointerFromIndex(i);
 
 		}
 
-		// Inkrementer antallet af sampels tæller varaibel
+		// Increment the sample counter variable
 		NumberOfSampels = NumberOfSampels + 1;
 
-		// Hvis Data logging sessionen har nåede sin indstillede ende
+		// If the data logging session has reached its set end
 		if (DataLoggingDurationTimerMilliSec >= DataLoggingSessionDurationMilliSec + DataLoggingIntervalMilliSec) {
 
 			// Opdater Data logging is running flag
 			DataLoggingIsRunningFlag = false;
 
-			// Opdater 2D Plot Data Logging indikator string med timer - Inaktiv stadie
+			// Update the 2D plot data logging indicator string with timer - inactive state
 			GlobalVariables::OpenGL2DPlot->RMH_OpenGL_SetDataLoggingLabelStateAndTimer(DataLoggingIsRunningFlag, DataLoggingDurationTimerMilliSec);
 
 			// Bryd While loop
@@ -974,7 +974,7 @@ void RMH_ThermalViewer_DataLoggingThreadProcess() {
 
 		}
 
-		// Skriv data til genereret CSV Fil
+		// Write the data to the generated CSV file
 		RMH_Winforms_WriteDataArrayToCSVFile(RMH_Conversion_SystemStringToStdString(GlobalVariables::LoggingCSVDefaultPath),
 			RMH_Conversion_SystemStringToStdString(GlobalVariables::DataLoggingSessionFileNameString),
 			RMH_Conversion_SystemStringToStdString(NumberOfSampels.ToString()),
@@ -985,11 +985,11 @@ void RMH_ThermalViewer_DataLoggingThreadProcess() {
 
 }
 
-// ------------------------ Temperatur Alarmers Håndterings Routiner ------------------------ //
+// ------------------------ Temperature Alarm Handling Routines ------------------------ //
 
 void RMH_ThermalViewer_SetTempAlarmDataSourcePointer(double** TempAlarmSourcePointer, unsigned char AlarmDataSource) {
 
-	// Routinen indstiller en valgt temperatur alarm data source pointer
+	// This routine sets a selected temperature alarm data source pointer
 
 	// Hvilket alarm data source er valgt
 	switch (AlarmDataSource) {
@@ -1047,18 +1047,18 @@ void RMH_ThermalViewer_SetTempAlarmDataSourcePointer(double** TempAlarmSourcePoi
 
 void RMH_ThermalViewer_ChangeTemperatureAlarmDataSource(System::Object^ sender) {
 
-	// Routinen indstiller en temperatur alarm pointer til et valgt data source
+	// This routine sets a temperature alarm pointer to a selected data source
 
 	// Cast Sender objekt som Forms ComboBox objekt
 	System::Windows::Forms::ComboBox^ ComboBox = (System::Windows::Forms::ComboBox^)sender;
 
-	// Læs Forms ComboBox objekt identifikations tag
+	// Read the identification tag of the form ComboBox object
 	unsigned char ComboBoxTag = Convert::ToInt16(ComboBox->Tag);
 
 	// Valg af temp alarm data source
 	switch (ComboBoxTag) {
 
-		// Indstil temperatur alarm data til givet data source
+		// Set the temperature alarm data to the given data source
 		case _TemperatureAlarm_1:  RMH_ThermalViewer_SetTempAlarmDataSourcePointer(&TempAlarm1DataSourcePointer, ComboBox->SelectedIndex);  break;
 		case _TemperatureAlarm_2:  RMH_ThermalViewer_SetTempAlarmDataSourcePointer(&TempAlarm2DataSourcePointer, ComboBox->SelectedIndex);  break;
 		case _TemperatureAlarm_3:  RMH_ThermalViewer_SetTempAlarmDataSourcePointer(&TempAlarm3DataSourcePointer, ComboBox->SelectedIndex);  break;
@@ -1067,146 +1067,146 @@ void RMH_ThermalViewer_ChangeTemperatureAlarmDataSource(System::Object^ sender) 
 
 	}
 
-	// Nulstil temperatur alarmens status Label string og farve
+	// Reset the status label string and color of the temperature alarm
 	GlobalVariables::TempAlarmsStatusLabels[ComboBoxTag]->Text = "Normal";
 	GlobalVariables::TempAlarmsStatusLabels[ComboBoxTag]->ForeColor = System::Drawing::Color::White;
 
-	// Nulstil temperatur Alarmens Trigger status
+	// Reset the trigger status of the temperature alarm
 	AlarmsTriggerStatusArray[ComboBoxTag] = false;
 
 }
 
 void RMH_ThermalViewer_ChangeTempAlarmConfigType(System::Object^ sender) {
 
-	// Routinen indstiller temperatur alarmens type
+	// This routine sets the type of the temperature alarm
 
 	// Cast Sender objekt som Forms ComboBox objekt
 	System::Windows::Forms::ComboBox^ ComboBox = (System::Windows::Forms::ComboBox^)sender;
 
-	// Læs Forms ComboBox objekt identifikations tag
+	// Read the identification tag of the form ComboBox object
 	unsigned char ComboBoxTag = Convert::ToInt16(ComboBox->Tag);
 
-	// Indstil temperatur alarm trigger type
+	// Set the temperature alarm trigger type
 	TempAlarmsConfigType[ComboBoxTag] = ComboBox->SelectedIndex;
 
-	// Nulstil temperatur alarmens status Label string og farve
+	// Reset the status label string and color of the temperature alarm
 	GlobalVariables::TempAlarmsStatusLabels[ComboBoxTag]->Text = "Normal";
 	GlobalVariables::TempAlarmsStatusLabels[ComboBoxTag]->ForeColor = System::Drawing::Color::White;
 
-	// Nulstil temperatur Alarmens Trigger status
+	// Reset the trigger status of the temperature alarm
 	AlarmsTriggerStatusArray[ComboBoxTag] = false;
 
 }
 
 void RMH_ThermalViewer_ChangeTempAlarmLowTempSetPoint(System::Object^ sender) {
 
-	// Routinen indstiller en valgt temperatur alarms low temperaturs værdi
+	// This routine sets the low temperature value of a selected temperature alarm
 
 	// Cast Sender objekt som Forms UpDown objekt
 	System::Windows::Forms::NumericUpDown^ SenderUpDown = (System::Windows::Forms::NumericUpDown^)sender;
 
-	// Læs Forms UpDown objekt identifikations tag
+	// Read the identification tag of the form UpDown object
 	unsigned char SenderUpDownTag = Convert::ToInt16(SenderUpDown->Tag);
 
-	// Skriv indstillede Temp alarm low værdi til globalt array
+	// Write the configured temperature alarm low value to the global array
 	TempAlarmsLowTempValues[SenderUpDownTag] = (float)SenderUpDown->Value;
 
-	// Nulstil temperatur alarmens status Label string og farve
+	// Reset the status label string and color of the temperature alarm
 	GlobalVariables::TempAlarmsStatusLabels[SenderUpDownTag]->Text = "Normal";
 	GlobalVariables::TempAlarmsStatusLabels[SenderUpDownTag]->ForeColor = System::Drawing::Color::White;
 
-	// Nulstil temperatur Alarmens Trigger status
+	// Reset the trigger status of the temperature alarm
 	AlarmsTriggerStatusArray[SenderUpDownTag] = false;
 
 }
 
 void RMH_ThermalViewer_ChangeTempAlarmHighTempSetPoint(System::Object^ sender) {
 
-	// Routinen indstiller en valgt temperatur alarms High temperaturs værdi
+	// This routine sets the high temperature value of a selected temperature alarm
 
 	// Cast Sender objekt som Forms UpDown objekt
 	System::Windows::Forms::NumericUpDown^ SenderUpDown = (System::Windows::Forms::NumericUpDown^)sender;
 
-	// Læs Forms UpDown objekt identifikations tag
+	// Read the identification tag of the form UpDown object
 	unsigned char SenderUpDownTag = Convert::ToInt16(SenderUpDown->Tag);
 
-	// Skriv indstillede Temp alarm High værdi til globalt array
+	// Write the configured temperature alarm high value to the global array
 	TempAlarmsHighTempValues[SenderUpDownTag] = (float)SenderUpDown->Value;
 
-	// Nulstil temperatur alarmens status Label string og farve
+	// Reset the status label string and color of the temperature alarm
 	GlobalVariables::TempAlarmsStatusLabels[SenderUpDownTag]->Text = "Normal";
 	GlobalVariables::TempAlarmsStatusLabels[SenderUpDownTag]->ForeColor = System::Drawing::Color::White;
 
-	// Nulstil temperatur Alarmens Trigger status
+	// Reset the trigger status of the temperature alarm
 	AlarmsTriggerStatusArray[SenderUpDownTag] = false;
 
 }
 
 void RMH_ThermalViewer_ChangeTempAlarmTriggerAction(System::Object^ sender) {
 
-	// Routinen indstiller den valgte temperatur alarms trigger aktion
+	// This routine sets the trigger action of the selected temperature alarm
 
 	// Cast Sender objekt som Forms ComboBox objekt
 	System::Windows::Forms::ComboBox^ ComboBox = (System::Windows::Forms::ComboBox^)sender;
 
-	// Læs Forms ComboBox objekt identifikations tag
+	// Read the identification tag of the form ComboBox object
 	unsigned char ComboBoxTag = Convert::ToInt16(ComboBox->Tag);
 
-	// Skriv indstillede Temp alarm High værdi til globalt array
+	// Write the configured temperature alarm high value to the global array
 	TempAlarmsTriggerAction[ComboBoxTag] = ComboBox->SelectedIndex;
 
-	// Nulstil temperatur alarmens status Label string og farve
+	// Reset the status label string and color of the temperature alarm
 	GlobalVariables::TempAlarmsStatusLabels[ComboBoxTag]->Text = "Normal";
 	GlobalVariables::TempAlarmsStatusLabels[ComboBoxTag]->ForeColor = System::Drawing::Color::White;
 
-	// Nulstil temperatur Alarmens Trigger status
+	// Reset the trigger status of the temperature alarm
 	AlarmsTriggerStatusArray[ComboBoxTag] = false;
 
 }
 
 void RMH_ThermalViewer_EnableTemperatureAlarm(System::Object^ sender) {
 
-	// Routinen aktiverer eller deaktiverer en valgt temperatur alarm
+	// This routine enables or disables a selected temperature alarm
 
 	// Cast Sender objekt som Forms CheckBox objekt
 	System::Windows::Forms::CheckBox^ CheckBox = (System::Windows::Forms::CheckBox^)sender;
 
-	// Læs Forms CheckBox objekt identifikations tag
+	// Read the identification tag of the form CheckBox object
 	unsigned char CheckBoxTag = Convert::ToInt16(CheckBox->Tag);
 
-	// Opdater temperatur alarmens aktiverings stadie
+	// Update the enabled state of the temperature alarm
 	EnabledTempAlarmsArray[CheckBoxTag] = (bool)CheckBox->Checked;
 
-	// Nulstil temperatur alarmens status Label string og farve
+	// Reset the status label string and color of the temperature alarm
 	GlobalVariables::TempAlarmsStatusLabels[CheckBoxTag]->Text = "Normal";
 	GlobalVariables::TempAlarmsStatusLabels[CheckBoxTag]->ForeColor = System::Drawing::Color::White;
 
-	// Nulstil temperatur Alarmens Trigger status
+	// Reset the trigger status of the temperature alarm
 	AlarmsTriggerStatusArray[CheckBoxTag] = false;
 
 }
 
 void RMH_ThermalViewer_UpdateTempAlarmsStatusLabels() {
 
-	// Routinen opdaterer temperatur alarmens status label afhængigt af det triggerede stadie
+	// This routine updates the status label of the temperature alarm depending on the triggered state
 
-	// Loop til og med det maksimale antal aktive temperatur alarmer
+	// Loop up to and including the maximum number of active temperature alarms
 	for (unsigned int i = 0; i < _MaxNumberOfConfigurableTempAlarms; i++) {
 
-		// Er valgte temperatur Alarmen aktiverede
+		// Is the selected temperature alarm enabled
 		if (EnabledTempAlarmsArray[i] == true) {
 
-			// Kontroller om den valgte temperatur alarm er blevet triggerede
+			// Check whether the selected temperature alarm has been triggered
 			if (AlarmsTriggerStatusArray[i] == true) {
 
-				// Opdater temperatur alarmens status Label string og farve
+				// Update the status label string and color of the temperature alarm
 				GlobalVariables::TempAlarmsStatusLabels[i]->Text = "Triggered!";
 				GlobalVariables::TempAlarmsStatusLabels[i]->ForeColor = System::Drawing::Color::Red;
 
 			}
 			else {
 
-				// Opdater temperatur alarmens status Label string og farve
+				// Update the status label string and color of the temperature alarm
 				GlobalVariables::TempAlarmsStatusLabels[i]->Text = "Normal";
 				GlobalVariables::TempAlarmsStatusLabels[i]->ForeColor = System::Drawing::Color::White;
 
@@ -1220,65 +1220,65 @@ void RMH_ThermalViewer_UpdateTempAlarmsStatusLabels() {
 
 void RMH_ThermalViewer_ReadTemperatureAlarmStatus(unsigned char TemperatureAlarmIndex, double TemperatureAlarmSourcePointer) {
 
-	// Routinen kontroller om en aktiv temperatur alarm er blevet triggerede
+	// This routine checks whether an active temperature alarm has been triggered
 
-	// Er valgte temperatur Alarmen aktiverede
+	// Is the selected temperature alarm enabled
 	if (EnabledTempAlarmsArray[TemperatureAlarmIndex] == true) {
 
-		// Kontroller temperatur alarmens type
+		// Check the type of the temperature alarm
 		switch (TempAlarmsConfigType[TemperatureAlarmIndex]) {
 
-			// Temperatur alarmen er en "Trigger Above Temp" Type Alarm
+			// The temperature alarm is a "Trigger Above Temp" type alarm
 			case _TempAlarmType_Above: 
 
-				// Kontroller om temperatur alarmens source data er højere end alarmens High Set Punkt
+				// Check whether the source data of the temperature alarm is higher than the high set point of the alarm
 				if (TemperatureAlarmSourcePointer >= TempAlarmsHighTempValues[TemperatureAlarmIndex]) {
 
-					// Opdater temperatur alarmens trigger status
+					// Update the trigger status of the temperature alarm
 					AlarmsTriggerStatusArray[TemperatureAlarmIndex] = true;
 
 				}
 				else {
 
-					// Opdater temperatur alarmens trigger status
+					// Update the trigger status of the temperature alarm
 					AlarmsTriggerStatusArray[TemperatureAlarmIndex] = false;
 
 				}
 				
 			break;
 
-			// Temperatur alarmen er en "Trigger Below Temp" Type Alarm
+			// The temperature alarm is a "Trigger Below Temp" type alarm
 			case _TempAlarmType_Below: 
 
-				// Kontroller om temperatur alarmens source data er lavere end alarmens Low Set Punkt
+				// Check whether the source data of the temperature alarm is lower than the low set point of the alarm
 				if (TemperatureAlarmSourcePointer <= TempAlarmsLowTempValues[TemperatureAlarmIndex]) {
 
-					// Opdater temperatur alarmens trigger status
+					// Update the trigger status of the temperature alarm
 					AlarmsTriggerStatusArray[TemperatureAlarmIndex] = true;
 
 				}
 				else {
 
-					// Opdater temperatur alarmens trigger status
+					// Update the trigger status of the temperature alarm
 					AlarmsTriggerStatusArray[TemperatureAlarmIndex] = false;
 
 				}
 				
 			break;
 
-			// Temperatur alarmen er en "Temp Window Trigger" Type Alarm
+			// The temperature alarm is a "Temp Window Trigger" type alarm
 			case _TempAlarmType_Window:
 
-				// Kontroller om temperatur alarmens source data er inden for det indstillede temperatur vindue
+				// Check whether the source data of the temperature alarm is within the set temperature window
 				if (TemperatureAlarmSourcePointer > TempAlarmsLowTempValues[TemperatureAlarmIndex] && TemperatureAlarmSourcePointer < TempAlarmsHighTempValues[TemperatureAlarmIndex]) {
 
-					// Opdater temperatur alarmens trigger status
+					// Update the trigger status of the temperature alarm
 					AlarmsTriggerStatusArray[TemperatureAlarmIndex] = false;
 
 				}
 				else {
 
-					// Opdater temperatur alarmens trigger status
+					// Update the trigger status of the temperature alarm
 					AlarmsTriggerStatusArray[TemperatureAlarmIndex] = true;
 
 				}
@@ -1293,9 +1293,9 @@ void RMH_ThermalViewer_ReadTemperatureAlarmStatus(unsigned char TemperatureAlarm
 
 void RMH_ThermalViewer_MonitorEnabledTempAlarmsStatus() {
 
-	// Routinen kontroller det triggerede stadie for de aktive temperatur alarmer
+	// This routine checks the triggered state of the active temperature alarms
 
-	// Læs og opdater temperatur alarmernes staus
+	// Read and update the status of the temperature alarms
 	RMH_ThermalViewer_ReadTemperatureAlarmStatus(_TemperatureAlarm_1, *TempAlarm1DataSourcePointer);
 	RMH_ThermalViewer_ReadTemperatureAlarmStatus(_TemperatureAlarm_2, *TempAlarm2DataSourcePointer);
 	RMH_ThermalViewer_ReadTemperatureAlarmStatus(_TemperatureAlarm_3, *TempAlarm3DataSourcePointer);
@@ -1306,27 +1306,27 @@ void RMH_ThermalViewer_MonitorEnabledTempAlarmsStatus() {
 
 void RMH_ThermalViewer_OpdateTempAlarmTriggerSoundTimer(System::Object^ sender) {
 
-	// Routinen aktiverer eller deaktiverer temperatur alarmernes advarsels lyds timer
+	// This routine enables or disables the warning sound timer of the temperature alarms
 
 	// Cast Sender objekt som Forms CheckBox objekt
 	System::Windows::Forms::CheckBox^ CheckBox = (System::Windows::Forms::CheckBox^)sender;
 
-	// Kontroller om alarmernes advarsels lyd skal aktiveres
+	// Check whether the warning sound of the alarms should be enabled
 	if (CheckBox->Checked == true) {
 
-		// Opdater temperatur alarmernes advarsels lyds timer aktive stadie
+		// Update the active state of the warning sound timer of the temperature alarms
 		TempAlarmTriggerSoundFlag = true;
 
-		// Aktiver temperatur alarmernes advarsels lyds timer
+		// Enable the warning sound timer of the temperature alarms
 		GlobalVariables::GlobalAlarmSoundTimer->Enabled = true;
 
 	}
 	else {
 
-		// Opdater temperatur alarmernes advarsels lyds timer aktive stadie
+		// Update the active state of the warning sound timer of the temperature alarms
 		TempAlarmTriggerSoundFlag = false;
 
-		// Deaktiver temperatur alarmernes advarsels lyds timer
+		// Disable the warning sound timer of the temperature alarms
 		GlobalVariables::GlobalAlarmSoundTimer->Enabled = false;
 
 	}
@@ -1335,12 +1335,12 @@ void RMH_ThermalViewer_OpdateTempAlarmTriggerSoundTimer(System::Object^ sender) 
 
 void RMH_ThermalViewer_AlarmSoundTimerTickEventHandler() {
 
-	// Routinen håndterer trigger events for temperatur alarmernes advarsels lyds timer 
+	// This routine handles the trigger events of the warning sound timer of the temperature alarms 
 
-	// Er temperatur alarmernes advarsels lyd aktiverede
+	// Is the warning sound of the temperature alarms enabled
 	if (TempAlarmTriggerSoundFlag == true) {
 
-		// Kontroller om der er alarmer som er blevet triggerede
+		// Check whether any alarms have been triggered
 		if (AlarmsTriggerStatusArray[_TemperatureAlarm_1] == true ||
 			AlarmsTriggerStatusArray[_TemperatureAlarm_2] == true ||
 			AlarmsTriggerStatusArray[_TemperatureAlarm_3] == true ||
@@ -1358,27 +1358,27 @@ void RMH_ThermalViewer_AlarmSoundTimerTickEventHandler() {
 
 void RMH_ThermalViewer_EnableAlarmTriggerEvents(System::Object^ sender) {
 
-	// Routinen aktiverer Temperatur alarmernes trigger events
+	// This routine enables the trigger events of the temperature alarms
 
 	// Cast Sender objekt som Forms CheckBox objekt
 	System::Windows::Forms::CheckBox^ CheckBox = (System::Windows::Forms::CheckBox^)sender;
 
-	// Opdater temperatur alarmernes trigger event aktiverings flag
+	// Update the enable flag of the trigger events of the temperature alarms
 	TempAlarmsTriggerEventsEnableFlag = (bool)CheckBox->Checked;
 
-	// Kontroller stadiet for checkbox
+	// Check the state of the checkbox
 	if (TempAlarmsTriggerEventsEnableFlag == true) {
 
 		// Konfigurer trigger timer interval 
 		GlobalVariables::GlobalAlarmTriggerEventTimer->Interval = (unsigned int)(GlobalVariables::GlobalAlarmTriggerEventsIntervalUpDown->Value * 1000);
 
-		// Aktiver temperatur alarmernes trigger event timer
+		// Enable the trigger event timer of the temperature alarms
 		GlobalVariables::GlobalAlarmTriggerEventTimer->Enabled = true;
 
 	}
 	else {
 
-		// Deaktiver temperatur alarmernes trigger event timer
+		// Disable the trigger event timer of the temperature alarms
 		GlobalVariables::GlobalAlarmTriggerEventTimer->Enabled = false;
 
 	}
@@ -1387,100 +1387,100 @@ void RMH_ThermalViewer_EnableAlarmTriggerEvents(System::Object^ sender) {
 
 void RMH_ThermalViewer_UpdateAlarmsTriggerEventResetButtonsBorderColor(unsigned char TemperatureAlarmIndex, bool TriggerEventExecutedFlag) {
 
-	// Routinen opdaterer Border Farven for "Trigger event er blevet eksikverede" status knapperne
+	// This routine updates the border color of the "Trigger event has been executed" status buttons
 
-	// Valg af temperatur alarm Index
+	// Selection of the temperature alarm index
 	switch (TemperatureAlarmIndex) {
 
-		// Opdater Temperatur alarm 1 knappen Border Farve
+		// Update the border color of the temperature alarm 1 button
 		case _TemperatureAlarm_1:  
 
 			// Er temp alarmens trigger event blevet eksikveret
 			if (TriggerEventExecutedFlag == true) {
 
-				// Opdater Knap Border Farve
+				// Update the button border color
 				GlobalVariables::GlobalAlarm1TriggerEventResetButton->FlatAppearance->BorderColor = System::Drawing::Color::Red;
 
 			}
 			else {
 
-				// Opdater Knap Border Farve
+				// Update the button border color
 				GlobalVariables::GlobalAlarm1TriggerEventResetButton->FlatAppearance->BorderColor = System::Drawing::Color::Lime;
 
 			}
 				
 		break;
 
-		// Opdater Temperatur alarm 2 knappen Border Farve
+		// Update the border color of the temperature alarm 2 button
 		case _TemperatureAlarm_2:
 
 			// Er temp alarmens trigger event blevet eksikveret
 			if (TriggerEventExecutedFlag == true) {
 
-				// Opdater Knap Border Farve
+				// Update the button border color
 				GlobalVariables::GlobalAlarm2TriggerEventResetButton->FlatAppearance->BorderColor = System::Drawing::Color::Red;
 
 			}
 			else {
 
-				// Opdater Knap Border Farve
+				// Update the button border color
 				GlobalVariables::GlobalAlarm2TriggerEventResetButton->FlatAppearance->BorderColor = System::Drawing::Color::Lime;
 
 			}
 
 		break;
 
-		// Opdater Temperatur alarm 3 knappen Border Farve
+		// Update the border color of the temperature alarm 3 button
 		case _TemperatureAlarm_3:
 
 			// Er temp alarmens trigger event blevet eksikveret
 			if (TriggerEventExecutedFlag == true) {
 
-				// Opdater Knap Border Farve
+				// Update the button border color
 				GlobalVariables::GlobalAlarm3TriggerEventResetButton->FlatAppearance->BorderColor = System::Drawing::Color::Red;
 
 			}
 			else {
 
-				// Opdater Knap Border Farve
+				// Update the button border color
 				GlobalVariables::GlobalAlarm3TriggerEventResetButton->FlatAppearance->BorderColor = System::Drawing::Color::Lime;
 
 			}
 
 		break;
 
-		// Opdater Temperatur alarm 4 knappen Border Farve
+		// Update the border color of the temperature alarm 4 button
 		case _TemperatureAlarm_4:
 
 			// Er temp alarmens trigger event blevet eksikveret
 			if (TriggerEventExecutedFlag == true) {
 
-				// Opdater Knap Border Farve
+				// Update the button border color
 				GlobalVariables::GlobalAlarm4TriggerEventResetButton->FlatAppearance->BorderColor = System::Drawing::Color::Red;
 
 			}
 			else {
 
-				// Opdater Knap Border Farve
+				// Update the button border color
 				GlobalVariables::GlobalAlarm4TriggerEventResetButton->FlatAppearance->BorderColor = System::Drawing::Color::Lime;
 
 			}
 
 		break;
 
-		// Opdater Temperatur alarm 5 knappen Border Farve
+		// Update the border color of the temperature alarm 5 button
 		case _TemperatureAlarm_5:
 
 			// Er temp alarmens trigger event blevet eksikveret
 			if (TriggerEventExecutedFlag == true) {
 
-				// Opdater Knap Border Farve
+				// Update the button border color
 				GlobalVariables::GlobalAlarm5TriggerEventResetButton->FlatAppearance->BorderColor = System::Drawing::Color::Red;
 
 			}
 			else {
 
-				// Opdater Knap Border Farve
+				// Update the button border color
 				GlobalVariables::GlobalAlarm5TriggerEventResetButton->FlatAppearance->BorderColor = System::Drawing::Color::Lime;
 
 			}
@@ -1493,34 +1493,34 @@ void RMH_ThermalViewer_UpdateAlarmsTriggerEventResetButtonsBorderColor(unsigned 
 
 void RMH_ThermalViewer_ResetAlarmTriggerEventExecutedFlag(System::Object^ sender) {
 
-	// Routinen nulstiller "Trigger event er blevet eksikverede" flaget for læste alarm tag
+	// This routine resets the "Trigger event has been executed" flag for the alarm tag read
 
 	// Cast Sender objekt som Forms Button objekt
 	System::Windows::Forms::Button^ TriggerResetButton = (System::Windows::Forms::Button^)sender;
 
-	// Læs trykkede Knaps identifikations tag
+	// Read the identification tag of the pressed button
 	unsigned int TriggerEventResetButtonTag = Convert::ToInt32(TriggerResetButton->Tag);
 
-	// Nulstil "Trigger event er blevet eksikverede" flaget for tilhørende temp alarm
+	// Reset the "Trigger event has been executed" flag for the associated temperature alarm
 	TriggerEventExecutedFlag[TriggerEventResetButtonTag] = false;
 
-	// Opdater Tilhørene trigger event reset knap border farvve
+	// Update the border color of the associated trigger event reset button
 	RMH_ThermalViewer_UpdateAlarmsTriggerEventResetButtonsBorderColor(TriggerEventResetButtonTag, TriggerEventExecutedFlag[TriggerEventResetButtonTag]);
 
 }
 
 void RMH_ThermalViewer_HandleTempAlarmTriggerActionEvent(unsigned char TemperatureAlarmIndex) {
 
-	// Routinen håndterer trigger aktions eventet for en triggerede alarm
+	// This routine handles the trigger action event of a triggered alarm
 
-	// Kontroller om den valgte temperatur alarm er aktiverede
+	// Check whether the selected temperature alarm is enabled
 	if (EnabledTempAlarmsArray[TemperatureAlarmIndex] == true) {
 
-		// Kontroller Om Termperatur Alarmen er blevet triggeret
+		// Check whether the temperature alarm has been triggered
 		if (AlarmsTriggerStatusArray[TemperatureAlarmIndex] == true) {
 
-			// Eksikver Kun trigger Event Hvis den ikke allerede har været triggerede
-			// Eller hvis trigger Event "Er Blevet Eksikverede" flaget er 'false'
+			// Execute the trigger event only if it has not already been triggered
+			// or if the trigger event "has been executed" flag is 'false'
 			if (TriggerEventExecutedFlag[TemperatureAlarmIndex] == false) {
 
 				// Kontroller Alarment Trigger aktion konfiguration
@@ -1528,7 +1528,7 @@ void RMH_ThermalViewer_HandleTempAlarmTriggerActionEvent(unsigned char Temperatu
 
 					// -------------------------------------------------------------------------- //
 
-					// Eksikver alarm trigger aktion
+					// Execute the alarm trigger action
 					case _TempAlarmTriggerAction_None: break;
 
 					// -------------------------------------------------------------------------- //
@@ -1575,7 +1575,7 @@ void RMH_ThermalViewer_HandleTempAlarmTriggerActionEvent(unsigned char Temperatu
 
 					case _TempAlarmTriggerAction_SaveSnapshot:
 
-						// Gem et live view snapshot
+						// Save a live view snapshot
 						RMH_ThermalViewer_SaveLiveViewSnapshot();
 
 					break;
@@ -1584,7 +1584,7 @@ void RMH_ThermalViewer_HandleTempAlarmTriggerActionEvent(unsigned char Temperatu
 
 					case _TempAlarmTriggerAction_SaveFullFrameTempData:
 
-						// Generer og Gem en Fuld Frame Temperatur Data CSV fil
+						// Generate and save a full-frame temperature data CSV file
 						RMH_ThermalViewer_SaveFullFrameTemperatureDataToCSVFile();
 
 					break;
@@ -1593,10 +1593,10 @@ void RMH_ThermalViewer_HandleTempAlarmTriggerActionEvent(unsigned char Temperatu
 
 				}
 
-				// Opdater Alarm Trigger Event "Er Blevet Eksikverede" Flag
+				// Update the alarm trigger event "has been executed" flag
 				TriggerEventExecutedFlag[TemperatureAlarmIndex] = true;
 
-				// Opdater Tilhørene trigger event reset knap border farvve
+				// Update the border color of the associated trigger event reset button
 				RMH_ThermalViewer_UpdateAlarmsTriggerEventResetButtonsBorderColor(TemperatureAlarmIndex, TriggerEventExecutedFlag[TemperatureAlarmIndex]);
 
 			}
@@ -1609,9 +1609,9 @@ void RMH_ThermalViewer_HandleTempAlarmTriggerActionEvent(unsigned char Temperatu
 
 void RMH_ThermalViewer_AlarmTriggerEventTimerTickEventHandler() {
 
-	// Routinen håndterer trigger events for temperatur alarmernes trigger event timer 
+	// This routine handles the trigger events of the trigger event timer of the temperature alarms 
 
-	// Eksikver trigger events for aktive temperatur alarmer
+	// Execute the trigger events of the active temperature alarms
 	RMH_ThermalViewer_HandleTempAlarmTriggerActionEvent(_TemperatureAlarm_1);
 	RMH_ThermalViewer_HandleTempAlarmTriggerActionEvent(_TemperatureAlarm_2);
 	RMH_ThermalViewer_HandleTempAlarmTriggerActionEvent(_TemperatureAlarm_3);
@@ -1620,42 +1620,42 @@ void RMH_ThermalViewer_AlarmTriggerEventTimerTickEventHandler() {
 
 }
 
-// ------------------- General Og Periodisk Trigger Håndterings Routiner -------------------- //
+// ------------------- General And Periodic Trigger Handling Routines -------------------- //
 
 void RMH_ThermalViewer_TogglePeriodicTriggerTimer() {
 
-	// Routinen aktiverer eller deaktiverer den periodiske trigger timer
+	// This routine enables or disables the periodic trigger timer
 
 	// Toggle den periodiske trigger timers aktiverings flag
 	PeriodicTriggerTimerEnableFlag = !PeriodicTriggerTimerEnableFlag;
 
-	// Hvis Live View streamen er i STOP Mode
+	// If the live view stream is in STOP mode
 	if (LiveViewRunStopFlag == false) {
 
-		// Nulstil den periodiske trigger timers aktiverings flag
+		// Reset the enable flag of the periodic trigger timer
 		PeriodicTriggerTimerEnableFlag = false;
 
 	}
 
-	// Håndter nyt stadie for aktiverings flag
+	// Handle the new state of the enable flag
 	if (PeriodicTriggerTimerEnableFlag == true) {
 
-		// Aktiver den periodiske trigger timer
+		// Enable the periodic trigger timer
 		GlobalVariables::GlobalPeriodicTriggerTimer->Enabled = true;
 
 		// Indstil Trigger timerens eksikverings interval
 		GlobalVariables::GlobalPeriodicTriggerTimer->Interval = 1000;
 
-		// Opdater Knap Border Farve
+		// Update the button border color
 		GlobalVariables::GlobalPeriodicTimerTriggerButton->FlatAppearance->BorderColor = System::Drawing::Color::Lime;
 
 	}
 	else {
 
-		// Deaktiver den periodiske trigger timer
+		// Disable the periodic trigger timer
 		GlobalVariables::GlobalPeriodicTriggerTimer->Enabled = false;
 
-		// Nulstil Knap Border Farve
+		// Reset the button border color
 		GlobalVariables::GlobalPeriodicTimerTriggerButton->FlatAppearance->BorderColor = System::Drawing::Color::FromArgb(255, 40, 40, 40);
 
 	}
@@ -1664,21 +1664,21 @@ void RMH_ThermalViewer_TogglePeriodicTriggerTimer() {
 
 void RMH_ThermalViewer_EnableDisableSelectedPeriodicTriggerEvent(System::Object^ sender) {
 
-	// Routinen aktiverer eller deaktiverer valgte Periodiske Trigger Event 
+	// This routine enables or disables the selected periodic trigger event 
 
 	// Cast Sender objekt som Forms CheckBox objekt
 	System::Windows::Forms::CheckBox^ CheckBoxTag = (System::Windows::Forms::CheckBox^)sender;
 
-	// Læs valgte CheckBox identifikations tag
+	// Read the identification tag of the selected CheckBox
 	unsigned int TriggerEventResetButtonTag = Convert::ToInt32(CheckBoxTag->Tag);
 
-	// Aktiver eller deaktiver valgte Periodiske trigger event
+	// Enable or disable the selected periodic trigger event
 	PeriodicTriggerEventEnableFlags[TriggerEventResetButtonTag] = GlobalVariables::GlobalPeriodicEventnEnableCheckBox[TriggerEventResetButtonTag]->Checked;
 
-	// Hvis den periodiske trigger timer er blevet aktiverede
+	// If the periodic trigger timer has been enabled
 	if (GlobalVariables::GlobalPeriodicEventnEnableCheckBox[TriggerEventResetButtonTag]->Checked == true) {
 
-		// Deaktiver tilhørende konfigurations GUI elementer
+		// Disable the associated configuration GUI elements
 		GlobalVariables::GlobalPeriodicEventnComboBox[TriggerEventResetButtonTag]->Enabled = false;
 		GlobalVariables::GlobalPeriodicEventIntervalnUpDown[TriggerEventResetButtonTag]->Enabled = false;
 		GlobalVariables::GlobalPeriodicEventnDisableCheckBox[TriggerEventResetButtonTag]->Enabled = false;
@@ -1686,7 +1686,7 @@ void RMH_ThermalViewer_EnableDisableSelectedPeriodicTriggerEvent(System::Object^
 	}
 	else {
 
-		// Aktiver tilhørende konfigurations GUI elementer
+		// Enable the associated configuration GUI elements
 		GlobalVariables::GlobalPeriodicEventnComboBox[TriggerEventResetButtonTag]->Enabled = true;
 		GlobalVariables::GlobalPeriodicEventIntervalnUpDown[TriggerEventResetButtonTag]->Enabled = true;
 		GlobalVariables::GlobalPeriodicEventnDisableCheckBox[TriggerEventResetButtonTag]->Enabled = true;
@@ -1697,13 +1697,13 @@ void RMH_ThermalViewer_EnableDisableSelectedPeriodicTriggerEvent(System::Object^
 
 void RMH_ThermalViewer_DisablePeriodicTriggerEventIndex(unsigned int PeriodicTriggerEvent) {
 
-	// Routinen deaktiverer valgte Periodiske Trigger Event 
+	// This routine disables the selected periodic trigger event 
 
 	/*
 	
-		Tilhørende Macroer ->
+		Calculate the normalized Gaussian kernel value
 
-		// Periodiske Trigger Event Nummer Macroer
+		// Periodic Trigger Event Number Macros
 		#define _PeriodicTriggerEvent_1                               0
 		#define _PeriodicTriggerEvent_2                               1
 		#define _PeriodicTriggerEvent_3                               2
@@ -1712,7 +1712,7 @@ void RMH_ThermalViewer_DisablePeriodicTriggerEventIndex(unsigned int PeriodicTri
 	
 	*/
 
-	// Deaktiver valgte Periodiske trigger event
+	// Disable the selected periodic trigger event
 	PeriodicTriggerEventEnableFlags[PeriodicTriggerEvent] = false;
 	GlobalVariables::GlobalPeriodicEventnEnableCheckBox[PeriodicTriggerEvent]->Checked = false;
 
@@ -1720,22 +1720,22 @@ void RMH_ThermalViewer_DisablePeriodicTriggerEventIndex(unsigned int PeriodicTri
 
 void RMH_ThermalViewer_ExecuteTriggerEventIndex(unsigned short TriggerEventFunction) {
 
-	// Routinen eksikverer valgte trigger event funktion fra givet event funktions index
+	// This routine executes the selected trigger event function from the given event function index
 
-	// Kontroller Hvilken periodisk trigger event funktion er blevet indstillet
+	// Check which periodic trigger event function has been set
 	switch (GlobalVariables::GlobalPeriodicEventnComboBox[TriggerEventFunction]->SelectedIndex) {
 
 		// -------------------------------------------------------------------------- //
 
-		// Eksikver tilhørende periodisk trigger event funktion
+		// Execute the associated periodic trigger event function
 		case _TriggerEventFunction_None: 
 			
-			// Deaktiver valgte Periodiske Trigger Event 
+			// Disable the selected periodic trigger event 
 			RMH_ThermalViewer_DisablePeriodicTriggerEventIndex(TriggerEventFunction);
 
 		break;
 
-		// Eksikver tilhørende periodisk trigger event funktion
+		// Execute the associated periodic trigger event function
 		case _TriggerEventFunction_StartDataLogging:
 
 			// Start Temperatur Data Logging Session
@@ -1743,7 +1743,7 @@ void RMH_ThermalViewer_ExecuteTriggerEventIndex(unsigned short TriggerEventFunct
 
 		break;
 
-		// Eksikver tilhørende periodisk trigger event funktion
+		// Execute the associated periodic trigger event function
 		case _TriggerEventFunction_StopDataLogging:
 
 			// Stop Temperatur Data Logging Session
@@ -1751,7 +1751,7 @@ void RMH_ThermalViewer_ExecuteTriggerEventIndex(unsigned short TriggerEventFunct
 
 		break;
 
-		// Eksikver tilhørende periodisk trigger event funktion
+		// Execute the associated periodic trigger event function
 		case _TriggerEventFunction_StartVideoRecording:
 
 			// Opdater Video optagnings flag - Start Optagning
@@ -1761,7 +1761,7 @@ void RMH_ThermalViewer_ExecuteTriggerEventIndex(unsigned short TriggerEventFunct
 
 		break;
 
-		// Eksikver tilhørende periodisk trigger event funktion
+		// Execute the associated periodic trigger event function
 		case _TriggerEventFunction_StopVideoRecording:
 
 			// Opdater Video optagnings flag - Stop Optagning
@@ -1771,18 +1771,18 @@ void RMH_ThermalViewer_ExecuteTriggerEventIndex(unsigned short TriggerEventFunct
 
 		break;
 
-		// Eksikver tilhørende periodisk trigger event funktion
+		// Execute the associated periodic trigger event function
 		case _TriggerEventFunction_SaveSnapshot:
 
-			// Gem et live view snapshot
+			// Save a live view snapshot
 			RMH_ThermalViewer_SaveLiveViewSnapshot();
 
 		break;
 
-		// Eksikver tilhørende periodisk trigger event funktion
+		// Execute the associated periodic trigger event function
 		case _TriggerEventFunction_SaveFullFrameTempData:
 
-			// Generer og Gem en Fuld Frame Temperatur Data CSV fil
+			// Generate and save a full-frame temperature data CSV file
 			RMH_ThermalViewer_SaveFullFrameTemperatureDataToCSVFile();
 
 		break;
@@ -1795,13 +1795,13 @@ void RMH_ThermalViewer_ExecuteTriggerEventIndex(unsigned short TriggerEventFunct
 
 void RMH_ThermalViewer_ExecuteSelectedPeriodicTriggerEvent(unsigned int PeriodicTriggerEvent) {
 
-	// Routinen eksikverer konfigureret periodiske trigger event, hvis aktiverede.
+	// This routine executes the configured periodic trigger event, if enabled.
 
 	/*
 
-		Tilhørende Macroer ->
+		Calculate the normalized Gaussian kernel value
 
-		// Periodiske Trigger Event Nummer Macroer
+		// Periodic Trigger Event Number Macros
 		#define _PeriodicTriggerEvent_1                               0
 		#define _PeriodicTriggerEvent_2                               1
 		#define _PeriodicTriggerEvent_3                               2
@@ -1810,25 +1810,25 @@ void RMH_ThermalViewer_ExecuteSelectedPeriodicTriggerEvent(unsigned int Periodic
 
 	*/
 
-	// Kontroller om valgte periodiske trigger event er aktiverede
+	// Check whether the selected periodic trigger event is enabled
 	if (PeriodicTriggerEventEnableFlags[PeriodicTriggerEvent] == true) {
 
-		// Inkrementer valgte periodiske trigger events Time-Out tæller varaibel
+		// Increment the timeout counter variable of the selected periodic trigger event
 		PeriodicEventTriggerCounter[PeriodicTriggerEvent] = PeriodicEventTriggerCounter[PeriodicTriggerEvent] + 1;
 
-		// Kontroller om valgte periodiske trigger event har nået sin indstillede interval værdi
+		// Check whether the selected periodic trigger event has reached its set interval value
 		if (PeriodicEventTriggerCounter[PeriodicTriggerEvent] >= GlobalVariables::GlobalPeriodicEventIntervalnUpDown[PeriodicTriggerEvent]->Value) {
 
-			// Nulstil valgte periodiske trigger events Time-Out tæller varaibel
+			// Reset the timeout counter variable of the selected periodic trigger event
 			PeriodicEventTriggerCounter[PeriodicTriggerEvent] = 0;
 
-			// Eksikver indstillede periodiske trigger event funktion
+			// Execute the configured periodic trigger event function
 			RMH_ThermalViewer_ExecuteTriggerEventIndex(PeriodicTriggerEvent);
 
-			// Kontroller om trigger event eksikveringen skal nulstilles efter første eksikvering
+			// Check whether the trigger event execution should be reset after the first execution
 			if (GlobalVariables::GlobalPeriodicEventnDisableCheckBox[PeriodicTriggerEvent]->Checked == true) {
 
-				// Deaktiver valgte Periodiske Trigger Event 
+				// Disable the selected periodic trigger event 
 				RMH_ThermalViewer_DisablePeriodicTriggerEventIndex(PeriodicTriggerEvent);
 
 			}
@@ -1838,7 +1838,7 @@ void RMH_ThermalViewer_ExecuteSelectedPeriodicTriggerEvent(unsigned int Periodic
 	}
 	else {
 
-		// Nulstil valgte periodiske trigger events Time-Out tæller varaibel
+		// Reset the timeout counter variable of the selected periodic trigger event
 		PeriodicEventTriggerCounter[PeriodicTriggerEvent] = 0;
 
 	}
@@ -1847,50 +1847,50 @@ void RMH_ThermalViewer_ExecuteSelectedPeriodicTriggerEvent(unsigned int Periodic
 
 void RMH_ThermalViewer_PeriodicTriggerEventTimerTickEventHandler() {
 
-	// Routinen håndterer events for den periodiske trigger event timer 
+	// This routine handles the events of the periodic trigger event timer 
 
-	// Eksikver alle aktiverede periodiske trigger event funktioner
+	// Execute all enabled periodic trigger event functions
 	RMH_ThermalViewer_ExecuteSelectedPeriodicTriggerEvent(_PeriodicTriggerEvent_1);
 	RMH_ThermalViewer_ExecuteSelectedPeriodicTriggerEvent(_PeriodicTriggerEvent_2);
 	RMH_ThermalViewer_ExecuteSelectedPeriodicTriggerEvent(_PeriodicTriggerEvent_3);
 	RMH_ThermalViewer_ExecuteSelectedPeriodicTriggerEvent(_PeriodicTriggerEvent_4);
 	RMH_ThermalViewer_ExecuteSelectedPeriodicTriggerEvent(_PeriodicTriggerEvent_5);
 	
-	// Kontroller om alle trigger events er deaktiverede
+	// Check whether all trigger events are disabled
 	if (PeriodicTriggerEventEnableFlags[_PeriodicTriggerEvent_1] == false &&
 		PeriodicTriggerEventEnableFlags[_PeriodicTriggerEvent_2] == false &&
 		PeriodicTriggerEventEnableFlags[_PeriodicTriggerEvent_3] == false &&
 		PeriodicTriggerEventEnableFlags[_PeriodicTriggerEvent_4] == false &&
 		PeriodicTriggerEventEnableFlags[_PeriodicTriggerEvent_5] == false) {
 
-		// Deaktiver Periodiske Trigger Events
+		// Disable the periodic trigger events
 		PeriodicTriggerTimerEnableFlag = true;
 		RMH_ThermalViewer_TogglePeriodicTriggerTimer();
 
-		// Skriv GUI status meddelse
+		// Write GUI status message
 		RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "No Periodic Trigger Events Are Enabled...", _StatusMessageType_Warning);
 
 	}
 
 }
 
-// ---------------------- Emissivity Tabel Skærm Håndterings Routiner ----------------------- //
+// ---------------------- Emissivity Table Screen Handling Routines ----------------------- //
 
 void RMH_ThermalViewer_LoadEmissivisyTableValueToThermalCamera(System::Windows::Forms::DataGridViewCellEventArgs^ e) {
 
-	// Routinen indlæser den valgte emissivity tabel værdi til det termiske kamera og opdaterer tilhørende GUI elementer
+	// This routine loads the selected emissivity table value into the thermal camera and updates the associated GUI elements
 
-	// Lokale variabler
+	// Read the temporary array data and sort the kernel array
 	float DataGridViewRowIndex;
 	bool SetNewEmissivityConfigFlag = true;
 
-	// Læs hvilken Row celle er blevet trykket 
+	// Read which row cell has been clicked 
 	DataGridViewRowIndex = e->RowIndex;
 
 	// Kontroller for minimalt emissivity tabel index 
 	if (DataGridViewRowIndex < 0.0) {
 
-		// Indstil til mindst tilladte emissivity tabel index 
+		// Set to the lowest allowed emissivity table index 
 		DataGridViewRowIndex = 0;
 
 		// Opdater Ny Emissivity Config Flag
@@ -1901,7 +1901,7 @@ void RMH_ThermalViewer_LoadEmissivisyTableValueToThermalCamera(System::Windows::
 	// Kontroller for maksimal emissivity tabel index 
 	if (DataGridViewRowIndex >= _EmissivityTableNumberOfElements) {
 
-		// Indstil til maksimale tilladte emissivity tabel index 
+		// Set to the highest allowed emissivity table index 
 		DataGridViewRowIndex = _EmissivityTableNumberOfElements - 1;
 
 		// Opdater Ny Emissivity Config Flag
@@ -1909,16 +1909,16 @@ void RMH_ThermalViewer_LoadEmissivisyTableValueToThermalCamera(System::Windows::
 
 	}
 
-	// Skal En ny Emissivity konfiguration skrives til kameraet
+	// Should a new emissivity configuration be written to the camera
 	if (SetNewEmissivityConfigFlag == true) {
 
-		// Skriv valgte Emissivity værdi til "Thermal Camera Configuration" Menu UpDown
+		// Write the selected emissivity value to the "Thermal Camera Configuration" menu UpDown
 		GlobalVariables::CameraConfigNumericUpDowns[4]->Value = (System::Decimal)MaterialEmissivityValues[(unsigned int)DataGridViewRowIndex];
 
-		// Skriv/Sæt de indstillede Kamera konfigurations parametere til kamera hukommelse
+		// Write/set the configured camera configuration parameters to the camera memory
 		RMH_ThermalViewer_SetCameraConfigParameters();
 
-		// Skriv GUI status meddelse
+		// Write GUI status message
 		RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "Material Sellected: " + EmissivityMaterialNames[(unsigned int)DataGridViewRowIndex], _StatusMessageType_Normal);
 		RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "Material Emissivity: " + RMH_Conversion_FloatToStdString(MaterialEmissivityValues[(unsigned int)DataGridViewRowIndex], 2), _StatusMessageType_Normal);
 		RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "New Emissivity Value Has Been Set!", _StatusMessageType_Success);
@@ -1927,179 +1927,179 @@ void RMH_ThermalViewer_LoadEmissivisyTableValueToThermalCamera(System::Windows::
 
 }
 
-// --------------------- Kamera Auto Kalibrerings Håndterings Routiner ---------------------- //
+// --------------------- Camera Auto Calibration Handling Routines ---------------------- //
 
 void RMH_ThermalViewer_ToggleCameraAutoShutterCalibrationTimer() {
 
-	// Routinen aktiverer eller deaktiverer auto kalibrerings feature timeren
+	// This routine enables or disables the auto calibration feature timer
 
 	// Toggle Auto kalibrerings aktiverings flag
 	AutoShutterCalEnableFlag = !AutoShutterCalEnableFlag;
 
-	// Skal Automatisk shutter kalibrering aktiveres eller deaktiveres
+	// Should automatic shutter calibration be enabled or disabled
 	if (AutoShutterCalEnableFlag == true) {
 
-		// Opdater Knap Border Farve
+		// Update the button border color
 		GlobalVariables::GlobalAutoShutterCalButton->FlatAppearance->BorderColor = System::Drawing::Color::Lime;
 
 		// Konfigurer timer perioden
 		GlobalVariables::GlobalAutoCalTimer->Interval = ((unsigned int)GlobalVariables::GlobalAutoCalPeriodUpDown->Value) * 1000;
 
-		// Aktiver auto kalibrerings timer
+		// Enable the auto calibration timer
 		GlobalVariables::GlobalAutoCalTimer->Enabled = true;
 
-		// Skriv GUI status meddelse
+		// Write GUI status message
 		RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "Automatic Shutter Calibration Is Enabled", _StatusMessageType_Success);
 
 	}
 	else {
 
-		// Nulstil Knap Border Farve
+		// Reset the button border color
 		GlobalVariables::GlobalAutoShutterCalButton->FlatAppearance->BorderColor = System::Drawing::Color::FromArgb(255, 40, 40, 40);
 
-		// Deaktiver auto kalibrerings timer
+		// Disable the auto calibration timer
 		GlobalVariables::GlobalAutoCalTimer->Enabled = false;
 
 	}
 
-	// Opdater knap grafik
+	// Update the button graphic
 	GlobalVariables::GlobalAutoShutterCalButton->Refresh();
 
 }
 
 void RMH_ThermalViewer_ToggleCameraDriftBasedCalibrationTimer() {
 
-	// Routinen aktiverer eller deaktiverer Temperatur Drift Baserede kalibrerings featuren 
+	// This routine enables or disables the temperature-drift-based calibration feature 
 
 	// Toggle Temperatur Drift Baserede kalibrerings aktiverings flag
 	DriftBasedCalEnableFlag = !DriftBasedCalEnableFlag;
 
-	// Skal Temperatur Drift Baserede kalibrering aktiveres eller deaktiveres
+	// Should temperature-drift-based calibration be enabled or disabled
 	if (DriftBasedCalEnableFlag == true) {
 
-		// Opdater Knap Border Farve
+		// Update the button border color
 		GlobalVariables::GlobalSensorDriftCalButton->FlatAppearance->BorderColor = System::Drawing::Color::Lime;
 
 		// Konfigurer timer perioden
 		GlobalVariables::GlobalDriftCalTimer->Interval = 2000;
 
-		// Aktiver auto kalibrerings timer
+		// Enable the auto calibration timer
 		GlobalVariables::GlobalDriftCalTimer->Enabled = true;
 
-		// Skriv GUI status meddelse
+		// Write GUI status message
 		RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "Temperature Drift Base Calibration Is Enabled", _StatusMessageType_Success);
 
 	}
 	else {
 
-		// Nulstil Knap Border Farve
+		// Reset the button border color
 		GlobalVariables::GlobalSensorDriftCalButton->FlatAppearance->BorderColor = System::Drawing::Color::FromArgb(255, 40, 40, 40);
 
-		// Deaktiver auto kalibrerings timer
+		// Disable the auto calibration timer
 		GlobalVariables::GlobalDriftCalTimer->Enabled = false;
 
 	}
 
-	// Opdater knap grafik
+	// Update the button graphic
 	GlobalVariables::GlobalAutoShutterCalButton->Refresh();
 
 }
 
 void RMH_ThermalViewer_ReadThermalCameraInternalTemps() {
 
-	// Routinen læser og viser kameraets interne Detektor, Core og Shutter temperaturer
+	// This routine reads and shows the internal detector, core and shutter temperatures of the camera
 
-	// Lokale variabler
+	// Read the temporary array data and sort the kernel array
 	float CameraDetectorTemp = (IRCamera.temp_fpa * TemperatureUnitScaleFactor) + TemperatureUnitOffsetFactor;
 	float CameraCoreTemp = (IRCamera.temp_core * TemperatureUnitScaleFactor) + TemperatureUnitOffsetFactor;
 	float CameraShutterTemp = (IRCamera.temp_shutter * TemperatureUnitScaleFactor) + TemperatureUnitOffsetFactor;
 	
-	// Opdater Kameraets interne temperatur labels
+	// Update the internal temperature labels of the camera
 	GlobalVariables::GlobalCameraDetectorTempLabel->Text = "Camera Detector: " + CameraDetectorTemp.ToString("F3") + GlobalVariables::DefaultTempUnitString;
 	GlobalVariables::GlobalCameraCoreTempLabel->Text = "Camera Core: " + CameraCoreTemp.ToString("F3") + GlobalVariables::DefaultTempUnitString;
 	GlobalVariables::GlobalCameraShutterTempLabel->Text = "Camera Shutter: " + CameraShutterTemp.ToString("F3") + GlobalVariables::DefaultTempUnitString;
 
 }
 
-// ---------------- Kamera Afbrydelses Eller Mode Skift Håndterings Routiner ---------------- //
+// ---------------- Camera Disconnect Or Mode Change Handling Routines ---------------- //
 
 void RMH_ThermalViewer_HandleSellectedDeviceOrModeChange() {
 
-	// Routinen håndterer handlingerne ved ændring af Kamera source ComboBox Item
+	// This routine handles the actions when the camera source ComboBox item changes
 
-	// ----------------------------------- Nulstil Temperatur Range stadier ----------------------------------- //
+	// ----------------------------------- Reset Temperature Range States ----------------------------------- //
 
-	// Nulstil Termiske kamera High-Range Flag
+	// Reset the thermal camera high-range flag
 	ThermalCameraHighRangeFlag = false;
 
-	// Opdater Temperatur Range Knap border farve
+	// Update the temperature range button border color
 	GlobalVariables::GlobalTempRangeButton->FlatAppearance->BorderColor = System::Drawing::Color::FromArgb(255, 40, 40, 40);
 
-	// Opdater IR Kamera Device Temperatur Range variabel
+	// Update the IR camera device temperature range variable
 	IRCamera.CurrentIRTempRangeFlag = 1;
 
 	// -------------------------------------------------------------------------------------------------------- //
 
-	// Deaktiver Kamera konfigurations GUI komponenter
+	// Disable the camera configuration GUI components
 	RMH_ThermalViewer_EnableCameraConfigurationControls(false);
 
-	// Nulstil Auto kalibrerings aktiverings flag - Falsk efter tilhørende routine eksikvering
+	// Reset the auto calibration enable flag - false after execution of the associated routine
 	AutoShutterCalEnableFlag = true;
 	// Deaktiver Automatisk shutter kalibrerings feature timeren
 	RMH_ThermalViewer_ToggleCameraAutoShutterCalibrationTimer();
-	// Deaktiver Auto Shutter kalibration knap i indstillings menuen
+	// Disable the auto shutter calibration button in the settings menu
 	GlobalVariables::GlobalAutoShutterCalButton->Enabled = false;
 
-	// Deaktiver Kamera Disconnect Knap
+	// Disable the camera disconnect button
 	GlobalVariables::GlobalDisconnectButton->Enabled = false;
-	// Deaktiver Kalibrerings knap i Live View Tools Panel
+	// Disable the calibration button in the live view tools panel
 	GlobalVariables::GlobalCalibrateCameraButton->Enabled = false;
-	// Deaktiver Temperatur Drift Baseret kalibration knap i indstillings menuen
+	// Disable the temperature-drift-based calibration button in the settings menu
 	GlobalVariables::GlobalSensorDriftCalButton->Enabled = false;
-	// Deaktiver Temperatur Range knap i Live View Tools Panel
+	// Disable the temperature range button in the live view tools panel
 	GlobalVariables::GlobalTempRangeButton->Enabled = false;
-	// Deaktiver Recording Knap i Live View Tools Panel
+	// Disable the recording button in the live view tools panel
 	GlobalVariables::GlobalRecordingButton->Enabled = false;
 
-	// Kontroller om Video Playback Formen er åben
+	// Check whether the video playback form is open
 	if (VideoPlaybackControlsFormIsOpenFlag == true) {
 
-		// Deaktiver Play, Frem og tilbage knapperne
+		// Disable the play, forward and back buttons
 		GlobalVariables::VideoPlaybackForwardStepButton->Enabled = false;
 		GlobalVariables::VideoPlaybackBackwardStepButton->Enabled = false;
 		GlobalVariables::VideoPlaybackPlayStopButton->Enabled = false;
 
 	}
 
-	// Loop igennem hele arrayet af Main Form GUIens Menu knapper
+	// Loop through the whole array of menu buttons of the main form GUI
 	for (unsigned int i = 0; i < GlobalVariables::MainGUILeftMenuButtons->Length; i++) {
 
-		// Deaktiver Main GUI Formens Venstra menu knapper - Untagen "Settings" Menu Knappen
+		// Disable the left menu buttons of the main GUI form - except the "Settings" menu button
 		GlobalVariables::MainGUILeftMenuButtons[i]->Enabled = false;
 
 	}
 
-	// Deaktiver GUI update timer
+	// Disable the GUI update timer
 	GlobalVariables::GlobalMainGUIUpdateTimer->Enabled = false;
 	GlobalVariables::GlobalMainGUIUpdateTimer->Stop();
 
-	// Kontroller om et kamera var forbundet
+	// Check whether a camera was connected
 	if (IRCamera.ConnectedFlag == true) {
-		// Skriv GUI Status Meddelse
+		// Write GUI status message
 		RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "Thermal Camera Has Been Disconnected And The Video Stream Has Stopped!", _StatusMessageType_Normal);
 	}
 
-	// Nulstil Kamera "isStreaming" status flag
+	// Reset the camera "isStreaming" status flag
 	IRCamera.isStreaming = false;
-	// Opdater Kamera Connect status flag
+	// Update the camera connect status flag
 	IRCamera.ConnectedFlag = false;
 
-	// Kun hvis "Recording Analysis" Mode ikke er aktiv
+	// Only if "Recording Analysis" mode is not active
 	if (InRecordingAnalysisModeFlag == false && InSnapShotAnalysisModeFlag == false) {
 
-		// Stop Kamera video capturing
+		// Stop the camera video capture
 		RMH_IRThermalCamera_StopCapturing();
-		// Stop Video Capture og luk for kameraet - hvis et kamera er aktivt
+		// Stop video capture and close the camera - if a camera is active
 		RMH_IRThermalCamera_CloseIRCameraDevice();
 
 	}
@@ -2107,33 +2107,33 @@ void RMH_ThermalViewer_HandleSellectedDeviceOrModeChange() {
 	// Er "SnapShot Analysis" Mode valgt
 	if (GlobalVariables::GlobalCameraSourceDropList->SelectedIndex == _SnapShotAnalysisMode) { 
 
-		// Opdater Connect Knap Label Text
+		// Update the connect button label text
 		GlobalVariables::GlobalConnectButton->Text = L"Click To\r\nBrowse And Open\r\nSnapShot File";
-		// Opdater Connect Knap border farve 
+		// Update the connect button border color 
 		GlobalVariables::GlobalConnectButton->FlatAppearance->BorderColor = System::Drawing::Color::FromArgb(255, 40, 40, 40);
 
 	}
 	else if (GlobalVariables::GlobalCameraSourceDropList->SelectedIndex == _RecordingAnalysisMode) { // Er "Recording Analysis" Mode valgt
 
-		// Opdater Connect Knap Label Text
+		// Update the connect button label text
 		GlobalVariables::GlobalConnectButton->Text = L"Click To\r\nBrowse And Open\r\nVideo File";
-		// Opdater Connect Knap border farve 
+		// Update the connect button border color 
 		GlobalVariables::GlobalConnectButton->FlatAppearance->BorderColor = System::Drawing::Color::FromArgb(255, 40, 40, 40);
 
 	}
 	else {
 
-		// Nulstil Connect Knap Label Text
+		// Reset the connect button label text
 		GlobalVariables::GlobalConnectButton->Text = L"Connect";
-		// Opdater Connect Knap border farve 
+		// Update the connect button border color 
 		GlobalVariables::GlobalConnectButton->FlatAppearance->BorderColor = System::Drawing::Color::FromArgb(255, 40, 40, 40);
 
 	}
 
-	// Luk "Recording Analysis" Mode video fil, hvis den er åben
+	// Close the "Recording Analysis" mode video file, if it is open
 	RMH_VideoFileReading_CloseRecordingAnalysisModeFile();
 
-	// Hvis "Recording Analysis" Mode er aktic
+	// If "Recording Analysis" mode is active
 	if (InRecordingAnalysisModeFlag == true) {
 
 		// Luk for video playback controls panel formen
@@ -2141,27 +2141,27 @@ void RMH_ThermalViewer_HandleSellectedDeviceOrModeChange() {
 
 	}
 
-	// Nulstil "Er i Recording Analysis Mode" flaget
+	// Reset the "in Recording Analysis mode" flag
 	InRecordingAnalysisModeFlag = false;
-	// Nulstil "Er i SnapShot Analysis Mode" flaget
+	// Reset the "in Snapshot Analysis mode" flag
 	InSnapShotAnalysisModeFlag = false;
 
 }
 
 void RMH_ThermalViewer_HandleCameraDisconnectedEvents(bool ShowStatusMEssageFlag) {
 
-	// Routinen håndterer events når kamera forbindelsen bliver afbrudt under video streaming
+	// This routine handles the events when the camera connection is lost during video streaming
 
-	// Skal ikke fortages i "Recording Analysis" Mode og "SnapShot Analysis" Mode
+	// Must not be done in "Recording Analysis" mode and "Snapshot Analysis" mode
 	if (InRecordingAnalysisModeFlag == false && InSnapShotAnalysisModeFlag == false) {
 
-		// Kontroller om kamera forbindelsen blev afbrudt
+		// Check whether the camera connection was lost
 		if (RMH_IRThermalCamera_CheckForCameraDisconnection()) {
 
-			// Skriv GUI Status Meddelse
+			// Write GUI status message
 			if (ShowStatusMEssageFlag == true) { RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "Connection To The Thermal Camera Was Lost!", _StatusMessageType_Error); }
 
-			// Håndter GUI stadie ved tabt kamera forbindelse eller "Mode" skift
+			// Handle the GUI state on lost camera connection or "mode" change
 			RMH_ThermalViewer_HandleSellectedDeviceOrModeChange();
 
 		}
@@ -2170,141 +2170,141 @@ void RMH_ThermalViewer_HandleCameraDisconnectedEvents(bool ShowStatusMEssageFlag
 
 }
 
-// --------------------- Kamera Temperatur Enheds Håndterings Routiner ---------------------- //
+// --------------------- Camera Temperature Unit Handling Routines ---------------------- //
 
 void RMH_ThermalViewer_ChangeTemperatureUnit(System::Object^ sender) {
 
-	// Routinen håndterer temperatur enheds knapperne, som et nested callbak for alle tre knapper.
-	// Routinen håndterer ligeledes events og handlinger ved skift af temperatur enheden, for alle temperature målinger.
+	// This routine handles the temperature unit buttons, as a nested callback for all three buttons.
+	// The routine also handles the events and actions when the temperature unit is changed, for all temperature measurements.
 
 	// Cast Sender objekt som Forms Button objekt
 	System::Windows::Forms::Button^ PressedTempUnitButton = (System::Windows::Forms::Button^)sender;
 
-	// Læs trykket knaps identifikations tag
+	// Read the identification tag of the pressed button
 	unsigned int ButtonTag = Convert::ToInt32(PressedTempUnitButton->Tag);
 
-	// Kontroller at ny valgte Temp enhed ikke er den nuværende
+	// Check that the newly selected temperature unit is not the current one
 	if (TempUnitState != ButtonTag) {
 
-		// Hvilken knap er blevet trykket - læs knap Tag
+		// Which button has been pressed - read the button tag
 		switch (ButtonTag) {
 
-			// Celsius Knap
+			// Celsius button
 			case 1:
 
-				// Opdater knapperned Border farve
+				// Update the button border color
 				GlobalVariables::TempUnitButtons[0]->FlatAppearance->BorderColor = System::Drawing::Color::Lime;
 				GlobalVariables::TempUnitButtons[1]->FlatAppearance->BorderColor = System::Drawing::Color::FromArgb(255, 40, 40, 40);
 				GlobalVariables::TempUnitButtons[2]->FlatAppearance->BorderColor = System::Drawing::Color::FromArgb(255, 40, 40, 40);
 
-				// Opdater temperatur enhedens skallerings faktor fra celsius
+				// Update the scaling factor of the temperature unit from Celsius
 				TemperatureUnitScaleFactor = 1.0;
-				// Opdater temperatur enhedens Offset værdi fra celsius
+				// Update the offset value of the temperature unit from Celsius
 				TemperatureUnitOffsetFactor = 0.0;
 
 				// Opdater Temp Unit Status Oldstate
 				TempUnitOldstate = TempUnitState;
-				// Opdater Temp Unit Status værdi
+				// Update the temperature unit status value
 				TempUnitState = 1;
 
-				// Opdater Default Temperatur Enheds String
+				// Update the default temperature unit string
 				GlobalVariables::DefaultTempUnitString = "°C";
 
-				// Skriv GUI Start Meddelse
+				// Write GUI start message
 				RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "Temperature Measurement Unit Changed To: Celsius.", _StatusMessageType_Normal);
 
 			break;
 
-			// Fahrenheit Knap
+			// Fahrenheit button
 			case 2:
 
-				// Opdater knapperned Border farve
+				// Update the button border color
 				GlobalVariables::TempUnitButtons[0]->FlatAppearance->BorderColor = System::Drawing::Color::FromArgb(255, 40, 40, 40);
 				GlobalVariables::TempUnitButtons[1]->FlatAppearance->BorderColor = System::Drawing::Color::Lime;
 				GlobalVariables::TempUnitButtons[2]->FlatAppearance->BorderColor = System::Drawing::Color::FromArgb(255, 40, 40, 40);
 
-				// Opdater temperatur enhedens skallerings faktor fra celsius
+				// Update the scaling factor of the temperature unit from Celsius
 				TemperatureUnitScaleFactor = 1.8;
-				// Opdater temperatur enhedens Offset værdi fra celsius
+				// Update the offset value of the temperature unit from Celsius
 				TemperatureUnitOffsetFactor = 32.0;
 
 				// Opdater Temp Unit Status Oldstate
 				TempUnitOldstate = TempUnitState;
-				// Opdater Temp Unit Status værdi
+				// Update the temperature unit status value
 				TempUnitState = 2;
 
-				// Opdater Default Temperatur Enheds String
+				// Update the default temperature unit string
 				GlobalVariables::DefaultTempUnitString = "°F";
 
-				// Skriv GUI Start Meddelse
+				// Write GUI start message
 				RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "Temperature Measurement Unit Changed To: Fahrenheit.", _StatusMessageType_Normal);
 
 			break;
 
-			// Kelvin Knap
+			// Kelvin button
 			case 3:
 
-				// Opdater knapperned Border farve
+				// Update the button border color
 				GlobalVariables::TempUnitButtons[0]->FlatAppearance->BorderColor = System::Drawing::Color::FromArgb(255, 40, 40, 40);
 				GlobalVariables::TempUnitButtons[1]->FlatAppearance->BorderColor = System::Drawing::Color::FromArgb(255, 40, 40, 40);
 				GlobalVariables::TempUnitButtons[2]->FlatAppearance->BorderColor = System::Drawing::Color::Lime;
 
-				// Opdater temperatur enhedens skallerings faktor fra celsius
+				// Update the scaling factor of the temperature unit from Celsius
 				TemperatureUnitScaleFactor = 1.0;
-				// Opdater temperatur enhedens Offset værdi fra celsius
+				// Update the offset value of the temperature unit from Celsius
 				TemperatureUnitOffsetFactor = 273.15;
 
 				// Opdater Temp Unit Status Oldstate
 				TempUnitOldstate = TempUnitState;
-				// Opdater Temp Unit Status værdi
+				// Update the temperature unit status value
 				TempUnitState = 3;
 
-				// Opdater Default Temperatur Enheds String
+				// Update the default temperature unit string
 				GlobalVariables::DefaultTempUnitString = "K";
 
-				// Skriv GUI Start Meddelse
+				// Write GUI start message
 				RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "Temperature Measurement Unit Changed To: Kelvin.", _StatusMessageType_Normal);
 
 			break;
 
 		}
 
-		// --------------- Opdater GUI elementer til valgte Temperatur enhed --------------- //
+		// --------------- Update GUI Elements To The Selected Temperature Unit --------------- //
 
-		// ----- Kamera Konfigurations Panel ----->
+		// ----- Camera Configuration Panel ----->
 
-		// Updater Kamera konfigurations panelets NumericUpDowns Maksimale og Minimale begrænsninger
+		// Update the maximum and minimum limits of the NumericUpDowns of the camera configuration panel
 		RMH_ThermalViewer_SetCameraConfigUpDownRanges(TemperatureUnitScaleFactor, TemperatureUnitOffsetFactor);
 
-		// Opdater kamera konfigurations Numeric UpDowns parametere værdier
+		// Update the parameter values of the camera configuration NumericUpDowns
 		RMH_Winforms_NumericUpDown_ChangeNumber(GlobalVariables::CameraConfigNumericUpDowns[1], IRCamera.ReflectedTemperatureSetting, TemperatureUnitScaleFactor, TemperatureUnitOffsetFactor, _IRThermalCameraDefault_ReflectedTemperatureValue);
 		RMH_Winforms_NumericUpDown_ChangeNumber(GlobalVariables::CameraConfigNumericUpDowns[2], IRCamera.AmbientTemperatureSetting, TemperatureUnitScaleFactor, TemperatureUnitOffsetFactor, _IRThermalCameraDefault_AmbientTemperatureValue);
 
-		// Opdater Kamera konfigurations panelets labels temperatur enheds string
+		// Update the temperature unit string of the labels of the camera configuration panel
 		GlobalVariables::CameraConfigLabels[0]->Text = "Temperature Correction [" + GlobalVariables::DefaultTempUnitString + "]:";
 		GlobalVariables::CameraConfigLabels[1]->Text = "Ambient Temperature [" + GlobalVariables::DefaultTempUnitString + "]:";
 		GlobalVariables::CameraConfigLabels[2]->Text = "Reflected Temperature [" + GlobalVariables::DefaultTempUnitString + "]:";
 
 		// ----- Video PlayBack Controls Panel ----->
 
-		// Opdater Kun hvis Video Playback Formen Er Åben
+		// Update only if the video playback form is open
 		if (VideoPlaybackControlsFormIsOpenFlag == true) {
 
-			// Opdater Video PlayBack Controls labels temperatur enheds string
+			// Update the temperature unit string of the video playback controls labels
 			GlobalVariables::VideoPlaybackTempCorrectionLabel->Text = RMH_Conversion_FloatToSystemString(IRCamera.TemperatureCorrectionSetting) + " " + GlobalVariables::DefaultTempUnitString;
 			GlobalVariables::VideoPlaybackAmbientTempLabel->Text = RMH_Conversion_FloatToSystemString(IRCamera.AmbientTemperatureSetting * TemperatureUnitScaleFactor + TemperatureUnitOffsetFactor) + " " + GlobalVariables::DefaultTempUnitString;
 			GlobalVariables::VideoPlaybackReflectedTempLabel->Text = RMH_Conversion_FloatToSystemString(IRCamera.ReflectedTemperatureSetting * TemperatureUnitScaleFactor + TemperatureUnitOffsetFactor) + " " + GlobalVariables::DefaultTempUnitString;
 
 		}
 
-		// ------ Live View Statistik Vindue ------->
+		// ------ Live View Statistics Window ------->
 		
-		// Nulstil Maksimum Peak Værdien
+		// Reset the maximum peak value
 		MaxPeakTemperature = 0;
-		// Nulstil Minimum Peak Værdien
+		// Reset the minimum peak value
 		MinPeakTemperature = 2000.0;
 
-		// Opdater Maksimale drift temperatur label i kalibrerings settings menu
+		// Update the maximum drift temperature label in the calibration settings menu
 		GlobalVariables::GlobalMaxTempDriftSetPountLabel->Text = "Maximum Drift Temperature [" + GlobalVariables::DefaultTempUnitString + "]:";
 
 		// --------------------------------------------------------------------------------- //
@@ -2313,75 +2313,75 @@ void RMH_ThermalViewer_ChangeTemperatureUnit(System::Object^ sender) {
 
 }
 
-// ----------------------- Temperatur Trackings Håndterings Routiner ------------------------ //
+// ----------------------- Temperature Tracking Handling Routines ------------------------ //
 
 void RMH_ThermalViewer_ReadMaxMinCentTemperatures() {
 
-	// Routinen læser Maximum, Minimum og Center temperaturer 
+	// This routine reads the maximum, minimum and center temperatures 
 
-	// Læs Maximum, Minimum og Center temperatur og kompenser for valg af temperatur enhed
+	// Read the maximum, minimum and center temperatures and compensate for the selected temperature unit
 	MaximumTemperature = (RMH_IRThermalCamera_ReadPixelTemperature(&IRCamera, IRCamera.Tmax_Tmp_Raw, IRCamera.ThermalCameraSupportPool) * TemperatureUnitScaleFactor) + TemperatureUnitOffsetFactor;
 	MinimumTemperature = (RMH_IRThermalCamera_ReadPixelTemperature(&IRCamera, IRCamera.Tmin_Tmp_Raw, IRCamera.ThermalCameraSupportPool) * TemperatureUnitScaleFactor) + TemperatureUnitOffsetFactor;
 	CenterTemperature = (RMH_IRThermalCamera_ReadPixelTemperature(&IRCamera, IRCamera.Center_Tmp_Raw, IRCamera.ThermalCameraSupportPool) * TemperatureUnitScaleFactor) + TemperatureUnitOffsetFactor;
 
-	// Udregn/Konverter den rå Gennemsnitlige Termiske Frame Data værdi til en aktuel temperatur
+	// Calculate/convert the raw average thermal frame data value to an actual temperature
 	AverageTemperature = (RMH_IRThermalCamera_ReadPixelTemperature(&IRCamera, IRCamera.Tavg_Tmp_Raw, IRCamera.ThermalCameraSupportPool) * TemperatureUnitScaleFactor) + TemperatureUnitOffsetFactor;
 
 }
 
 void RMH_ThermalViewer_FormatMaximumTemperatureLabel() {
 
-	// Routinen formaterer et tilhørende label til renderering på live view
+	// This routine formats an associated label for rendering on the live view
 
-	// Formater Maximum temperatur label til live view renderering
+	// Format the maximum temperature label for live view rendering
 	GlobalVariables::MaximumTempLabel = "Max: " + MaximumTemperature.ToString(GlobalVariables::TemperaturePrecision) + " " + GlobalVariables::DefaultTempUnitString;
 
 }
 
 void RMH_ThermalViewer_FormatMinimumTemperatureLabel() {
 
-	// Routinen formaterer et tilhørende label til renderering på live view
+	// This routine formats an associated label for rendering on the live view
 
-	// Formater Minimum temperatur label til live view renderering
+	// Format the minimum temperature label for live view rendering
 	GlobalVariables::MinimumTempLabel = "Min: " + MinimumTemperature.ToString(GlobalVariables::TemperaturePrecision) + " " + GlobalVariables::DefaultTempUnitString;
 
 }
 
 void RMH_ThermalViewer_FormatCenterTemperatureLabel() {
 
-	// Routinen formaterer et tilhørende label til renderering på live view
+	// This routine formats an associated label for rendering on the live view
 
-	// Formater Center temperatur label til live view renderering
+	// Format the center temperature label for live view rendering
 	GlobalVariables::CenterTempLabel = "Center: " + CenterTemperature.ToString(GlobalVariables::TemperaturePrecision) + " " + GlobalVariables::DefaultTempUnitString;
 
 }
 
 void RMH_ThermalViewer_ReadAndFormatMouseCursorTempAndLabel() {
 
-	// Routinen læser og formaterer et tilhørende label til Mus cursor label renderering på live view
+	// This routine reads and formats an associated label for the mouse cursor label rendering on the live view
 
-	// Læs Mus Cursor temperaturen og kompenser for valg af temperatur enhed
+	// Read the mouse cursor temperature and compensate for the selected temperature unit
 	CursorTemperature = (RMH_IRThermalCamera_ReadFramePixelTemperature(&IRCamera, &FrameThermalDataRaw[0], LiveViewCursorTrackPos.CursorXPos, LiveViewCursorTrackPos.CursorYPos, IRCamera.ThermalCameraSupportPool) * TemperatureUnitScaleFactor) + TemperatureUnitOffsetFactor;
 
-	// Formater Mus Cursor temperatur label til live view renderering
+	// Format the mouse cursor temperature label for live view rendering
 	GlobalVariables::MouseCursorTempLabel = "Temp: " + CursorTemperature.ToString(GlobalVariables::TemperaturePrecision) + " " + GlobalVariables::DefaultTempUnitString;
 
 }
 
 void RMH_ThermalViewer_ReadAndFormatROITempAndLabels() {
 
-	// Routinen læser aktive ROI Maximum og Minimum Temperaturerne og Formaterer Tilhørende Label Strings Til Renderering
+	// This routine reads the active ROI maximum and minimum temperatures and formats the associated label strings for rendering
 
-	// Lokale variabler
+	// Read the temporary array data and sort the kernel array
 	unsigned short Renderindex = 0;
 
-	// Læs temperatur og formater labels for alle aktive ROIer
+	// Read the temperature and format the labels for all active ROIs
 	for (unsigned int i = 0; i < NumOfActiveLiveViewROIs; i++) {
 
-		// Læs Render orden indexet
+		// Read the render order index
 		Renderindex = ActiveROIRenderingOrder[i];
 
-		// Læs Aktive ROI Maximum og Minimum Temperature - Samt ROI arealets Rå Pixel værdier
+		// Read the active ROI maximum and minimum temperature - as well as the raw pixel values of the ROI area
 		ROIAreaPixelValues[Renderindex] = RMH_IRThermalCamera_ReadROIAreaPixelInfoInsideFrameArea(&IRCamera,
 			&FrameThermalDataRaw[0], IRCamera.FrameWidth,
 			ROIRectanglePositions[Renderindex].RectangleX0Pos,
@@ -2391,12 +2391,12 @@ void RMH_ThermalViewer_ReadAndFormatROITempAndLabels() {
 			ROIxReturnAreaRawPixelValsFlags[Renderindex], &ROIxAreaRawPixelValues[0], 
 			IRCamera.ThermalCameraSupportPool);
 
-		// Konpenser for valgte temperatur enhed
+		// Compensate for the selected temperature unit
 		ROIAreaPixelValues[Renderindex].MaxValue = (ROIAreaPixelValues[Renderindex].MaxValue * TemperatureUnitScaleFactor) + TemperatureUnitOffsetFactor;
 		ROIAreaPixelValues[Renderindex].MinValue = (ROIAreaPixelValues[Renderindex].MinValue * TemperatureUnitScaleFactor) + TemperatureUnitOffsetFactor;
 		ROIAreaPixelValues[Renderindex].AvgValue = (ROIAreaPixelValues[Renderindex].AvgValue * TemperatureUnitScaleFactor) + TemperatureUnitOffsetFactor;
 
-		// Formater ROI Maximum og Minimum temperatur label til live view renderering
+		// Format the ROI maximum and minimum temperature label for live view rendering
 		GlobalVariables::ROIMaxTempLabels[Renderindex] = "Max: " + ROIAreaPixelValues[Renderindex].MaxValue.ToString(GlobalVariables::TemperaturePrecision) + " " + GlobalVariables::DefaultTempUnitString;
 		GlobalVariables::ROIMinTempLabels[Renderindex] = "Min: " + ROIAreaPixelValues[Renderindex].MinValue.ToString(GlobalVariables::TemperaturePrecision) + " " + GlobalVariables::DefaultTempUnitString;
 
@@ -2405,7 +2405,7 @@ void RMH_ThermalViewer_ReadAndFormatROITempAndLabels() {
 	// Er Live View Split View aktiverede
 	if (LiveViewSplitViewEnableFlag == true) {
 
-		// Læs Zoom ROI Maximum og Minimum Temperature - Samt ROI arealets Rå Pixel værdier
+		// Read the zoom ROI maximum and minimum temperature - as well as the raw pixel values of the ROI area
 		ZoomROIAreaPixelValues = RMH_IRThermalCamera_ReadROIAreaPixelInfoInsideFrameArea(&IRCamera,
 			&FrameThermalDataRaw[0], IRCamera.FrameWidth,
 			ZoomROIRectanglePositions.RectangleX0Pos,
@@ -2415,12 +2415,12 @@ void RMH_ThermalViewer_ReadAndFormatROITempAndLabels() {
 			true, &ZoomROIxAreaRawPixelValues[0],
 			IRCamera.ThermalCameraSupportPool);
 
-		// Konpenser for valgte temperatur enhed
+		// Compensate for the selected temperature unit
 		ZoomROIAreaPixelValues.MaxValue = (ZoomROIAreaPixelValues.MaxValue * TemperatureUnitScaleFactor) + TemperatureUnitOffsetFactor;
 		ZoomROIAreaPixelValues.MinValue = (ZoomROIAreaPixelValues.MinValue * TemperatureUnitScaleFactor) + TemperatureUnitOffsetFactor;
 		ZoomROIAreaPixelValues.AvgValue = (ZoomROIAreaPixelValues.AvgValue * TemperatureUnitScaleFactor) + TemperatureUnitOffsetFactor;
 
-		// Formater Zoom ROI Maximum og Minimum temperatur label til live view renderering
+		// Format the zoom ROI maximum and minimum temperature label for live view rendering
 		GlobalVariables::ZoomROIMaxTempLabels = "Max: " + ZoomROIAreaPixelValues.MaxValue.ToString(GlobalVariables::TemperaturePrecision) + " " + GlobalVariables::DefaultTempUnitString;
 		GlobalVariables::ZoomROIMinTempLabels = "Min: " + ZoomROIAreaPixelValues.MinValue.ToString(GlobalVariables::TemperaturePrecision) + " " + GlobalVariables::DefaultTempUnitString;
 
@@ -2430,25 +2430,25 @@ void RMH_ThermalViewer_ReadAndFormatROITempAndLabels() {
 
 void RMH_ThermalViewer_ReadAndFormatTempMeasurementsAndLabels() {
 
-	// Routinen læser aktive ROI Maximum og Minimum Temperaturerne og Formaterer Tilhørende Label Strings Til Renderering
+	// This routine reads the active ROI maximum and minimum temperatures and formats the associated label strings for rendering
 
-	// Lokale variabler
+	// Read the temporary array data and sort the kernel array
 	unsigned short Renderindex = 0;
 
-	// Læs temperaturer og formater labels for alle aktive temperatur målinger
+	// Read the temperatures and format the labels for all active temperature measurements
 	for (unsigned int i = 0; i < NumOfActiveLiveViewTempMeas; i++) {
 
-		// Læs Render orden indexet
+		// Read the render order index
 		Renderindex = ActiveTempMeasRenderingOrder[i];
 
-		// Læs Aktive Temp Målings temperatur
+		// Read the temperature of the active temperature measurement
 		TempMeasurementValues[Renderindex] = RMH_IRThermalCamera_ReadFramePixelTemperature(&IRCamera, &FrameThermalDataRaw[0],
 			TempMeasPositions[Renderindex].CrosshairX0Pos, TempMeasPositions[Renderindex].CrosshairY0Pos, IRCamera.ThermalCameraSupportPool);
 
-		// Konpenser for valgte temperatur enhed
+		// Compensate for the selected temperature unit
 		TempMeasurementValues[Renderindex] = (TempMeasurementValues[Renderindex] * TemperatureUnitScaleFactor) + TemperatureUnitOffsetFactor;
 
-		// Formater temperatur målings Label string til live view renderering
+		// Format the temperature measurement label string for live view rendering
 		GlobalVariables::TempMeasurementsLabels[Renderindex] = TempMeasurementValues[Renderindex].ToString(GlobalVariables::TemperaturePrecision) + " " + GlobalVariables::DefaultTempUnitString;
 
 	}
@@ -2457,9 +2457,9 @@ void RMH_ThermalViewer_ReadAndFormatTempMeasurementsAndLabels() {
 
 void RMH_ThermalViewer_ReadAndFormatLinesMaxMinAvgTempsAndLabels() {
 
-	// Routinen læser aktive linjers Maximum, Minimum Og Gennemsnitlig Temperaturerne og Formaterer Tilhørende Label Strings Til Renderering
+	// This routine reads the maximum, minimum and average temperatures of the active lines and formats the associated label strings for rendering
 
-	// Lokale variabler
+	// Read the temporary array data and sort the kernel array
 	double LineTempValue = 0.0;
 	unsigned short Renderindex = 0;
 	double LineMaximumTemperature = 0.0;
@@ -2468,67 +2468,67 @@ void RMH_ThermalViewer_ReadAndFormatLinesMaxMinAvgTempsAndLabels() {
 	unsigned short TempLinesPositionsXCordinates = 0;
 	unsigned short TempLinesPositionsYCordinates = 0;
 
-	// Læs Live View billeders Native Højde, Bredde Og Aspect Ratio parametere
+	// Read the native height, width and aspect ratio parameters of the live view images
 	LiveViewNativeImageWidth = GlobalVariables::OpenGLRender->RMH_LiveView_GetNativeImageWidth();
 	LiveViewNativeImageHeight = GlobalVariables::OpenGLRender->RMH_LiveView_GetNativeImageHeight();
 	LiveViewNativeImageAspectRatio = GlobalVariables::OpenGLRender->RMH_LiveView_GetNativeImageAspectRatio();
 
-	// Læs temperaturer og formater labels for alle aktive temperatur linjer
+	// Read the temperatures and format the labels for all active temperature lines
 	for (unsigned int i = 0; i < NumOfActiveLiveViewLines; i++) {
 
-		// Læs Render orden indexet
+		// Read the render order index
 		Renderindex = ActiveTempLineRenderingOrder[i];
 
-		// Indstil Maximum og Minimums værdier til Absolut Max/Min
+		// Set the maximum and minimum values to the absolute max/min
 		LineMaximumTemperature = -10000;
 		LineMinimumTemperature = 10000;
 
-		// Linjens gennemsnitlige temperatur værdi
+		// Average temperature value of the line
 		LineAverageTemperature = 0.0;
 
-		// Læs temperatur linjens Maximum og minimum temperaturer
+		// Read the maximum and minimum temperatures of the temperature line
 		for (unsigned int j = 0; j < TempLinesPositions[Renderindex].LinePixelLength; j++) {
 
 			// Kontroller Live View Roterings Indstillingen
 			if (GlobalVariables::OpenGLRender->RMH_LiveView_GetRotation() == 0) {
 
-				// Læs Temperatur Linjernes X/Y Positions Koordinater
+				// Read the X/Y position coordinates of the temperature lines
 				TempLinesPositionsXCordinates = TempLinesPositions[Renderindex].LineXCordinates[j];
 				TempLinesPositionsYCordinates = TempLinesPositions[Renderindex].LineYCordinates[j];
 
 			}
 			if (GlobalVariables::OpenGLRender->RMH_LiveView_GetRotation() == 90) {
 
-				// Læs Temperatur Linjernes X/Y Positions Koordinater
+				// Read the X/Y position coordinates of the temperature lines
 				TempLinesPositionsXCordinates = LiveViewNativeImageWidth - TempLinesPositions[Renderindex].LineYCordinates[j] * LiveViewNativeImageAspectRatio;
 				TempLinesPositionsYCordinates = TempLinesPositions[Renderindex].LineXCordinates[j] / LiveViewNativeImageAspectRatio;
 	
 			}
 			if (GlobalVariables::OpenGLRender->RMH_LiveView_GetRotation() == 180) {
 
-				// Læs Temperatur Linjernes X/Y Positions Koordinater
+				// Read the X/Y position coordinates of the temperature lines
 				TempLinesPositionsXCordinates = LiveViewNativeImageWidth - TempLinesPositions[Renderindex].LineXCordinates[j];
 				TempLinesPositionsYCordinates = LiveViewNativeImageHeight - TempLinesPositions[Renderindex].LineYCordinates[j];
 	
 			}
 			if (GlobalVariables::OpenGLRender->RMH_LiveView_GetRotation() == 270) {
 
-				// Læs Temperatur Linjernes X/Y Positions Koordinater
+				// Read the X/Y position coordinates of the temperature lines
 				TempLinesPositionsXCordinates = TempLinesPositions[Renderindex].LineYCordinates[j] * LiveViewNativeImageAspectRatio;
 				TempLinesPositionsYCordinates = LiveViewNativeImageHeight - TempLinesPositions[Renderindex].LineXCordinates[j] / LiveViewNativeImageAspectRatio;
 	
 			}
 
-			// Læs Temperatur værdien fra linjens X/Y kordinater
+			// Read the temperature value from the X/Y coordinates of the line
 			LineTempValue = RMH_IRThermalCamera_ReadFramePixelTemperature(&IRCamera, &FrameThermalDataRaw[0], TempLinesPositionsXCordinates, TempLinesPositionsYCordinates, IRCamera.ThermalCameraSupportPool);
 
-			// Lager Linjens Temperatur værdier
+			// Store the temperature values of the line
 			TempLinesTemperatureValues[Renderindex][j] = (LineTempValue * TemperatureUnitScaleFactor) + TemperatureUnitOffsetFactor;
 
-			// Kontroller for Maximum Temperatur
+			// Check for the maximum temperature
 			if (LineTempValue > LineMaximumTemperature) {
 
-				// Opdater Maximum Temperatur værdi
+				// Update the maximum temperature value
 				LineMaximumTemperature = LineTempValue;
 
 				// Lager Maximum temperaturens Frame X/Y Kordinater
@@ -2537,10 +2537,10 @@ void RMH_ThermalViewer_ReadAndFormatLinesMaxMinAvgTempsAndLabels() {
 
 			}
 
-			// Kontroller for Maximum Temperatur
+			// Check for the maximum temperature
 			if (LineTempValue < LineMinimumTemperature) {
 
-				// Opdater Minimum Temperatur værdi
+				// Update the minimum temperature value
 				LineMinimumTemperature = LineTempValue;
 
 				// Lager Minimum temperaturens Frame X/Y Kordinater
@@ -2549,25 +2549,25 @@ void RMH_ThermalViewer_ReadAndFormatLinesMaxMinAvgTempsAndLabels() {
 
 			}
 
-			// Akkumulere summen af alle Linje pixel værdiers temperatur sum
+			// Accumulate the sum of the temperatures of all line pixel values
 			LineAverageTemperature = LineAverageTemperature + LineTempValue;
 
 		}
 
-		// Udregn den gennemsnitlige Linje temperatur
+		// Calculate the average line temperature
 		LineAverageTemperature = LineAverageTemperature / (double)(TempLinesPositions[Renderindex].LinePixelLength);
 
-		// Konpenser for valgte temperatur enhed
+		// Compensate for the selected temperature unit
 		LineMaximumTemperature = (LineMaximumTemperature * TemperatureUnitScaleFactor) + TemperatureUnitOffsetFactor;
 		LineMinimumTemperature = (LineMinimumTemperature * TemperatureUnitScaleFactor) + TemperatureUnitOffsetFactor;
 		LineAverageTemperature = (LineAverageTemperature * TemperatureUnitScaleFactor) + TemperatureUnitOffsetFactor;
 
-		// Lager læste Maximum, minimums og gennemsnitlig temperaturer i globalt array
+		// Store the maximum, minimum and average temperatures read in the global array
 		TempLinesMaxTempValues[Renderindex] = LineMaximumTemperature;
 		TempLinesMinTempValues[Renderindex] = LineMinimumTemperature;
 		TempLinesAvgTempValues[Renderindex] = LineAverageTemperature;
 
-		// Formater temperatur målings Label string til live view renderering
+		// Format the temperature measurement label string for live view rendering
 		GlobalVariables::TempLinesMaxLabels[Renderindex] = "Max: " + TempLinesMaxTempValues[Renderindex].ToString(GlobalVariables::TemperaturePrecision) + " " + GlobalVariables::DefaultTempUnitString;
 		GlobalVariables::TempLinesMinLabels[Renderindex] = "Min: " + TempLinesMinTempValues[Renderindex].ToString(GlobalVariables::TemperaturePrecision) + " " + GlobalVariables::DefaultTempUnitString;
 
@@ -2577,143 +2577,143 @@ void RMH_ThermalViewer_ReadAndFormatLinesMaxMinAvgTempsAndLabels() {
 
 void RMH_ThermalViewer_ToggleMaximumTempTracking() {
 
-	// Routinen aktiverer eller deaktiverer live view maximum temperatur tracking
+	// This routine enables or disables live view maximum temperature tracking
 
 	// Toggle Max Temp trackings aktiverings flag
 	MaxTempTrackingEnableFlag = !MaxTempTrackingEnableFlag;
 
-	// Skal Dual Color Palette aktiveres eller deaktiveres
+	// Should the dual color palette be enabled or disabled
 	if (MaxTempTrackingEnableFlag == true) {
 
-		// Opdater Knap Border Farve
+		// Update the button border color
 		GlobalVariables::GlobalMaxTempTrackButton->FlatAppearance->BorderColor = System::Drawing::Color::Lime;
 
 	}
 	else {
 
-		// Nulstil Knap Border Farve
+		// Reset the button border color
 		GlobalVariables::GlobalMaxTempTrackButton->FlatAppearance->BorderColor = System::Drawing::Color::FromArgb(255, 40, 40, 40);
 
 	}
 
-	// Opdater knap grafik
+	// Update the button graphic
 	GlobalVariables::GlobalMaxTempTrackButton->Refresh();
 
 }
 
 void RMH_ThermalViewer_ToggleMinimumTempTracking() {
 
-	// Routinen aktiverer eller deaktiverer live view minimum temperatur tracking
+	// This routine enables or disables live view minimum temperature tracking
 
 	// Toggle Min Temp trackings aktiverings flag
 	MinTempTrackingEnableFlag = !MinTempTrackingEnableFlag;
 
-	// Skal Dual Color Palette aktiveres eller deaktiveres
+	// Should the dual color palette be enabled or disabled
 	if (MinTempTrackingEnableFlag == true) {
 
-		// Opdater Knap Border Farve
+		// Update the button border color
 		GlobalVariables::GlobalMinTempTrackButton->FlatAppearance->BorderColor = System::Drawing::Color::Lime;
 
 	}
 	else {
 
-		// Nulstil Knap Border Farve
+		// Reset the button border color
 		GlobalVariables::GlobalMinTempTrackButton->FlatAppearance->BorderColor = System::Drawing::Color::FromArgb(255, 40, 40, 40);
 
 	}
 
-	// Opdater knap grafik
+	// Update the button graphic
 	GlobalVariables::GlobalMinTempTrackButton->Refresh();
 
 }
 
 void RMH_ThermalViewer_ToggleCenterTempTracking() {
 
-	// Routinen aktiverer eller deaktiverer live view center temperatur tracking
+	// This routine enables or disables live view center temperature tracking
 
 	// Toggle Center Temp trackings aktiverings flag
 	CenterTempTrackingEnableFlag = !CenterTempTrackingEnableFlag;
 
-	// Skal Dual Color Palette aktiveres eller deaktiveres
+	// Should the dual color palette be enabled or disabled
 	if (CenterTempTrackingEnableFlag == true) {
 
-		// Opdater Knap Border Farve
+		// Update the button border color
 		GlobalVariables::GlobalCenterTempTrackButton->FlatAppearance->BorderColor = System::Drawing::Color::Lime;
 
 	}
 	else {
 
-		// Nulstil Knap Border Farve
+		// Reset the button border color
 		GlobalVariables::GlobalCenterTempTrackButton->FlatAppearance->BorderColor = System::Drawing::Color::FromArgb(255, 40, 40, 40);
 
 	}
 
-	// Opdater knap grafik
+	// Update the button graphic
 	GlobalVariables::GlobalCenterTempTrackButton->Refresh();
 
 }
 
 void RMH_ThermalViewer_ToggleMouseCursorTempTracking() {
 	
-	// Routinen aktiverer eller deaktiverer Mus Cursor temperatur tracking
+	// This routine enables or disables mouse cursor temperature tracking
 
 	// Toggle Center Temp trackings aktiverings flag
 	CursorTempTrackEnableFlag = !CursorTempTrackEnableFlag;
 
-	// Skal Dual Color Palette aktiveres eller deaktiveres
+	// Should the dual color palette be enabled or disabled
 	if (CursorTempTrackEnableFlag == true) {
 
-		// Opdater Knap Border Farve
+		// Update the button border color
 		GlobalVariables::GlobalCursorTempTrackButton->FlatAppearance->BorderColor = System::Drawing::Color::Lime;
 
 	}
 	else {
 
-		// Nulstil Knap Border Farve
+		// Reset the button border color
 		GlobalVariables::GlobalCursorTempTrackButton->FlatAppearance->BorderColor = System::Drawing::Color::FromArgb(255, 40, 40, 40);
 
 	}
 
-	// Aktiver eller deaktiver Mus Cursor Temperatur tracking
+	// Enable or disable mouse cursor temperature tracking
 	GlobalVariables::OpenGLRender->RMH_OpenGL_EnableMouseCursorTrackingWLabel(CursorTempTrackEnableFlag);
 
-	// Opdater knap grafik
+	// Update the button graphic
 	GlobalVariables::GlobalCursorTempTrackButton->Refresh();
 
 }
 
-// --------------------- Live View Statistik Data Håndterings Routiner ---------------------- //
+// --------------------- Live View Statistics Data Handling Routines ---------------------- //
 
 void RMH_ThermalViewer_CalLiveViewStatisticsData() {
 
-	// Routinen udregner Live view statistik vinduets tilhørende data.
+	// This routine calculates the data of the live view statistics window.
 
-	// Udregn det termiske kameras temperatur drift fra sidste kalibrering
+	// Calculate the temperature drift of the thermal camera since the last calibration
 	SensorTemperatureCalDrift = CurrentCalDetectorTemperature - IRCamera.temp_fpa;
 
-	// Kontroller om Live View Statistik Vinduet er åbent
+	// Check whether the live view statistics window is open
 	if (LiveViewStatisticsWindowIsShownFlag == true) {
 
 		// Udregn Live View "Span" (Max - Min) Temperaturen
 		TemperatureSpan = MaximumTemperature - MinimumTemperature;
-		// Udregn hvor meget af det termiske kameras nuværende temperatur range er brugt (0 - 14Bit = 0% - 100%)
+		// Calculate how much of the current temperature range of the thermal camera is used (0 - 14-bit = 0% - 100%)
 		ThermalCameraRangeUsage = ((double)IRCamera.Tmax_Tmp_Raw / 16383.0) * 100.0;
 
 		// Udren det termiske kameras sensor drift error (Tdrift / (Min - Max))
 		SensorDriftError = (SensorTemperatureCalDrift / (MinimumTemperature - MaximumTemperature)) * 100.0;
 
-		// Er den maksimale temperatur blevet højere
+		// Has the maximum temperature become higher
 		if (MaximumTemperature > MaxPeakTemperature) {
 
-			// Lager den nyeste højeste temperatur måling
+			// Store the latest highest temperature measurement
 			MaxPeakTemperature = MaximumTemperature;
 
 		}
 
-		// Er den minimale temperatur blevet mindre
+		// Has the minimum temperature become lower
 		if (MinimumTemperature < MinPeakTemperature) {
 
-			// Lager den nyeste mindste temperatur måling
+			// Store the latest lowest temperature measurement
 			MinPeakTemperature = MinimumTemperature;
 
 		}
@@ -2724,26 +2724,26 @@ void RMH_ThermalViewer_CalLiveViewStatisticsData() {
 
 void RMH_ThermalViewer_UpdateAndFormatLiveViewStatisticsLabels() {
 
-	// Routinen udregner Live view statistik data, samt opdaterer og formaterer Statistik Labels
+	// This routine calculates the live view statistics data, and updates and formats the statistics labels
 
-	// Kontroller om Live View Statistik Vinduet er åbent
+	// Check whether the live view statistics window is open
 	if (LiveViewStatisticsWindowIsShownFlag == true) {
 
-		// Akkumuler læste kameras frame rate Sum
+		// Accumulate the sum of the camera frame rate read
 		IRCamera.CameraFrameRateSum = IRCamera.CameraFrameRateSum + RMH_IRThermalCamera_ReadCameraFPS();
 
-		// Inkrementer kameraets frame rate tæller varaibel
+		// Increment the camera frame rate counter variable
 		IRCamera.CameraFrameRateSumCounter = IRCamera.CameraFrameRateSumCounter + 1;
 
-		// Hvis læste kameras frame rate Sum har Akkumulerede nok målinger
+		// If the camera frame rate sum read has accumulated enough measurements
 		if (IRCamera.CameraFrameRateSumCounter >= (unsigned int)IRCamera.FrameRate) {
 
 			// Udregn kamerats gennemsnitlige frame rate
 			IRCamera.CameraAverageFrameRate = IRCamera.CameraFrameRateSum / 20;
 
-			// Nulstil læste kameras frame rate Sum
+			// Reset the camera frame rate sum read
 			IRCamera.CameraFrameRateSum = 0;
-			// Nulstil kameraets frame rate tæller varaibel
+			// Reset the camera frame rate counter variable
 			IRCamera.CameraFrameRateSumCounter = 0;
 
 			// Opdater Live View Statistik Vinduets FPS Label
@@ -2751,11 +2751,11 @@ void RMH_ThermalViewer_UpdateAndFormatLiveViewStatisticsLabels() {
 
 		}
 
-		// Opdater Live View Statistik Vinduets "Antal fanget frames" Label
+		// Update the "Captured frames" label of the live view statistics window
 		GlobalVariables::GlobalNumberOfFramesLabel->Text = IRCamera.NumbOfCapturedFrames.ToString();
-		// Opdater Live View Statistik Vinduets "Temperatur Span" Label
+		// Update the "Temperature span" label of the live view statistics window
 		GlobalVariables::GlobalSpanLabel->Text = TemperatureSpan.ToString(GlobalVariables::TemperaturePrecision) + " " + GlobalVariables::DefaultTempUnitString;;
-		// Opdater Live View Statistik Vinduets "Gennemsnitlige Temperatur" Label
+		// Update the "Average temperature" label of the live view statistics window
 		GlobalVariables::GlobalAverageLabel->Text = AverageTemperature.ToString(GlobalVariables::TemperaturePrecision) + " " + GlobalVariables::DefaultTempUnitString;
 		// Opdater Live View Statistik Vinduets "Range Usage" Label
 		GlobalVariables::GlobalRangeUsageLabel->Text = ThermalCameraRangeUsage.ToString("F2") + "%";
@@ -2772,26 +2772,26 @@ void RMH_ThermalViewer_UpdateAndFormatLiveViewStatisticsLabels() {
 
 }
 
-// ------------------ Fast Temperatur Label Trackings Håndterings Routiner ------------------ //
+// ------------------ Fixed Temperature Label Tracking Handling Routines ------------------ //
 
 void RMH_ThermalViewer_UpdateTempMeasurementsRenderingOrder() {
 
-	// Routinen lager aktiverede Temp Målings labels positioner i et array
+	// This routine stores the positions of the enabled temperature measurement labels in an array
 	// Som definerer senere rendererings orden
 
-	// Lokale variabler
+	// Read the temporary array data and sort the kernel array
 	unsigned int ActiveTempMeasOrderIndex = 0;
 
-	// Loop til og med det maksimale tilladte antal Temp Meas Labels
+	// Loop up to and including the maximum allowed number of temperature measurement labels
 	for (unsigned int i = 0; i < _MaxNumberOfMovableCrosshairs; i++) {
 
-		// Hvis læste aktive Temp Meas Label er aktiverede
+		// If the active temperature measurement label read is enabled
 		if (ActiveTempMeasEnableFlags[i] == true) {
 
 			// Lager de aktiverede Temp Meas Labels indexer i rendererings ordens array
 			ActiveTempMeasRenderingOrder[ActiveTempMeasOrderIndex] = i;
 
-			// Inkrementer lokalt ordens index tæller variabel
+			// Increment the local order index counter variable
 			ActiveTempMeasOrderIndex = ActiveTempMeasOrderIndex + 1;
 
 		}
@@ -2802,21 +2802,21 @@ void RMH_ThermalViewer_UpdateTempMeasurementsRenderingOrder() {
 
 void RMH_ThermalViewer_AddTemperatureMeasurementToLiveView() {
 
-	// Routinen aktiverer et temperatur målings label til live view streamen
+	// This routine enables a temperature measurement label for the live view stream
 
-	// Lokale variabler
+	// Read the temporary array data and sort the kernel array
 	unsigned int ActiveTempMeasEnableIndex = 0;
 
-	// Hvis det maksimale antal aktive temperature målinger er nåede
+	// If the maximum number of active temperature measurements has been reached
 	if (NumOfActiveLiveViewTempMeas < _MaxNumberOfMovableCrosshairs) {
 
-		// Loop til og med det maksimale tilladte antal Crosshair labels
+		// Loop up to and including the maximum allowed number of crosshair labels
 		for (unsigned int i = 0; i < _MaxNumberOfMovableCrosshairs; i++) {
 
-			// Hvilke Temperatur målinger er ikke aktive
+			// Which temperature measurements are not active
 			if (ActiveTempMeasEnableFlags[i] == false) {
 
-				// Læs index positionen for senest slettede temp måling
+				// Read the index position of the most recently deleted temperature measurement
 				ActiveTempMeasEnableIndex = i;
 
 				// Opdater ROI enable flag array position
@@ -2829,25 +2829,25 @@ void RMH_ThermalViewer_AddTemperatureMeasurementToLiveView() {
 
 		}
 
-		// Opdater Temp målingernes rendererings orden
+		// Update the rendering order of the temperature measurements
 		RMH_ThermalViewer_UpdateTempMeasurementsRenderingOrder();
 
-		// Aktiver tilhørende ROI Sub Context Menu Drop Down List Item 
+		// Enable the associated ROI sub context menu drop-down list item 
 		GlobalVariables::GlobaldeleteTempLabelToolStripMenuItem->DropDownItems[ActiveTempMeasEnableIndex]->Enabled = true;
 
-		// Inkrementer antallet af aktive Temperatur målinger
+		// Increment the number of active temperature measurements
 		NumOfActiveLiveViewTempMeas = NumOfActiveLiveViewTempMeas + 1;
 
-		// Opdater Knap Border Farve
+		// Update the button border color
 		GlobalVariables::GlobalAddTempMeasButton->FlatAppearance->BorderColor = System::Drawing::Color::Lime;
 
 	}
 	else {
 
-		// Opdater Knap Border Farve
+		// Update the button border color
 		GlobalVariables::GlobalAddTempMeasButton->FlatAppearance->BorderColor = System::Drawing::Color::Magenta;
 
-		// Skriv GUI status meddelse
+		// Write GUI status message
 		RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "Maximum Number Of Temperature Measurements Reached!", _StatusMessageType_Warning);
 
 	}
@@ -2856,37 +2856,37 @@ void RMH_ThermalViewer_AddTemperatureMeasurementToLiveView() {
 
 void RMH_ThermalViewer_DeleteTemperatureMeasurementFromLiveView(System::Object^ sender) {
 
-	// Routinen fjerner en Temperatur måling fra rendererings listen på Live View streamen
+	// This routine removes a temperature measurement from the rendering list of the live view stream
 
 	// Cast Sender objekt som Forms Tool Strip objekt
 	System::Windows::Forms::ToolStripMenuItem^ TempMeasIndex = (System::Windows::Forms::ToolStripMenuItem^)sender;
 
-	// Læs Sub Context Menu identifikations tag
+	// Read the sub context menu identification tag
 	unsigned int TempMeasIndexTag = Convert::ToInt32(TempMeasIndex->Tag);
 
-	// Kontroller om der er Temperatur målinger at slette
+	// Check whether there are temperature measurements to delete
 	if (NumOfActiveLiveViewTempMeas > 0) {
 
-		// Deaktiver tilhørende Temperatur målinger Sub Context Menu Drop Down List Item 
+		// Disable the associated temperature measurement sub context menu drop-down list item 
 		GlobalVariables::GlobaldeleteTempLabelToolStripMenuItem->DropDownItems[TempMeasIndexTag]->Enabled = false;
 
-		// Dekrementer antallet af aktive  Temperatur målinger
+		// Decrement the number of active temperature measurements
 		NumOfActiveLiveViewTempMeas = NumOfActiveLiveViewTempMeas - 1;
 
-		// Hvis sidste Temperatur målinger er blever slettet
+		// If the last temperature measurement has been deleted
 		if (NumOfActiveLiveViewTempMeas <= 0) {
-			// Nulstil Knap Border Farve
+			// Reset the button border color
 			GlobalVariables::GlobalAddTempMeasButton->FlatAppearance->BorderColor = System::Drawing::Color::FromArgb(255, 40, 40, 40);
 		}
 		else {
-			// Opdater Knap Border Farve
+			// Update the button border color
 			GlobalVariables::GlobalAddTempMeasButton->FlatAppearance->BorderColor = System::Drawing::Color::Lime;
 		}
 
-		// Nulstil tilhørende Temperatur målings Tag enable flag
+		// Reset the enable flag of the associated temperature measurement tag
 		ActiveTempMeasEnableFlags[TempMeasIndexTag] = false;
 
-		// Opdater Temp målingernes rendererings orden
+		// Update the rendering order of the temperature measurements
 		RMH_ThermalViewer_UpdateTempMeasurementsRenderingOrder();
 
 	}
@@ -2895,55 +2895,55 @@ void RMH_ThermalViewer_DeleteTemperatureMeasurementFromLiveView(System::Object^ 
 
 void RMH_ThermalViewer_DeleteAllTemperatureMeasurementFromLiveView() {
 
-	// Routinen sletter alle aktive Temperatur målinger fra Live View Streamen
+	// This routine deletes all active temperature measurements from the live view stream
 
-	// Loop til og med det maksimale tilladte antal Temperatur målinger
+	// Loop up to and including the maximum allowed number of temperature measurements
 	for (unsigned int i = 0; i < _MaxNumberOfMovableCrosshairs; i++) {
 
-		// Kontroller aktive Temperatur Målinger
+		// Check the active temperature measurements
 		if (ActiveTempMeasEnableFlags[i] == true) {
 
-			// Deaktiver tilhørende Temp målings Sub Context Menu Drop Down List Item 
+			// Disable the associated temperature measurement sub context menu drop-down list item 
 			GlobalVariables::GlobaldeleteTempLabelToolStripMenuItem->DropDownItems[i]->Enabled = false;
 
-			// Dekrementer antallet af aktive Temp Målinger
+			// Decrement the number of active temperature measurements
 			NumOfActiveLiveViewTempMeas = NumOfActiveLiveViewTempMeas - 1;
 
-			// Nulstil tilhørende Temp Målings Tag enable flag
+			// Reset the enable flag of the associated temperature measurement tag
 			ActiveTempMeasEnableFlags[i] = false;
 
 		}
 
 	}
 
-	// Nulstil Knap Border Farve
+	// Reset the button border color
 	GlobalVariables::GlobalAddTempMeasButton->FlatAppearance->BorderColor = System::Drawing::Color::FromArgb(255, 40, 40, 40);
 
-	// Opdater Temp målingernes rendererings orden
+	// Update the rendering order of the temperature measurements
 	RMH_ThermalViewer_UpdateTempMeasurementsRenderingOrder();
 
 }
 
-// --------------------- ROI Temperatur Trackings Håndterings Routiner ---------------------- //
+// --------------------- ROI Temperature Tracking Handling Routines ---------------------- //
 
 void RMH_ThermalViewer_UpdateROIRenderingOrder() {
 
-	// Routinen lager aktiverede ROI positioner i et array
+	// This routine stores the positions of the enabled ROIs in an array
     // Som definerer senere rendererings orden
 	
-	// Lokale variabler
+	// Read the temporary array data and sort the kernel array
 	unsigned int ActiveROIOrderIndex = 0;
 
-	// Loop til og med det maksimale tilladte antal ROIRektangler
+	// Loop up to and including the maximum allowed number of ROI rectangles
 	for (unsigned int i = 0; i < _MaxNumberOfMovableRectangles; i++) {
 
-		// Hvis læste aktive ROI flag er aktiverede
+		// If the active ROI flag read is enabled
 		if (ActiveROIEnableFlags[i] == true) {
 
 			// Lager de aktiverede ROIers indexer i ROI rendererings ordens array
 			ActiveROIRenderingOrder[ActiveROIOrderIndex] = i;
 
-			// Inkrementer lokalt ordens index tæller variabel
+			// Increment the local order index counter variable
 			ActiveROIOrderIndex = ActiveROIOrderIndex + 1;
 
 		}
@@ -2954,21 +2954,21 @@ void RMH_ThermalViewer_UpdateROIRenderingOrder() {
 
 void RMH_ThermalViewer_AddRegionOfInterestBoxToLiveView() {
 
-	// Routinen Aktiverer et ROI til renderering på Live View streamen
+	// This routine enables an ROI for rendering on the live view stream
 
-	// Lokale variabler
+	// Read the temporary array data and sort the kernel array
 	unsigned int ActiveROIEnableIndex = 0;
 
-	// Hvis det maksimale antal aktive ROIer (Minus Color Palette ROI) Er nåede - 2 = (Color Palette ROI + Zoom ROI)
+	// If the maximum number of active ROIs (minus the color palette ROI) has been reached - 2 = (color palette ROI + zoom ROI)
 	if (NumOfActiveLiveViewROIs < _MaxNumberOfMovableRectangles - _NumberOfNonMainLiveViewROIs) {
 
-		// Loop til og med det maksimale tilladte antal ROIRektangler
+		// Loop up to and including the maximum allowed number of ROI rectangles
 		for (unsigned int i = 0; i < _MaxNumberOfMovableRectangles; i++) {
 
-			// Hvilke ROIer er ikke aktive
+			// Which ROIs are not active
 			if (ActiveROIEnableFlags[i] == false) {
 
-				// Læs index positionen for senest slettede ROI
+				// Read the index position of the most recently deleted ROI
 				ActiveROIEnableIndex = i;
 
 				// Opdater ROI enable flag array position
@@ -2981,26 +2981,26 @@ void RMH_ThermalViewer_AddRegionOfInterestBoxToLiveView() {
 
 		}
 
-		// Opdater ROIernes rendererings orden
+		// Update the rendering order of the ROIs
 		RMH_ThermalViewer_UpdateROIRenderingOrder();
 
-		// Aktiver tilhørende ROI Sub Context Menu Drop Down List Item 
+		// Enable the associated ROI sub context menu drop-down list item 
 		GlobalVariables::GlobaldeleteROIToolStripMenuItem->DropDownItems[ActiveROIEnableIndex]->Enabled = true;
 		GlobalVariables::GlobalhistogramSourceToolStripMenuItem->DropDownItems[ActiveROIEnableIndex + 5]->Enabled = true;
 
-		// Inkrementer antallet af aktive ROIer
+		// Increment the number of active ROIs
 		NumOfActiveLiveViewROIs = NumOfActiveLiveViewROIs + 1;
 
-		// Opdater Knap Border Farve
+		// Update the button border color
 		GlobalVariables::GlobalAddROIMeasButton->FlatAppearance->BorderColor = System::Drawing::Color::Lime;
 
 	}
 	else {
 
-		// Opdater Knap Border Farve
+		// Update the button border color
 		GlobalVariables::GlobalAddROIMeasButton->FlatAppearance->BorderColor = System::Drawing::Color::Magenta;
 
-		// Skriv GUI status meddelse
+		// Write GUI status message
 		RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "Maximum Number Of ROI Reached!", _StatusMessageType_Warning);
 
 	}
@@ -3009,38 +3009,38 @@ void RMH_ThermalViewer_AddRegionOfInterestBoxToLiveView() {
 
 void RMH_ThermalViewer_DeleteRegionOfInterestBoxFromLiveView(System::Object^ sender) {
 
-	// Routinen fjerner et ROI fra rendererings listen på Live View streamen
+	// This routine removes an ROI from the rendering list of the live view stream
 
 	// Cast Sender objekt som Forms Tool Strip objekt
 	System::Windows::Forms::ToolStripMenuItem^ ROIIndex = (System::Windows::Forms::ToolStripMenuItem^)sender;
 
-	// Læs Sub Context Menu identifikations tag
+	// Read the sub context menu identification tag
 	unsigned int ROIIndexTag = Convert::ToInt32(ROIIndex->Tag);
 
-	// Kontroller om der er ROIer at slette
+	// Check whether there are ROIs to delete
 	if (NumOfActiveLiveViewROIs > 0) {
 
-		// Deaktiver tilhørende ROI Sub Context Menu Drop Down List Item 
+		// Disable the associated ROI sub context menu drop-down list item 
 		GlobalVariables::GlobaldeleteROIToolStripMenuItem->DropDownItems[ROIIndexTag]->Enabled = false;
 		GlobalVariables::GlobalhistogramSourceToolStripMenuItem->DropDownItems[ROIIndexTag + 5]->Enabled = false;
 
-		// Dekrementer antallet af aktive ROIer
+		// Decrement the number of active ROIs
 		NumOfActiveLiveViewROIs = NumOfActiveLiveViewROIs - 1;
 
-		// Hvis sidste ROI er blever slettet
+		// If the last ROI has been deleted
 		if (NumOfActiveLiveViewROIs <= 0) {
-			// Nulstil Knap Border Farve
+			// Reset the button border color
 			GlobalVariables::GlobalAddROIMeasButton->FlatAppearance->BorderColor = System::Drawing::Color::FromArgb(255, 40, 40, 40);
 		}
 		else {
-			// Opdater Knap Border Farve
+			// Update the button border color
 			GlobalVariables::GlobalAddROIMeasButton->FlatAppearance->BorderColor = System::Drawing::Color::Lime;
 		}
 
-		// Nulstil tilhørende tag ROI enable flag
+		// Reset the enable flag of the associated ROI tag
 		ActiveROIEnableFlags[ROIIndexTag] = false;
 
-		// Opdater ROIernes rendererings orden
+		// Update the rendering order of the ROIs
 		RMH_ThermalViewer_UpdateROIRenderingOrder();
 
 	}
@@ -3049,56 +3049,56 @@ void RMH_ThermalViewer_DeleteRegionOfInterestBoxFromLiveView(System::Object^ sen
 
 void RMH_ThermalViewer_DeleteAllRegionOfInterestBoxFromLiveView() {
 
-	// Routinen sletter alle aktive ROIer fra Live View Streamen
+	// This routine deletes all active ROIs from the live view stream
 
-	// Loop til og med det maksimale tilladte antal ROIRektangler
+	// Loop up to and including the maximum allowed number of ROI rectangles
 	for (unsigned int i = 0; i < _MaxNumberOfMovableRectangles; i++) {
 
-		// Kontroller aktive ROIer
+		// Check the active ROIs
 		if (ActiveROIEnableFlags[i] == true) {
 
-			// Deaktiver tilhørende ROI Sub Context Menu Drop Down List Item 
+			// Disable the associated ROI sub context menu drop-down list item 
 			GlobalVariables::GlobaldeleteROIToolStripMenuItem->DropDownItems[i]->Enabled = false;
 			GlobalVariables::GlobalhistogramSourceToolStripMenuItem->DropDownItems[i + 5]->Enabled = false;
 
-			// Dekrementer antallet af aktive ROIer
+			// Decrement the number of active ROIs
 			NumOfActiveLiveViewROIs = NumOfActiveLiveViewROIs - 1;
 
-			// Nulstil tilhørende tag ROI enable flag
+			// Reset the enable flag of the associated ROI tag
 			ActiveROIEnableFlags[i] = false;
 
 		}
 
 	}
 
-	// Nulstil Knap Border Farve
+	// Reset the button border color
 	GlobalVariables::GlobalAddROIMeasButton->FlatAppearance->BorderColor = System::Drawing::Color::FromArgb(255, 40, 40, 40);
 
-	// Opdater ROIernes rendererings orden
+	// Update the rendering order of the ROIs
 	RMH_ThermalViewer_UpdateROIRenderingOrder();
 
 }
 
-// --------------------- Temperatur Linje Tracking Håndterings Routiner --------------------- //
+// --------------------- Temperature Line Tracking Handling Routines --------------------- //
 
 void RMH_ThermalViewer_UpdateTempLinesRenderingOrder() {
 
-	// Routinen lager aktiverede Temp Linjers positioner i et array
+	// This routine stores the positions of the enabled temperature lines in an array
 	// Som definerer senere rendererings orden
 
-	// Lokale variabler
+	// Read the temporary array data and sort the kernel array
 	unsigned int ActiveLinesOrderIndex = 0;
 
-	// Loop til og med det maksimale tilladte antal linjer
+	// Loop up to and including the maximum allowed number of lines
 	for (unsigned int i = 0; i < _MaxNumberOfMovableLines; i++) {
 
-		// Hvis læste aktive linje er aktiverede
+		// If the active line read is enabled
 		if (ActiveTempLineEnableFlags[i] == true) {
 
 			// Lager de aktiverede linjers indexer i rendererings ordens array
 			ActiveTempLineRenderingOrder[ActiveLinesOrderIndex] = i;
 
-			// Inkrementer lokalt ordens index tæller variabel
+			// Increment the local order index counter variable
 			ActiveLinesOrderIndex = ActiveLinesOrderIndex + 1;
 
 		}
@@ -3109,21 +3109,21 @@ void RMH_ThermalViewer_UpdateTempLinesRenderingOrder() {
 
 void RMH_ThermalViewer_AddTemperatureLineToLiveView() {
 
-	// Routinen Aktiverer en Temperatur Linje til renderering på Live View streamen
+	// This routine enables a temperature line for rendering on the live view stream
 
-	// Lokale variabler
+	// Read the temporary array data and sort the kernel array
 	unsigned int ActiveLineEnableIndex = 0;
 
-	// Hvis det maksimale antal aktive temperatur linjer er nåede
+	// If the maximum number of active temperature lines has been reached
 	if (NumOfActiveLiveViewLines < _MaxNumberOfMovableLines) {
 
-		// Loop til og med det maksimale tilladte antal linjer
+		// Loop up to and including the maximum allowed number of lines
 		for (unsigned int i = 0; i < _MaxNumberOfMovableLines; i++) {
 
-			// Hvilke linjer er ikke aktive
+			// Which lines are not active
 			if (ActiveTempLineEnableFlags[i] == false) {
 
-				// Læs index positionen for senest slettede linje
+				// Read the index position of the most recently deleted line
 				ActiveLineEnableIndex = i;
 
 				// Opdater ROI enable flag array position
@@ -3136,26 +3136,26 @@ void RMH_ThermalViewer_AddTemperatureLineToLiveView() {
 
 		}
 
-		// Opdater Linjernes rendererings orden
+		// Update the rendering order of the lines
 		RMH_ThermalViewer_UpdateTempLinesRenderingOrder();
 
-		// Aktiver tilhørende label Sub Context Menu Drop Down List Item 
+		// Enable the associated label sub context menu drop-down list item 
 		GlobalVariables::GlobaldeleteLineToolStripMenuItem->DropDownItems[ActiveLineEnableIndex]->Enabled = true;
 		GlobalVariables::GlobalhistogramSourceToolStripMenuItem->DropDownItems[ActiveLineEnableIndex]->Enabled = true;
 
-		// Inkrementer antallet af aktive linjer
+		// Increment the number of active lines
 		NumOfActiveLiveViewLines = NumOfActiveLiveViewLines + 1;
 
-		// Opdater Knap Border Farve
+		// Update the button border color
 		GlobalVariables::GlobalAddTempSpecLineButton->FlatAppearance->BorderColor = System::Drawing::Color::Lime;
 
 	}
 	else {
 
-		// Opdater Knap Border Farve
+		// Update the button border color
 		GlobalVariables::GlobalAddTempSpecLineButton->FlatAppearance->BorderColor = System::Drawing::Color::Magenta;
 
-		// Skriv GUI status meddelse
+		// Write GUI status message
 		RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "Maximum Number Of Lines Reached!", _StatusMessageType_Warning);
 
 	}
@@ -3164,38 +3164,38 @@ void RMH_ThermalViewer_AddTemperatureLineToLiveView() {
 
 void RMH_ThermalViewer_DeleteTemperatureLineFromLiveView(System::Object^ sender) {
 
-	// Routinen fjerner en temperatur linje fra rendererings listen på Live View streamen
+	// This routine removes a temperature line from the rendering list of the live view stream
 
 	// Cast Sender objekt som Forms Tool Strip objekt
 	System::Windows::Forms::ToolStripMenuItem^ LineIndex = (System::Windows::Forms::ToolStripMenuItem^)sender;
 
-	// Læs Sub Context Menu identifikations tag
+	// Read the sub context menu identification tag
 	unsigned int LineIndexTag = Convert::ToInt32(LineIndex->Tag);
 
-	// Kontroller om der er linjer som kan slette
+	// Check whether there are lines that can be deleted
 	if (NumOfActiveLiveViewLines > 0) {
 
-		// Deaktiver tilhørende linje Sub Context Menu Drop Down List Item 
+		// Disable the associated line sub context menu drop-down list item 
 		GlobalVariables::GlobaldeleteLineToolStripMenuItem->DropDownItems[LineIndexTag]->Enabled = false;
 		GlobalVariables::GlobalhistogramSourceToolStripMenuItem->DropDownItems[LineIndexTag]->Enabled = false;
 
-		// Dekrementer antallet af aktive linjer
+		// Decrement the number of active lines
 		NumOfActiveLiveViewLines = NumOfActiveLiveViewLines - 1;
 
-		// Hvis sidste linje er blever slettet
+		// If the last line has been deleted
 		if (NumOfActiveLiveViewLines <= 0) {
-			// Nulstil Knap Border Farve
+			// Reset the button border color
 			GlobalVariables::GlobalAddTempSpecLineButton->FlatAppearance->BorderColor = System::Drawing::Color::FromArgb(255, 40, 40, 40);
 		}
 		else {
-			// Opdater Knap Border Farve
+			// Update the button border color
 			GlobalVariables::GlobalAddTempSpecLineButton->FlatAppearance->BorderColor = System::Drawing::Color::Lime;
 		}
 
-		// Nulstil tilhørende Tag linje enable flag
+		// Reset the enable flag of the associated line tag
 		ActiveTempLineEnableFlags[LineIndexTag] = false;
 
-		// Opdater Linjernes rendererings orden
+		// Update the rendering order of the lines
 		RMH_ThermalViewer_UpdateTempLinesRenderingOrder();
 
 	}
@@ -3204,41 +3204,41 @@ void RMH_ThermalViewer_DeleteTemperatureLineFromLiveView(System::Object^ sender)
 
 void RMH_ThermalViewer_DeleteAllTemperatureLinesFromLiveView() {
 
-	// Routinen sletter alle aktive temperatur linjer fra Live View Streamen
+	// This routine deletes all active temperature lines from the live view stream
 
-	// Loop til og med det maksimale tilladte antal temperatur linjer
+	// Loop up to and including the maximum allowed number of temperature lines
 	for (unsigned int i = 0; i < _MaxNumberOfMovableLines; i++) {
 
-		// Kontroller aktive temperatur linjer
+		// Check the active temperature lines
 		if (ActiveTempLineEnableFlags[i] == true) {
 
-			// Deaktiver tilhørende temperatur linjes Sub Context Menu Drop Down List Item 
+			// Disable the associated temperature line sub context menu drop-down list item 
 			GlobalVariables::GlobaldeleteLineToolStripMenuItem->DropDownItems[i]->Enabled = false;
 			GlobalVariables::GlobalhistogramSourceToolStripMenuItem->DropDownItems[i]->Enabled = false;
 
-			// Dekrementer antallet af aktive temperatur linjes
+			// Decrement the number of active temperature lines
 			NumOfActiveLiveViewLines = NumOfActiveLiveViewLines - 1;
 
-			// Nulstil tilhørende Linjes Tag enable flag
+			// Reset the enable flag of the associated line tag
 			ActiveTempLineEnableFlags[i] = false;
 
 		}
 
 	}
 
-	// Nulstil Knap Border Farve
+	// Reset the button border color
 	GlobalVariables::GlobalAddTempSpecLineButton->FlatAppearance->BorderColor = System::Drawing::Color::FromArgb(255, 40, 40, 40);
 
-	// Opdater Linjernes rendererings orden
+	// Update the rendering order of the lines
 	RMH_ThermalViewer_UpdateTempLinesRenderingOrder();
 
 }
 
-// ------------------------ Live View Histogram Håndterings Routiner ------------------------ //
+// ------------------------ Live View Histogram Handling Routines ------------------------ //
 
 void RMH_ThermalViewer_EnableLiveViewHistogram() {
 
-	// Routinen aktiverer live view streamens Histogram feature for linjer og frame data
+	// This routine enables the histogram feature of the live view stream for lines and frame data
 
 	// Toggle live view histogram enable flag
 	LiveViewHistogramEnableFlag = !LiveViewHistogramEnableFlag;
@@ -3246,24 +3246,24 @@ void RMH_ThermalViewer_EnableLiveViewHistogram() {
 	// Skallive view histogram aktiveres eller deaktiveres
 	if (LiveViewHistogramEnableFlag == true) {
 
-		// Opdater Knap Border Farve
+		// Update the button border color
 		GlobalVariables::GlobalShowLineHistButton->FlatAppearance->BorderColor = System::Drawing::Color::Lime;
 
-		// Gør Histogram panel synlig
+		// Make the histogram panel visible
 		GlobalVariables::GlobalLiveViewHistogramPanel->Visible = true;
 
 	}
 	else {
 
-		// Nulstil Knap Border Farve
+		// Reset the button border color
 		GlobalVariables::GlobalShowLineHistButton->FlatAppearance->BorderColor = System::Drawing::Color::FromArgb(255, 40, 40, 40);
 
-		// Gør Histogram panel usynlig
+		// Make the histogram panel invisible
 		GlobalVariables::GlobalLiveViewHistogramPanel->Visible = false;
 
 	}
 
-	// Opdater knap grafik
+	// Update the button graphic
 	GlobalVariables::GlobalShowLineHistButton->Refresh();
 
 }
@@ -3271,54 +3271,54 @@ void RMH_ThermalViewer_EnableLiveViewHistogram() {
 void RMH_ThermalViewer_ChangeHistoramDataSource(System::Object^ sender) {
 
 	// Routinen indstiller histogrammets data source 
-	// Som enten kan være temperature linjer, ROIer eller hele Live view billedet
+	// which can be either temperature lines, ROIs or the whole live view image
 
 	// Cast Sender objekt som Forms Tool Strip objekt
 	System::Windows::Forms::ToolStripMenuItem^ MenuIndex = (System::Windows::Forms::ToolStripMenuItem^)sender;
 
-	// Læs Sub Context Menu identifikations tag
+	// Read the sub context menu identification tag
 	unsigned int MenuIndexTag = Convert::ToInt32(MenuIndex->Tag);
 
-	// Opdater Histogrammets data source tag værdi
+	// Update the histogram data source tag value
 	HistogramDataSourceTag = (unsigned char)MenuIndexTag;
 
-	// Loop til og med det maksimale antal ROIer
+	// Loop up to and including the maximum number of ROIs
 	for (unsigned int i = 0; i < _MaxNumberOfMovableRectangles - _NumberOfNonMainLiveViewROIs; i++) {
 
-		// Deaktiver læsning af Rå pixel data fra alle Aktive ROIer
+		// Disable reading of raw pixel data from all active ROIs
 		ROIxReturnAreaRawPixelValsFlags[i] = false;
 
 	}
 
-	// Hvis valgte Histogram Data source er en af de aktive ROIer
+	// If the selected histogram data source is one of the active ROIs
 	if (HistogramDataSourceTag >= _MaxNumberOfMovableRectangles - _NumberOfNonMainLiveViewROIs) {
 
-		// Aktiver læsning af Rå pixel data for det valgte ROI
+		// Enable reading of raw pixel data for the selected ROI
 		ROIxReturnAreaRawPixelValsFlags[HistogramDataSourceTag - (_MaxNumberOfMovableRectangles - _NumberOfNonMainLiveViewROIs)] = true;
 
 	}
 
 }
 
-// -------------- Gem Fuld Frame Temperatur Data Til CSV Håndterings Routiner --------------- //
+// -------------- Save Full-Frame Temperature Data To CSV Handling Routines --------------- //
 
 void RMH_ThermalViewer_UpdateFullFrameTemperatureCSVDataDelimiter() {
 
-	// Routinen opdaterer hvilken Data delimiter som benyttes når der gemmes en Full frame temperatur data CSV fil
+	// This routine updates which data delimiter is used when saving a full-frame temperature data CSV file
 
-	// Lokale variabler
+	// Read the temporary array data and sort the kernel array
 	unsigned char DataDelimiterIndex = 0;
 
-	// Læs den valgte Data delimiter fra tilhørende CombiBox
+	// Read the selected data delimiter from the associated ComboBox
 	DataDelimiterIndex = GlobalVariables::GlobalFullFrameTempDataCSVDelimiterCombiBox->SelectedIndex;
 
-	// Lager og opdater læste CSV Data delimiter i globalt variabel
+	// Store and update the CSV data delimiter read in the global variable
 	SelectedFullFrameTempCSVDataDelimiterIndex = DataDelimiterIndex;
 
-	// Hvilken Delimiter index er blevet valgt
+	// Which delimiter index has been selected
 	switch (SelectedFullFrameTempCSVDataDelimiterIndex) {
 
-		// Opdater tilhørende globale delimiter string
+		// Update the associated global delimiter string
 		case _FullFrameTempCSVDataDelimiterIndex_Comma:		GlobalVariables::FullFrameDataCSVDelimiterString = ",";  break;
 		case _FullFrameTempCSVDataDelimiterIndex_Semicolon: GlobalVariables::FullFrameDataCSVDelimiterString = ";";  break;
 		case _FullFrameTempCSVDataDelimiterIndex_Colon:		GlobalVariables::FullFrameDataCSVDelimiterString = ":";  break;
@@ -3331,25 +3331,25 @@ void RMH_ThermalViewer_UpdateFullFrameTemperatureCSVDataDelimiter() {
 
 void RMH_ThermalViewer_SaveFullFrameTemperatureDataToCSVFile() {
 
-	// Routinen opretter/gemmer en CSV fil og formaterer den seneste data frame til en fuld frame af temperatur data, Som derefter skrives til CSV filen.
-	// Den gemte fils sti er den samme som den valgte snapshots fil sti
+	// This routine creates/saves a CSV file and formats the latest data frame into a full frame of temperature data, which is then written to the CSV file.
+	// The path of the saved file is the same as the selected snapshot file path
 
-	// Lokale variabler - Frame Bredde og Højde konstanter
+	// Local variables - frame width and height constants
 	unsigned int FrameWidth = IRCamera.FrameWidth;
 	unsigned int FrameHeight = IRCamera.FrameHeight - IRCamera.FrameMetadataSize;
 
 	// Formater Filens data identifikations string (FrameTempData_HHmmssddMMyyyy)
 	System::String^ FileName = System::DateTime::Now.ToString("HHmmssfffddMMyyyy");
-	// Formater Temperatur frame Data Filens navn
+	// Format the name of the temperature frame data file
 	System::String^ FrameTempDataFileNameString = "FrameTempData_" + FileName + ".txt";
 
 	// Fortag Live View Single frame trigger
 	RMH_ThermalViewer_TriggerLiveViewSingleFrameCapture();
 
-	// Loop igennem alle rå termiske data værdier i tilhørende frame data array
+	// Loop through all raw thermal data values in the associated frame data array
 	for (unsigned long i = 0; i < (FrameWidth * FrameHeight); i += 4) {
 
-		// Konverter Rå termisk data til temperature data og lager i array
+		// Convert the raw thermal data to temperature data and store it in the array
 		FrameTemperatureData[i + 0] = (RMH_IRThermalCamera_ReadPixelTemperature(&IRCamera, FrameThermalDataRaw[i + 0], IRCamera.ThermalCameraSupportPool) * TemperatureUnitScaleFactor) + TemperatureUnitOffsetFactor;
 		FrameTemperatureData[i + 1] = (RMH_IRThermalCamera_ReadPixelTemperature(&IRCamera, FrameThermalDataRaw[i + 1], IRCamera.ThermalCameraSupportPool) * TemperatureUnitScaleFactor) + TemperatureUnitOffsetFactor;
 		FrameTemperatureData[i + 2] = (RMH_IRThermalCamera_ReadPixelTemperature(&IRCamera, FrameThermalDataRaw[i + 2], IRCamera.ThermalCameraSupportPool) * TemperatureUnitScaleFactor) + TemperatureUnitOffsetFactor;
@@ -3357,10 +3357,10 @@ void RMH_ThermalViewer_SaveFullFrameTemperatureDataToCSVFile() {
 
 	}
 
-	// Generer Temperatur Frame Data CSV fil og skriv data til fil
+	// Generate the temperature frame data CSV file and write the data to the file
 	RMH_Winforms_WriteDataArrayMatrixToCSVFile(RMH_Conversion_SystemStringToStdString(GlobalVariables::SnapShotDefaultPath), RMH_Conversion_SystemStringToStdString(FrameTempDataFileNameString), &FrameTemperatureData[0], FrameWidth, FrameHeight, GlobalVariables::FullFrameDataCSVDelimiterString);
 
-	// Skriv GUI Status Meddelse
+	// Write GUI status message
 	RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "Full Frame Temperature Data CSV, Has Been Saved To Path.", _StatusMessageType_Success);
 
 	// Genstart Live View Streamen
@@ -3369,175 +3369,175 @@ void RMH_ThermalViewer_SaveFullFrameTemperatureDataToCSVFile() {
 
 }
 
-// ----------- Live View Stream Video Optagning Og Snapshot Håndterings Routiner ------------ //
+// ----------- Live View Stream Video Recording And Snapshot Handling Routines ------------ //
 
 void RMH_ThermalViewer_UpdateSnapshotDefaultSaveFilePath(System::Windows::Forms::Label^ DefaultPathString) {
 
-	// Routinen opdaterer fil lokationen hvor et Live View Snapshot skal gemmes
+	// This routine updates the file location where a live view snapshot is saved
 
-	// Lokale variabler
+	// Read the temporary array data and sort the kernel array
 	System::String^ SaveFilePathString;
 
-	// Læs valgte snapshot default save fil path 
+	// Read the selected default save file path of the snapshot 
 	SaveFilePathString = RMH_Winforms_GetSaveFileDialogDirectory();
 
-	// Kontroller om et path blev valgt, eller om dialogen blev lukket
+	// Check whether a path was selected, or whether the dialog was closed
 	if (SaveFilePathString == "None") {
 
-		// Skriv GUI status meddelse
+		// Write GUI status message
 		RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "No New Default Snapshot File Path Was Choosen!", _StatusMessageType_Warning);
 
 	}
 	else {
 
-		// Opdater Snapshot default path
+		// Update the default snapshot path
 		GlobalVariables::SnapShotDefaultPath = SaveFilePathString;
 
-		// Skriv GUI status meddelse
+		// Write GUI status message
 		RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "New Default Snapshot File Path Was Choosen.", _StatusMessageType_Success);
 
 	}
 
-	// Opdater Snapshot default Fil path stringet 
+	// Update the default snapshot file path string 
 	DefaultPathString->Text = "Default Save File Path:  " + GlobalVariables::SnapShotDefaultPath;
 
 }
 
 void RMH_ThermalViewer_UpdateVideoRecordingDefaultSaveFilePath(System::Windows::Forms::Label^ DefaultPathString) {
 
-	// Routinen opdaterer fil lokationen hvor Video optagningen skal gemmes
+	// This routine updates the file location where the video recording is saved
 
-	// Lokale variabler
+	// Read the temporary array data and sort the kernel array
 	System::String^ SaveFilePathString;
 
-	// Læs valgte Video optagnings default save fil path 
+	// Read the selected default save file path of the video recording 
 	SaveFilePathString = RMH_Winforms_GetSaveFileDialogDirectory();
 
-	// Kontroller om et path blev valgt, eller om dialogen blev lukket
+	// Check whether a path was selected, or whether the dialog was closed
 	if (SaveFilePathString == "None") {
 
-		// Skriv GUI status meddelse
+		// Write GUI status message
 		RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "No New Default Video Recording File Path Was Choosen!", _StatusMessageType_Warning);
 
 	}
 	else {
 
-		// Opdater Snapshot default path
+		// Update the default snapshot path
 		GlobalVariables::RecordingDefaultPath = SaveFilePathString;
 
-		// Skriv GUI status meddelse
+		// Write GUI status message
 		RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "New Default Video Recording File Path Was Choosen.", _StatusMessageType_Success);
 
 	}
 
-	// Opdater Snapshot default Fil path stringet 
+	// Update the default snapshot file path string 
 	DefaultPathString->Text = "Default Save File Path:  " + GlobalVariables::RecordingDefaultPath;
 
 }
 
 void RMH_ThermalViewer_IncludeColorBarInSnapshot() {
 
-	// Routinen håndterer om det valgte snapshot skal indeholde colorbaren eller ikke
+	// This routine handles whether the selected snapshot should include the colorbar or not
 
 	// Toggle inkluder Colorbar i snapshot aktiverings flag
 	IncludeColorBarSnapshotFlag = !IncludeColorBarSnapshotFlag;
 
-	// Skal colorbaren inkluderes i snapshot aktiveres eller deaktiveres
+	// Whether the colorbar is included in the snapshot is enabled or disabled
 	if (IncludeColorBarSnapshotFlag == true) {
 
-		// Opdater Knap Border Farve
+		// Update the button border color
 		GlobalVariables::GlobalIncludeColorbarSnapButton->FlatAppearance->BorderColor = System::Drawing::Color::Lime;
 
 	}
 	else {
 
-		// Nulstil Knap Border Farve
+		// Reset the button border color
 		GlobalVariables::GlobalIncludeColorbarSnapButton->FlatAppearance->BorderColor = System::Drawing::Color::FromArgb(255, 40, 40, 40);
 
 	}
 
-	// Opdater knap grafik
+	// Update the button graphic
 	GlobalVariables::GlobalIncludeColorbarSnapButton->Refresh();
 
 }
 
 void RMH_ThermalViewer_ToggleSavinfOfRawSensorDataSnapshot() {
 
-	// Routinen opdater GUI elementer og kontrol flag, når et RÅ sensor data snapshot 
-	// er blevet valgt til at skulle gemmes med det tilhørende live view snapshot.
+	// This routine updates the GUI elements and control flags when a RAW sensor data snapshot 
+	// has been selected to be saved together with the associated live view snapshot.
 
-	// Toggle Gem Rå sensor data snapshot aktiverings flag
+	// Toggle the save raw sensor data snapshot enable flag
 	CaptureRawSensorSnapshotFlag = !CaptureRawSensorSnapshotFlag;
 
-	// Skal Gem Rå sensor data gemmes
+	// Should the raw sensor data be saved
 	if (CaptureRawSensorSnapshotFlag == true) {
 
-		// Opdater Knap Border Farve
+		// Update the button border color
 		GlobalVariables::GlobalSaveRawSensorSnapButton->FlatAppearance->BorderColor = System::Drawing::Color::Lime;
 
 	}
 	else {
 
-		// Nulstil Knap Border Farve
+		// Reset the button border color
 		GlobalVariables::GlobalSaveRawSensorSnapButton->FlatAppearance->BorderColor = System::Drawing::Color::FromArgb(255, 40, 40, 40);
 
 	}
 
-	// Opdater knap grafik
+	// Update the button graphic
 	GlobalVariables::GlobalSaveRawSensorSnapButton->Refresh();
 
 }
 
 void RMH_ThermalViewer_SaveLiveViewSnapshot() {
 
-	// Routinen gemmer et snapshot af live View streamen, med eller uden colorbaren og tools panelet
+	// This routine saves a snapshot of the live view stream, with or without the colorbar and the tools panel
 
-	// lokale variabler
+	// local variables
 	bool SnapshotStatus = false;
 	bool RawSnapshotStatus = false;
 
-	// Kontroller om live view panalet er i visning i guien - Eller er undocked
+	// Check whether the live view panel is shown in the GUI - or undocked
 	if (isLiveViewStreamFormOpen == true) {
 
-		// Skal snapshotet indeholde colorbaren og tools panelet
+		// Should the snapshot include the colorbar and the tools panel
 		if (IncludeColorBarSnapshotFlag == true) {
-			// Gem et snapshot af live view streamen - med colorbar og tools panelet
+			// Save a snapshot of the live view stream - with the colorbar and the tools panel
 			SnapshotStatus = RMH_Winforms_SavePanelSnapShotPNG(GlobalVariables::GlobalStreamAndCBarPanel, GlobalVariables::SnapShotDefaultPath);
 		}
 		else {
-			// Gem et snapshot af live view streamen - uden colorbar
+			// Save a snapshot of the live view stream - without the colorbar
 			SnapshotStatus = RMH_Winforms_SavePanelSnapShotPNG(GlobalVariables::GlobalLiveViewStreamPanel, GlobalVariables::SnapShotDefaultPath);
 		}
 	}
 
-	// Skal et tilhørende Rå sensor data snapshot gemmes
+	// Should an associated raw sensor data snapshot be saved
 	if (CaptureRawSensorSnapshotFlag == true) {
 
-		// Gem et Rå sensor data snapshot fra forbundet termiske kamera
+		// Save a raw sensor data snapshot from the connected thermal camera
 		RawSnapshotStatus = RMH_IRThermalCamera_ConvertCapturedRawImageDataToSnapshotPNG(IRCamera.ThermalCameraSupportPool);
 
 	}
 
-	// Kontroller om snapshot blev korrekt gemt
+	// Check whether the snapshot was saved correctly
 	if (SnapshotStatus == true) {
-		// Skriv GUI status meddelse
+		// Write GUI status message
 		RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "Snapshot Has Been Saved To Path Location.", _StatusMessageType_Success);
 	}
 	else {
-		// Skriv GUI status meddelse
+		// Write GUI status message
 		RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "Could Not Save The Snapshot To Path Location!", _StatusMessageType_Error);
 	}
 
-	// Skal et tilhørende Rå sensor data snapshot gemmes
+	// Should an associated raw sensor data snapshot be saved
 	if (CaptureRawSensorSnapshotFlag == true) {
 
-		// Kontroller om Rå snapshot blev korrekt gemt
+		// Check whether the raw snapshot was saved correctly
 		if (RawSnapshotStatus == true) {
-			// Skriv GUI status meddelse
+			// Write GUI status message
 			RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "RAW Snapshot Has Been Saved To Path Location.", _StatusMessageType_Success);
 		}
 		else {
-			// Skriv GUI status meddelse
+			// Write GUI status message
 			RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "Could Not Save The RAW Snapshot To Path Location!", _StatusMessageType_Error);
 		}
 
@@ -3547,21 +3547,21 @@ void RMH_ThermalViewer_SaveLiveViewSnapshot() {
 
 void RMH_ThermalViewer_SaveSurfacePlotSnapshot() {
 
-	// Routinen gemmer et snapshot af 3D surface plottet
+	// This routine saves a snapshot of the 3D surface plot
 
-	// lokale variabler
+	// local variables
 	bool SnapshotStatus = false;
 
-	// Gem et snapshot af 3D Surface Plottet
+	// Save a snapshot of the 3D surface plot
 	SnapshotStatus = RMH_Winforms_SavePanelSnapShotPNG(GlobalVariables::GlobalSurfacePlotPanel, GlobalVariables::SnapShotDefaultPath);
 	
-	// Kontroller om snapshot blev korrekt gemt
+	// Check whether the snapshot was saved correctly
 	if (SnapshotStatus == true) {
-		// Skriv GUI status meddelse
+		// Write GUI status message
 		RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "Snapshot Has Been Saved To Path Location.", _StatusMessageType_Success);
 	}
 	else {
-		// Skriv GUI status meddelse
+		// Write GUI status message
 		RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "Could Not Save The Snapshot To Path Location!", _StatusMessageType_Error);
 	}
 
@@ -3569,25 +3569,25 @@ void RMH_ThermalViewer_SaveSurfacePlotSnapshot() {
 
 void RMH_ThermalViewer_ConfigDefaultCapturingProgram(System::Object^ sender) {
 
-	// Routinen konfigurerer det default Video Capturing program for optagning af live view video
+	// This routine configures the default video capturing program for recording live view video
 
 	// Cast Sender objekt som Forms Button objekt
 	System::Windows::Forms::Button^ SettingsButton = (System::Windows::Forms::Button^)sender;
 
-	// Læs indstillings knappens identifikations tag
+	// Read the identification tag of the settings button
 	unsigned int ButtonTag = Convert::ToInt32(SettingsButton->Tag);
 
-	// Hvilken knap er blevet trykket
+	// Which button has been pressed
 	switch (ButtonTag) {
 
 		// Snipping Tool
 		case 0: 
 
-			// Opdater Knappernes Border Farver
+			// Update the button border colors
 			GlobalVariables::GlobalUseWinSnippingToolButton->FlatAppearance->BorderColor = System::Drawing::Color::Lime;
 			GlobalVariables::GlobalUseWin11ScreenRecordToolButton->FlatAppearance->BorderColor = System::Drawing::Color::FromArgb(255, 40, 40, 40);
 
-			// Opdater Det default Video Capturing program for optagning af live view video
+			// Update the default video capturing program for recording live view video
 			GlobalVariables::DefaultCapturingAppPackageFamilyNameString = _MicrosoftStore_SnippingTool;
 
 
@@ -3596,18 +3596,18 @@ void RMH_ThermalViewer_ConfigDefaultCapturingProgram(System::Object^ sender) {
 		// Screen Recorder FOr Windows 11
 		case 1: 
 
-			// Opdater Knappernes Border Farver
+			// Update the button border colors
 			GlobalVariables::GlobalUseWinSnippingToolButton->FlatAppearance->BorderColor = System::Drawing::Color::FromArgb(255, 40, 40, 40);
 			GlobalVariables::GlobalUseWin11ScreenRecordToolButton->FlatAppearance->BorderColor = System::Drawing::Color::Lime;
 
-			// Opdater Det default Video Capturing program for optagning af live view video
+			// Update the default video capturing program for recording live view video
 			GlobalVariables::DefaultCapturingAppPackageFamilyNameString = _MicrosoftStore_ScreenRecorderForWindows11;
 
 		break;
 
 	}
 
-	// Opdater knappernes grafik
+	// Update the button graphics
 	GlobalVariables::GlobalUseWinSnippingToolButton->Refresh();
 	GlobalVariables::GlobalUseWin11ScreenRecordToolButton->Refresh();
 
@@ -3615,24 +3615,24 @@ void RMH_ThermalViewer_ConfigDefaultCapturingProgram(System::Object^ sender) {
 
 void RMH_ThermalViewer_OpenDefaultVideoCapturingApp() {
 
-	// Routinen åbner den valgte default video capturing applikation
+	// This routine opens the selected default video capturing application
 
-	// Lokale Variabler
+	// Local variables
 	bool AppProcessErrorStatus = false;
 
-	// Åben den valgte default Video Capturing applikation
+	// Open the selected default video capturing application
 	AppProcessErrorStatus = RMH_Winforms_OpenWindowsMicrosoftStoreApp(GlobalVariables::DefaultCapturingAppPackageFamilyNameString);
 
-	// Kontroller om der var nogle fejl ved åbningen af appen
+	// Check whether there were any errors when opening the app
 	if (AppProcessErrorStatus == true) {
 
-		// Skriv GUI status meddelse
+		// Write GUI status message
 		RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "Could Not Open The Selected Capturing Program!", _StatusMessageType_Error);
 
 	}
 	else {
 
-		// Skriv GUI status meddelse
+		// Write GUI status message
 		RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "Opening Video Capturing Program...", _StatusMessageType_Normal);
 
 	}
@@ -3641,85 +3641,85 @@ void RMH_ThermalViewer_OpenDefaultVideoCapturingApp() {
 
 void RMH_ThermalViewer_ToggleRecordingOfRAWDataForPostAnalysis() {
 
-	// Routinen Toggler om der skal gemmes en RAW data optagnings fil
+	// This routine toggles whether a RAW data recording file should be saved
 
 	// Toggle RAW data optagnings flag
 	SaveRAWDataRecordingFlag = !SaveRAWDataRecordingFlag;
 
-	// Skal RAW data optagning aktiveres eller deaktiveres
+	// Should RAW data recording be enabled or disabled
 	if (SaveRAWDataRecordingFlag == true) {
 
-		// Opdater Knap Border Farve
+		// Update the button border color
 		GlobalVariables::GlobalSaveRawAnalysisRecordingButton->FlatAppearance->BorderColor = System::Drawing::Color::Lime;
 
 	}
 	else {
 
-		// Nulstil Knap Border Farve
+		// Reset the button border color
 		GlobalVariables::GlobalSaveRawAnalysisRecordingButton->FlatAppearance->BorderColor = System::Drawing::Color::FromArgb(255, 40, 40, 40);
 
 	}
 
-	// Opdater knap grafik
+	// Update the button graphic
 	GlobalVariables::GlobalSaveRawAnalysisRecordingButton->Refresh();
 
 }
 
 void RMH_ThermalViewer_StartStopVideoRecording() {
 
-	// Routinen starten optagningen af video data
+	// This routine starts the recording of video data
 
-	// Generer og skriv ekstra RAW Meta data til frame data array 
+	// Generate and write extra RAW metadata to the frame data array 
 	RMH_AnalysisMode_AddIDAndMetaDataToFrameArray(IRCamera.FrameWidth, IRCamera.FrameHeight, &IRCameraFrameData[0],
 		IRCamera.ThermalCameraSupportPool, IRCamera.FrameMetadataSize, IRCamera.FrameWidthPixelOffset, IRCamera.FrameHeightPixelOffset,
 		IRCamera.TemperatureCorrectionSetting, IRCamera.AmbientTemperatureSetting, IRCamera.ReflectedTemperatureSetting, IRCamera.HumiditySetting, IRCamera.EmissivitySetting, IRCamera.DistanceSetting);
 
-	// Generer og skriv ekstra RAW Meta data til frame data array - For Pool 3 Kameraer med NUC Korrektion
+	// Generate and write extra RAW metadata to the frame data array - for pool 3 cameras with NUC correction
 	RMH_AnalysisMode_AddIDAndMetaDataToFrameArray(IRCamera.FrameWidth, IRCamera.FrameHeight, &FrameThermalData3Band[0],
 		IRCamera.ThermalCameraSupportPool, IRCamera.FrameMetadataSize, IRCamera.FrameWidthPixelOffset, IRCamera.FrameHeightPixelOffset,
 		IRCamera.TemperatureCorrectionSetting, IRCamera.AmbientTemperatureSetting, IRCamera.ReflectedTemperatureSetting, IRCamera.HumiditySetting, IRCamera.EmissivitySetting, IRCamera.DistanceSetting);
 
-	// Kontroller om video optagning skal startes
+	// Check whether video recording should be started
 	if (VideoRecordingStartedFlag == true && VideoFilesReadyFlag == false) {
 
 		// Indstil Optagningens Globale Framerate Varaibel
 		RecordingFrameRateSetValue = (unsigned int)GlobalVariables::GlobalRecordingFrameRateNumericUpDown->Value;
 
-		// Nulstil Video Optagnings Time-Out Tæller Variablet
+		// Reset the video recording timeout counter variable
 		RecordingFrameRateTimeOutCounter = 0;
 
-		// Deaktiver brugen af "SaveRawAnalysisRecordingButton" ved start af video optagning
+		// Disable the use of "SaveRawAnalysisRecordingButton" when video recording starts
 		GlobalVariables::GlobalSaveRawAnalysisRecordingButton->Enabled = false;
 
-		// Kontroller om der skal gemmes en RAW Optagning
+		// Check whether a RAW recording should be saved
 		if (SaveRAWDataRecordingFlag == true) {
 
-			// Konfigurerer og klargøre en AVI video fil til optagning af RAW camera data
+			// Configure and prepare an AVI video file for recording RAW camera data
 			RMH_VideoFileRecording_SetupRecordingAnalysisModeVideoFile(GlobalVariables::RecordingDefaultPath, "RAWRecording_", IRCamera.FrameWidth, IRCamera.FrameHeight, RecordingFrameRateSetValue);
 
 		}
 
-		// Hvis Live View Ultra Opløsnings Mode er aktiverede
+		// If live view ultra resolution mode is enabled
 		if (UltraResolutionEnableFlag == true) {
 
-			// Konfigurerer og klargøre en AVI video fil til optagning af processerede camera data
+			// Configure and prepare an AVI video file for recording processed camera data
 			RMH_VideoFileRecording_SetupLiveViewCaptureVideoFile(GlobalVariables::RecordingDefaultPath, "Recording_", IRCamera.FrameWidth * UltraResolutionScaleFactor, (IRCamera.FrameHeight - IRCamera.FrameMetadataSize) * UltraResolutionScaleFactor, RecordingFrameRateSetValue);
 
-			// Deaktiver Ultra Opløsnings Knappen I Live-View Tools Panelet
+			// Disable the ultra resolution button in the live view tools panel
 			GlobalVariables::GlobalUltraResolutionButton->Enabled = false;
 
 		}
 		else {
 
-			// Konfigurerer og klargøre en AVI video fil til optagning af processerede camera data
+			// Configure and prepare an AVI video file for recording processed camera data
 			RMH_VideoFileRecording_SetupLiveViewCaptureVideoFile(GlobalVariables::RecordingDefaultPath, "Recording_", IRCamera.FrameWidth, IRCamera.FrameHeight - IRCamera.FrameMetadataSize, RecordingFrameRateSetValue);
 
 		}
 
-		// Opdater optagnings tools knap Border Farve
+		// Update the border color of the recording tools button
 		GlobalVariables::GlobalRecordingButton->FlatAppearance->BorderColor = System::Drawing::Color::Red;
 
-		// Skriv Status Meddelse til GUI Status Text Box
+		// Write status message to the GUI status text box
 		RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "Video Recording Has Started.", _StatusMessageType_Success);
 
 		// Opdater Video filernes "Ready" flag
@@ -3727,33 +3727,33 @@ void RMH_ThermalViewer_StartStopVideoRecording() {
 
 	}
 
-	// Kontroller om video optagning skal stoppes
+	// Check whether video recording should be stopped
 	if (VideoRecordingStartedFlag == false && VideoFilesReadyFlag == true) {
 
 		// Nulstil Video filernes "Ready" flag
 		VideoFilesReadyFlag = false;
 
-		// Kontroller om der skal gemmes en RAW Optagning
+		// Check whether a RAW recording should be saved
 		if (SaveRAWDataRecordingFlag == true) {
 
-			// Luk og gem optagningen af RAW camera data
+			// Close and save the recording of RAW camera data
 			RMH_VideoFileRecording_CloseVideoFileWriting(_VideoFileWriteObject_RecordingAnalysisModeFile);
 
 		}
 
-		// Aktiver Ultra Opløsnings Knappen I Live-View Tools Panelet
+		// Enable the ultra resolution button in the live view tools panel
 		GlobalVariables::GlobalUltraResolutionButton->Enabled = true;
 
-		// Luk og gem optagningen processerede camera data
+		// Close and save the recording of processed camera data
 		RMH_VideoFileRecording_CloseVideoFileWriting(_VideoFileWriteObject_LiveViewStreamFile);
 
-		// Nulstil optagnings tools knap Border Farve
+		// Reset the border color of the recording tools button
 		GlobalVariables::GlobalRecordingButton->FlatAppearance->BorderColor = System::Drawing::Color::FromArgb(255, 40, 40, 40);
 
-		// Skriv Status Meddelse til GUI Status Text Box
+		// Write status message to the GUI status text box
 		RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "Video Recording Has Stopped.", _StatusMessageType_Warning);
 
-		// Aktiver brugen af "SaveRawAnalysisRecordingButton" ved start af video optagning
+		// Enable the use of "SaveRawAnalysisRecordingButton" when video recording starts
 		GlobalVariables::GlobalSaveRawAnalysisRecordingButton->Enabled = true;
 
 	}
@@ -3763,7 +3763,7 @@ void RMH_ThermalViewer_StartStopVideoRecording() {
 
 }
 
-// --------------------- Live View Stream Run/Stop Håndterings Routiner --------------------- //
+// --------------------- Live View Stream Run/Stop Handling Routines --------------------- //
 
 void RMH_ThermalViewer_ToggleLiveViewStreamRunStop() {
 
@@ -3772,36 +3772,36 @@ void RMH_ThermalViewer_ToggleLiveViewStreamRunStop() {
 	// Toggle Live View Streamens Run/Stop Flag
 	LiveViewRunStopFlag = !LiveViewRunStopFlag;
 
-	// Skal colorbaren inkluderes i snapshot aktiveres eller deaktiveres
+	// Whether the colorbar is included in the snapshot is enabled or disabled
 	if (LiveViewRunStopFlag == true) {
 
-		// Opdater Knap Border Farve
+		// Update the button border color
 		GlobalVariables::GlobalLiveViewRunStopButton->FlatAppearance->BorderColor = System::Drawing::Color::Lime;
 
 	}
 	else {
 
-		// Nulstil Knap Border Farve
+		// Reset the button border color
 		GlobalVariables::GlobalLiveViewRunStopButton->FlatAppearance->BorderColor = System::Drawing::Color::FromArgb(255, 255, 0, 0);
 
 	}
 
-	// Opdater knap grafik
+	// Update the button graphic
 	GlobalVariables::GlobalLiveViewRunStopButton->Refresh();
 
 }
 
 void RMH_ThermalViewer_TriggerLiveViewSingleFrameCapture() {
 
-	// Routinen trigger en enkelt Live View data frame capture
+	// This routine triggers a single live view data frame capture
 
 	// Opdater Live View Streamens Run/Stop Flag
 	LiveViewRunStopFlag = false;
 
-	// Nulstil Knap Border Farve
+	// Reset the button border color
 	GlobalVariables::GlobalLiveViewRunStopButton->FlatAppearance->BorderColor = System::Drawing::Color::FromArgb(255, 255, 255, 0);
 
-	// Opdater knap grafik
+	// Update the button graphic
 	GlobalVariables::GlobalLiveViewRunStopButton->Refresh();
 
 	// Opdater Live View Single frame trigger flag
@@ -3809,51 +3809,51 @@ void RMH_ThermalViewer_TriggerLiveViewSingleFrameCapture() {
 
 }
 
-// -------------- Termisk Kamera Billede Processerings Og Håndterings Routiner -------------- //
+// -------------- Thermal Camera Image Processing And Handling Routines -------------- //
 
 void RMH_ThermalViewer_FrameCrabberCallback() {
 
-	// Routinen eksikverer hver gang at en data frame fra forbundet kamera er blevet modtaget
+	// This routine executes every time a data frame from the connected camera has been received
 
-	// Inkrementer antal læste kamera video frames
+	// Increment the number of camera video frames read
 	IRCamera.NumbOfCapturedFrames = IRCamera.NumbOfCapturedFrames + 1;
 	
-	// Aktiver Thread Data Event - Bliver Ikke Brugt 
+	// Enable thread data event - not used 
 	//GlobalVariables::ThreadDataReadyEvent->Set();
 
 }
 
 void RMH_ThermalViewer_ImageProcessingSequence() {
 
-	// Routinen detaljerer kamera billede processeringen af den termiske ratiometriske data
-	// Og implementeringerne af forskellige billede processerings teknikker.
-	// Routinen er skrevet til at være optimeret til at blive eksikverede i en seperat CPU process Thread
-	// Håndteringen af Colorbaren data er ligeledes håndterede i denne routine
+	// This routine details the camera image processing of the thermal ratiometric data
+	// and the implementations of various image processing techniques.
+	// The routine is written to be optimized for execution in a separate CPU process thread
+	// The handling of the colorbar data is likewise handled in this routine
 
-	// Kontroller Live View Run/Stop og single trigger flags Stadier
+	// Check the states of the live view run/stop and single trigger flags
 	if (LiveViewRunStopFlag == true || LiveViewSingleFrameTriggerFlag == true) {
 
 		// Er Applikationen i "Recording Analysis" Mode
 		if (InRecordingAnalysisModeFlag == true) {
 
-			// Læs valgte rå video frame fra åben RAW Fil
+			// Read the selected raw video frame from the open RAW file
 			RMH_VideoFileReading_ReadVideoFileFrame(CurrentPlayBackFrameValue, RecordingAnalysisModeFileInfo.NumberOfFrames, &IRCameraFrameData[0]);
 
-			// Hver Læste frame er en ny frame
+			// Every frame read is a new frame
 			IsCapturedFrameNewFlag = true;
 
 		}
 		else {
 
-			// Læs rå frame data fra termisk kamera
+			// Read raw frame data from the thermal camera
 			IsCapturedFrameNewFlag = RMH_IRThermalCamera_ReadFrameRaw(&IRCameraFrameData[0], &VideoFrameSize);
 
 		}
 
-		// Formater Rå YUY2 Data til 16Bit termisk data array - Læs Dataens Gennemsnitlige værdi
+		// Format the raw YUY2 data to a 16-bit thermal data array - read the average value of the data
 		IRCamera.Tavg_Tmp_Raw = RMH_IRThermalCamera_ConvertYUY2To14BitThermalDataArray(&IRCamera, &IRCameraFrameData[0], &FrameThermalDataRaw[0]);
 
-		// Kontroller om den seneste læste frame er en ny data frame
+		// Check whether the latest frame read is a new data frame
 		if (IsCapturedFrameNewFlag == true && NewRecordFrameAvailableFlag == false) {
 
 			// Opdater "Ny optagnings frame" klar flag
@@ -3866,18 +3866,18 @@ void RMH_ThermalViewer_ImageProcessingSequence() {
 
 	}
 
-	// Læs IR kameraets frame Meta Data og Udregn Interne IR Sensor Temperaturer
+	// Read the frame metadata of the IR camera and calculate the internal IR sensor temperatures
 	RMH_IRThermalCamera_ReadCalFrameMetaData(&FrameThermalDataRaw[0], &IRCamera, IRCamera.ThermalCameraSupportPool);
 
-	// Læs Maximum, Minimum Og Center Temperaturer
+	// Read the maximum, minimum and center temperatures
 	RMH_ThermalViewer_ReadMaxMinCentTemperatures();
 
 	// ---------------------------------- Generering Af Gaussian Kernel Maske ----------------------------------- //
 
-	// Kontroller om en ny Gaussian Kernel maske skal genereres
+	// Check whether a new Gaussian kernel mask should be generated
 	if (NewGaussianKernelMaskGenerateFlag == true) {
 
-		// Nulstil "Der skal genereres en ny Gaussian Kernal Maske" flag
+		// Reset the "a new Gaussian kernel mask should be generated" flag
 		NewGaussianKernelMaskGenerateFlag = false;
 
 		// Generer Ny Gaussian Kernel Unsharp Maske
@@ -3885,31 +3885,31 @@ void RMH_ThermalViewer_ImageProcessingSequence() {
 
 	}
 
-	// --------------------------------- ColorBar & Billede Processering Part 1 --------------------------------- //
+	// --------------------------------- ColorBar & Image Processing Part 1 --------------------------------- //
 
-	// Kontroller om Colorbaren er i automatisk eller manual range mode
+	// Check whether the colorbar is in automatic or manual range mode
 	if (ColorBarManualRangeFlag == true && ColorBarManualHighRangeFlag == false && ColorBarManualLowRangeFlag == false) {
 
-		// Set colorbarens maximum og minimum temperatur range værdier
+		// Set the maximum and minimum temperature range values of the colorbar
 		GlobalVariables::OpenGLColorBar->RMH_OpenGL_SetColorBarMaxMinRangeTemperature(ColorBarInitialManualRangeMaxTemp, ColorBarInitialManualRangeMinTemp);
 
-		// Læs Colorbarens maximum og minimum range værdier i Manual range mode
+		// Read the maximum and minimum range values of the colorbar in manual range mode
 		ManualTempRangeSetValues = GlobalVariables::OpenGLColorBar->RMH_OpenGL_ReadColorBarRangeMaxMinValues();
 
-		// Er Billede Sharpening aktiverede
+		// Is image sharpening enabled
 		if (LiveViewImageSharpeningEnableFlag == true) {
 
-			// Implementerer Linear Automatisk Gain Kontrol Til billede data - konverter til grayscale - Manual Range
+			// Implements linear automatic gain control for the image data - convert to grayscale - manual range
 			RMH_IRThermalCamera_LinearAutomaticGainControlTemp(&FrameThermalDataRaw[0], &AGCSharpFrameDataArray[0], IRCamera.FrameWidth, IRCamera.FrameHeight - IRCamera.FrameMetadataSize, _ImageProcessing_ImageResolution_14Bit, 0,
 				ManualTempRangeSetValues.ManualMaxRangeTemp, ManualTempRangeSetValues.ManualMinRangeTemp, TemperatureUnitScaleFactor, TemperatureUnitOffsetFactor);
 
-			// Fortag Billede Skærpning med Gaussian Unsharp Maskering
+			// Perform image sharpening with Gaussian unsharp masking
 			RMH_ImageProcessing_2DUnsharpMaskKernelImageSharpening(&AGCSharpFrameDataArray[0], _ImageProcessing_ImageResolution_14Bit, IRCamera.FrameWidth, IRCamera.FrameHeight - IRCamera.FrameMetadataSize, _ImageKernelMaskFilter_Size3x3, &GlobalGaussian3x3KernelMask[0], ImageSharpeningStrength, ShowUnsharpenMaskImageFlag, &AGCFrameDataArray[0]);
 
 		}
 		else {
 
-			// Implementerer Linear Automatisk Gain Kontrol Til billede data - konverter til grayscale - Manual Range
+			// Implements linear automatic gain control for the image data - convert to grayscale - manual range
 			RMH_IRThermalCamera_LinearAutomaticGainControlTemp(&FrameThermalDataRaw[0], &AGCFrameDataArray[0], IRCamera.FrameWidth, IRCamera.FrameHeight - IRCamera.FrameMetadataSize, _ImageProcessing_ImageResolution_14Bit, 0,
 				ManualTempRangeSetValues.ManualMaxRangeTemp, ManualTempRangeSetValues.ManualMinRangeTemp, TemperatureUnitScaleFactor, TemperatureUnitOffsetFactor);
 
@@ -3918,26 +3918,26 @@ void RMH_ThermalViewer_ImageProcessingSequence() {
 	}
 	else if (ColorBarManualRangeFlag == false && ColorBarManualHighRangeFlag == true && ColorBarManualLowRangeFlag == false) {
 
-		// Set colorbarens maximum og minimum temperatur range værdier
+		// Set the maximum and minimum temperature range values of the colorbar
 		GlobalVariables::OpenGLColorBar->RMH_OpenGL_SetColorBarMaxMinRangeTemperature(ColorBarInitialManualRangeMaxTemp, MinimumTemperature);
 
-		// Læs Colorbarens maximum og minimum range værdier i Manual range mode
+		// Read the maximum and minimum range values of the colorbar in manual range mode
 		ManualTempRangeSetValues = GlobalVariables::OpenGLColorBar->RMH_OpenGL_ReadColorBarRangeMaxMinValues();
 
-		// Er Billede Sharpening aktiverede
+		// Is image sharpening enabled
 		if (LiveViewImageSharpeningEnableFlag == true) {
 
-			// Implementerer Linear Automatisk Gain Kontrol Til billede data - konverter til grayscale - Manual Range
+			// Implements linear automatic gain control for the image data - convert to grayscale - manual range
 			RMH_IRThermalCamera_LinearAutomaticGainControlTemp(&FrameThermalDataRaw[0], &AGCSharpFrameDataArray[0], IRCamera.FrameWidth, IRCamera.FrameHeight - IRCamera.FrameMetadataSize, _ImageProcessing_ImageResolution_14Bit, 0,
 				ManualTempRangeSetValues.ManualMaxRangeTemp, MinimumTemperature, TemperatureUnitScaleFactor, TemperatureUnitOffsetFactor);
 
-			// Fortag Billede Skærpning med Gaussian Unsharp Maskering
+			// Perform image sharpening with Gaussian unsharp masking
 			RMH_ImageProcessing_2DUnsharpMaskKernelImageSharpening(&AGCSharpFrameDataArray[0], _ImageProcessing_ImageResolution_14Bit, IRCamera.FrameWidth, IRCamera.FrameHeight - IRCamera.FrameMetadataSize, _ImageKernelMaskFilter_Size3x3, &GlobalGaussian3x3KernelMask[0], ImageSharpeningStrength, ShowUnsharpenMaskImageFlag, &AGCFrameDataArray[0]);
 
 		}
 		else {
 
-			// Implementerer Linear Automatisk Gain Kontrol Til billede data - konverter til grayscale - Manual Range
+			// Implements linear automatic gain control for the image data - convert to grayscale - manual range
 			RMH_IRThermalCamera_LinearAutomaticGainControlTemp(&FrameThermalDataRaw[0], &AGCFrameDataArray[0], IRCamera.FrameWidth, IRCamera.FrameHeight - IRCamera.FrameMetadataSize, _ImageProcessing_ImageResolution_14Bit, 0,
 				ManualTempRangeSetValues.ManualMaxRangeTemp, MinimumTemperature, TemperatureUnitScaleFactor, TemperatureUnitOffsetFactor);
 
@@ -3946,26 +3946,26 @@ void RMH_ThermalViewer_ImageProcessingSequence() {
 	}
 	else if (ColorBarManualRangeFlag == false && ColorBarManualHighRangeFlag == false && ColorBarManualLowRangeFlag == true) {
 
-		// Set colorbarens maximum og minimum temperatur range værdier
+		// Set the maximum and minimum temperature range values of the colorbar
 		GlobalVariables::OpenGLColorBar->RMH_OpenGL_SetColorBarMaxMinRangeTemperature(MaximumTemperature, ColorBarInitialManualRangeMinTemp);
 
-		// Læs Colorbarens maximum og minimum range værdier i Manual range mode
+		// Read the maximum and minimum range values of the colorbar in manual range mode
 		ManualTempRangeSetValues = GlobalVariables::OpenGLColorBar->RMH_OpenGL_ReadColorBarRangeMaxMinValues();
 
-		// Er Billede Sharpening aktiverede
+		// Is image sharpening enabled
 		if (LiveViewImageSharpeningEnableFlag == true) {
 
-			// Implementerer Linear Automatisk Gain Kontrol Til billede data - konverter til grayscale - Manual Range
+			// Implements linear automatic gain control for the image data - convert to grayscale - manual range
 			RMH_IRThermalCamera_LinearAutomaticGainControlTemp(&FrameThermalDataRaw[0], &AGCSharpFrameDataArray[0], IRCamera.FrameWidth, IRCamera.FrameHeight - IRCamera.FrameMetadataSize, _ImageProcessing_ImageResolution_14Bit, 0,
 				MaximumTemperature, ManualTempRangeSetValues.ManualMinRangeTemp, TemperatureUnitScaleFactor, TemperatureUnitOffsetFactor);
 
-			// Fortag Billede Skærpning med Gaussian Unsharp Maskering
+			// Perform image sharpening with Gaussian unsharp masking
 			RMH_ImageProcessing_2DUnsharpMaskKernelImageSharpening(&AGCSharpFrameDataArray[0], _ImageProcessing_ImageResolution_14Bit, IRCamera.FrameWidth, IRCamera.FrameHeight - IRCamera.FrameMetadataSize, _ImageKernelMaskFilter_Size3x3, &GlobalGaussian3x3KernelMask[0], ImageSharpeningStrength, ShowUnsharpenMaskImageFlag, &AGCFrameDataArray[0]);
 
 		}
 		else {
 
-			// Implementerer Linear Automatisk Gain Kontrol Til billede data - konverter til grayscale - Manual Range
+			// Implements linear automatic gain control for the image data - convert to grayscale - manual range
 			RMH_IRThermalCamera_LinearAutomaticGainControlTemp(&FrameThermalDataRaw[0], &AGCFrameDataArray[0], IRCamera.FrameWidth, IRCamera.FrameHeight - IRCamera.FrameMetadataSize, _ImageProcessing_ImageResolution_14Bit, 0,
 				MaximumTemperature, ManualTempRangeSetValues.ManualMinRangeTemp, TemperatureUnitScaleFactor, TemperatureUnitOffsetFactor);
 
@@ -3974,22 +3974,22 @@ void RMH_ThermalViewer_ImageProcessingSequence() {
 	}
 	else {
 
-		// Set colorbarens maximum og minimum temperatur range værdier
+		// Set the maximum and minimum temperature range values of the colorbar
 		GlobalVariables::OpenGLColorBar->RMH_OpenGL_SetColorBarMaxMinRangeTemperature(MaximumTemperature, MinimumTemperature);
 
-		// Er Billede Sharpening aktiverede
+		// Is image sharpening enabled
 		if (LiveViewImageSharpeningEnableFlag == true) {
 
-			// Implementerer Linear Automatisk Gain Kontrol Til billede data - konverter til grayscale - Adaptiv Range
+			// Implements linear automatic gain control for the image data - convert to grayscale - adaptive range
 			RMH_ImageProcessing_LinearAutomaticGainControlRaw(&FrameThermalDataRaw[0], &AGCSharpFrameDataArray[0], IRCamera.FrameWidth, IRCamera.FrameHeight - IRCamera.FrameMetadataSize, _ImageProcessing_ImageResolution_14Bit, 0, IRCamera.Tmax_Tmp_Raw, IRCamera.Tmin_Tmp_Raw);
 
-			// Fortag Billede Skærpning med Gaussian Unsharp Maskering
+			// Perform image sharpening with Gaussian unsharp masking
 			RMH_ImageProcessing_2DUnsharpMaskKernelImageSharpening(&AGCSharpFrameDataArray[0], _ImageProcessing_ImageResolution_14Bit, IRCamera.FrameWidth, IRCamera.FrameHeight - IRCamera.FrameMetadataSize, _ImageKernelMaskFilter_Size3x3, &GlobalGaussian3x3KernelMask[0], ImageSharpeningStrength, ShowUnsharpenMaskImageFlag, &AGCFrameDataArray[0]);
 
 		}
 		else {
 
-			// Implementerer Linear Automatisk Gain Kontrol Til billede data - konverter til grayscale - Adaptiv Range
+			// Implements linear automatic gain control for the image data - convert to grayscale - adaptive range
 			RMH_ImageProcessing_LinearAutomaticGainControlRaw(&FrameThermalDataRaw[0], &AGCFrameDataArray[0], IRCamera.FrameWidth, IRCamera.FrameHeight - IRCamera.FrameMetadataSize, _ImageProcessing_ImageResolution_14Bit, 0, IRCamera.Tmax_Tmp_Raw, IRCamera.Tmin_Tmp_Raw);
 
 		}
@@ -3999,18 +3999,18 @@ void RMH_ThermalViewer_ImageProcessingSequence() {
 	// Formater colorbarens Major og Minor tick label strings
 	GlobalVariables::OpenGLColorBar->RMH_OpenGL_FormatColorBarTickAndTagLabelStrings(GlobalVariables::DefaultTempUnitString);
 
-	// Opdater Colorbarens Maximum, Minimum og center temperatur indikator piles position
+	// Update the position of the maximum, minimum and center temperature indicator arrows of the colorbar
 	GlobalVariables::OpenGLColorBar->RMH_OpenGL_UpdateColorBarMaxMinCenterTempArrowsPos(MaximumTemperature, MinimumTemperature, CenterTemperature);
 
 	// ------------------------------ Color Palette & Billede Processering Part 2 ------------------------------- //
 
-	// Læs ColorBar Maximum Og Minimum Tagenes Positioner
+	// Read the positions of the colorbar maximum and minimum tags
 	ColorBarMaxMinTagPositions = GlobalVariables::OpenGLColorBar->RMH_OpenGL_ReadColorBarTagsPositions();
 
 	// Skal Live View color palette range skaleres i colorbaren
 	if (LiveViewPaletteRangeScalingEnableFlag == true) {
 
-		// Opdater Live View color palette Maximum Og Minimum Range Positioner
+		// Update the maximum and minimum range positions of the live view color palette
 		LiveViewPaletteTagPositions = ColorBarMaxMinTagPositions;
 
 	}
@@ -4018,20 +4018,20 @@ void RMH_ThermalViewer_ImageProcessingSequence() {
 	// Kompenser for inverterede live view color palette
 	if (InvertLiveViewPaletteFlag == true) {
 
-		// Formater Live view color palette indenfor konfigureret colorbar maximum og minimum Tag temperatur range
+		// Format the live view color palette within the configured colorbar maximum and minimum tag temperature range
 		RMH_ImageProcessing_FormatColorPaletteRangeInsideBackgroundPalette(ColorPalettePtr, InvertLiveViewPaletteFlag, AdaptFullColorBarPaletteRangeFlag, ColorBarBackPalettePtr, InvertColorBarBackgroundPaletteFlag,
 			LiveViewPaletteTagPositions.MinimumTagPos - 1, LiveViewPaletteTagPositions.MaximumTagPos, FormattedLiveViewPalette);
 
 	}
 	else {
 
-		// Formater Live view color palette indenfor konfigureret colorbar maximum og minimum Tag temperatur range
+		// Format the live view color palette within the configured colorbar maximum and minimum tag temperature range
 		RMH_ImageProcessing_FormatColorPaletteRangeInsideBackgroundPalette(ColorPalettePtr, InvertLiveViewPaletteFlag, AdaptFullColorBarPaletteRangeFlag, ColorBarBackPalettePtr, InvertColorBarBackgroundPaletteFlag,
 			_ImageProcessing_ImageResolution_14Bit - LiveViewPaletteTagPositions.MaximumTagPos, _ImageProcessing_ImageResolution_14Bit - (LiveViewPaletteTagPositions.MinimumTagPos - 1), FormattedLiveViewPalette);
 
 	}
 
-	// Skriv Formaterede Live view color palette til colorbar data struktur 
+	// Write the formatted live view color palette to the colorbar data structure 
 	GlobalVariables::OpenGLColorBar->RMH_OpenGL_LoadFirstColorPalettesData(FormattedLiveViewPalette);
 	
 	// Er Dual Color Palette Aktiverede
@@ -4040,7 +4040,7 @@ void RMH_ThermalViewer_ImageProcessingSequence() {
 		// Skal Dual Live View color palette range skaleres i colorbaren
 		if (DualPaletteRangeScalingEnableFlag == true) {
 
-			// Opdater Dual color palette Maximum Og Minimum Range Positioner
+			// Update the maximum and minimum range positions of the dual color palette
 			DualLiveViewPaletteTagPositions = ColorBarMaxMinTagPositions;
 
 		}
@@ -4048,23 +4048,23 @@ void RMH_ThermalViewer_ImageProcessingSequence() {
 		// Kompenser for inverterede Dual Live View Color Palette
 		if (InvertLiveViewDualPaletteFlag == true) {
 
-			// Formater Live view color palette indenfor konfigureret colorbar maximum og minimum Tag temperatur range
+			// Format the live view color palette within the configured colorbar maximum and minimum tag temperature range
 			RMH_ImageProcessing_FormatColorPaletteRangeInsideBackgroundPalette(DualColorPalettePtr, InvertLiveViewDualPaletteFlag, AdaptFullColorBarPaletteRangeFlag, ColorBarBackPalettePtr, InvertColorBarBackgroundPaletteFlag,
 				DualLiveViewPaletteTagPositions.MinimumTagPos - 1, DualLiveViewPaletteTagPositions.MaximumTagPos, FormattedDualLiveViewPalette);
 
 		}
 		else {
 
-			// Formater Live view color palette indenfor konfigureret colorbar maximum og minimum Tag temperatur range
+			// Format the live view color palette within the configured colorbar maximum and minimum tag temperature range
 			RMH_ImageProcessing_FormatColorPaletteRangeInsideBackgroundPalette(DualColorPalettePtr, InvertLiveViewDualPaletteFlag, AdaptFullColorBarPaletteRangeFlag, ColorBarBackPalettePtr, InvertColorBarBackgroundPaletteFlag,
 				_ImageProcessing_ImageResolution_14Bit - DualLiveViewPaletteTagPositions.MaximumTagPos, _ImageProcessing_ImageResolution_14Bit - (DualLiveViewPaletteTagPositions.MinimumTagPos - 1), FormattedDualLiveViewPalette);
 
 		}
 
-		// Skriv Formaterede Dual Live view color palette til colorbar data struktur 
+		// Write the formatted dual live view color palette to the colorbar data structure 
 		GlobalVariables::OpenGLColorBar->RMH_OpenGL_LoadSecondColorPalettesData(FormattedDualLiveViewPalette);
 
-		// Map frame data til valgte Color Palette format - Med Dual Color Palette
+		// Map the frame data to the selected color palette format - with dual color palette
 		RMH_ImageProcessing_ApplyOverlayedPaletteToGrayScaleImageData(
 			&AGCFrameDataArray[0], &ProcessedThermalImage[0],
 			IRCamera.FrameWidth, IRCamera.FrameHeight - IRCamera.FrameMetadataSize,
@@ -4076,7 +4076,7 @@ void RMH_ThermalViewer_ImageProcessingSequence() {
 	}
 	else {
 
-		// Map frame data til valgte Color Palette format
+		// Map the frame data to the selected color palette format
 		RMH_ImageProcessing_ApplyColorPaletteToGrayscaleImageData(&AGCFrameDataArray[0], IRCamera.FrameWidth, IRCamera.FrameHeight - IRCamera.FrameMetadataSize, FormattedLiveViewPalette, InvertLiveViewPaletteFlag, &ProcessedThermalImage[0]);
 
 	}
@@ -4086,10 +4086,10 @@ void RMH_ThermalViewer_ImageProcessingSequence() {
 	// Er Live view histogram panelet aktiverede
 	if (LiveViewHistogramEnableFlag == true && LiveViewHistogramDataReadyFlag == false) {
 
-		// Hvilken Palette skal histogrammet rendereres med
+		// Which palette should the histogram be rendered with
 		if (HistogramDualOrLiveViewPaletteFlag == false) {
 
-			// Skal den formaterede eller fulde color palette vises 
+			// Should the formatted or the full color palette be shown 
 			if (HistogramShowRangedPaletteFlag == true) {
 
 				// Load histogram color palette
@@ -4106,7 +4106,7 @@ void RMH_ThermalViewer_ImageProcessingSequence() {
 		}
 		else {
 
-			// Skal den formaterede eller fulde color palette vises 
+			// Should the formatted or the full color palette be shown 
 			if (HistogramShowRangedPaletteFlag == true) {
 
 				// Load histogram color palette
@@ -4122,13 +4122,13 @@ void RMH_ThermalViewer_ImageProcessingSequence() {
 
 		}
 
-		// Kontroller om Colorbaren er i automatisk eller manual range mode
+		// Check whether the colorbar is in automatic or manual range mode
 		if (ColorBarManualRangeFlag == true && ColorBarManualHighRangeFlag == false && ColorBarManualLowRangeFlag == false) {
 
 			// Er histogrammets Data source Live view dataen
 			if (HistogramDataSourceTag == 5) {
 
-				// Formater og fordel Frame data til Histogram Bins - Manuel Range
+				// Format and distribute the frame data into histogram bins - manual range
 				GlobalVariables::OpenGLHistogram->RMH_OpenGL_FormatHistogramBinDataTemp(&IRCamera, &FrameThermalDataRaw[0],
 					IRCamera.FrameWidth * (IRCamera.FrameHeight - IRCamera.FrameMetadataSize), 
 					ManualTempRangeSetValues.ManualMaxRangeTemp, ManualTempRangeSetValues.ManualMinRangeTemp,
@@ -4138,7 +4138,7 @@ void RMH_ThermalViewer_ImageProcessingSequence() {
 			// Er histogrammets Data source Live view Zoom dataen
 			else if (HistogramDataSourceTag == 6) {
 
-				// Formater og fordel valgte Zoom ROI data til Histogram Bins - Manuel Range
+				// Format and distribute the selected zoom ROI data into histogram bins - manual range
 				GlobalVariables::OpenGLHistogram->RMH_OpenGL_FormatHistogramBinDataTemp(&IRCamera, &ZoomROIxAreaRawPixelValues[0],
 					ZoomROIAreaPixelValues.ROIAreaNmbOfPixels, ManualTempRangeSetValues.ManualMaxRangeTemp, ManualTempRangeSetValues.ManualMinRangeTemp,
 					TemperatureUnitScaleFactor, TemperatureUnitOffsetFactor, IRCamera.ThermalCameraSupportPool);
@@ -4146,7 +4146,7 @@ void RMH_ThermalViewer_ImageProcessingSequence() {
 			}
 			else if (HistogramDataSourceTag >= _MaxNumberOfMovableRectangles - _NumberOfNonMainLiveViewROIs) {
 
-				// Formater og fordel valgte ROI data til Histogram Bins - Manuel Range
+				// Format and distribute the selected ROI data into histogram bins - manual range
 				GlobalVariables::OpenGLHistogram->RMH_OpenGL_FormatHistogramBinDataTemp(&IRCamera, &ROIxAreaRawPixelValues[0],
 					ROIAreaPixelValues[HistogramDataSourceTag - (_MaxNumberOfMovableRectangles - _NumberOfNonMainLiveViewROIs)].ROIAreaNmbOfPixels,
 					ManualTempRangeSetValues.ManualMaxRangeTemp, ManualTempRangeSetValues.ManualMinRangeTemp,
@@ -4155,7 +4155,7 @@ void RMH_ThermalViewer_ImageProcessingSequence() {
 			}
 			else {
 
-				// Formater og fordel valgte Linje Data til Histogram Bins - Manuel Range
+				// Format and distribute the selected line data into histogram bins - manual range
 				GlobalVariables::OpenGLHistogram->RMH_OpenGL_FormatHistogramBinDataLine(&IRCamera, &FrameThermalDataRaw[0],
 					&TempLinesPositions[HistogramDataSourceTag].LineXCordinates[0],
 					&TempLinesPositions[HistogramDataSourceTag].LineYCordinates[0],
@@ -4172,7 +4172,7 @@ void RMH_ThermalViewer_ImageProcessingSequence() {
 			// Er histogrammets Data source Live view dataen
 			if (HistogramDataSourceTag == 5) {
 
-				// Formater og fordel Frame data til Histogram Bins - Manuel Range
+				// Format and distribute the frame data into histogram bins - manual range
 				GlobalVariables::OpenGLHistogram->RMH_OpenGL_FormatHistogramBinDataTemp(&IRCamera, &FrameThermalDataRaw[0],
 					IRCamera.FrameWidth * (IRCamera.FrameHeight - IRCamera.FrameMetadataSize),
 					ManualTempRangeSetValues.ManualMaxRangeTemp, MinimumTemperature,
@@ -4182,7 +4182,7 @@ void RMH_ThermalViewer_ImageProcessingSequence() {
 			// Er histogrammets Data source Live view Zoom dataen
 			else if (HistogramDataSourceTag == 6) {
 
-				// Formater og fordel valgte Zoom ROI data til Histogram Bins - Manuel Range
+				// Format and distribute the selected zoom ROI data into histogram bins - manual range
 				GlobalVariables::OpenGLHistogram->RMH_OpenGL_FormatHistogramBinDataTemp(&IRCamera, &ZoomROIxAreaRawPixelValues[0],
 					ZoomROIAreaPixelValues.ROIAreaNmbOfPixels, ManualTempRangeSetValues.ManualMaxRangeTemp, MinimumTemperature,
 					TemperatureUnitScaleFactor, TemperatureUnitOffsetFactor, IRCamera.ThermalCameraSupportPool);
@@ -4190,7 +4190,7 @@ void RMH_ThermalViewer_ImageProcessingSequence() {
 			}
 			else if (HistogramDataSourceTag >= _MaxNumberOfMovableRectangles - _NumberOfNonMainLiveViewROIs) {
 
-				// Formater og fordel valgte ROI data til Histogram Bins - Manuel Range
+				// Format and distribute the selected ROI data into histogram bins - manual range
 				GlobalVariables::OpenGLHistogram->RMH_OpenGL_FormatHistogramBinDataTemp(&IRCamera, &ROIxAreaRawPixelValues[0],
 					ROIAreaPixelValues[HistogramDataSourceTag - (_MaxNumberOfMovableRectangles - _NumberOfNonMainLiveViewROIs)].ROIAreaNmbOfPixels,
 					ManualTempRangeSetValues.ManualMaxRangeTemp, MinimumTemperature,
@@ -4199,7 +4199,7 @@ void RMH_ThermalViewer_ImageProcessingSequence() {
 			}
 			else {
 
-				// Formater og fordel valgte Linje Data til Histogram Bins - Manuel Range
+				// Format and distribute the selected line data into histogram bins - manual range
 				GlobalVariables::OpenGLHistogram->RMH_OpenGL_FormatHistogramBinDataLine(&IRCamera, &FrameThermalDataRaw[0],
 					&TempLinesPositions[HistogramDataSourceTag].LineXCordinates[0],
 					&TempLinesPositions[HistogramDataSourceTag].LineYCordinates[0],
@@ -4216,7 +4216,7 @@ void RMH_ThermalViewer_ImageProcessingSequence() {
 			// Er histogrammets Data source Live view dataen
 			if (HistogramDataSourceTag == 5) {
 
-				// Formater og fordel Frame data til Histogram Bins - Manuel Range
+				// Format and distribute the frame data into histogram bins - manual range
 				GlobalVariables::OpenGLHistogram->RMH_OpenGL_FormatHistogramBinDataTemp(&IRCamera, &FrameThermalDataRaw[0],
 					IRCamera.FrameWidth * (IRCamera.FrameHeight - IRCamera.FrameMetadataSize),
 					MaximumTemperature, ManualTempRangeSetValues.ManualMinRangeTemp,
@@ -4226,7 +4226,7 @@ void RMH_ThermalViewer_ImageProcessingSequence() {
 			// Er histogrammets Data source Live view Zoom dataen
 			else if (HistogramDataSourceTag == 6) {
 
-				// Formater og fordel valgte Zoom ROI data til Histogram Bins - Manuel Range
+				// Format and distribute the selected zoom ROI data into histogram bins - manual range
 				GlobalVariables::OpenGLHistogram->RMH_OpenGL_FormatHistogramBinDataTemp(&IRCamera, &ZoomROIxAreaRawPixelValues[0],
 					ZoomROIAreaPixelValues.ROIAreaNmbOfPixels, MaximumTemperature, ManualTempRangeSetValues.ManualMinRangeTemp,
 					TemperatureUnitScaleFactor, TemperatureUnitOffsetFactor, IRCamera.ThermalCameraSupportPool);
@@ -4234,7 +4234,7 @@ void RMH_ThermalViewer_ImageProcessingSequence() {
 			}
 			else if (HistogramDataSourceTag >= _MaxNumberOfMovableRectangles - _NumberOfNonMainLiveViewROIs) {
 
-				// Formater og fordel valgte ROI data til Histogram Bins - Manuel Range
+				// Format and distribute the selected ROI data into histogram bins - manual range
 				GlobalVariables::OpenGLHistogram->RMH_OpenGL_FormatHistogramBinDataTemp(&IRCamera, &ROIxAreaRawPixelValues[0],
 					ROIAreaPixelValues[HistogramDataSourceTag - (_MaxNumberOfMovableRectangles - _NumberOfNonMainLiveViewROIs)].ROIAreaNmbOfPixels,
 					MaximumTemperature, ManualTempRangeSetValues.ManualMinRangeTemp,
@@ -4243,7 +4243,7 @@ void RMH_ThermalViewer_ImageProcessingSequence() {
 			}
 			else {
 
-				// Formater og fordel valgte Linje Data til Histogram Bins - Manuel Range
+				// Format and distribute the selected line data into histogram bins - manual range
 				GlobalVariables::OpenGLHistogram->RMH_OpenGL_FormatHistogramBinDataLine(&IRCamera, &FrameThermalDataRaw[0],
 					&TempLinesPositions[HistogramDataSourceTag].LineXCordinates[0],
 					&TempLinesPositions[HistogramDataSourceTag].LineYCordinates[0],
@@ -4260,7 +4260,7 @@ void RMH_ThermalViewer_ImageProcessingSequence() {
 			// Er histogrammets Data source Live view dataen
 			if (HistogramDataSourceTag == 5) {
 
-				// Formater og fordel Frame data til Histogram Bins - Auto Range
+				// Format and distribute the frame data into histogram bins - auto range
 				GlobalVariables::OpenGLHistogram->RMH_OpenGL_FormatHistogramBinDataRaw(&FrameThermalDataRaw[0],
 					IRCamera.FrameWidth * (IRCamera.FrameHeight - IRCamera.FrameMetadataSize), IRCamera.Tmax_Tmp_Raw, IRCamera.Tmin_Tmp_Raw);
 
@@ -4268,14 +4268,14 @@ void RMH_ThermalViewer_ImageProcessingSequence() {
 			// Er histogrammets Data source Live view Zoom dataen
 			else if (HistogramDataSourceTag == 6) {
 
-				// Formater og fordel valgte Zoom ROI data til Histogram Bins - Auto Range
+				// Format and distribute the selected zoom ROI data into histogram bins - auto range
 				GlobalVariables::OpenGLHistogram->RMH_OpenGL_FormatHistogramBinDataRaw(&ZoomROIxAreaRawPixelValues[0],
 					ZoomROIAreaPixelValues.ROIAreaNmbOfPixels, IRCamera.Tmax_Tmp_Raw, IRCamera.Tmin_Tmp_Raw);
 
 			}
 			else if (HistogramDataSourceTag >= _MaxNumberOfMovableRectangles - _NumberOfNonMainLiveViewROIs) {
 
-				// Formater og fordel valgte ROI data til Histogram Bins - Auto Range
+				// Format and distribute the selected ROI data into histogram bins - auto range
 				GlobalVariables::OpenGLHistogram->RMH_OpenGL_FormatHistogramBinDataRaw(&ROIxAreaRawPixelValues[0],
 					ROIAreaPixelValues[HistogramDataSourceTag - (_MaxNumberOfMovableRectangles - _NumberOfNonMainLiveViewROIs)].ROIAreaNmbOfPixels,
 					IRCamera.Tmax_Tmp_Raw, IRCamera.Tmin_Tmp_Raw);
@@ -4283,7 +4283,7 @@ void RMH_ThermalViewer_ImageProcessingSequence() {
 			}
 			else {
 
-				// Formater og fordel valgte Linje Data til Histogram Bins - Auto Range
+				// Format and distribute the selected line data into histogram bins - auto range
 				GlobalVariables::OpenGLHistogram->RMH_OpenGL_FormatHistogramBinDataLine(&IRCamera, &FrameThermalDataRaw[0],
 					&TempLinesPositions[HistogramDataSourceTag].LineXCordinates[0],
 					&TempLinesPositions[HistogramDataSourceTag].LineYCordinates[0],
@@ -4296,60 +4296,60 @@ void RMH_ThermalViewer_ImageProcessingSequence() {
 
 		}
 
-		// Opdater "Histogram Data Er Klar Til Rengerering" Flaget
+		// Update the "Histogram data is ready for rendering" flag
 		LiveViewHistogramDataReadyFlag = true;
 
 	}
 
-	// ------------------------------------------ Temperatur Tracking ------------------------------------------- //
+	// ------------------------------------------ Temperature Tracking ------------------------------------------- //
 
-	// Læs Aktive ROI Max/Min Temperaturerne og Formaterer Tilhørende Label Strings Til Renderering
+	// Read the active ROI max/min temperatures and format the associated label strings for rendering
 	RMH_ThermalViewer_ReadAndFormatROITempAndLabels();
 
-	// Læs aktive Temperatur målingers temperaturer og Formaterer Tilhørende Label Strings Til Renderering 
+	// Read the temperatures of the active temperature measurements and format the associated label strings for rendering 
 	RMH_ThermalViewer_ReadAndFormatTempMeasurementsAndLabels();
 
-	// Læs aktive Temperatur linjers temperaturer og Formaterer Tilhørende Label Strings Til Renderering 
+	// Read the temperatures of the active temperature lines and format the associated label strings for rendering 
 	RMH_ThermalViewer_ReadAndFormatLinesMaxMinAvgTempsAndLabels();
 
-	// Er maximum temperatur tracking aktiverede
+	// Is maximum temperature tracking enabled
 	if (MaxTempTrackingEnableFlag == true) {
 
-		// Formater Max Temperatur label til renderering på live view
+		// Format the max temperature label for rendering on the live view
 		RMH_ThermalViewer_FormatMaximumTemperatureLabel();
 
 	}
 
-	// Er Minimum temperatur tracking aktiverede
+	// Is minimum temperature tracking enabled
 	if (MinTempTrackingEnableFlag == true) {
 
-		// Formater Min Temperatur label til renderering på live view
+		// Format the min temperature label for rendering on the live view
 		RMH_ThermalViewer_FormatMinimumTemperatureLabel();
 
 	}
 
-	// Er Center temperatur tracking aktiverede
+	// Is center temperature tracking enabled
 	if (CenterTempTrackingEnableFlag == true) {
 
-		// Formater Center Temperatur label til renderering på live view
+		// Format the center temperature label for rendering on the live view
 		RMH_ThermalViewer_FormatCenterTemperatureLabel();
 
 	}
 
-	// Hvis Mus Cursor Temperatur tracking er aktiverede
+	// If mouse cursor temperature tracking is enabled
 	if (CursorTempTrackEnableFlag == true) {
 
-		// Læs og formater temperatur og label til Mus cursor label renderering på live view
+		// Read and format the temperature and label for the mouse cursor label rendering on the live view
 		RMH_ThermalViewer_ReadAndFormatMouseCursorTempAndLabel();
 
 	}
 
 	// ---------------------------------------------- 2D Plot Data ---------------------------------------------- //
 
-	// Er Temperatur Plot Formen i Visning
+	// Is the temperature plot form visible
 	if (isTempMeasurementsFormDocked == true || isTempMeasurementsFormUndocked == true) {
 
-		// Tilføj målinger til aktive 2D Plot data Sæt 
+		// Add measurements to the active 2D plot data sets 
 		GlobalVariables::OpenGL2DPlot->RMH_OpenGL_AddDataPointToPlotDataSet(*Plot2DDataSet1SourcePointer, _2DPlotDataSet_1);
 		GlobalVariables::OpenGL2DPlot->RMH_OpenGL_AddDataPointToPlotDataSet(*Plot2DDataSet2SourcePointer, _2DPlotDataSet_2);
 		GlobalVariables::OpenGL2DPlot->RMH_OpenGL_AddDataPointToPlotDataSet(*Plot2DDataSet3SourcePointer, _2DPlotDataSet_3);
@@ -4361,14 +4361,14 @@ void RMH_ThermalViewer_ImageProcessingSequence() {
 		GlobalVariables::OpenGL2DPlot->RMH_OpenGL_AddDataPointToPlotDataSet(*Plot2DDataSet9SourcePointer, _2DPlotDataSet_9);
 		GlobalVariables::OpenGL2DPlot->RMH_OpenGL_AddDataPointToPlotDataSet(*Plot2DDataSet10SourcePointer, _2DPlotDataSet_10);
 
-		// Læs Maximum og Minimums værdien for alle aktive data sæt og indstiller plottets Y-Akse Range varaibler
+		// Read the maximum and minimum values of all active data sets and set the Y-axis range variables of the plot
 		GlobalVariables::OpenGL2DPlot->RMH_OpenGL_ReadDataSetsMaxMinDataRangeValues();
 
 	}
 
-	// ------------------------------------------- Temperatur Alarmer ------------------------------------------- //
+	// ------------------------------------------- Temperature Alarms ------------------------------------------- //
 
-	// Monitorer aktive temperatur alarmer og opdater deres statuser
+	// Monitor the active temperature alarms and update their statuses
 	RMH_ThermalViewer_MonitorEnabledTempAlarmsStatus();
 
 	// ---------------------------------------- Live View Statistik Data ---------------------------------------- //
@@ -4382,22 +4382,22 @@ void RMH_ThermalViewer_ImageProcessingSequence() {
 
 void RMH_ThermalViewer_SecondaryProcessingSequence() {
 
-	// Routinen benyttes som en sekundær processerings thread
+	// This routine is used as a secondary processing thread
 
-	// Lokale varaibler
+	// Local variables
 	unsigned int FrameWidth = IRCamera.FrameWidth; 
 	unsigned int FrameHeight = IRCamera.FrameHeight - IRCamera.FrameMetadataSize;
 
-	// Hvis Live View Ultra Opløsnings Mode er aktiverede
+	// If live view ultra resolution mode is enabled
 	if (UltraResolutionEnableFlag == true && UltraResolutionImageDataReadyFlag == false && UltraResolutionImageDataReadyZoomFlag == false) {
 
-		// Fortag Bilinear 2D Interpolering Af AGC Billede Data
+		// Perform bilinear 2D interpolation of the AGC image data
 		RMH_ImageProcessing_2DBilinearInterpolation(&AGCFrameDataArray[0], FrameWidth, FrameHeight, FrameWidth * UltraResolutionScaleFactor, FrameHeight * UltraResolutionScaleFactor, &UltraResolutionImage[0]);
 
 		// Er Dual Color Palette Aktiverede
 		if (DualColorPaletteEnableFlag == true) {
 
-			// Map frame data til valgte Color Palette format - Med Dual Color Palette
+			// Map the frame data to the selected color palette format - with dual color palette
 			RMH_ImageProcessing_ApplyOverlayedPaletteToGrayScaleImageData(
 				&UltraResolutionImage[0], &PrecessedUltraResolutionImage[0],
 				FrameWidth * UltraResolutionScaleFactor, FrameHeight * UltraResolutionScaleFactor,
@@ -4409,12 +4409,12 @@ void RMH_ThermalViewer_SecondaryProcessingSequence() {
 		}
 		else {
 
-			// Map frame data til valgte Color Palette format
+			// Map the frame data to the selected color palette format
 			RMH_ImageProcessing_ApplyColorPaletteToGrayscaleImageData(&UltraResolutionImage[0], FrameWidth * UltraResolutionScaleFactor, FrameHeight * UltraResolutionScaleFactor, FormattedLiveViewPalette, InvertLiveViewPaletteFlag, &PrecessedUltraResolutionImage[0]);
 
 		}
 
-		// Opdater "Ultra Opløsnings Billede" Færdig processerede og klar flaget
+		// Update the "ultra resolution image" finished processing and ready flag
 		UltraResolutionImageDataReadyFlag = true;
 		UltraResolutionImageDataReadyZoomFlag = true;
 
@@ -4424,44 +4424,44 @@ void RMH_ThermalViewer_SecondaryProcessingSequence() {
 
 void RMH_ThermalViewer_ToggleEnhancedLiveViewResolution() {
 
-	// Routinen aktiverer eller deaktiverer Live view enhanced billed opløsnings mode
+	// This routine enables or disables the live view enhanced image resolution mode
 
-	// Håndter nyt stadie for aktiverings flag
+	// Handle the new state of the enable flag
 	if (EnhancedResEnableFlag == true) {
 
-		// Opdater Knap Border Farve
+		// Update the button border color
 		GlobalVariables::GlobalEnhancedResButton->FlatAppearance->BorderColor = System::Drawing::Color::Lime;
 
 	}
 	else {
 
-		// Nulstil Knap Border Farve
+		// Reset the button border color
 		GlobalVariables::GlobalEnhancedResButton->FlatAppearance->BorderColor = System::Drawing::Color::FromArgb(255, 40, 40, 40);
 
 	}
 
-	// Aktiver eller deaktiver enhanced billed opløsnings mod
+	// Enable or disable enhanced image resolution mode
 	GlobalVariables::OpenGLRender->RMH_OpenGL_EnableTextureLinearInterpolation(EnhancedResEnableFlag);
 
 }
 
 void RMH_ThermalViewer_ToggleLiveViewImageSharpening() {
 
-	// Routinen aktiverer eller deaktiverer Live view billed Sharpenings featuren
+	// This routine enables or disables the live view image sharpening feature
 
 	// Toggle live view billed Sharpenings aktiverings flag
 	LiveViewImageSharpeningEnableFlag = !LiveViewImageSharpeningEnableFlag;
 
-	// Håndter nyt stadie for aktiverings flag
+	// Handle the new state of the enable flag
 	if (LiveViewImageSharpeningEnableFlag == true) {
 
-		// Opdater Knap Border Farve
+		// Update the button border color
 		GlobalVariables::GlobalImageSharpButton->FlatAppearance->BorderColor = System::Drawing::Color::Lime;
 
 	}
 	else {
 
-		// Nulstil Knap Border Farve
+		// Reset the button border color
 		GlobalVariables::GlobalImageSharpButton->FlatAppearance->BorderColor = System::Drawing::Color::FromArgb(255, 40, 40, 40);
 
 	}
@@ -4470,101 +4470,101 @@ void RMH_ThermalViewer_ToggleLiveViewImageSharpening() {
 
 void RMH_ThermalViewer_ToggleLiveViewUltraResolution() {
 
-	// Routinen aktiverer eller deaktiverer Live view Ultra billed opløsnings mode
+	// This routine enables or disables the live view ultra image resolution mode
 
-	// Håndtering ag stadiet for aktiverings flag
+	// Handle the state of the enable flag
 	if (UltraResolutionEnableFlag == true) {
 
-		// Opdater Knap Border Farve
+		// Update the button border color
 		GlobalVariables::GlobalUltraResolutionButton->FlatAppearance->BorderColor = System::Drawing::Color::Lime;
 
 	}
 	else {
 
-		// Nulstil Knap Border Farve
+		// Reset the button border color
 		GlobalVariables::GlobalUltraResolutionButton->FlatAppearance->BorderColor = System::Drawing::Color::FromArgb(255, 40, 40, 40);
 
 	}
 
-	// Aktiver eller deaktiver Ultra opløsnings modet
+	// Enable or disable ultra resolution mode
 	GlobalVariables::OpenGLRender->RMH_LiveViewStream_UltraResolutionMode(UltraResolutionEnableFlag);
 
 }
 
-// --------------- Live View Aspect Ratio Knap Og Event Håndterings Routiner ---------------- //
+// --------------- Live View Aspect Ratio Button And Event Handling Routines ---------------- //
 
 void RMH_ThermalViewer_UpdateAspectRatioButtonBorderColor() {
 
-	// Routinen Indstiller start tilstanden for Live View Aspecr ratio knappen
+	// This routine sets the start state of the live view aspect ratio button
 
-	// Kontroller nuværende aspect ratio indstilling
+	// Check the current aspect ratio setting
 	if (FixedLiveViewAspectRatio == true) {
 
-		// Opdater aspect ratio knap border farve
+		// Update the aspect ratio button border color
 		GlobalVariables::GlobalFixedAspectRatioButton->FlatAppearance->BorderColor = System::Drawing::Color::Lime;
 
 	}
 	else {
 
-		// Opdater aspect ratio knap border farve
+		// Update the aspect ratio button border color
 		GlobalVariables::GlobalFixedAspectRatioButton->FlatAppearance->BorderColor = System::Drawing::Color::FromArgb(255, 40, 40, 40);
 
 	}
 
 }
 
-// -------------------- Surface Plot Opdaterings Og Håndterings Routiner -------------------- //
+// -------------------- Surface Plot Update And Handling Routines -------------------- //
 
 void RMH_ThermalViewer_UpdateSurfacePlotMenuScreen(unsigned int SurfacePlotPanelWidth, unsigned int SurfacePlotPanelHeight) {
 
-	// Routinen opdaterer Surface Plottet med seneste processerede data
+	// This routine updates the surface plot with the latest processed data
 
 	// Render 3. dimensional Surface Plot
 	GlobalVariables::OpenGLSurfacePlot->RMH_OpenGL_RenderSurfacePlot(SurfacePlotPanelWidth, SurfacePlotPanelHeight, &ProcessedThermalImage[0], IRCamera.FrameWidth, IRCamera.FrameHeight - IRCamera.FrameMetadataSize, &FrameThermalDataRaw[0], IRCamera.Tmax_Tmp_Raw, IRCamera.Tmin_Tmp_Raw);
 
 }
 
-// ----------------------- 2D Plot Opdaterings Og Håndterings Routiner ---------------------- //
+// ----------------------- 2D Plot Update And Handling Routines ---------------------- //
 
 void RMH_ThermalViewer_Update2DPlotMenuScreen(unsigned int PlotPanelWidth, unsigned int PlotPanelHeight) {
 
-	// Routinen opdaterer 2D Plottet med seneste processerede data
+	// This routine updates the 2D plot with the latest processed data
 
 	// Render 2. dimensional X/Y Plot
 	GlobalVariables::OpenGL2DPlot->RMH_OpenGL_Render2DPlot(PlotPanelWidth, PlotPanelHeight, GlobalVariables::DefaultTempUnitString);
 
 }
 
-// ----------------- Temperatur Alarmer Opdaterings Og Håndterings Routiner ----------------- //
+// ----------------- Temperature Alarm Update And Handling Routines ----------------- //
 
 void RMH_ThermalViewer_UpdateTemperatureAlarmsSubMenuStatusLabels() {
 
-	// Routinen opdaterer ralavante temperatur alarmers stauts labels 
+	// This routine updates the status labels of the relevant temperature alarms 
 
-	// Opdater aktive temperatur alarmens status labels
+	// Update the status labels of the active temperature alarms
 	RMH_ThermalViewer_UpdateTempAlarmsStatusLabels();
 
 }
 
-// --------------- Live View Opdaterings, Optagnings Og Håndterings Routiner ---------------- //
+// --------------- Live View Update, Recording And Handling Routines ---------------- //
 
 void RMH_ThermalViewer_WriteDataToVideoRecordingFilesSequence() {
 
-	// Routinen håndterer skrivningen af relatanv data til video filer, hvis video optagning er startede
+	// This routine handles writing the relevant data to video files, if video recording has started
 
-	// Kontroller Om En Ny Video Data Frame Er Klar
+	// Check whether a new video data frame is ready
 	if (NewRecordFrameAvailableFlag == true) {
 
-		// Inkrementer Video Optagnings Time-Out Tæller Variablet
+		// Increment the video recording timeout counter variable
 		RecordingFrameRateTimeOutCounter = RecordingFrameRateTimeOutCounter + 1;
 
-		// Kontroller Om Video Optagnings Time-Out Tæller Variablet Har Nået Set Punkts Værdien
+		// Check whether the video recording timeout counter variable has reached the set point value
 		if (RecordingFrameRateTimeOutCounter >= (IRCamera.FrameRate / RecordingFrameRateSetValue)) {
 
-			// Håndter skrivningen af valgte Kamera Pool data til video filer, hvis video optagning er startede og klar
+			// Handle writing the selected camera pool data to video files, if video recording has started and is ready
 			RMH_IRThermalCamera_WriteDataToVideoRecordingFilesSequence(IRCamera.ThermalCameraSupportPool);
 
-			// Nulstil Video Optagnings Time-Out Tæller Variablet
+			// Reset the video recording timeout counter variable
 			RecordingFrameRateTimeOutCounter = 0;
 
 		}
@@ -4576,29 +4576,29 @@ void RMH_ThermalViewer_WriteDataToVideoRecordingFilesSequence() {
 
 }
 
-// ZOOM TEMPERATUR LABELS - IKKE FÆRDIG !!!
+// ZOOM TEMPERATURE LABELS - NOT FINISHED !!!
 void RMH_ThermalViewer_UpdateLiveView(unsigned int LiveViewPanelWidth, unsigned int LiveViewPanelHeight, bool FixedAspectRatio, unsigned int ColorBarPanelWidth, unsigned int ColorBarPanelHeight, unsigned int HistogramPanelWidth, unsigned int HistogramPanelHeight) {
 
-	// Routinen opdaterer Live View Video Streamen, Colorbaren og live view histogrammet med seneste processerede billed data
+	// This routine updates the live view video stream, the colorbar and the live view histogram with the latest processed image data
 
-	// Lokale variabler
+	// Read the temporary array data and sort the kernel array
 	unsigned int i = 0;
 
-	// Render ColorBar med tilhørende tick linje, labels og yderligere grafiske objekter
+	// Render the colorbar with the associated tick lines, labels and additional graphical objects
 	GlobalVariables::OpenGLColorBar->RMH_OpenGL_RenderColorBar(ColorBarPanelWidth, ColorBarPanelHeight, DualColorPaletteEnableFlag, NmbOfColorBarTempTicks, ColorBarCenterTrackEnableFlag, ColorBarManualRangeFlag, ColorBarManualHighRangeFlag, ColorBarManualLowRangeFlag);
 
-	// Hvis Live View Ultra Opløsnings Mode er aktiverede
+	// If live view ultra resolution mode is enabled
 	if (UltraResolutionEnableFlag == true) {
 
-		// Er Ultra Opløsnings Billede Data Færdig processerede og klar
+		// Is the ultra resolution image data finished processing and ready
 		if (UltraResolutionImageDataReadyFlag == true) {
 
-			// Render Nyeste processerede Ultra Opløsnings billed data i Live View Texture panel 
+			// Render the latest processed ultra resolution image data in the live view texture panel 
 			GlobalVariables::OpenGLRender->RMH_OpenGL_RenderGrayscaleUltraResolutionImageData(LiveViewPanelWidth, LiveViewPanelHeight,
 				PrecessedUltraResolutionImage, IRCamera.FrameWidth, IRCamera.FrameHeight - IRCamera.FrameMetadataSize,
 				IRCamera.FrameWidth * UltraResolutionScaleFactor, (IRCamera.FrameHeight - IRCamera.FrameMetadataSize) * UltraResolutionScaleFactor, FixedAspectRatio);
 
-			// Nulstil "Ultra Opløsnings Billede" Færdig processerede og klar flaget
+			// Reset the "ultra resolution image" finished processing and ready flag
 			UltraResolutionImageDataReadyFlag = false;
 
 		}
@@ -4615,28 +4615,28 @@ void RMH_ThermalViewer_UpdateLiveView(unsigned int LiveViewPanelWidth, unsigned 
 	// Er Dual Color Palette Aktiverede
 	if (DualColorPaletteEnableFlag == true) {
 
-		// Renderer Størrelses justerbar rektangel og læs dens position på texturen
+		// Render the resizable rectangle and read its position on the texture
 		DualPaletteRectPosition = GlobalVariables::OpenGLRender->RMH_OpenGL_RenderMovableRectangle(1, "Palette", 
 			ROISelectedColorR, ROISelectedColorG, ROISelectedColorB, ROIPassiveColorR, ROIPassiveColorG, ROIPassiveColorB, false);
 
 	}
 
-	// Render antallet af aktive ROI Rektangler
+	// Render the number of active ROI rectangles
 	for (i = 0; i < NumOfActiveLiveViewROIs; i++) {
 
-		// Renderer Størrelses justerbar ROI rektangel - Med aktive orden og læs ROI position
+		// Render the resizable ROI rectangle - with active order and read the ROI position
 		ROIRectanglePositions[ActiveROIRenderingOrder[i]] = GlobalVariables::OpenGLRender->RMH_OpenGL_RenderMovableRectangle(
 			ActiveROIRenderingOrder[i] + 3, "ROI " + std::to_string(ActiveROIRenderingOrder[i] + 1),
 			ROISelectedColorR, ROISelectedColorG, ROISelectedColorB, ROIPassiveColorR, ROIPassiveColorG, ROIPassiveColorB, false);
 
-		// Render ROI Maximum Temperatur Crosshair og label
+		// Render the ROI maximum temperature crosshair and label
 		GlobalVariables::OpenGLRender->RMH_OpenGL_RenderCrossHairWithLabel(
 			ROIAreaPixelValues[ActiveROIRenderingOrder[i]].ROIMaxPixelWidth,
 			ROIAreaPixelValues[ActiveROIRenderingOrder[i]].ROIMaxPixelHeight, true,
 			GlobalVariables::ROIMaxTempLabels[ActiveROIRenderingOrder[i]],
 			MaxCrosshairColorR, MaxCrosshairColorG, MaxCrosshairColorB);
 
-		// Render ROI Minimum Temperatur Crosshair og label
+		// Render the ROI minimum temperature crosshair and label
 		GlobalVariables::OpenGLRender->RMH_OpenGL_RenderCrossHairWithLabel(
 			ROIAreaPixelValues[ActiveROIRenderingOrder[i]].ROIMinPixelWidth,
 			ROIAreaPixelValues[ActiveROIRenderingOrder[i]].ROIMinPixelHeight, true,
@@ -4645,10 +4645,10 @@ void RMH_ThermalViewer_UpdateLiveView(unsigned int LiveViewPanelWidth, unsigned 
 
 	}
 
-	// Render antallet af aktive Temperatur Målinger
+	// Render the number of active temperature measurements
 	for (i = 0; i < NumOfActiveLiveViewTempMeas; i++) {
 
-		// Renderer Positions justerbar Temperatur Målings Crosshair med label
+		// Render the position-adjustable temperature measurement crosshair with label
 		TempMeasPositions[ActiveTempMeasRenderingOrder[i]] = GlobalVariables::OpenGLRender->RMH_OpenGL_RenderMovableCrossHairWithLabel(
 			ActiveTempMeasRenderingOrder[i] + 1, 
 			"TM" + (ActiveTempMeasRenderingOrder[i] + 1).ToString() + ": " + GlobalVariables::TempMeasurementsLabels[ActiveTempMeasRenderingOrder[i]],
@@ -4657,10 +4657,10 @@ void RMH_ThermalViewer_UpdateLiveView(unsigned int LiveViewPanelWidth, unsigned 
 
 	}
 
-	// Render antallet af aktive Temperatur linjer
+	// Render the number of active temperature lines
 	for (i = 0; i < NumOfActiveLiveViewLines; i++) {
 
-		// Renderer Positions justerbar Temperatur linjer på live view streamen
+		// Render the position-adjustable temperature lines on the live view stream
 		TempLinesPositions[ActiveTempLineRenderingOrder[i]] = GlobalVariables::OpenGLRender->RMH_OpenGL_RenderMovableLine(
 			ActiveTempLineRenderingOrder[i] + 1, 2,
 			TempLinesSelectedColorR, TempLinesSelectedColorG, TempLinesSelectedColorB, 
@@ -4669,14 +4669,14 @@ void RMH_ThermalViewer_UpdateLiveView(unsigned int LiveViewPanelWidth, unsigned 
 		// Kontroller Live View Roterings Indstillingen
 		if (GlobalVariables::OpenGLRender->RMH_LiveView_GetRotation() == 0) {
 
-			// Render Linje Maximum Temperatur Crosshair og label
+			// Render the line maximum temperature crosshair and label
 			GlobalVariables::OpenGLRender->RMH_OpenGL_RenderCrossHairWithLabel(
 				TempLinesMaxTempValueXCoordinate[ActiveTempLineRenderingOrder[i]],
 				TempLinesMaxTempValueYCoordinate[ActiveTempLineRenderingOrder[i]],
 				true, GlobalVariables::TempLinesMaxLabels[ActiveTempLineRenderingOrder[i]],
 				MaxCrosshairColorR, MaxCrosshairColorG, MaxCrosshairColorB);
 
-			// Render Linje Minimum Temperatur Crosshair og label
+			// Render the line minimum temperature crosshair and label
 			GlobalVariables::OpenGLRender->RMH_OpenGL_RenderCrossHairWithLabel(
 				TempLinesMinTempValueXCoordinate[ActiveTempLineRenderingOrder[i]],
 				TempLinesMinTempValueYCoordinate[ActiveTempLineRenderingOrder[i]],
@@ -4686,14 +4686,14 @@ void RMH_ThermalViewer_UpdateLiveView(unsigned int LiveViewPanelWidth, unsigned 
 		}
 		if (GlobalVariables::OpenGLRender->RMH_LiveView_GetRotation() == 90) {
 
-			// Render Linje Maximum Temperatur Crosshair og label
+			// Render the line maximum temperature crosshair and label
 			GlobalVariables::OpenGLRender->RMH_OpenGL_RenderCrossHairWithLabel(
 				LiveViewNativeImageWidth - ((double)TempLinesMaxTempValueYCoordinate[ActiveTempLineRenderingOrder[i]]) * LiveViewNativeImageAspectRatio,
 				(double)TempLinesMaxTempValueXCoordinate[ActiveTempLineRenderingOrder[i]] / LiveViewNativeImageAspectRatio,
 				true, GlobalVariables::TempLinesMaxLabels[ActiveTempLineRenderingOrder[i]],
 				MaxCrosshairColorR, MaxCrosshairColorG, MaxCrosshairColorB);
 
-			// Render Linje Minimum Temperatur Crosshair og label
+			// Render the line minimum temperature crosshair and label
 			GlobalVariables::OpenGLRender->RMH_OpenGL_RenderCrossHairWithLabel(
 				LiveViewNativeImageWidth - ((double)TempLinesMinTempValueYCoordinate[ActiveTempLineRenderingOrder[i]]) * LiveViewNativeImageAspectRatio,
 				(double)TempLinesMinTempValueXCoordinate[ActiveTempLineRenderingOrder[i]] / LiveViewNativeImageAspectRatio,
@@ -4703,14 +4703,14 @@ void RMH_ThermalViewer_UpdateLiveView(unsigned int LiveViewPanelWidth, unsigned 
 		}
 		if (GlobalVariables::OpenGLRender->RMH_LiveView_GetRotation() == 180) {
 
-			// Render Linje Maximum Temperatur Crosshair og label
+			// Render the line maximum temperature crosshair and label
 			GlobalVariables::OpenGLRender->RMH_OpenGL_RenderCrossHairWithLabel(
 				LiveViewNativeImageWidth - (double)TempLinesMaxTempValueXCoordinate[ActiveTempLineRenderingOrder[i]],
 				LiveViewNativeImageHeight - (double)TempLinesMaxTempValueYCoordinate[ActiveTempLineRenderingOrder[i]],
 				true, GlobalVariables::TempLinesMaxLabels[ActiveTempLineRenderingOrder[i]],
 				MaxCrosshairColorR, MaxCrosshairColorG, MaxCrosshairColorB);
 
-			// Render Linje Minimum Temperatur Crosshair og label
+			// Render the line minimum temperature crosshair and label
 			GlobalVariables::OpenGLRender->RMH_OpenGL_RenderCrossHairWithLabel(
 				LiveViewNativeImageWidth - (double)TempLinesMinTempValueXCoordinate[ActiveTempLineRenderingOrder[i]],
 				LiveViewNativeImageHeight - (double)TempLinesMinTempValueYCoordinate[ActiveTempLineRenderingOrder[i]],
@@ -4720,14 +4720,14 @@ void RMH_ThermalViewer_UpdateLiveView(unsigned int LiveViewPanelWidth, unsigned 
 		}
 		if (GlobalVariables::OpenGLRender->RMH_LiveView_GetRotation() == 270) {
 
-			// Render Linje Maximum Temperatur Crosshair og label
+			// Render the line maximum temperature crosshair and label
 			GlobalVariables::OpenGLRender->RMH_OpenGL_RenderCrossHairWithLabel(
 				(double)TempLinesMaxTempValueYCoordinate[ActiveTempLineRenderingOrder[i]] * LiveViewNativeImageAspectRatio,
 				LiveViewNativeImageHeight - (double)TempLinesMaxTempValueXCoordinate[ActiveTempLineRenderingOrder[i]] / LiveViewNativeImageAspectRatio,
 				true, GlobalVariables::TempLinesMaxLabels[ActiveTempLineRenderingOrder[i]],
 				MaxCrosshairColorR, MaxCrosshairColorG, MaxCrosshairColorB);
 
-			// Render Linje Minimum Temperatur Crosshair og label
+			// Render the line minimum temperature crosshair and label
 			GlobalVariables::OpenGLRender->RMH_OpenGL_RenderCrossHairWithLabel(
 				(double)TempLinesMinTempValueYCoordinate[ActiveTempLineRenderingOrder[i]] * LiveViewNativeImageAspectRatio,
 				LiveViewNativeImageHeight - (double)TempLinesMinTempValueXCoordinate[ActiveTempLineRenderingOrder[i]] / LiveViewNativeImageAspectRatio,
@@ -4738,10 +4738,10 @@ void RMH_ThermalViewer_UpdateLiveView(unsigned int LiveViewPanelWidth, unsigned 
 
 	}
 
-	// Er maximum temperatur tracking aktiverede
+	// Is maximum temperature tracking enabled
 	if (MaxTempTrackingEnableFlag == true) {
 
-		// Render Maximum temperatur Crosshair med label på live view texturen
+		// Render the maximum temperature crosshair with label on the live view texture
 		GlobalVariables::OpenGLRender->RMH_OpenGL_RenderCrossHairWithLabel(
 			IRCamera.Tmax_X, IRCamera.Tmax_Y, true, 
 			GlobalVariables::MaximumTempLabel, 
@@ -4749,10 +4749,10 @@ void RMH_ThermalViewer_UpdateLiveView(unsigned int LiveViewPanelWidth, unsigned 
 
 	}
 
-	// Er Minimum temperatur tracking aktiverede
+	// Is minimum temperature tracking enabled
 	if (MinTempTrackingEnableFlag == true) {
 
-		// Render Minimum temperatur Crosshair med label på live view texturen
+		// Render the minimum temperature crosshair with label on the live view texture
 		GlobalVariables::OpenGLRender->RMH_OpenGL_RenderCrossHairWithLabel(
 			IRCamera.Tmin_X, IRCamera.Tmin_Y, true,
 			GlobalVariables::MinimumTempLabel, 
@@ -4760,10 +4760,10 @@ void RMH_ThermalViewer_UpdateLiveView(unsigned int LiveViewPanelWidth, unsigned 
 
 	}
 
-	// Er Center temperatur tracking aktiverede
+	// Is center temperature tracking enabled
 	if (CenterTempTrackingEnableFlag == true) {
 
-		// Render Minimum temperatur Crosshair med label på live view texturen
+		// Render the minimum temperature crosshair with label on the live view texture
 		GlobalVariables::OpenGLRender->RMH_OpenGL_RenderCrossHairCenterLabel(
 			IRCamera.FrameWidth * 0.5, ((IRCamera.FrameHeight - IRCamera.FrameMetadataSize) * 0.5),
 			GlobalVariables::CenterTempLabel, 
@@ -4771,7 +4771,7 @@ void RMH_ThermalViewer_UpdateLiveView(unsigned int LiveViewPanelWidth, unsigned 
 
 	}
 
-	// Hvis Mus Cursor Temperatur tracking er aktiverede
+	// If mouse cursor temperature tracking is enabled
 	if (CursorTempTrackEnableFlag == true) {
 
 		// Render Mus Cursor Temperatur trackings label
@@ -4782,13 +4782,13 @@ void RMH_ThermalViewer_UpdateLiveView(unsigned int LiveViewPanelWidth, unsigned 
 	// Er Live View Split View aktiverede
 	if (LiveViewSplitViewEnableFlag == true) {
 
-		// Renderer Størrelses justerbar rektangel til indstilling af Live View Zoom
+		// Render the resizable rectangle for setting the live view zoom
 		ZoomROIRectanglePositions = GlobalVariables::OpenGLRender->RMH_OpenGL_RenderMovableRectangle(2, "Zoom",
 			ROISelectedColorR, ROISelectedColorG, ROISelectedColorB, ROIPassiveColorR, ROIPassiveColorG, ROIPassiveColorB, true);
 
 	}
 	
-	// Marker enden på en Live View OpenGL rendererins sekvens
+	// Mark the end of a live view OpenGL rendering sequence
 	GlobalVariables::OpenGLRender->RMH_OpenGL_RenderingFinishedMark();
 
 	// Er Live view histogram panelet aktiverede
@@ -4797,7 +4797,7 @@ void RMH_ThermalViewer_UpdateLiveView(unsigned int LiveViewPanelWidth, unsigned 
 		// Render Live View Histogram i Histogram Panelet
 		GlobalVariables::OpenGLHistogram->RMH_OpenGL_RenderHistogram(HistogramPanelWidth, HistogramPanelHeight);
 
-		// Nulstil "Histogram Data Er Klar Til Rengerering" Flaget
+		// Reset the "Histogram data is ready for rendering" flag
 		LiveViewHistogramDataReadyFlag = false;
 
 	}
@@ -4805,20 +4805,20 @@ void RMH_ThermalViewer_UpdateLiveView(unsigned int LiveViewPanelWidth, unsigned 
 	// Er Live View Split View aktiverede
 	if (LiveViewSplitViewEnableFlag == true) {
 
-		// Hvis Live View Ultra Opløsnings Mode er aktiverede
+		// If live view ultra resolution mode is enabled
 		if (UltraResolutionEnableFlag == true) {
 
-			// Er Ultra Opløsnings Billede Data Færdig processerede og klar
+			// Is the ultra resolution image data finished processing and ready
 			if (UltraResolutionImageDataReadyZoomFlag == true) {
 
-				// Render Nyeste processerede Ultra Opløsnings billed data i Live View Zoom Texture panel 
+				// Render the latest processed ultra resolution image data in the live view zoom texture panel 
 				GlobalVariables::LiveViewZoomWindowRender->RMH_LiveView_RenderZoomWindowUltraResolution(GlobalVariables::GlobalLiveViewZoomPanel->Width, GlobalVariables::GlobalLiveViewZoomPanel->Height,
 					PrecessedUltraResolutionImage, IRCamera.FrameWidth, IRCamera.FrameHeight - IRCamera.FrameMetadataSize,
 					IRCamera.FrameWidth * UltraResolutionScaleFactor, (IRCamera.FrameHeight - IRCamera.FrameMetadataSize) * UltraResolutionScaleFactor, FixedAspectRatio,
 					ZoomROIRectanglePositions.RectangleX0Pos, ZoomROIRectanglePositions.RectangleY0Pos, ZoomROIRectanglePositions.RectangleWidth, ZoomROIRectanglePositions.RectangleHeight,
 					GlobalVariables::OpenGLRender->RMH_LiveView_GetRotation());
 
-				// Nulstil "Ultra Opløsnings Zoom Billede" Færdig processerede og klar flaget
+				// Reset the "ultra resolution zoom image" finished processing and ready flag
 				UltraResolutionImageDataReadyZoomFlag = false;
 
 			}
@@ -4840,14 +4840,14 @@ void RMH_ThermalViewer_UpdateLiveView(unsigned int LiveViewPanelWidth, unsigned 
 		//cout << ZoomROIRectanglePositions.RectangleHeight << endl;
 		//cout << endl;
 
-		// Render ROI Maximum Temperatur Crosshair og label
+		// Render the ROI maximum temperature crosshair and label
 		//GlobalVariables::LiveViewZoomWindowRender->RMH_LiveView_RenderCrossHairWithLabel(
 			//ZoomROIAreaPixelValues.ROIMaxPixelWidth + ZoomROIRectanglePositions.RectangleX0Pos,
 			//ZoomROIAreaPixelValues.ROIMaxPixelHeight + ZoomROIRectanglePositions.RectangleX0Pos, true,
 			//GlobalVariables::ZoomROIMaxTempLabels,
 			//MaxCrosshairColorR, MaxCrosshairColorG, MaxCrosshairColorB);
 	
-		// Render ROI Minimum Temperatur Crosshair og label
+		// Render the ROI minimum temperature crosshair and label
 		//GlobalVariables::LiveViewZoomWindowRender->RMH_LiveView_RenderCrossHairWithLabel(
 			//ZoomROIAreaPixelValues.ROIMinPixelWidth,
 			//ZoomROIAreaPixelValues.ROIMinPixelHeight, true,
@@ -4856,13 +4856,13 @@ void RMH_ThermalViewer_UpdateLiveView(unsigned int LiveViewPanelWidth, unsigned 
 
 
 
-		// Marker enden på en Zoom Winduets OpenGL rendererins sekvens
+		// Mark the end of a zoom window OpenGL rendering sequence
 		GlobalVariables::LiveViewZoomWindowRender->RMH_OpenGL_RenderingFinishedMark();
 
 	}
 	else {
 
-		// Nulstil "Ultra Opløsnings Zoom Billede" Færdig processerede og klar flaget
+		// Reset the "ultra resolution zoom image" finished processing and ready flag
 		UltraResolutionImageDataReadyZoomFlag = false;
 
 	}

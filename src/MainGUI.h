@@ -1,6 +1,6 @@
 #pragma once
 
-// Inkluderede Blblioteker
+// Included libraries
 #include "GlobalObjectsAndVariables.h"
 #include "RMH_ImageProcessing_Library.h"
 #include "RMH_Application_ThermalViewer.h"
@@ -9,10 +9,10 @@
 #include "RMH_Winforms_Library.h"
 #include <iostream>
 
-// Inkluderede applikations Resourcer
+// Included application resources
 #include "RMH_Application_Information.h"
 
-// Inkluderede Form Headere
+// Included form headers
 #include "LiveViewStream.h"
 #include "WelcomeScreen.h"
 #include "ThermalCameraGUI.h"
@@ -26,7 +26,7 @@
 // Klasse Namespace
 namespace IRCAMThermalViewer {
 
-	// Tilhørende namespaces
+	// Associated namespaces
 	using namespace System;
 	using namespace System::ComponentModel;
 	using namespace System::Collections;
@@ -41,33 +41,33 @@ namespace IRCAMThermalViewer {
 
 	public:
 
-		// ------------------------------ Lokale Form Reference Struktur ------------------------------ //
+		// ------------------------------ Local Form Reference Structure ------------------------------ //
 
-		// Lokale Reference struktur
+		// Local reference structure
 		ref struct ManagedLocals {
 
-			// Live View Stream Form statiske Objekter og variabler
+			// Live view stream form static objects and variables
 			static IRCAMThermalViewer::LiveViewStream^ LiveViewStreamForm;
 
-			// Welcome Screen Form statiske Objekter og variabler
+			// Welcome screen form static objects and variables
 			static IRCAMThermalViewer::WelcomeScreen^ WelcomeScreenForm;
 
-			// User Guide Form statiske Objekter og variabler
+			// User guide form static objects and variables
 			static IRCAMThermalViewer::UserGuideViewerGUI^ UserGuideViewerGUIForm;
 
-			// Thermal Kamera Form statiske Objekter og variabler
+			// Thermal camera form static objects and variables
 			static IRCAMThermalViewer::ThermalCameraGUI^ ThermalCameraGUIForm;
 
-			// Surface Plot Form statiske Objekter og variabler
+			// Surface plot form static objects and variables
 			static IRCAMThermalViewer::SurfacePlotGUI^ SurfacePlotGUIForm;
 
-			// Temperatur Målings Plot Form statiske Objekter og variabler
+			// Temperature measurement plot form static objects and variables
 			static IRCAMThermalViewer::TempMeasGUI^ TempMeasurementsGUIForm;
 
-			// Emissivity Tabel GUI Form statiske Objekter og variabler
+			// Emissivity table GUI form static objects and variables
 			static IRCAMThermalViewer::EmissivityTableGUI^ EmissivityTableGUIForm;
 
-			// Video Playback Tools GUI Form statiske Objekter og variabler
+			// Video playback tools GUI form static objects and variables
 			static IRCAMThermalViewer::VideoPlayBackTools^ PlayBackControlsPanelForm;
 
 		};
@@ -80,17 +80,17 @@ namespace IRCAMThermalViewer {
 
 		MainGUI(void) {
 
-			// Init GUI komponenter og objekter
+			// Init GUI components and objects
 			InitializeComponent();
-			// Formater arrays af winform komponenter til global brug
+			// Format arrays of WinForms components for global use
 			InitializeComponentArrays();
-			// Indstil globale objekter fra denne Form til global brug
+			// Set global objects from this form for global use
 			InitializeGlobalFormsObjects();
 
 			// Aktiver Applikationens TitelBars Dark Mode
 			RMH_Winforms_EnableTitleBarDarkMode(this->Handle);
 
-			// Indstil gemt applikation configuration ved applikation start op
+			// Set the saved application configuration at application start-up
 			RMH_Application_SetSavedSessionConfigToApplication(this->GUIInfoTextArea);
 
 			// Initiliser Live View Screen Form
@@ -103,7 +103,7 @@ namespace IRCAMThermalViewer {
 			ManagedLocals::ThermalCameraGUIForm = gcnew IRCAMThermalViewer::ThermalCameraGUI();
 			// Initiliser Surface Plot GUI Form
 			ManagedLocals::SurfacePlotGUIForm = gcnew IRCAMThermalViewer::SurfacePlotGUI();
-			// Initiliser Temperatur Målings Plot GUI Form
+			// Initialize the temperature measurement plot GUI form
 			ManagedLocals::TempMeasurementsGUIForm = gcnew IRCAMThermalViewer::TempMeasGUI();
 			// Initiliser Emissivity Tabel GUI Form
 			ManagedLocals::EmissivityTableGUIForm = gcnew IRCAMThermalViewer::EmissivityTableGUI();
@@ -111,10 +111,10 @@ namespace IRCAMThermalViewer {
 			// Indstil de gemte sessions 2D Plot linje farve data
 			RMH_ThermalViewer_Load2DPlotSavedSessionLineColorData();
 
-			// Håndter Docking af Velkommens Formen ved start-op
+			// Handle docking of the welcome form at start-up
 			HandleFormsOpeningDockingAndUndocking(ManagedLocals::WelcomeScreenForm, this->MainViewTopPanel, &isWelcomeScreenFormOpen, &isWelcomeScreenFormDocked, &isWelcomeScreenFormUndocked, _FormDockingState_DockForm);
 
-			// Opdater formens Titelbar string
+			// Update the title bar string of the form
 			RMH_Winforms_ChangeFormTitleBarText(this, ApplicationInformationString);
 
 		}
@@ -123,7 +123,7 @@ namespace IRCAMThermalViewer {
 
 		void InitializeComponentArrays(void) {
 
-			// Routinen formaterer arrays af winform komponenter til global brug
+			// This routine formats arrays of WinForms components for global use
 
 			// Array Af Main GUIens Menu Knapper
 			GlobalVariables::MainGUILeftMenuButtons = gcnew cli::array<System::Windows::Forms::Button^>(8) {
@@ -141,10 +141,10 @@ namespace IRCAMThermalViewer {
 
 		void InitializeGlobalFormsObjects() {
 
-			// Routinen indstiller globale objekter fra denne form
-			// Så disse kan blve tilgået fra andre Forms
+			// This routine sets global objects from this form
+			// so that these can be accessed from other forms
 
-			// Initiliser Globale objeker til tilhørende Form Objekter
+			// Initialize global objects to the associated form objects
 			GlobalVariables::GlobalGUIInfoTextArea = this->GUIInfoTextArea;
 			GlobalVariables::GlobalVideoStreamThread = this->VideoStreamThread;
 			GlobalVariables::GlobalMainGUIUpdateTimer = this->MainGUIUpdateTimer;
@@ -156,72 +156,72 @@ namespace IRCAMThermalViewer {
 
 		void HandleFormsOpeningDockingAndUndocking(System::Windows::Forms::Form^ FormObject, System::Windows::Forms::Panel^ ParentPanel, bool* FormOpenedFlag, bool* FormDockedFlag, bool* FormUndockedFlag, unsigned short FormState) {
 
-			// Routinen håndterer Docking og Undocking af de forskellige Forms
+			// This routine handles docking and undocking of the different forms
 
-			// Skal en Form Dockes til parent panelet
+			// Should a form be docked to the parent panel
 			if (FormState == _FormDockingState_DockForm) {
 
-				// Kontroller stadiet for tidligere tilhørende Form objekt
+				// Check the state of the previous associated form object
 				if (isThermalCameraFormOpen == true && isThermalCameraFormDocked == true && FormObject != ManagedLocals::ThermalCameraGUIForm) {
 
-					// Fjern tilhørende Form som en "Control" fra givet "Parent" Panel
+					// Remove the associated form as a "control" from the given "parent" panel
 					ParentPanel->Controls->Clear();
 
-					// Luk tilhørende Form objekt
+					// Close the associated form object
 					RMH_Winforms_CloseForm(ManagedLocals::ThermalCameraGUIForm, &isThermalCameraFormOpen, &isThermalCameraFormDocked, &isThermalCameraFormUndocked);
 
 				}
 				if (isLiveViewStreamFormOpen == true && isLiveViewStreamFormDocked == true && FormObject != ManagedLocals::LiveViewStreamForm) {
 
-					// Fjern tilhørende Form som en "Control" fra givet "Parent" Panel
+					// Remove the associated form as a "control" from the given "parent" panel
 					ParentPanel->Controls->Clear();
 
-					// Luk tilhørende Form objekt
+					// Close the associated form object
 					RMH_Winforms_CloseForm(ManagedLocals::LiveViewStreamForm, &isLiveViewStreamFormOpen, &isLiveViewStreamFormDocked, &isLiveViewStreamFormUndocked);
 
 				}
 				if (isSurfacePlotFormOpen == true && isSurfacePlotFormDocked == true && FormObject != ManagedLocals::SurfacePlotGUIForm) {
 
-					// Fjern tilhørende Form som en "Control" fra givet "Parent" Panel
+					// Remove the associated form as a "control" from the given "parent" panel
 					ParentPanel->Controls->Clear();
 
-					// Luk tilhørende Form objekt
+					// Close the associated form object
 					RMH_Winforms_CloseForm(ManagedLocals::SurfacePlotGUIForm, &isSurfacePlotFormOpen, &isSurfacePlotFormDocked, &isSurfacePlotFormUndocked);
 
 				}
 				if (isTempMeasurementsFormOpen == true && isTempMeasurementsFormDocked == true && FormObject != ManagedLocals::TempMeasurementsGUIForm) {
 
-					// Fjern tilhørende Form som en "Control" fra givet "Parent" Panel
+					// Remove the associated form as a "control" from the given "parent" panel
 					ParentPanel->Controls->Clear();
 
-					// Luk tilhørende Form objekt
+					// Close the associated form object
 					RMH_Winforms_CloseForm(ManagedLocals::TempMeasurementsGUIForm, &isTempMeasurementsFormOpen, &isTempMeasurementsFormDocked, &isTempMeasurementsFormUndocked);
 
 				}
 				if (isEmissivityTableFormOpen == true && isEmissivityTableFormDocked == true && FormObject != ManagedLocals::EmissivityTableGUIForm) {
 
-					// Fjern tilhørende Form som en "Control" fra givet "Parent" Panel
+					// Remove the associated form as a "control" from the given "parent" panel
 					ParentPanel->Controls->Clear();
 
-					// Luk tilhørende Form objekt
+					// Close the associated form object
 					RMH_Winforms_CloseForm(ManagedLocals::EmissivityTableGUIForm, &isEmissivityTableFormOpen, &isEmissivityTableFormDocked, &isEmissivityTableFormUndocked);
 
 				}
 				if (isWelcomeScreenFormOpen == true && isWelcomeScreenFormDocked == true && FormObject != ManagedLocals::WelcomeScreenForm) {
 
-					// Fjern tilhørende Form som en "Control" fra givet "Parent" Panel
+					// Remove the associated form as a "control" from the given "parent" panel
 					ParentPanel->Controls->Clear();
 
-					// Luk tilhørende Form objekt
+					// Close the associated form object
 					RMH_Winforms_CloseForm(ManagedLocals::WelcomeScreenForm, &isWelcomeScreenFormOpen, &isWelcomeScreenFormDocked, &isWelcomeScreenFormUndocked);
 
 				}
 				if (isUserGuideFormOpen == true && isUserGuideFormDocked == true && FormObject != ManagedLocals::UserGuideViewerGUIForm) {
 
-					// Fjern tilhørende Form som en "Control" fra givet "Parent" Panel
+					// Remove the associated form as a "control" from the given "parent" panel
 					ParentPanel->Controls->Clear();
 
-					// Luk tilhørende Form objekt
+					// Close the associated form object
 					RMH_Winforms_CloseForm(ManagedLocals::UserGuideViewerGUIForm, &isUserGuideFormOpen, &isUserGuideFormDocked, &isUserGuideFormUndocked);
 
 				}
@@ -230,61 +230,61 @@ namespace IRCAMThermalViewer {
 
 			// ---------------------------------------------------------------- Docking/Undocking Procedure ---------------------------------------------------------------- //
 
-			// Skal en Form Dockes til parent panelet
+			// Should a form be docked to the parent panel
 			if (FormState == _FormDockingState_DockForm) {
 
-				// Hvis Valgte Form allerede er åben
+				// If the selected form is already open
 				if (*FormOpenedFlag == true) {
 
-					// Luk valgte Formen før docking
+					// Close the selected form before docking
 					RMH_Winforms_CloseForm(FormObject, FormOpenedFlag, FormDockedFlag, FormUndockedFlag);
 
 				}
 
-				// Åben og dock form i main GUIens Main Panel
+				// Open and dock the form in the main panel of the main GUI
 				RMH_Winforms_OpenAndDockFormInParentPanel(FormObject, ParentPanel, FormOpenedFlag, FormDockedFlag, FormUndockedFlag);
 
 			}
 
-			// Skal en Form Undockes fra parent panelet
+			// Should a form be undocked from the parent panel
 			if (FormState == _FormDockingState_UndockForm) {
 
-				// Hvis Main View panelet er parent til valgte Form Objekt
+				// If the main view panel is the parent of the selected form object
 				if (FormObject->Parent == ParentPanel) {
 
-					// Nulstil Formens Parent 
+					// Reset the parent of the form 
 					FormObject->Parent = nullptr;
-					// Fjern Formen som en "Control" fra givet "Parent" Panel
+					// Remove the form as a "control" from the given "parent" panel
 					ParentPanel->Controls->Clear();
 
 				}
 
-				// Kontroller om formen er åben, med ikke docked
+				// Check whether the form is open, but not docked
 				if (*FormOpenedFlag == true && *FormDockedFlag == false) {
 
-					// Luk Formen
+					// Close the form
 					RMH_Winforms_CloseForm(FormObject, FormOpenedFlag, FormDockedFlag, FormUndockedFlag);
 
-					// Undock Formen og åben i seperat vindue
+					// Undock the form and open it in a separate window
 					RMH_Winforms_OpenFormInSeperateWindow(FormObject, FormOpenedFlag, FormDockedFlag, FormUndockedFlag);
 
 				}
 
-				// Kontroller om formen er åben og docked
+				// Check whether the form is open and docked
 				if (*FormOpenedFlag == true && *FormDockedFlag == true) {
 
-					// Luk Formen
+					// Close the form
 					RMH_Winforms_CloseForm(FormObject, FormOpenedFlag, FormDockedFlag, FormUndockedFlag);
 
-					// Undock Formen fra Parent panelet og åben i seperat vindue
+					// Undock the form from the parent panel and open it in a separate window
 					RMH_Winforms_UndockFormFromParentPanel(FormObject, ParentPanel, FormOpenedFlag, FormDockedFlag, FormUndockedFlag, System::Windows::Forms::FormBorderStyle::Sizable);
 
 				}
 
-				// Kontroller om formen ikke er åben og ikke er docked
+				// Check whether the form is not open and not docked
 				if (*FormOpenedFlag == false && *FormDockedFlag == false) {
 
-					// Undock Formen og åben i seperat vindue
+					// Undock the form and open it in a separate window
 					RMH_Winforms_OpenFormInSeperateWindow(FormObject, FormOpenedFlag, FormDockedFlag, FormUndockedFlag);
 
 				}
@@ -293,14 +293,14 @@ namespace IRCAMThermalViewer {
 
 			// ------------------------------------------------------------------------------------------------------------------------------------------------------------- //
 
-			// Hvis ingen Forms er docket i Main GUIens View panel
+			// If no forms are docked in the view panel of the main GUI
 			if (isThermalCameraFormDocked == false &&
 				isLiveViewStreamFormDocked == false &&
 				isSurfacePlotFormDocked == false &&
 				isTempMeasurementsFormDocked == false &&
 				isEmissivityTableFormDocked == false) {
 
-				// Åben og dock Velkommen Skærm formen i main GUIens Main Panel
+				// Open and dock the welcome screen form in the main panel of the main GUI
 				RMH_Winforms_OpenAndDockFormInParentPanel(ManagedLocals::WelcomeScreenForm, ParentPanel, &isWelcomeScreenFormOpen, &isWelcomeScreenFormDocked, &isWelcomeScreenFormUndocked);
 
 			}
@@ -318,7 +318,7 @@ namespace IRCAMThermalViewer {
 
 				if (components) {
 
-					// Slet alle Form Komponenter
+					// Delete all form components
 					delete components;
 
 				}
@@ -754,10 +754,10 @@ namespace IRCAMThermalViewer {
 		// Main GUI Opstartnings Callback Routine -> 
 		private: System::Void MainGUI_Shown(System::Object^ sender, System::EventArgs^ e) {
 
-			// Routinen er Applikation GUIens Start op funktion
-			// Som tager relavante GUI komponenter som input argument
+			// This routine is the start-up function of the application GUI
+			// which takes the relevant GUI components as input arguments
 
-			// Skriv GUI Start Meddelse
+			// Write GUI start message
 			RMH_Winforms_RichTextBox_WriteLine(this->GUIInfoTextArea, "Sellect A Thermal Camera Or Mode, In The Settings Menu, & Press The 'Connect' or 'Open File' Button.", _StatusMessageType_Normal);
 
 		}
@@ -765,12 +765,12 @@ namespace IRCAMThermalViewer {
 		// Main GUI Nedluknings Callback Routine ->
 		private: System::Void MainGUI_FormClosing(System::Object^ sender, System::Windows::Forms::FormClosingEventArgs^ e) {
 
-			// Routinen er Applikation GUIens Nedluknings routine
+			// This routine is the shutdown routine of the application GUI
 
-			// Opdater Thermal Camera Form Sessions parametere til globale variabler
+			// Update the thermal camera form session parameters into global variables
 			ManagedLocals::ThermalCameraGUIForm->SaveFormSessionSettings();
 
-			// Gem de nuværende applikations sessions parameter til næste session
+			// Save the current application session parameters for the next session
 			RMH_Application_SaveLastSessionConfigToFile();
 
 		}
@@ -780,10 +780,10 @@ namespace IRCAMThermalViewer {
 		// Main GUI Key-Press Event Callback Routine ->
 		private: System::Void MainGUI_KeyPress(System::Object^ sender, System::Windows::Forms::KeyPressEventArgs^ e) {
 
-			// Kontroller om live view streamen, 3D surface Plottet eller Temp Plottet er i visning
+			// Check whether the live view stream, the 3D surface plot or the temp plot is in view
 			if (isLiveViewStreamFormOpen == true || isTempMeasurementsFormOpen == true  || isSurfacePlotFormOpen == true ) {
 
-				// Håndter live view funktions knappernes HotKeys 
+				// Handle the hotkeys of the live view function buttons 
 				ManagedLocals::LiveViewStreamForm->HandleLiveViewButtonsHotKeyFunctions(e);
 
 			}
@@ -795,7 +795,7 @@ namespace IRCAMThermalViewer {
 		// Thermal Camera Menu Knap Callback ->
 		private: System::Void ThermalCAMMenuButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Håndter Docking af Form GUIen i Main GUIens Main View Panel
+			// Handle docking of the form GUI in the main view panel of the main GUI
 			HandleFormsOpeningDockingAndUndocking(ManagedLocals::ThermalCameraGUIForm, this->MainViewTopPanel, &isThermalCameraFormOpen, &isThermalCameraFormDocked, &isThermalCameraFormUndocked, _FormDockingState_DockForm);
 
 		}
@@ -803,7 +803,7 @@ namespace IRCAMThermalViewer {
 		// Thermal Camera Undock Knap Callback ->
 		private: System::Void ThermalCAMUndockButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Håndter Undocking af Form GUIen
+			// Handle undocking of the form GUI
 			HandleFormsOpeningDockingAndUndocking(ManagedLocals::ThermalCameraGUIForm, this->MainViewTopPanel, &isThermalCameraFormOpen, &isThermalCameraFormDocked, &isThermalCameraFormUndocked, _FormDockingState_UndockForm);
 
 		}
@@ -811,7 +811,7 @@ namespace IRCAMThermalViewer {
 	    // Live View Menu Knap Callback ->
 		private: System::Void LiveViewMenuButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Håndter Docking af Form GUIen i Main GUIens Main View Panel
+			// Handle docking of the form GUI in the main view panel of the main GUI
 			HandleFormsOpeningDockingAndUndocking(ManagedLocals::LiveViewStreamForm, this->MainViewTopPanel, &isLiveViewStreamFormOpen, &isLiveViewStreamFormDocked, &isLiveViewStreamFormUndocked, _FormDockingState_DockForm);
 
 			// Garbage Collect Applikationen
@@ -822,7 +822,7 @@ namespace IRCAMThermalViewer {
 		// Live View Undock Knap Callback ->
 		private: System::Void LiveViewUndockButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Håndter Undocking af Form GUIen
+			// Handle undocking of the form GUI
 			HandleFormsOpeningDockingAndUndocking(ManagedLocals::LiveViewStreamForm, this->MainViewTopPanel, &isLiveViewStreamFormOpen, &isLiveViewStreamFormDocked, &isLiveViewStreamFormUndocked, _FormDockingState_UndockForm);
 			
 			// Garbage Collect Applikationen
@@ -833,7 +833,7 @@ namespace IRCAMThermalViewer {
 	    // Surface Plot Menu Knap Callback ->
 		private: System::Void SurfacePlotMenuButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Håndter Docking af Form GUIen i Main GUIens Main View Panel
+			// Handle docking of the form GUI in the main view panel of the main GUI
 			HandleFormsOpeningDockingAndUndocking(ManagedLocals::SurfacePlotGUIForm, this->MainViewTopPanel, &isSurfacePlotFormOpen, &isSurfacePlotFormDocked, &isSurfacePlotFormUndocked, _FormDockingState_DockForm);
 
 			// Garbage Collect Applikationen
@@ -844,7 +844,7 @@ namespace IRCAMThermalViewer {
 		// Surface Plot Undock Knap Callback ->
 		private: System::Void SurfacePlotUndockButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Håndter Undocking af Form GUIen
+			// Handle undocking of the form GUI
 			HandleFormsOpeningDockingAndUndocking(ManagedLocals::SurfacePlotGUIForm, this->MainViewTopPanel, &isSurfacePlotFormOpen, &isSurfacePlotFormDocked, &isSurfacePlotFormUndocked, _FormDockingState_UndockForm);
 
 			// Garbage Collect Applikationen
@@ -855,7 +855,7 @@ namespace IRCAMThermalViewer {
 	    // Temperature Measurements Menu Knap Callback ->
 		private: System::Void TempMeasMenuButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Håndter Docking af Form GUIen i Main GUIens Main View Panel
+			// Handle docking of the form GUI in the main view panel of the main GUI
 			HandleFormsOpeningDockingAndUndocking(ManagedLocals::TempMeasurementsGUIForm, this->MainViewTopPanel, &isTempMeasurementsFormOpen, &isTempMeasurementsFormDocked, &isTempMeasurementsFormUndocked, _FormDockingState_DockForm);
 			
 		}
@@ -863,7 +863,7 @@ namespace IRCAMThermalViewer {
 		// Temperature Measurements Undock Knap Callback ->
 		private: System::Void TempMeasUndockButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Håndter Undocking af Form GUIen
+			// Handle undocking of the form GUI
 			HandleFormsOpeningDockingAndUndocking(ManagedLocals::TempMeasurementsGUIForm, this->MainViewTopPanel, &isTempMeasurementsFormOpen, &isTempMeasurementsFormDocked, &isTempMeasurementsFormUndocked, _FormDockingState_UndockForm);
 
 		}
@@ -871,7 +871,7 @@ namespace IRCAMThermalViewer {
 		// Emissivity Tabel Menu Knap Callback ->
 		private: System::Void EmissivityMenuButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Håndter Docking af Form GUIen i Main GUIens Main View Panel
+			// Handle docking of the form GUI in the main view panel of the main GUI
 			HandleFormsOpeningDockingAndUndocking(ManagedLocals::EmissivityTableGUIForm, this->MainViewTopPanel, &isEmissivityTableFormOpen, &isEmissivityTableFormDocked, &isEmissivityTableFormUndocked, _FormDockingState_DockForm);
 
 		}
@@ -879,7 +879,7 @@ namespace IRCAMThermalViewer {
 		// Emissivity Tabel Undock Knap Callback ->
 		private: System::Void EmissivityUndockButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Håndter Undocking af Form GUIen
+			// Handle undocking of the form GUI
 			HandleFormsOpeningDockingAndUndocking(ManagedLocals::EmissivityTableGUIForm, this->MainViewTopPanel, &isEmissivityTableFormOpen, &isEmissivityTableFormDocked, &isEmissivityTableFormUndocked, _FormDockingState_UndockForm);
 
 		}
@@ -887,7 +887,7 @@ namespace IRCAMThermalViewer {
 		// About Informations Menu knap Callback ->
 		private: System::Void AboutMenuButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Håndter Docking af Form GUIen i Main GUIens Main View Panel
+			// Handle docking of the form GUI in the main view panel of the main GUI
 			HandleFormsOpeningDockingAndUndocking(ManagedLocals::WelcomeScreenForm, this->MainViewTopPanel, &isWelcomeScreenFormOpen, &isWelcomeScreenFormDocked, &isWelcomeScreenFormUndocked, _FormDockingState_DockForm);
 
 		}
@@ -895,7 +895,7 @@ namespace IRCAMThermalViewer {
 		// User Guide Menu knap Callback ->
 		private: System::Void UserGuideButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Håndter Docking af Form GUIen i Main GUIens Main View Panel
+			// Handle docking of the form GUI in the main view panel of the main GUI
 			HandleFormsOpeningDockingAndUndocking(ManagedLocals::UserGuideViewerGUIForm, this->MainViewTopPanel, &isUserGuideFormOpen, &isUserGuideFormDocked, &isUserGuideFormUndocked, _FormDockingState_DockForm);
 
 		}
@@ -905,13 +905,13 @@ namespace IRCAMThermalViewer {
 		// Video Stream Process Thread Callback Routine ->
 		private: System::Void VideoStreamThread_DoWork(System::Object^ sender, System::ComponentModel::DoWorkEventArgs^ e) {
 					
-			// Primære Thread Process
+			// Primary thread process
 			while (IRCamera.ConnectedFlag) {
 
 				// Kontroller Thread Data ready flag
 				if (ThreadDataReadyFlag == false) {
 
-					// Eksikver Termisk kamera Billede Processerings Sekvens 
+					// Execute the thermal camera image processing sequence 
 					RMH_ThermalViewer_ImageProcessingSequence();
 
 					// Opdater Thread Data klar flag
@@ -919,7 +919,7 @@ namespace IRCAMThermalViewer {
 
 				}
 
-				// Kontroller om kameraet er blevet frakoblet
+				// Check whether the camera has been disconnected
 				if (IRCamera.ConnectedFlag == false) {
 
 					// Skriv GUI Start Meddelse i terminal
@@ -930,23 +930,23 @@ namespace IRCAMThermalViewer {
 
 				}
 
-				// Begræns CPU brug og lad thread vente
+				// Limit CPU usage and let the thread wait
 				System::Threading::Thread::Sleep(1);
 
 			}
 			
 		}
 
-		// Sekundær Processerings Thread Callback Routine ->
+		// Secondary processing thread callback routine ->
 		private: System::Void SecondaryProcessingThread_DoWork(System::Object^ sender, System::ComponentModel::DoWorkEventArgs^ e) {
 
-			// Primære Thread Process
+			// Primary thread process
 			while (IRCamera.ConnectedFlag) {
 
-				// Håndtering Af sekundær processerings thread
+				// Handling of the secondary processing thread
 				RMH_ThermalViewer_SecondaryProcessingSequence();
 
-				// Kontroller om kameraet er blevet frakoblet
+				// Check whether the camera has been disconnected
 				if (IRCamera.ConnectedFlag == false) {
 
 					// Skriv GUI Start Meddelse i terminal
@@ -957,7 +957,7 @@ namespace IRCAMThermalViewer {
 
 				}
 
-				// Begræns CPU brug og lad thread vente
+				// Limit CPU usage and let the thread wait
 				System::Threading::Thread::Sleep(1);
 
 			}
@@ -967,12 +967,12 @@ namespace IRCAMThermalViewer {
 		// Main GUI Update Timer Callback ->
 		private: System::Void MainGUIUpdateTimer_Tick(System::Object^ sender, System::EventArgs^ e) {
 
-			// Routinen er en timer callback som benyttes til at opdaterer GUI elementer
+			// This routine is a timer callback used to update GUI elements
 
-			// Er processerede data fra thread klar
+			// Is processed data from the thread ready
 			if (ThreadDataReadyFlag == true) {
 
-				// Er Live View Form GUIen åben
+				// Is the live view form GUI open
 				if (isLiveViewStreamFormOpen == true) {
 
 					// Opdater Live View Stream Menuen
@@ -988,38 +988,38 @@ namespace IRCAMThermalViewer {
 				// Er video optagning blevet startede
 				if (VideoRecordingStartedFlag == true) {
 
-					// Håndter skrivning af relatanv data til video filer, hvis video optagning er startede
+					// Handle writing the relevant data to video files, if video recording has started
 					RMH_ThermalViewer_WriteDataToVideoRecordingFilesSequence();
 
 				}
 
-				// Skal Surface Plot Form GUIen vises i tilhørende panel
+				// Should the surface plot form GUI be shown in the associated panel
 				if (isSurfacePlotFormOpen == true) {
 
-					// Opdater Surface Plot Formen
+					// Update the surface plot form
 					RMH_ThermalViewer_UpdateSurfacePlotMenuScreen(ManagedLocals::SurfacePlotGUIForm->SurfacePlotPanel->Width,
 						ManagedLocals::SurfacePlotGUIForm->SurfacePlotPanel->Height);
 
 				}
 
-				// Skal 2D Plot Form GUIen vises i tilhørende panel
+				// Should the 2D plot form GUI be shown in the associated panel
 				if (isTempMeasurementsFormOpen == true) {
 
-					// Opdater 2D Plot Formen
+					// Update the 2D plot form
 					RMH_ThermalViewer_Update2DPlotMenuScreen(ManagedLocals::TempMeasurementsGUIForm->Temp2DPlotPanel->Width, 
 						ManagedLocals::TempMeasurementsGUIForm->Temp2DPlotPanel->Height);
 
 				}
 
-				// Opdater kun temperature alarmernes status labels, hvis menuen er i visning og hvis kamera config formen er i visning
+				// Update the status labels of the temperature alarms only if the menu is in view and the camera config form is in view
 				if (TempAlarmsConfigMenuIsOpen == true && isThermalCameraFormOpen == true) {
 
-					// Opdater aktive temperatur Alarmers status labels i Sub Menu
+					// Update the status labels of the active temperature alarms in the sub menu
 					RMH_ThermalViewer_UpdateTemperatureAlarmsSubMenuStatusLabels();
 
 				}
 
-				// Opdater Live View Statistik Vinduets Data Label - Hvis vinduet er åbent
+				// Update the data labels of the live view statistics window - if the window is open
 				RMH_ThermalViewer_UpdateAndFormatLiveViewStatisticsLabels();
 
 				// Nulstil Thread Data klar flag
@@ -1027,9 +1027,9 @@ namespace IRCAMThermalViewer {
 
 			}
 
-			// --------------------- Åben, Dock og Luk Form GUIer Håndtering ---------------------- //
+			// --------------------- Open, Dock And Close Form GUIs Handling ---------------------- //
 
-			// Hvis Live View Tools Panelet er blevet lukket
+			// If the live view tools panel has been closed
 			if (isLiveViewToolsFormOpen == false) {
 
 				// Dock tools formen tilbage i live view formen
@@ -1037,34 +1037,34 @@ namespace IRCAMThermalViewer {
 
 			}
 
-			// Skal video playback controls formen åbnes og er formen allerede lukket
+			// Should the video playback controls form be opened and is the form already closed
 			if (OpenVideoPlayBackControlsFormFlag == true && VideoPlaybackControlsFormIsOpenFlag == false) {
 
-				// Alloker Video Playback Controls Kontrol Formen til hukommelsen
+				// Allocate the video playback controls form to memory
 				ManagedLocals::PlayBackControlsPanelForm = gcnew IRCAMThermalViewer::VideoPlayBackTools();
 
-				// Åben/Vis Video Playback Controls Kontrol Formen 
+				// Open/show the video playback controls form 
 				ManagedLocals::PlayBackControlsPanelForm->Show();
 
-				// Nulstil "Åben video playback" form flaget
+				// Reset the "open video playback" form flag
 				OpenVideoPlayBackControlsFormFlag = false;
 
 			}
 
-			// Skal video playback controls formen lukkes og er formen allerede åben
+			// Should the video playback controls form be closed and is the form already open
 			if (CloseVideoPlayBackControlsFormFlag == true && VideoPlaybackControlsFormIsOpenFlag == true) {
 
-				// Åben/Vis Video Playback Controls Kontrol Formen 
+				// Open/show the video playback controls form 
 				ManagedLocals::PlayBackControlsPanelForm->Close();
 
-				// Nulstil "Luk video playback" form flaget
+				// Reset the "close video playback" form flag
 				CloseVideoPlayBackControlsFormFlag = false;
 
 			}
 
-			// ----------------- Håndtering Af USB Forbindelses Tab Til Kameraet ------------------ //
+			// ----------------- Handling Of Loss Of The USB Connection To The Camera ------------------ //
 
-			// Håndter Events ved tab af forbindelsen til kameraet
+			// Handle events on loss of the connection to the camera
 			RMH_ThermalViewer_HandleCameraDisconnectedEvents(true);
 
 			// Var Kameraets USB forbindelsen tabt
@@ -1073,7 +1073,7 @@ namespace IRCAMThermalViewer {
 				// Deaktiver Main GUIens Menu Knapper
 				RMH_Application_DisableMainGUIMenuButtons();
 
-				// Håndter Docking af Form GUIen i Main GUIens Main View Panel
+				// Handle docking of the form GUI in the main view panel of the main GUI
 				HandleFormsOpeningDockingAndUndocking(ManagedLocals::ThermalCameraGUIForm, this->MainViewTopPanel, &isThermalCameraFormOpen, &isThermalCameraFormDocked, &isThermalCameraFormUndocked, _FormDockingState_DockForm);
 
 			}

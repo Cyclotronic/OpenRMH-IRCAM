@@ -1,12 +1,12 @@
 #pragma once
 
-// Inkluderede Blblioteker
+// Included libraries
 #include "GlobalObjectsAndVariables.h"
 #include "RMH_Application_ThermalViewer.h"
 #include "RMH_Winforms_Library.h"
 #include "PopUpDialog.h"
 
-// Inkluderede Resourcer
+// Included resources
 #include "RMH_2DPlotDataSetSources_Resources.h"
 #include "RMH_TemperatureAlarms_Resources.h"
 #include "RMH_SupportedIRCameras_Resources.h"
@@ -17,7 +17,7 @@
 // Klasse Namespace
 namespace IRCAMThermalViewer {
 
-	// Tilhørende namespaces
+	// Associated namespaces
 	using namespace System;
 	using namespace System::ComponentModel;
 	using namespace System::Collections;
@@ -28,12 +28,12 @@ namespace IRCAMThermalViewer {
 	// Summary for Form - ThermalCameraGUI
 	public ref class ThermalCameraGUI : public System::Windows::Forms::Form {
 
-		// ------------------------------ Lokale Form Reference Struktur ------------------------------ //
+		// ------------------------------ Local Form Reference Structure ------------------------------ //
 
-		// Lokale Reference struktur
+		// Local reference structure
 		ref struct ManagedLocals {
 
-			// Pop-Up GUI Form statiske Objekter og variabler
+			// Pop-up GUI form static objects and variables
 			static IRCAMThermalViewer::PopUpDialog^ PopUpDialogForm;
 
 		};
@@ -47,9 +47,9 @@ namespace IRCAMThermalViewer {
 		// Form Konstruktor
 		ThermalCameraGUI() {
 
-			// Init GUI komponenter og objekter
+			// Init GUI components and objects
 			InitializeComponent();
-			// Formater arrays og objekter af winform komponenter til global brug
+			// Format arrays and objects of WinForms components for global use
 			InitializeComponentArraysAndObjects();
 
 			// Aktiver Applikationens TitelBars Dark Mode
@@ -61,46 +61,46 @@ namespace IRCAMThermalViewer {
 			// Indstil Gemte Sessions Applikations Parametere
 			GlobalVariables::GlobalRecordingFrameRateNumericUpDown->Value = RecordingFrameRateSetValue;
 
-			// Opdater Snapshot default Fil path stringet 
+			// Update the default snapshot file path string 
 			this->DefaultSnapshotSavePathString->Text = "Default Save File Path:  " + GlobalVariables::SnapShotDefaultPath;
-			// Opdater Video Optagning default Fil path stringet 
+			// Update the default video recording file path string 
 			this->DefaultRecordingSavePathString->Text = "Default Save File Path:  " + GlobalVariables::RecordingDefaultPath;
-			// Opdater Data Logging default Fil path stringet 
+			// Update the default data logging file path string 
 			this->DefaultDataLoggingSavePathString->Text = "Default Save File Path:  " + GlobalVariables::LoggingCSVDefaultPath;
 
 			// Load data strings ind i hver 2D Plot Data set ComboBoxer
 			LoadDataToDataSetComboBoxsAndSetStartUpConfiguration();
 
-			// Load Data strings til Temperatur Alarm Menu ComboBoxer
+			// Load data strings into the temperature alarm menu ComboBoxes
 			LoadTemperatureAlarmsConfigDataToComboboxes();
 
 			// Opdaterer Teksten i toppen af GUIen
 			RMH_Winforms_ChangeFormTitleBarText(this, "Thermal Camera Settings, Setup And Configuration");
 
-			// Indsæt listen over de supporterede termiske kameraer i "Supported Devices" ComboBox.
+			// Insert the list of supported thermal cameras into the "Supported Devices" ComboBox.
 			RMH_Winforms_CombiBox_AddArrayOfItemStrings(GlobalVariables::GlobalCameraSourceDropList, SupportedCamerasModelNames);
-			// Indstil valgte termiske kamera index fra gemte sessions data
+			// Set the selected thermal camera index from the saved session data
 			RMH_Winforms_CombiBox_SetSellectedItemPosition(this->CameraSourceDropList, SelectedThermalCameraIndex);
 
-			// Indsæt listen over de tilgængelige Full Frame Temp CSV Data Delimitere i tilhørende combibox
+			// Insert the list of available full frame temperature CSV data delimiters into the associated combobox
 			RMH_Winforms_CombiBox_AddArrayOfItemStrings(GlobalVariables::GlobalFullFrameTempDataCSVDelimiterCombiBox, FullFrameTempCSVDataDelimiters);
-			// Indstil valgte Full Frame Temp CSV Data Delimitere fra gemte sessions data
+			// Set the selected full frame temperature CSV data delimiter from the saved session data
 			RMH_Winforms_CombiBox_SetSellectedItemPosition(this->FullFrameTempDataCSVDelimiterCombiBox, SelectedFullFrameTempCSVDataDelimiterIndex);
 
-			// Indsæt listen over de tilgængelige Data Logging CSV Delimitere i tilhørende combibox
+			// Insert the list of available data logging CSV delimiters into the associated combobox
 			RMH_Winforms_CombiBox_AddArrayOfItemStrings(GlobalVariables::GlobalDataLoggingCSVDelimiterCombiBox, DataLoggingCSVDataDelimiters);
-			// Indstil valgte Data Logging CSV Delimitere fra gemte sessions data
+			// Set the selected data logging CSV delimiter from the saved session data
 			RMH_Winforms_CombiBox_SetSellectedItemPosition(this->DataLoggingCSVDelimiterCombiBox, SelectedDataLoggingCSVDataDelimiterIndex);
 
 		}
 
-		// ---------------------------- Diverse Tilhørende Klasse Metoder ----------------------------- //
+		// ---------------------------- Miscellaneous Associated Class Methods ----------------------------- //
 
 		void InitializeComponentArraysAndObjects(void) {
 
-			// Routinen formaterer arrays og objekter af winform komponenter til global brug
+			// This routine formats arrays and objects of WinForms components for global use
 
-			// Initiliser globale form objekter
+			// Initialize global form objects
 			GlobalVariables::CameraConfigNumericUpDowns = gcnew cli::array<System::Windows::Forms::NumericUpDown^>(6) {
 				this->TempCorrUpDown,
 				this->AmbientTempUpDown,
@@ -239,31 +239,31 @@ namespace IRCAMThermalViewer {
 
 		void SaveFormSessionSettings() {
 
-			// Opdater Form Gemte Sessions parametere til globale variabler
+			// Update the saved session parameters of the form into global variables
 
-			// Lager Valgte Kamera Index til globale variabel til gemt sessions parameter
+			// Store the selected camera index in the global variable for the saved session parameter
 			SelectedThermalCameraIndex = this->CameraSourceDropList->SelectedIndex;
 
-			// Lager Valgte Full Frame Temp CSV Data Delimiter til globale variabel til gemt sessions parameter
+			// Store the selected full frame temperature CSV data delimiter in the global variable for the saved session parameter
 			SelectedFullFrameTempCSVDataDelimiterIndex = this->FullFrameTempDataCSVDelimiterCombiBox->SelectedIndex;
 
-			// Lager Valgte Data Logging CSV Data Delimiter til globale variabel til gemt sessions parameter
+			// Store the selected data logging CSV data delimiter in the global variable for the saved session parameter
 			SelectedDataLoggingCSVDataDelimiterIndex = this->DataLoggingCSVDelimiterCombiBox->SelectedIndex;
 
-			// Opdater Temperatur korrektions værdi til globale variabel til gemt sessions parameter
+			// Update the temperature correction value in the global variable for the saved session parameter
 			SavedTempCorrectionSetting = RMH_Conversion_SystemDecimalToFloat(this->TempCorrUpDown->Value);
 
-			// Load 2D Plot Data linjernes farve værdier til globale arrays
+			// Load the color values of the 2D plot data lines into the global arrays
 			RMH_ThermalViewer_Load2DPlotLineColorDataToGlobalArrays();
 
 		}
 
 		void LoadDataToDataSetComboBoxsAndSetStartUpConfiguration() {
 
-			// Routinen loader data strings ind i hver 2D Plot Data set ComboBoxer
+			// This routine loads data strings into each 2D plot data set ComboBox
 			// Samt indstiller start konfigurationen for 2D plot pointere og ComboBoxer
 
-			// Indsæt listen over de tilgængelige Temperatur Plot Data Sæt Sources til ComboBox
+			// Insert the list of available temperature plot data set sources into the ComboBox
 			RMH_Winforms_CombiBox_AddArrayOfItemStrings(this->DataSet1ComboBox, PlorDataSetSources);
 			RMH_Winforms_CombiBox_AddArrayOfItemStrings(this->DataSet2ComboBox, PlorDataSetSources);
 			RMH_Winforms_CombiBox_AddArrayOfItemStrings(this->DataSet3ComboBox, PlorDataSetSources);
@@ -275,7 +275,7 @@ namespace IRCAMThermalViewer {
 			RMH_Winforms_CombiBox_AddArrayOfItemStrings(this->DataSet9ComboBox, PlorDataSetSources);
 			RMH_Winforms_CombiBox_AddArrayOfItemStrings(this->DataSet10ComboBox, PlorDataSetSources);
 
-			// Indstil Plot Data Sæt Sources Combibox til start Index
+			// Set the plot data set sources ComboBox to the start index
 			RMH_Winforms_CombiBox_SetSellectedItemPosition(this->DataSet1ComboBox, _2DPlotDataSource_MaximumTemp);
 			RMH_Winforms_CombiBox_SetSellectedItemPosition(this->DataSet2ComboBox, _2DPlotDataSource_MinimumTemp);
 			RMH_Winforms_CombiBox_SetSellectedItemPosition(this->DataSet3ComboBox, _2DPlotDataSource_CenterTemp);
@@ -287,7 +287,7 @@ namespace IRCAMThermalViewer {
 			RMH_Winforms_CombiBox_SetSellectedItemPosition(this->DataSet9ComboBox, _2DPlotDataSource_ROI1MinTemp);
 			RMH_Winforms_CombiBox_SetSellectedItemPosition(this->DataSet10ComboBox, _2DPlotDataSource_MousePositionTemp);
 
-			// Indstil 2D Plottets Data Sæt pointere til start Data Sourcer
+			// Set the data set pointers of the 2D plot to the start data sources
 			RMH_ThermalViewer_Set2DPlotDataSetSource(&Plot2DDataSet1SourcePointer, _2DPlotDataSource_MaximumTemp);
 			RMH_ThermalViewer_Set2DPlotDataSetSource(&Plot2DDataSet2SourcePointer, _2DPlotDataSource_MinimumTemp);
 			RMH_ThermalViewer_Set2DPlotDataSetSource(&Plot2DDataSet3SourcePointer, _2DPlotDataSource_CenterTemp);
@@ -303,51 +303,51 @@ namespace IRCAMThermalViewer {
 
 		void LoadTemperatureAlarmsConfigDataToComboboxes() {
 
-			// Routinen loader konfigurations strings til temperatur Alarm konfigurations menuens ComboBoxer
+			// This routine loads configuration strings into the ComboBoxes of the temperature alarm configuration menu
 
-			// Indlæs listen over tilgængelige temperatur alarmers data sourcer
+			// Load the list of available temperature alarm data sources
 			RMH_Winforms_CombiBox_AddArrayOfItemStrings(this->TempAlarm1DataSourceComboBox, TempAlarmsDataSourcesStrings);
 			RMH_Winforms_CombiBox_AddArrayOfItemStrings(this->TempAlarm2DataSourceComboBox, TempAlarmsDataSourcesStrings);
 			RMH_Winforms_CombiBox_AddArrayOfItemStrings(this->TempAlarm3DataSourceComboBox, TempAlarmsDataSourcesStrings);
 			RMH_Winforms_CombiBox_AddArrayOfItemStrings(this->TempAlarm4DataSourceComboBox, TempAlarmsDataSourcesStrings);
 			RMH_Winforms_CombiBox_AddArrayOfItemStrings(this->TempAlarm5DataSourceComboBox, TempAlarmsDataSourcesStrings);
 
-			// Indstil default Temperatur alarmers data sources
+			// Set the default temperature alarm data sources
 			RMH_Winforms_CombiBox_SetSellectedItemPosition(this->TempAlarm1DataSourceComboBox, _TempAlarmDataSource_MaximumTemp);
 			RMH_Winforms_CombiBox_SetSellectedItemPosition(this->TempAlarm2DataSourceComboBox, _TempAlarmDataSource_MinimumTemp);
 			RMH_Winforms_CombiBox_SetSellectedItemPosition(this->TempAlarm3DataSourceComboBox, _TempAlarmDataSource_CenterTemp);
 			RMH_Winforms_CombiBox_SetSellectedItemPosition(this->TempAlarm4DataSourceComboBox, _TempAlarmDataSource_TempPoint1);
 			RMH_Winforms_CombiBox_SetSellectedItemPosition(this->TempAlarm5DataSourceComboBox, _TempAlarmDataSource_TempPoint2);
 
-			// Indlæs listen over tilgængelige temperatur alarm konfigurations typer
+			// Load the list of available temperature alarm configuration types
 			RMH_Winforms_CombiBox_AddArrayOfItemStrings(this->TempAlarm1AlarmTypeComboBox, TempAlarmsConfigTypeStrings);
 			RMH_Winforms_CombiBox_AddArrayOfItemStrings(this->TempAlarm2AlarmTypeComboBox, TempAlarmsConfigTypeStrings);
 			RMH_Winforms_CombiBox_AddArrayOfItemStrings(this->TempAlarm3AlarmTypeComboBox, TempAlarmsConfigTypeStrings);
 			RMH_Winforms_CombiBox_AddArrayOfItemStrings(this->TempAlarm4AlarmTypeComboBox, TempAlarmsConfigTypeStrings);
 			RMH_Winforms_CombiBox_AddArrayOfItemStrings(this->TempAlarm5AlarmTypeComboBox, TempAlarmsConfigTypeStrings);
 
-			// Indstil default Temperatur alarmers type konfiguration
+			// Set the default temperature alarm type configuration
 			RMH_Winforms_CombiBox_SetSellectedItemPosition(this->TempAlarm1AlarmTypeComboBox, _TempAlarmType_Above);
 			RMH_Winforms_CombiBox_SetSellectedItemPosition(this->TempAlarm2AlarmTypeComboBox, _TempAlarmType_Above);
 			RMH_Winforms_CombiBox_SetSellectedItemPosition(this->TempAlarm3AlarmTypeComboBox, _TempAlarmType_Above);
 			RMH_Winforms_CombiBox_SetSellectedItemPosition(this->TempAlarm4AlarmTypeComboBox, _TempAlarmType_Above);
 			RMH_Winforms_CombiBox_SetSellectedItemPosition(this->TempAlarm5AlarmTypeComboBox, _TempAlarmType_Above);
 
-			// Indlæs listen over tilgængelige temperatur alarm trigger aktioner
+			// Load the list of available temperature alarm trigger actions
 			RMH_Winforms_CombiBox_AddArrayOfItemStrings(this->TempAlarm1TriggerActionComboBox, TempAlarmsTriggerActionStrings);
 			RMH_Winforms_CombiBox_AddArrayOfItemStrings(this->TempAlarm2TriggerActionComboBox, TempAlarmsTriggerActionStrings);
 			RMH_Winforms_CombiBox_AddArrayOfItemStrings(this->TempAlarm3TriggerActionComboBox, TempAlarmsTriggerActionStrings);
 			RMH_Winforms_CombiBox_AddArrayOfItemStrings(this->TempAlarm4TriggerActionComboBox, TempAlarmsTriggerActionStrings);
 			RMH_Winforms_CombiBox_AddArrayOfItemStrings(this->TempAlarm5TriggerActionComboBox, TempAlarmsTriggerActionStrings);
 
-			// Indstil default Temperatur alarmer trigger aktion konfiguration
+			// Set the default temperature alarm trigger action configuration
 			RMH_Winforms_CombiBox_SetSellectedItemPosition(this->TempAlarm1TriggerActionComboBox, _TempAlarmTriggerAction_None);
 			RMH_Winforms_CombiBox_SetSellectedItemPosition(this->TempAlarm2TriggerActionComboBox, _TempAlarmTriggerAction_None);
 			RMH_Winforms_CombiBox_SetSellectedItemPosition(this->TempAlarm3TriggerActionComboBox, _TempAlarmTriggerAction_None);
 			RMH_Winforms_CombiBox_SetSellectedItemPosition(this->TempAlarm4TriggerActionComboBox, _TempAlarmTriggerAction_None);
 			RMH_Winforms_CombiBox_SetSellectedItemPosition(this->TempAlarm5TriggerActionComboBox, _TempAlarmTriggerAction_None);
 
-			// Indlæs listen over tilgængelige periodiske trigger event funktioner
+			// Load the list of available periodic trigger event functions
 			RMH_Winforms_CombiBox_AddArrayOfItemStrings(GlobalVariables::GlobalPeriodicEventnComboBox[0], PeriodicTriggerEventFuncStrings);
 			RMH_Winforms_CombiBox_AddArrayOfItemStrings(GlobalVariables::GlobalPeriodicEventnComboBox[1], PeriodicTriggerEventFuncStrings);
 			RMH_Winforms_CombiBox_AddArrayOfItemStrings(GlobalVariables::GlobalPeriodicEventnComboBox[2], PeriodicTriggerEventFuncStrings);
@@ -374,7 +374,7 @@ namespace IRCAMThermalViewer {
 
 			if (components) {
 
-				// Slet alle Form Komponenter
+				// Delete all form components
 				delete components;
 
 			}
@@ -7960,10 +7960,10 @@ namespace IRCAMThermalViewer {
 		// Thermal Camera Form Opstartnings Callback Routine -> 
 		private: System::Void ThermalCameraGUI_Shown(System::Object^ sender, System::EventArgs^ e) {
 
-			// Opdater tilhørende form Flag
+			// Update the associated form flag
 			isThermalCameraFormOpen = true;
 
-			// Aktiver Plot af en valgt DataSæt index
+			// Enable plotting of a selected data set index
 			GlobalVariables::OpenGL2DPlot->RMH_OpenGL_EnablePlotOfDataSetx(_2DPlotDataSet_1, true);
 			GlobalVariables::OpenGL2DPlot->RMH_OpenGL_EnablePlotOfDataSetx(_2DPlotDataSet_2, true);
 			GlobalVariables::OpenGL2DPlot->RMH_OpenGL_EnablePlotOfDataSetx(_2DPlotDataSet_3, true);
@@ -7973,27 +7973,27 @@ namespace IRCAMThermalViewer {
 	    // Thermal Camera Form Nedluknings Callback Routine ->
 		private: System::Void ThermalCameraGUI_FormClosing(System::Object^ sender, System::Windows::Forms::FormClosingEventArgs^ e) {
 
-			// Opdater tilhørende form Flag
+			// Update the associated form flag
 			isThermalCameraFormOpen = false;
 			isThermalCameraFormDocked = false;
 			isThermalCameraFormUndocked = false;
 
-			// Når Formen lukkes - Gem Formen
+			// When the form is closed - hide the form
 			this->Hide();
-			// Deaktiver "Disposing" Af Form Objektet
+			// Disable "disposing" of the form object
 			e->Cancel = true;
 
 		}
 		
-		// ------------------------- Form Fælles Reference CallBack Routiner -------------------------- //
+		// ------------------------- Form Common Reference Callback Routines -------------------------- //
 
-		// Reference Routine Til Deaktivering Af CombiBox Mus Hjul Scroll Deaktiverings Callback Routine ->
+		// Reference routine for the ComboBox mouse wheel scroll disable callback routine ->
 		private: System::Void ComboBox_MouseWheelDisable(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e) {
 
-			// Lokale objekter - Event argument konvertering
+			// Local objects - event argument conversion
 			System::Windows::Forms::HandledMouseEventArgs^ MouseEventArgs = dynamic_cast<System::Windows::Forms::HandledMouseEventArgs^>(e);
 
-			// Kontroller om event argumenter ikke er null
+			// Check whether the event arguments are not null
 			if (MouseEventArgs != nullptr) {
 
 				// Deaktiver yderligere event for handle
@@ -8021,7 +8021,7 @@ namespace IRCAMThermalViewer {
 
 		}
 
-		// Automatisk Kamera Kalibrering Menu Knap Callback ->
+		// Automatic camera calibration menu button callback ->
 		private: System::Void AutoCalMenuButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
 			// Toggle Termisk Kamera Auto Kalibrerings Sub Menu
@@ -8045,10 +8045,10 @@ namespace IRCAMThermalViewer {
 
 		}
 
-		// Plot Data Sæt Konfiguration Indstillingers Menu Knap Callback ->
+		// Plot data set configuration settings menu button callback ->
 		private: System::Void TempPlotDataSetSettingsMenuButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Toggle Plot Data Sæt Konfiguration Indstillingers Sub Menu
+			// Toggle the plot data set configuration settings sub menu
 			RMH_Winforms_ToggleSubMenuPanel(this->TempPlotDataSetSettingsSubMenuPanel, this->TempPlotDataSetSettingsMenuButton);
 
 		}
@@ -8064,15 +8064,15 @@ namespace IRCAMThermalViewer {
 		// Data Logging Delimiter CombiBox Ny Delimiter Valgt CallBack ROutine ->
 		private: System::Void DataLoggingCSVDelimiterCombiBox_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
 
-			// Opdater hvilken Data delimiter som benyttes når der gemmes en data Logging CSV fil
+			// Update which data delimiter is used when saving a data logging CSV file
 			RMH_ThermalViewer_UpdateDataLoggingCSVDataDelimiter();
 
 		}
 
-		// Temperatur Alarmers Konfigurations Menu Knap Callback ->
+		// Temperature alarm configuration menu button callback ->
 		private: System::Void TempAlarmsConfigMenuButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Opdater tilhørende "Menu er åben" flag
+			// Update the associated "menu is open" flag
 			TempAlarmsConfigMenuIsOpen = !TempAlarmsConfigMenuIsOpen;
 
 			// Toggle Temp Alarmernes Konfiguration Indstillingers Sub Menu
@@ -8080,7 +8080,7 @@ namespace IRCAMThermalViewer {
 
 		}
 		
-		// General Og Periodisk Trigger Konfigurations Menu Knap Callback ->
+		// General and periodic trigger configuration menu button callback ->
 		private: System::Void PeriodicTriggerConfigMenuButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
 			// Toggle General Og Periodisk Trigger Konfiguration Indstillingers Sub Menu
@@ -8090,26 +8090,26 @@ namespace IRCAMThermalViewer {
 
 		// -------------------- Thermal Camera Connect Og Konfigurations Callbacks -------------------- //
 
-		// Connect Knap click event Callback Routine ->
+		// Connect button click event callback routine ->
 		private: System::Void ConnectButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Kontroller om TOPDON informations dialogen skal vises
+			// Check whether the TOPDON information dialog should be shown
 			if (PopUpDialogDontShowFlag == false) {
 
-				// Åben informations dialogen - Med Info Om TOPDON Cameraer
+				// Open the information dialog - with info about TOPDON cameras
 				ManagedLocals::PopUpDialogForm->ShowDialog();
 
 			}
 
-			// Forbind til valgte termiske kamera eller analysis mode
+			// Connect to the selected thermal camera or analysis mode
 			RMH_IRThermalCamera_ConnectToThermalCameraOrAnalysisMode();
 
 		}
 
-		// Connect Knap click event Callback Routine ->
+		// Connect button click event callback routine ->
 		private: System::Void DisconnectButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Håndter handlingerne ved ændring af Kamera source ComboBox Item - Samme Som Disconnect
+			// Handle the actions when the camera source ComboBox item changes - same as disconnect
 			RMH_ThermalViewer_HandleSellectedDeviceOrModeChange();
 
 			// Opdater GUI controls (Executes any pending requests for painting.)
@@ -8117,10 +8117,10 @@ namespace IRCAMThermalViewer {
 
 		}
 
-		// Supported Kamera Device ComboBox Værdi Ændrings Callback ->
+		// Supported camera device ComboBox value changed callback ->
 		private: System::Void CameraSourceDropList_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
 
-			// Håndter handlingerne ved ændring af Kamera source ComboBox Item
+			// Handle the actions when the camera source ComboBox item changes
 			RMH_ThermalViewer_HandleSellectedDeviceOrModeChange();
 
 			// Opdater GUI controls (Executes any pending requests for painting.)
@@ -8128,10 +8128,10 @@ namespace IRCAMThermalViewer {
 
 		}
 
-	    // Læs Kamera Konfigurations Knap Click Callback Routine ->
+	    // Read camera configuration button click callback routine ->
 		private: System::Void ReadCameraConfigButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Læs og vis de læste interne kamera konfigurations parametere
+			// Read and show the internal camera configuration parameters read
 			RMH_ThermalViewer_ReadAndDisplayCameraConfigParameters();
 
 			// Opdater GUI controls (Executes any pending requests for painting.)
@@ -8139,13 +8139,13 @@ namespace IRCAMThermalViewer {
 
 		}
 
-		// Indstil Kamera Konfigurations Knap Click Callback Routine ->
+		// Set camera configuration button click callback routine ->
 		private: System::Void SetCameraConfigButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Opdater Temperatur korrektions værdi til globale variabel til gemt sessions parameter
+			// Update the temperature correction value in the global variable for the saved session parameter
 			SavedTempCorrectionSetting = RMH_Conversion_SystemDecimalToFloat(this->TempCorrUpDown->Value);
 
-			// Skriv/Sæt de indstillede Kamera konfigurations parametere til kamera hukommelse
+			// Write/set the configured camera configuration parameters to the camera memory
 			RMH_ThermalViewer_SetCameraConfigParameters();
 
 			// Opdater GUI controls (Executes any pending requests for painting.)
@@ -8153,17 +8153,17 @@ namespace IRCAMThermalViewer {
 
 		}
 
-		// Genindstil/Recover default kamera temperature konfigurations Knap Click Callback Routine -> 
+		// Reset/recover default camera temperature configuration button click callback routine -> 
 		private: System::Void RecoverDefaultCameraSettingsButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Indstil default temperatur konfigurationen for termisk kamera
+			// Set the default temperature configuration for the thermal camera
 			RMH_ThermalViewer_RecoverDefaultCameraTempConfiguration();
 
 		}
 
 		// ------------- Automatisk Shutter Kalibration Menu Og Konfigurations Callbacks -------------- //
 
-		// Aktiver Auto Kalibrerings timer Knap Click Callback Routine ->
+		// Enable auto calibration timer button click callback routine ->
 		private: System::Void AutoShutterCalButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
 			// Toggle Automatisk shutter kalibrerings feature timeren
@@ -8171,7 +8171,7 @@ namespace IRCAMThermalViewer {
 
 		}
 
-		// Aktiver Temperatur Drift Baserede Kalibrerings timer Knap Click Callback Routine ->
+		// Enable temperature-drift-based calibration timer button click callback routine ->
 		private: System::Void SensorDriftCalButton_Click(System::Object^ sender, System::EventArgs^ e) {
 			
 			// Toggle Temperatur Drift Baseret kalibrerings feature timeren
@@ -8182,137 +8182,137 @@ namespace IRCAMThermalViewer {
 		// Auto Kalibrerings timer Callback Routine ->
 		private: System::Void AutoCalTimer_Tick(System::Object^ sender, System::EventArgs^ e) {
 
-			// Eksikver events ved auto kalibrerings timer callback
+			// Execute the events of the auto calibration timer callback
 			RMH_IRThermalCamera_AutoShutterCalTimerCallbackHandler();
 
 		}
 
-		// Temperatur Drift Baserede Kalibrerings timer Callback Routine ->
+		// Temperature-drift-based calibration timer callback routine ->
 		private: System::Void DriftCalTimer_Tick(System::Object^ sender, System::EventArgs^ e) {
 
-			// Eksikver events ved Temperatur Drift Baserede kalibrerings timer callback
+			// Execute the events of the temperature-drift-based calibration timer callback
 			RMH_IRThermalCamera_TempDriftBasedCalTimerCallbackHandler();
 
 		}
 
-		// Temperatur Drift Baserede Kalibrerings Set-punkts værdi Callback Routine ->
+		// Temperature-drift-based calibration set point value callback routine ->
 		private: System::Void SensorDriftCalUpDown_ValueChanged(System::Object^ sender, System::EventArgs^ e) {
 
-			// Opdater Temperatur Drift Baserede Kalibrerings Set-punkts værdien
+			// Update the temperature-drift-based calibration set point value
 			TempDriftCalibrationSetValue = (double)this->SensorDriftCalUpDown->Value;
 
 		}
 
-		// Læs Kameraets interne temperaturer Knap Callback Routine ->
+		// Read the internal camera temperatures button callback routine ->
 		private: System::Void ReadIntCameraTempsButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Læs Kameraets interne kalibrerings temperaturer
+			// Read the internal calibration temperatures of the camera
 			RMH_ThermalViewer_ReadThermalCameraInternalTemps();
 
 		}
 
-		// ------ Full Frame CSV Data Og Snapshot Indstillingers Menu Og Konfigurations Callbacks ------ //
+		// ------ Full Frame CSV Data And Snapshot Settings Menu And Configuration Callbacks ------ //
 
-		// Indstil Snapshot default fil path Callback Routine ->
+		// Set snapshot default file path callback routine ->
 		private: System::Void ChangeSnapDefaultPathButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Opdater fil lokationen hvor et Live View Snapshot skal gemmes
+			// Update the file location where a live view snapshot is saved
 			RMH_ThermalViewer_UpdateSnapshotDefaultSaveFilePath(this->DefaultSnapshotSavePathString);
 
 		}
 
-		// Inkluder ColorBar i Snapshot Knap Callback Routine ->
+		// Include ColorBar in snapshot button callback routine ->
 		private: System::Void IncludeColorbarSnapButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Toggle om det valgte snapshot skal indeholde colorbaren eller ikke
+			// Toggle whether the selected snapshot should include the colorbar or not
 			RMH_ThermalViewer_IncludeColorBarInSnapshot();
 
 		}
 
-		// Gem Rå Sensor Data Snapshot Knap Callback Routine ->
+		// Save raw sensor data snapshot button callback routine ->
 		private: System::Void SaveRawSensorSnapButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Toggle om et Rå sensor data snapshot skal gemmes med tilhørende live view snapshot
+			// Toggle whether a raw sensor data snapshot is saved together with the associated live view snapshot
 			RMH_ThermalViewer_ToggleSavinfOfRawSensorDataSnapshot();
 
 		}
 
-		// Full Frame CSV Data Delimiter CombiBox Index ændret CallBack Routine ->
+		// Full frame CSV data delimiter ComboBox index changed callback routine ->
 		private: System::Void FullFrameTempDataCSVDelimiterCombiBox_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
 
-			// Opdater hvilken Data delimiter som benyttes når der gemmes en Full frame temperatur data CSV fil
+			// Update which data delimiter is used when saving a full frame temperature data CSV file
 			RMH_ThermalViewer_UpdateFullFrameTemperatureCSVDataDelimiter();
 
 		}
 
 		// ------------- Video Optagnings Indstillingers Menu Og Konfigurations Callbacks ------------- //
 
-		// Default Live view video capturing applikation Knap Callback Routine ->
+		// Default live view video capturing application button callback routine ->
 		private: System::Void UseWinSnippingToolButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Opdater Det default Video Capturing program for optagning af live view video
+			// Update the default video capturing program for recording live view video
 			RMH_ThermalViewer_ConfigDefaultCapturingProgram(sender);
 
 		}
 	
-		// Indstil Video Recording default fil path Callback Routine ->
+		// Set video recording default file path callback routine ->
 		private: System::Void ChangeRecordingDefaultPathButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Opdater fil lokationen hvor video optagningen skal gemmes
+			// Update the file location where the video recording is saved
 			RMH_ThermalViewer_UpdateVideoRecordingDefaultSaveFilePath(this->DefaultRecordingSavePathString);
 
 		}
 
-		// Toggle gemning af RAW Data optagning Callback Routine ->
+		// Toggle saving of a RAW data recording callback routine ->
 		private: System::Void SaveRawAnalysisRecordingButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Toggle optagning af en RAW data fil
+			// Toggle recording of a RAW data file
 			RMH_ThermalViewer_ToggleRecordingOfRAWDataForPostAnalysis();
 
 		}
 
-		// ------------ Temp Plot Data Sæt Indstillingers Menu Og Konfigurations Callbacks ------------ //
+		// ------------ Temp Plot Data Set Settings Menu And Configuration Callbacks ------------ //
 
-		// Plot Data Sæt Aktiverings CheckBox Callback Routine ->
+		// Plot data set enable CheckBox callback routine ->
 		private: System::Void DataSet1CheckBox_CheckStateChanged(System::Object^ sender, System::EventArgs^ e) {
 
-			// Aktiver 2D Plot Data Set til plotning
+			// Enable the 2D plot data set for plotting
 			RMH_ThermalViewer_Enable2DPlotDataSet(sender);
 
-			// Opdater 2D Plot Legend
+			// Update the 2D plot legend
 			RMH_ThermalViewer_Update2DPlotLegendLabels();
 
 		}
 
-		// Plot Data Sæt Linje Farve Click Callback Routine ->
+		// Plot data set line color click callback routine ->
 		private: System::Void DataSet1ColorPanel_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Opdater 2D Plot Data sæt farve - Samt Menu panel
+			// Update the 2D plot data set color - as well as the menu panel
 			RMH_ThermalViewer_Change2DPlotDataSetAndSettingsPanelColor(sender);
 
-			// Opdater 2D Plot Legend
+			// Update the 2D plot legend
 			RMH_ThermalViewer_Update2DPlotLegendLabels();
 
 		}
 
-		// Plot Data Sæt Linje Tykkelse UpDown Callback Routine ->
+		// Plot data set line thickness UpDown callback routine ->
 		private: System::Void DataSet1UpDown_ValueChanged(System::Object^ sender, System::EventArgs^ e) {
 
-			// Opdater 2D Plot Data Sæt linje tykkelse
+			// Update the 2D plot data set line thickness
 			RMH_ThermalViewer_Change2DPlotDataSetLineWidth(sender);
 
 		}
 
-		// Plot Data Sæt Source ComboBox Callback Routine ->
+		// Plot data set source ComboBox callback routine ->
 		private: System::Void DataSet1ComboBox_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
 
-			// Indstil 2D Plot data sæt source til valgte ComboBox Index
+			// Set the 2D plot data set source to the selected ComboBox index
 			RMH_ThermalViewer_Change2DPlotDataSetSource(sender);
 
-			// Opdater Kun 2D Plot Legende når TempMeasGUI er loaded
+			// Update the 2D plot legend only when TempMeasGUI is loaded
 			if (TempMeasGUIReadyFlag == true) {
 
-				// Opdater 2D Plot Legend
+				// Update the 2D plot legend
 				RMH_ThermalViewer_Update2DPlotLegendLabels();
 
 			}
@@ -8321,92 +8321,92 @@ namespace IRCAMThermalViewer {
 
 		// --------------- Data Logging Indstillingers Menu Og Konfigurations Callbacks --------------- //
 
-		// Indstil Data Logging default fil path Callback Routine ->
+		// Set data logging default file path callback routine ->
 		private: System::Void ChangeCSVDefaultPathButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Opdater fil lokationen hvor Data Logging CSV filen skal gemmes
+			// Update the file location where the data logging CSV file is saved
 			RMH_ThermalViewer_UpdateDataLoggingDefaultSaveFilePath(this->DefaultDataLoggingSavePathString);
 
 		}
 
-		// ------------- Temperatur Alarm Indstillingers Menu Og Konfigurations Callbacks ------------- //
+		// ------------- Temperature Alarm Settings Menu And Configuration Callbacks ------------- //
 
-		// Temperatur Alarm Data Sources ComboBox Callback Routine ->
+		// Temperature alarm data sources ComboBox callback routine ->
 		private: System::Void TempAlarm1DataSourceComboBox_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
 
-			// Opdater Temperatur Alarms Data Source Reference
+			// Update the temperature alarm data source reference
 			RMH_ThermalViewer_ChangeTemperatureAlarmDataSource(sender);
 
 		}
 
-		// Temperatur Alarm Type ComboBox Callback Routine ->
+		// Temperature alarm type ComboBox callback routine ->
 		private: System::Void TempAlarm1AlarmTypeComboBox_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
 
-			// Opdater Temperatur Alarms Type konfiguration
+			// Update the temperature alarm type configuration
 			RMH_ThermalViewer_ChangeTempAlarmConfigType(sender);
 
 		}
 
-		// Temperatur Alarm Low Temp Set Punkt Ændret Callback Routine ->
+		// Temperature alarm low temp set point changed callback routine ->
 		private: System::Void TempAlarm1LowTempThresUpDown_ValueChanged(System::Object^ sender, System::EventArgs^ e) {
 
-			// Opdater Temperatur Alarmens Low Temp Tærskel værdi
+			// Update the low temp threshold value of the temperature alarm
 			RMH_ThermalViewer_ChangeTempAlarmLowTempSetPoint(sender);
 
 		}
 
-		// Temperatur Alarm High Temp Set Punkt Ændret Callback Routine ->
+		// Temperature alarm high temp set point changed callback routine ->
 		private: System::Void TempAlarm1HighTempThresUpDown_ValueChanged(System::Object^ sender, System::EventArgs^ e) {
 
-			// Opdater Temperatur Alarmens High Temp Tærskel værdi
+			// Update the high temp threshold value of the temperature alarm
 			RMH_ThermalViewer_ChangeTempAlarmHighTempSetPoint(sender);
 
 		}
 
-		// Temperatur Alarm Trigger Aktion Combobox Ændret Callback Routine ->
+		// Temperature alarm trigger action ComboBox changed callback routine ->
 		private: System::Void TempAlarm1TriggerActionComboBox_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
 
-			// Opdater Temperatur Alarmens Trigger aktions parameter
+			// Update the trigger action parameter of the temperature alarm
 			RMH_ThermalViewer_ChangeTempAlarmTriggerAction(sender);
 
 		}
 
-		// Temperatur Alarm aktiverings status ændret Callback Routine ->
+		// Temperature alarm enable status changed callback routine ->
 		private: System::Void TempAlarm1EnableCheckBox_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
 
-			// Aktiver eller deaktiver Temperatur Alarm
+			// Enable or disable the temperature alarm
 			RMH_ThermalViewer_EnableTemperatureAlarm(sender);
 
 		}
 		
-		// Aktiver Temperatur Alarm Trigger Lyd CheckBox Callback ->
+		// Enable temperature alarm trigger sound CheckBox callback ->
 		private: System::Void TempAlarmsTriggerSoundCheckBox_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
 
-			// Aktiver eller deaktiver temperatur alarmernes advarsels lyd timer
+			// Enable or disable the warning sound timer of the temperature alarms
 			RMH_ThermalViewer_OpdateTempAlarmTriggerSoundTimer(sender);
 
 		}
 
-		// Temperatur alarmernes Trigger Lyd timer Tick Callback Routine ->
+		// Temperature alarm trigger sound timer tick callback routine ->
 		private: System::Void AlarmSoundTimer_Tick(System::Object^ sender, System::EventArgs^ e) {
 
-			// Håndter trigger events for temperatur alarmernes advarsels lyds timer 
+			// Handle the trigger events of the warning sound timer of the temperature alarms 
 			RMH_ThermalViewer_AlarmSoundTimerTickEventHandler();
 
 		}
 
-		// Aktiver Temperatur Alarm Trigger events CheckBox Callback ->
+		// Enable temperature alarm trigger events CheckBox callback ->
 		private: System::Void EnableAlarmTriggerEventsCheckBox_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
 
-			// Aktiver Temperatur alarmernes trigger events
+			// Enable the trigger events of the temperature alarms
 			RMH_ThermalViewer_EnableAlarmTriggerEvents(sender);
 
 		}
 
-		// Temperatur alarmernes Trigger Event timer Tick Callback Routine ->
+		// Temperature alarm trigger event timer tick callback routine ->
 		private: System::Void AlarmTriggerEventTimer_Tick(System::Object^ sender, System::EventArgs^ e) {
 
-			// Håndter trigger events for temperatur alarmernes trigger event timer 
+			// Handle the trigger events of the trigger event timer of the temperature alarms 
 			RMH_ThermalViewer_AlarmTriggerEventTimerTickEventHandler();
 
 		}
@@ -8414,12 +8414,12 @@ namespace IRCAMThermalViewer {
 		// Reset Alarm trigger event eksikvering knappers Callback Routine ->
 		private: System::Void Alarm1TriggerEventResetButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Nulstil "Trigger event er blevet eksikverede" flaget for tilhørende temp alarm
+			// Reset the "Trigger event has been executed" flag for the associated temperature alarm
 			RMH_ThermalViewer_ResetAlarmTriggerEventExecutedFlag(sender);
 
 		}
 
-		// Alarm trigger event Delay timer UpDown Værdi Ændret Callback Routine ->
+		// Alarm trigger event delay timer UpDown value changed callback routine ->
 		private: System::Void AlarmTriggerEventsIntervalUpDown_ValueChanged(System::Object^ sender, System::EventArgs^ e) {
 
 			// Opdater Alarm trigger event Delay timer interval 
@@ -8427,12 +8427,12 @@ namespace IRCAMThermalViewer {
 
 		}
 		
-		// ------- General Og Periodisk Trigger Indstillingers Menu Og Konfigurations Callbacks ------- //
+		// ------- General And Periodic Trigger Settings Menu And Configuration Callbacks ------- //
 
-		// General Og Periodisk Trigger Timer Tick Callback Routine ->
+		// General and periodic trigger timer tick callback routine ->
 		private: System::Void PeriodicTriggerTimer_Tick(System::Object^ sender, System::EventArgs^ e) {
 
-			// Håndter events for den periodiske trigger event timer
+			// Handle the events of the periodic trigger event timer
 			RMH_ThermalViewer_PeriodicTriggerEventTimerTickEventHandler();
 
 		}
@@ -8440,7 +8440,7 @@ namespace IRCAMThermalViewer {
 		// Periodisk Trigger Event Aktiverings CheckBoxCallback Routine ->
 		private: System::Void PeriodicEventnEnableCheckBox_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
 
-			// Aktiver eller deaktiver valgte Periodiske Trigger event
+			// Enable or disable the selected periodic trigger event
 			RMH_ThermalViewer_EnableDisableSelectedPeriodicTriggerEvent(sender);
 
 		}

@@ -1,15 +1,15 @@
 #pragma once
 
-// Inkluderede biblioteker
+// Included libraries
 #include "RMH_MathConversions_Library.h"
 
-// Inkluderede Resourcer
+// Included resources
 #include "RMH_Application_Information.h"
 
 // Klasse Namespace
 namespace IRCAMThermalViewer {
 
-	// Tilhørende Klasse Navnerum
+	// Associated class namespace
 	using namespace System;
 	using namespace System::ComponentModel;
 	using namespace System::Collections;
@@ -24,7 +24,7 @@ namespace IRCAMThermalViewer {
 
 		WelcomeScreen(void) {
 
-			// Init GUI komponenter og objekter
+			// Init GUI components and objects
 			InitializeComponent();
 
 			// Aktiver Applikationens TitelBars Dark Mode
@@ -44,7 +44,7 @@ namespace IRCAMThermalViewer {
 
 			if (components) {
 
-				// Slet alle Form Komponenter
+				// Delete all form components
 				delete components;
 
 			}
@@ -152,7 +152,7 @@ namespace IRCAMThermalViewer {
 		// Welcome/About Form Opstartnings Callback Routine -> 
 		private: System::Void WelcomeScreen_Shown(System::Object^ sender, System::EventArgs^ e) {
 
-			// Opdater tilhørende form Flag
+			// Update the associated form flag
 			isWelcomeScreenFormOpen = true;
 
 		}
@@ -160,24 +160,24 @@ namespace IRCAMThermalViewer {
 		// Welcome/About Form Nedluknings Callback Routine ->
 		private: System::Void WelcomeScreen_FormClosing(System::Object^ sender, System::Windows::Forms::FormClosingEventArgs^ e) {
 
-			// Opdater tilhørende form Flag
+			// Update the associated form flag
 			isWelcomeScreenFormOpen = false;
 			isWelcomeScreenFormDocked = false;
 			isWelcomeScreenFormUndocked = false;
 
-			// Når Formen lukkes - Gem Formen
+			// When the form is closed - hide the form
 			this->Hide();
-			// Deaktiver "Disposing" Af Form Objektet
+			// Disable "disposing" of the form object
 			e->Cancel = true;
 
 		}
 
-		// -------------------------- Welcome/About Skærm Callback Routiner ------------------------- //
+		// -------------------------- Welcome/About Screen Callback Routines ------------------------- //
 
 		// Link Label Clicked Callback Routine ->
 		private: System::Void linkLabel1_LinkClicked(System::Object^ sender, System::Windows::Forms::LinkLabelLinkClickedEventArgs^ e) {
 
-			// Navigate Til Discord URL
+			// Navigate to the Discord URL
 			RMH_Winforms_OpenLinkURL(RMH_Conversion_StdStringToSystemString(DiscordServerLinkAddress));
 
 		}

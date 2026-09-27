@@ -13,12 +13,12 @@
 #ifndef RMH_MathConversions_Library_H 
 #define RMH_MathConversions_Library_H
 
-// Inkluderede Blbiloteker
+// Included libraries
 #include <string>
 #include <opencv2/opencv.hpp>
 #include <msclr\marshal_cppstd.h>
 
-// Tilhørende Namespaces
+// Associated namespaces
 using namespace std;
 
 // --------------------------------- Konverterings Routiner --------------------------------- //

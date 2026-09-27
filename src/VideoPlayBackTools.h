@@ -1,18 +1,18 @@
 #pragma once
 
-// Inkluderede Blblioteker
+// Included libraries
 #include "GlobalObjectsAndVariables.h"
 #include "RMH_Winforms_Library.h"
 #include <iostream>
 
-// Globale Statiske klasse objekter og variabler
+// Global static class objects and variables
 static unsigned char ElapsedTimeStringChar[] = { '0','0','0',':','0','0',':','0','0',':','0','0','0' };
 static unsigned char RemainingTimeStringChar[] = { '0','0','0',':','0','0',':','0','0',':','0','0','0' };
 
 // Klasse Namespace
 namespace IRCAMThermalViewer {
 
-	// Tilhørende namespaces
+	// Associated namespaces
 	using namespace System;
 	using namespace System::ComponentModel;
 	using namespace System::Collections;
@@ -30,24 +30,24 @@ namespace IRCAMThermalViewer {
 
 		VideoPlayBackTools() {
 
-			// Init GUI komponenter og objekter
+			// Init GUI components and objects
 			InitializeComponent();
-			// Indstil globale objekter fra denne Form til global brug
+			// Set global objects from this form for global use
 			InitializeGlobalFormsObjects();
 
 			// Aktiver Applikationens TitelBars Dark Mode
 			RMH_Winforms_EnableTitleBarDarkMode(this->Handle);
 
-			// Læs Valgte Video fils informations parametere 
+			// Read the information parameters of the selected video file 
 			RecordingAnalysisModeFileInfo = RMH_VideoFileReading_SetupRecordingAnalysisModeVideoFileReader(GlobalVariables::RecordingAnalysisModeRAWFilePath);
 
-			// Opdater "Video Playback Formen Er Åben" flaget
+			// Update the "video playback form is open" flag
 			VideoPlaybackControlsFormIsOpenFlag = true;
 
 			// Opdaterer Teksten i toppen af GUIens TitelBar
 			RMH_Winforms_ChangeFormTitleBarText(this, "Video Playback Controls");
 
-			// Opdater Termisk Kamera konfigurations labels
+			// Update the thermal camera configuration labels
 			this->TempCorrectionLabel->Text = RMH_Conversion_FloatToSystemString(IRCamera.TemperatureCorrectionSetting) + " " + GlobalVariables::DefaultTempUnitString;
 			this->AmbientTempLabel->Text = RMH_Conversion_FloatToSystemString(IRCamera.AmbientTemperatureSetting) + " " + GlobalVariables::DefaultTempUnitString;
 			this->ReflectedTempLabel->Text = RMH_Conversion_FloatToSystemString(IRCamera.ReflectedTemperatureSetting) + " " + GlobalVariables::DefaultTempUnitString;
@@ -55,14 +55,14 @@ namespace IRCAMThermalViewer {
 			this->EmissivityLabel->Text = RMH_Conversion_FloatToSystemString(IRCamera.EmissivitySetting);
 			this->DistanceLabel->Text = RMH_Conversion_IntToSystemString(IRCamera.DistanceSetting) + " " + "Meter";
 
-			// Nulstil Nuværende Frame Indeks værdi
+			// Reset the current frame index value
 			CurrentPlayBackFrameValue = 0;
-			// Nulstil TrackBar position
+			// Reset the trackbar position
 			this->FrameTrackBar->Value = CurrentPlayBackFrameValue;
-			// Indstil TrackBarens Maksimale grænse værdi til det maksimale antal læste frames
+			// Set the maximum limit value of the trackbar to the maximum number of frames read
 			this->FrameTrackBar->Maximum = RecordingAnalysisModeFileInfo.NumberOfFrames;
 			
-			// Opdater Video Informations labels
+			// Update the video information labels
 			this->VideoDurationLabel->Text = RMH_Conversion_FloatToSystemString(RecordingAnalysisModeFileInfo.DurationTime) + " Sec";
 			this->NumOfFramesLabel->Text = RMH_Conversion_IntToSystemString(RecordingAnalysisModeFileInfo.NumberOfFrames) + " Frames";
 			this->CurrentFrameLabel->Text = RMH_Conversion_IntToSystemString(CurrentPlayBackFrameValue) + " Frames";
@@ -70,7 +70,7 @@ namespace IRCAMThermalViewer {
 			this->FrameWidthLabel->Text = RMH_Conversion_IntToSystemString(RecordingAnalysisModeFileInfo.FrameWidth) + " Pixels";
 			this->FrameHeightLabel->Text = RMH_Conversion_IntToSystemString(RecordingAnalysisModeFileInfo.FrameHeight - IRCamera.FrameMetadataSize) + " Pixels";
 
-			// Opdater tilbageværende og Forløbet tids labels
+			// Update the remaining and elapsed time labels
 			FormatUpdataAndDisplayElapsedAndRemainingTimeLabels();
 
 		}
@@ -79,10 +79,10 @@ namespace IRCAMThermalViewer {
 
 		void InitializeGlobalFormsObjects() {
 
-			// Routinen indstiller globale objekter fra denne form
-			// Så disse kan blve tilgået fra andre Forms
+			// This routine sets global objects from this form
+			// so that these can be accessed from other forms
 
-			// Initiliser Globale objeker til tilhørende Form Objekter
+			// Initialize global objects to the associated form objects
 			GlobalVariables::VideoPlaybackTempCorrectionLabel = this->TempCorrectionLabel;
 			GlobalVariables::VideoPlaybackAmbientTempLabel = this->AmbientTempLabel;
 			GlobalVariables::VideoPlaybackReflectedTempLabel = this->ReflectedTempLabel;
@@ -94,16 +94,16 @@ namespace IRCAMThermalViewer {
 
 		void FormatUpdataAndDisplayElapsedAndRemainingTimeLabels() {
 
-			// Routinen konverterer og håndtererr opdateringen af de to Elapsed time og Remaining Time Labels
+			// This routine converts and handles the update of the two elapsed time and remaining time labels
 
 			// Udregn hver video frames tids periode i sekunter
 			double FramePeriod = RecordingAnalysisModeFileInfo.DurationTime / (double)RecordingAnalysisModeFileInfo.NumberOfFrames;
 			// Udregn video filens varighed i MilliSekunter
 			double TotalVideoDurationMilliSec = RecordingAnalysisModeFileInfo.DurationTime * 1000.0;
 
-			// Udregn den forløbet tid fra nuværende playback frame nummer 
+			// Calculate the elapsed time from the current playback frame number 
 			unsigned long ElapsedTimeValueMilliSec = (unsigned long)((FramePeriod * 1000.0) * (double)CurrentPlayBackFrameValue);
-			// Udregn den tilbageværende tid fra nuværende playback frame nummer 
+			// Calculate the remaining time from the current playback frame number 
 			unsigned long RemainingTimeTimeValueMilliSec = (unsigned long)(TotalVideoDurationMilliSec - (double)ElapsedTimeValueMilliSec);
 
 			// Formater "Elapsed" tids label
@@ -142,7 +142,7 @@ namespace IRCAMThermalViewer {
 			RemainingTimeStringChar[11] = (MilliSecValue / 10) % 10 + 48;
 			RemainingTimeStringChar[12] = MilliSecValue % 10 + 48;
 
-			// Opdater "Elapsed" og "Remaining" tids labels
+			// Update the "elapsed" and "remaining" time labels
 			this->ElapsedTimeLabel->Text = RMH_Conversion_UnsignedCharArrayToSystemString(ElapsedTimeStringChar, 13);
 			this->RemainingTimeLabel->Text = RMH_Conversion_UnsignedCharArrayToSystemString(RemainingTimeStringChar, 13);
 
@@ -159,7 +159,7 @@ namespace IRCAMThermalViewer {
 
 			if (components) {
 
-				// Slet alle Form Komponenter
+				// Delete all form components
 				delete components;
 
 			}
@@ -1001,13 +1001,13 @@ namespace IRCAMThermalViewer {
 		// Video Playback Controls Form Nedluknings Callback Routine -> 
 		private: System::Void VideoPlayBackTools_FormClosing(System::Object^ sender, System::Windows::Forms::FormClosingEventArgs^ e) {
 
-			// Nulstil "Video Playback Formen Er Åben" flaget
+			// Reset the "video playback form is open" flag
 			VideoPlaybackControlsFormIsOpenFlag = false;
 
-			// Hvis "Recording Analysis" Mode er aktiv
+			// If "Recording Analysis" mode is active
 			if (InRecordingAnalysisModeFlag == true) {
 
-				// Gen-Åben video playback controls panel formen
+				// Reopen the video playback controls panel form
 				OpenVideoPlayBackControlsFormFlag = true;
 
 			}
@@ -1016,107 +1016,107 @@ namespace IRCAMThermalViewer {
 
 		// ---------------------------- Form GUI Event & Callback Routiner ---------------------------- //
 
-		// Video Frame TrackBar Værdi ændret Callback Routine ->
+		// Video frame trackbar value changed callback routine ->
 		private: System::Void FrameTrackBar_ValueChanged(System::Object^ sender, System::EventArgs^ e) {
 
-			// Opdater Nuværende Frame Indeks værdi fra trackbar værdi
+			// Update the current frame index value from the trackbar value
 			CurrentPlayBackFrameValue = this->FrameTrackBar->Value;
-			// Opdater nuværende frame informations label
+			// Update the current frame information label
 			this->CurrentFrameLabel->Text = RMH_Conversion_IntToSystemString(CurrentPlayBackFrameValue) + " Frames";
 
-			// Opdater tilbageværende og Forløbet tids labels
+			// Update the remaining and elapsed time labels
 			FormatUpdataAndDisplayElapsedAndRemainingTimeLabels();
 
 		}
 
-		// Video Playback step Backward knap Callback Routine ->
+		// Video playback step backward button callback routine ->
 		private: System::Void BackwardStepButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Kontroller om nuværende playback frame værdi er '0'
+			// Check whether the current playback frame value is '0'
 			if (CurrentPlayBackFrameValue == 0) {
 				
-				// Indstil nuværende playback frame til maks frame værdi
+				// Set the current playback frame to the max frame value
 				CurrentPlayBackFrameValue = RecordingAnalysisModeFileInfo.NumberOfFrames;
 
 			}
 			else {
 
-				// Dekrementer nuværende playback frame variabel
+				// Decrement the current playback frame variable
 				CurrentPlayBackFrameValue = CurrentPlayBackFrameValue - 1;
 
 			}
 
-			// Kontroller om nuværende playback frame er over det maksimale antal frames
+			// Check whether the current playback frame is above the maximum number of frames
 			if (CurrentPlayBackFrameValue > RecordingAnalysisModeFileInfo.NumberOfFrames) {
 
-				// Nulstil nuværende playback frame variabel
+				// Reset the current playback frame variable
 				CurrentPlayBackFrameValue = 0;
 
 			}
 
-			// Opdater Trackbar værdi fra Frame Indeks værdi
+			// Update the trackbar value from the frame index value
 			this->FrameTrackBar->Value = CurrentPlayBackFrameValue;
-			// Opdater nuværende frame informations label
+			// Update the current frame information label
 			this->CurrentFrameLabel->Text = RMH_Conversion_IntToSystemString(CurrentPlayBackFrameValue) + " Frames";
 
-			// Opdater tilbageværende og Forløbet tids labels
+			// Update the remaining and elapsed time labels
 			FormatUpdataAndDisplayElapsedAndRemainingTimeLabels();
 
 		}
 
-		// Video Playback Play knap Callback Routine ->
+		// Video playback play button callback routine ->
 		private: System::Void PlayStopButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
 			// Toggle video playback controls Play/Stop Flag
 			VideoPlayBackControlsPlayStopFlag = !VideoPlayBackControlsPlayStopFlag;
 
-			// Kontroller stadiet af video playback controls Play/Stop Flag - True: Play
+			// Check the state of the video playback controls play/stop flag - true: play
 			if (VideoPlayBackControlsPlayStopFlag == true) {
 
-				// Opdater Play/Stop Knap Text og border farve
+				// Update the play/stop button text and border color
 				this->PlayStopButton->Text = "Stop";
 				this->PlayStopButton->FlatAppearance->BorderColor = System::Drawing::Color::Red;
 
-				// Konfigurer Timer interval fra læst video frame rate
+				// Configure the timer interval from the video frame rate read
 				this->PlayTimer->Interval = (unsigned int)(1000.0 / RecordingAnalysisModeFileInfo.FrameRate);
 
-				// Aktiver Play timer tick 
+				// Enable the play timer tick 
 				this->PlayTimer->Enabled = true;
 
 			}
 			else {
 
-				// Opdater Play/Stop Knap Text og border farve
+				// Update the play/stop button text and border color
 				this->PlayStopButton->Text = "Play";
 				this->PlayStopButton->FlatAppearance->BorderColor = System::Drawing::Color::FromArgb(255, 40, 40, 40);
 
-				// Deaktiver Play timer tick 
+				// Disable the play timer tick 
 				this->PlayTimer->Enabled = false;
 
 			}
 
 		}
 
-		// Video Playback step Forward knap Callback Routine ->
+		// Video playback step forward button callback routine ->
 		private: System::Void ForwardStepButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Inkrementer nuværende playback frame variabel
+			// Increment the current playback frame variable
 			CurrentPlayBackFrameValue = CurrentPlayBackFrameValue + 1;
 
-			// Kontroller om nuværende playback frame er over det maksimale antal frames
+			// Check whether the current playback frame is above the maximum number of frames
 			if (CurrentPlayBackFrameValue > RecordingAnalysisModeFileInfo.NumberOfFrames) {
 
-				// Nulstil nuværende playback frame variabel
+				// Reset the current playback frame variable
 				CurrentPlayBackFrameValue = 0;
 
 			}
 
-			// Opdater Trackbar værdi fra Frame Indeks værdi
+			// Update the trackbar value from the frame index value
 			this->FrameTrackBar->Value = CurrentPlayBackFrameValue;
-			// Opdater nuværende frame informations label
+			// Update the current frame information label
 			this->CurrentFrameLabel->Text = RMH_Conversion_IntToSystemString(CurrentPlayBackFrameValue) + " Frames";
 
-			// Opdater tilbageværende og Forløbet tids labels
+			// Update the remaining and elapsed time labels
 			FormatUpdataAndDisplayElapsedAndRemainingTimeLabels();
 
 		}
@@ -1131,26 +1131,26 @@ namespace IRCAMThermalViewer {
 
 		// ----------------------------- Play Timer Tick Callback Routine ----------------------------- //
 
-		// Play Timer TickCallback Routine ->
+		// Play timer tick callback routine ->
 		private: System::Void PlayTimer_Tick(System::Object^ sender, System::EventArgs^ e) {
 
-			// Inkrementer nuværende playback frame variabel
+			// Increment the current playback frame variable
 			CurrentPlayBackFrameValue = CurrentPlayBackFrameValue + 1;
 
-			// Kontroller om nuværende playback frame er over det maksimale antal frames
+			// Check whether the current playback frame is above the maximum number of frames
 			if (CurrentPlayBackFrameValue > RecordingAnalysisModeFileInfo.NumberOfFrames) {
 				
-				// Nulstil nuværende playback frame variabel
+				// Reset the current playback frame variable
 				CurrentPlayBackFrameValue = 0;
 
 			}
 
-			// Opdater Trackbar værdi fra Frame Indeks værdi
+			// Update the trackbar value from the frame index value
 			this->FrameTrackBar->Value = CurrentPlayBackFrameValue;
-			// Opdater nuværende frame informations label
+			// Update the current frame information label
 			this->CurrentFrameLabel->Text = RMH_Conversion_IntToSystemString(CurrentPlayBackFrameValue) + " Frames";
 
-			// Opdater tilbageværende og Forløbet tids labels
+			// Update the remaining and elapsed time labels
 			FormatUpdataAndDisplayElapsedAndRemainingTimeLabels();
 
 		}

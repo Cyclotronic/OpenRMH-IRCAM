@@ -22,7 +22,7 @@
 static std::vector<std::string> EmissivityTableHeaderStrings = { "Type Of Material:",
 																 "Emissivity Value:" };
 
-// Tilgængelige Applikations Color Palettes navne ->
+// Available application color palette names ->
 static std::vector<std::string> EmissivityMaterialNames = { "Camera Default",
 															"Perfect BlackBody",
 															"Aluminum, Polished",
@@ -101,7 +101,7 @@ static std::vector<std::string> EmissivityMaterialNames = { "Camera Default",
 															"Water",
 															"Zinc, Sheet" };
 
-// Tilhørende Emissivity Værdier For Matrialer
+// Associated emissivity values for materials
 static float MaterialEmissivityValues[77] = { 0.98, 1.00, 0.05, 0.07, 0.25, 0.96, 0.78, 0.94, 0.96, 
 											  0.22, 0.03, 0.85, 0.85, 0.94, 0.55, 0.10, 0.80, 0.81, 
 											  0.21, 0.96, 0.10, 0.91, 0.54, 0.01, 0.07, 0.65, 0.88, 

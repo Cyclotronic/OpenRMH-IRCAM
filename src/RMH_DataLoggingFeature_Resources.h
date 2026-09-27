@@ -20,7 +20,7 @@
 #define _DataLoggingDelimiterIndex_Space           3       
 #define _DataLoggingDelimiterIndex_Tab             4 
 
-// Tilgængelige Data Logging CSV Delimiter ->
+// Available data logging CSV delimiters ->
 static std::vector<std::string> DataLoggingCSVDataDelimiters = { "Comma", "Semicolon", "Colon", "Space", "Tab" };
 
 #endif /* RMH_DataLoggingFeature_Resources_H */

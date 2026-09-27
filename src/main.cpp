@@ -4,55 +4,55 @@
  *
  *  Author: Rune Mark Hansen
  *  Start Date: April 2023
- *  Opdaterede: 25-09-2026
+ *  Updated: 25-09-2026
  * 
  *  TODO:
  * 
- *    Ideer ->
+ *    Ideas ->
  *   
- *    Store Opgaver ->
+ *    Large tasks ->
  * 	
- *		- Opdater Histogram Til PBO OpenGL
- *		- Opdater LiveView Snapshot Funktionalitet (BITMAP)
- *		- Opdater Temperatur Alarm Funktionalitet
- *      - Opdater Periodisk Trigger Funktionalitet
- *		- Test Ny 2D Plot Hastighed!
- *		- Hvis Surface Plot Formen er Undocked Med 2D Plot Formen Undocked, så kan Surface Plot Line Mode Ikke Ændres?
- *		- Opdater Applikation Med Hurtigere Surface Plot Med Vertex Arrays mm
- *      - Opdater Applikation Til At benytte Nye, Moderne Og Hurtigere OpenGL Rengerering.
+ *		- Update the histogram to PBO OpenGL
+ *		- Update the live view snapshot functionality (BITMAP)
+ *		- Update the temperature alarm functionality
+ *      - Update the periodic trigger functionality
+ *		- Test the new 2D plot speed!
+ *		- If the surface plot form is undocked with the 2D plot form undocked, then the surface plot line mode cannot be changed?
+ *		- Update the application with a faster surface plot using vertex arrays etc.
+ *      - Update the application to use new, modern and faster OpenGL rendering.
  * 
- *    Medium Opgaver ->
+ *    Medium tasks ->
  *   
- *    Små Opgaver ->
+ *    Small tasks ->
  *		
- *		- Tilføj alarm "Nulstil Event Trigger" som en periodisk trigger mulighed
- *		- Gem Sessionens Live View Roterings Indstilling 
- *		- Tilføj TNV256i Kamera
- *		- Tilføj HT203U Kamera (Tiny1-C Sensor)
- *		- Tilføj HIKMICRO Mini2Plus
- *      - Tilføj TOOLTOP T7 Kamera (Test Om P2/Pro Variant...)
+ *		- Add alarm "reset event trigger" as a periodic trigger option
+ *		- Save the live view rotation setting of the session 
+ *		- Add TNV256i camera
+ *		- Add HT203U camera (Tiny1-C sensor)
+ *		- Add HIKMICRO Mini2Plus
+ *      - Add TOOLTOP T7 camera (test whether it is a P2/Pro variant...)
  * 
- *    Fundet Fejl, Eller Kontroller Feature ->
+ *    Found errors, or features to check ->
  * 
- *		- Recording Analysis Mode - High Range Problem!!
- *		- High Range Look-up tabel for T2S+_V2 matcher ikke (Kontroller Udregninger) (Muligvis Grundet & 0x3FFF i linjen: TemperatureLookUpTabel[PixelValue & 0x3FFF])
- *		- Find Ud af hvordan man trigger en shutter kalibrering for InfiRay P2/P2Pro (Pool 2 kameraer)
- *		- Find Ud af hvordan man skifter temperatur Range for InfiRay P2/P2Pro (Pool 2 kameraer)
+ *		- Recording Analysis mode - high range problem!!
+ *		- The high range look-up table for T2S+_V2 does not match (check the calculations) (possibly due to & 0x3FFF in the line: TemperatureLookUpTabel[PixelValue & 0x3FFF])
+ *		- Find out how to trigger a shutter calibration for InfiRay P2/P2Pro (pool 2 cameras)
+ *		- Find out how to switch the temperature range for InfiRay P2/P2Pro (pool 2 cameras)
  * 
- *    Er Fixet Eller Tilføjet -> 
+ *    Fixed or added -> 
  * 
- *	  SKAL KONTROLLERES FØRST!
- *		- Kontroller Snapshot Temperatur Data For P2 Kameraer
- *		- HIGH Range For T2 V2 Kamera Serier 
+ *	  MUST BE CHECKED FIRST!
+ *		- Check the snapshot temperature data for P2 cameras
+ *		- HIGH range for T2 V2 camera series 
  * 
  *      
  *		 
  */
 
-// Deaktiver applikations Console
+// Disable the application console
 #pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup")
 
-// Inkluderede Blblioteker
+// Included libraries
 #include "MainGUI.h"
 #include "SplashScreen.h"
 
@@ -71,7 +71,7 @@ void main() {
 	// Applicationen Benytter den globale default Text render 
 	System::Windows::Forms::Application::SetCompatibleTextRenderingDefault(false);
 
-	// Vis Start Splash Screen
+	// Show the start splash screen
 	System::Windows::Forms::Application::Run(gcnew SplashScreen());
 	// Start Main GUI applikation
 	System::Windows::Forms::Application::Run(gcnew MainGUI());

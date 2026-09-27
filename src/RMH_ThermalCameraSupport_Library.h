@@ -13,7 +13,7 @@
 #ifndef RMH_ThermalCameraSupport_Library_H 
 #define RMH_ThermalCameraSupport_Library_H
 
-// Inkluderede Blbiloteker
+// Included libraries
 #include <string>
 #include <vector>
 
@@ -34,16 +34,16 @@ struct ROIAreaPixelInfoFormat {
 
 };
 
-// ----------------------------------- Tilhørende Klasser ----------------------------------- //
+// ----------------------------------- Associated Classes ----------------------------------- //
 
-// Tilhørende Namespace Til Klasse
+// Associated namespace for the class
 namespace ThermalCameraDevice {
 
     // IR Kamera Device informations Klasse 
     class IRCameraDeviceFormat {
     public:
 
-        // Termisk kamera identifikations index og pool variabler
+        // Thermal camera identification index and pool variables
         unsigned int SellectedCameraIndex = 0;
         unsigned short ThermalCameraSupportPool = 0;
 
@@ -51,24 +51,24 @@ namespace ThermalCameraDevice {
         unsigned int FrameWidthPixelOffset = 0;
         unsigned int FrameHeightPixelOffset = 0;
 
-        // Kamera Frame Rate variabler
+        // Camera frame rate variables
         double FrameRate = 0.0;
         double CameraFrameRateSum = 0.0;
         unsigned int CameraFrameRateSumCounter = 0;
         double CameraAverageFrameRate = 0.0;
 
-        // Diverse Variabler & Objekter
+        // Miscellaneous variables & objects
         std::string StatusMessage = "NAN";
         bool ConnectedFlag = false;  
         bool isStreaming = false;
         unsigned long NumbOfCapturedFrames = 0;
         unsigned char CurrentIRTempRangeFlag = 1; // '1' - LowRange, '2' - High Range 
 
-        // Suporterede Termisk Kamera Pool 2 specifikke variabler
+        // Supported thermal camera pool 2 specific variables
         double ObjectEnvirTempCorrectionFactor = 0.0;
         double ObjectEnvirTempCorrectionOffset = 0.0;
 
-        // Konstante Variabler & Objekter
+        // Constant variables & objects
         std::string CameraDeviceName = "NAN";
         std::string CameraSystemDevicePath = "NAN";
         unsigned char IRCameraDeviceIndex = 0;
@@ -83,23 +83,23 @@ namespace ThermalCameraDevice {
         unsigned int FrameHeight = 0;
         unsigned int FrameMetadataSize = 0;
 
-        // Statiske Meta Data Variabler & Objekter
+        // Static metadata variables & objects
         unsigned short Tmax_X = 0;            // Frame Max Temp X-Kordinat
         unsigned short Tmax_Y = 0;            // Frame Max Temp Y-Kordinat
-        unsigned short Tmax_Tmp_Raw = 0;      // Frame Max Temp Rå Data
+        unsigned short Tmax_Tmp_Raw = 0;      // Frame max temp raw data
         unsigned short Tmin_X = 0;            // Frame Min Temp X-Kordinat
         unsigned short Tmin_Y = 0;            // Frame Min Temp Y-Kordinat
-        unsigned short Tmin_Tmp_Raw = 0;      // Frame Min Temp Rå Data
-        double Tavg_Tmp_Raw = 0;              // Frame Sensor Gennemsnitlig Værdi
-        unsigned short Center_Tmp_Raw = 0;    // Frame Center Temp Rå Data
-        unsigned short temp_fpa_Raw = 0;      // IR Kamera Detector Temp Rå Data
-        unsigned short temp_shutter_Raw = 0;  // IR Kamera Shutter Temp Rå Data
-        unsigned short temp_core_Raw = 0;     // IR Kamera Core Temp Rå Data
+        unsigned short Tmin_Tmp_Raw = 0;      // Frame min temp raw data
+        double Tavg_Tmp_Raw = 0;              // Frame sensor average value
+        unsigned short Center_Tmp_Raw = 0;    // Frame center temp raw data
+        unsigned short temp_fpa_Raw = 0;      // IR camera detector temp raw data
+        unsigned short temp_shutter_Raw = 0;  // IR camera shutter temp raw data
+        unsigned short temp_core_Raw = 0;     // IR camera core temp raw data
         double temp_fpa = 0.0;                // IR Kamera Detector Temp (Udregnede)
         double temp_shutter = 0.0;            // IR Kamera Shutter Temp (Udregnede)
         double temp_core = 0.0;               // IR Kamera Core Temp (Udregnede)
 
-        // Statiske Kalibrerings Variabler
+        // Static calibration variables
         float CalValue0 = 0.0;
         float CalValue1 = 0.0;
         float CalValue2 = 0.0;
@@ -107,7 +107,7 @@ namespace ThermalCameraDevice {
         float CalValue4 = 0.0;
         float CalValue5 = 0.0;
 
-        // Interne Kamera Konfigurations parameter Variabler
+        // Internal camera configuration parameter variables
         float TemperatureCorrectionSetting = 0.0;
         float ReflectedTemperatureSetting = 0.0;
         float AmbientTemperatureSetting = 0.0;
@@ -115,14 +115,14 @@ namespace ThermalCameraDevice {
         float EmissivitySetting = 0.0;
         float DistanceSetting = 0.0;
 
-        // Kamera Temperatur Loop-Up Tabel array
+        // Camera temperature look-up table array
         double TemperatureLookUpTabel[16384];
         
     };
 
 }
 
-// -------------------------------- Kamera Initialiserings, Konfigurations & Håndterings Routiner -------------------------------- //
+// -------------------------------- Camera Initialization, Configuration & Handling Routines -------------------------------- //
 
 double RMH_IRThermalCamera_ReadCameraFPS();
 void RMH_IRThermalCamera_StartCapturing();
@@ -135,26 +135,26 @@ void RMH_IRThermalCamera_SetIRCameraTemperatureRange(unsigned int TemperatureRan
 void RMH_IRThermalCamera_InitIRCameraConstants(ThermalCameraDevice::IRCameraDeviceFormat* CameraStatus, unsigned short SupportedCameraPool);
 ThermalCameraDevice::IRCameraDeviceFormat RMH_IRThermalCamera_ConnectToThermalCamera(System::Windows::Forms::ComboBox^ CameraSourceComboBox);
 
-// ---------------------------------- Rå Billede Data Til Rå Termisk Data Konverterings Routine ---------------------------------- //
+// ---------------------------------- Raw Image Data To Raw Thermal Data Conversion Routine ---------------------------------- //
 
 double RMH_IRThermalCamera_ConvertYUY2To14BitThermalDataArray(ThermalCameraDevice::IRCameraDeviceFormat* IRCamera, unsigned char* YUY2in, unsigned short* ThermalDataRaw);
 void RMH_IRThermalCamera_Convert14BitThermalDataArrayToYUY2(unsigned short* ThermalData, unsigned char* YUY2Out, unsigned int FrameWidth, unsigned int FrameHeight);
 
-// --------------------------------- Termisk Kamera Region Of Interest (ROI) Håndterings Routine --------------------------------- //
+// --------------------------------- Thermal Camera Region Of Interest (ROI) Handling Routine --------------------------------- //
 
 ROIAreaPixelInfoFormat RMH_IRThermalCamera_ReadROIAreaPixelInfoInsideFrameArea(ThermalCameraDevice::IRCameraDeviceFormat* IRCamera, unsigned short* ThermalData, unsigned int FrameWidth, unsigned int AreaX0Pos, unsigned int AreaY0Pos, unsigned int AreaWidth, unsigned int AreaHeight, bool ReturnROIPixels, unsigned short* ROIAreaRawPixelValues, unsigned short SupportedCameraPool);
 
-// --------------------------------- Termisk Kamera Pool Specifikke Billede Processerings Routine -------------------------------- //
+// --------------------------------- Thermal Camera Pool-Specific Image Processing Routine -------------------------------- //
 
 void RMH_IRThermalCamera_LinearAutomaticGainControlTemp(unsigned short* ThermalData, unsigned short* GainGrayscale, unsigned int FrameWidth, unsigned int FrameHeight, double MaxOutPixelVal, double MinOutPixelVal, double MaxInPixelVal, double MinInPixelVal, float TempUnitScaleFactor, float TempUnitOffsetFactor);
 
-// -------------------------------------------- Kamera Frame Data Håndterings Routiner ------------------------------------------- //
+// -------------------------------------------- Camera Frame Data Handling Routines ------------------------------------------- //
 
 bool RMH_IRThermalCamera_ReadFrameRaw(unsigned char* ImageData, unsigned int* ImageSize);
 void RMH_IRThermalCamera_ReadCalFrameMetaData(unsigned short* ThermalData, ThermalCameraDevice::IRCameraDeviceFormat* IRCamera, unsigned short SupportedCameraPool);
 void RMH_IRThermalCamera_ReadCalibrationParameters(unsigned short* ThermalData, ThermalCameraDevice::IRCameraDeviceFormat* IRCamera, unsigned short SupportedCameraPool);
 
-// --------------------------------------- Kamera Konfigurations Data Håndterings Routiner --------------------------------------- //
+// --------------------------------------- Camera Configuration Data Handling Routines --------------------------------------- //
 
 void RMH_IRThermalCamera_ReadCameraConfigParameters(unsigned short* ThermalData, ThermalCameraDevice::IRCameraDeviceFormat* IRCamera, unsigned short SupportedCameraPool);
 void RMH_IRThermalCamera_WriteCameraConfigParameter(unsigned int ParameterAddress, float ParameterValue, unsigned short SupportedCameraPool);
@@ -171,12 +171,12 @@ void RMH_IRThermalCamera_GenerateThermoGrapicLookUpTable(ThermalCameraDevice::IR
 double RMH_IRThermalCamera_ReadPixelTemperature(ThermalCameraDevice::IRCameraDeviceFormat* IRCamera, unsigned short PixelValue, unsigned short SupportedCameraPool);
 double RMH_IRThermalCamera_ReadFramePixelTemperature(ThermalCameraDevice::IRCameraDeviceFormat* IRCamera, unsigned short* ThermalData, unsigned short PixelWidth, unsigned short PixelHeight, unsigned short SupportedCameraPool);
 
-// ------------------------------- Recording/Snapshot Analysis Mode Kamera Pool Spesifikke Routine ------------------------------- //
+// ------------------------------- Recording/Snapshot Analysis Mode Camera Pool-Specific Routines ------------------------------- //
 
 void RMH_IRThermalCamera_WriteDataToVideoRecordingFilesSequence(unsigned short SupportedCameraPool);
 bool RMH_IRThermalCamera_ConvertCapturedRawImageDataToSnapshotPNG(unsigned short SupportedCameraPool);
 
-// --------------------------------- Termisk Kamera Pool Specifikke Håndterings/Kontrol Routiner --------------------------------- //
+// --------------------------------- Thermal Camera Pool-Specific Handling/Control Routines --------------------------------- //
 
 void RMH_IRThermalCamera_AutoShutterCalTimerCallbackHandler();
 void RMH_IRThermalCamera_TempDriftBasedCalTimerCallbackHandler();

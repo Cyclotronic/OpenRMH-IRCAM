@@ -127,7 +127,7 @@ namespace IRCAMThermalViewer {
 
 	private: System::Void timer1_Tick(System::Object^ sender, System::EventArgs^ e) {
 
-		// Luk Splash Screen
+		// Close the splash screen
 		this->Close();
 
 	}

@@ -7,19 +7,19 @@
  *
  */
 
-// Maximum Frame Data Array Størrelse
-#define MaximumFrameDataArraySize       (1600 * 1200 * 3) // Bredde * Højde * Bånd
+// Maximum frame data array size
+#define MaximumFrameDataArraySize       (1600 * 1200 * 3) // Width * height * bands
 
-// Inkluderede Resourcer
+// Included resources
 #include "GlobalObjectsAndVariables.h"
 #include "RMH_ThermalCameraSupport_Library.h"
 
-// Inkluderede Resourcer
+// Included resources
 #include "RMH_CustomColorPalette_Resources.h"
 #include "RMH_TemperatureAlarms_Resources.h"
 #include "RMH_GeneralTriggerEvent_Resources.h"
 
-// Definition af globale Extern Objekter
+// Definition of global extern objects
 IRCameraDeviceFormat IRCamera;
 
 // Live view elementers Farve globale variable
@@ -84,7 +84,7 @@ bool isLiveViewToolsFormOpen = false;
 bool isLiveViewToolsFormDocked = false;
 bool isLiveViewToolsFormUndocked = false;
 
-// Definition af globale Extern Variabler
+// Definition of global extern variables
 bool ThreadStoppedFlag = false;
 bool ThreadDataReadyFlag = false;
 bool CameraConnectErrorFlag = false;
@@ -210,7 +210,7 @@ double TempLinesTemperatureValues[_MaxNumberOfMovableLines][_MovableLinesMaxPixe
 unsigned int RecordingFrameRateSetValue = 25;
 unsigned int RecordingFrameRateTimeOutCounter = 0;
 
-// Data Logging Objekter og variabler
+// Data logging objects and variables
 bool DataLoggingIsRunningFlag = false;
 unsigned char DataLoggingNumberOfActiveSets = 0;
 unsigned long DataLoggingIntervalMilliSec = 1000;
@@ -228,7 +228,7 @@ double* DataLoggingDataSet8SourcePointer = &ROIAreaPixelValues[0].MaxValue;
 double* DataLoggingDataSet9SourcePointer = &ROIAreaPixelValues[0].MinValue;
 double* DataLoggingDataSet10SourcePointer = &CursorTemperature;
 
-// Temperatur Alarm Variabler og Objekter
+// Temperature alarm variables and objects
 bool TempAlarmsConfigMenuIsOpen = false;
 bool TempAlarmTriggerSoundFlag = false;
 bool TempAlarmsTriggerEventsEnableFlag = false;
@@ -245,7 +245,7 @@ double* TempAlarm3DataSourcePointer = &CenterTemperature;
 double* TempAlarm4DataSourcePointer = &TempMeasurementValues[0];
 double* TempAlarm5DataSourcePointer = &TempMeasurementValues[1];
 
-// 2D Plot Data Sæt Source Pointers
+// 2D plot data set source pointers
 unsigned char Plot2DDataSetLineColorsR[_2DPlotMaxNumberOfDataSets] = {255,  0, 50,255,255,255,  0,255,128,128};
 unsigned char Plot2DDataSetLineColorsG[_2DPlotMaxNumberOfDataSets] = {  0,  0,205,255,128,  0,255,255,128,255};
 unsigned char Plot2DDataSetLineColorsB[_2DPlotMaxNumberOfDataSets] = {  0,255, 50,  0,  0,255,255,255,128,128};
@@ -260,7 +260,7 @@ double *Plot2DDataSet8SourcePointer = &ROIAreaPixelValues[0].MaxValue;
 double *Plot2DDataSet9SourcePointer = &ROIAreaPixelValues[0].MinValue;
 double *Plot2DDataSet10SourcePointer = &CursorTemperature;
 
-// Generalle Og Periodiske Trigger Event Timer Objekter og variabler
+// General and periodic trigger event timer objects and variables
 bool PeriodicTriggerEventEnableFlags[_MaxNumberOfConfigurablePeriodicTriggerEvents] = { false, false, false, false, false };
 unsigned int PeriodicEventTriggerCounter[_MaxNumberOfConfigurablePeriodicTriggerEvents] = { 0, 0, 0, 0, 0 };
 

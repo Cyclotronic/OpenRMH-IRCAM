@@ -15,7 +15,7 @@
 // Applikationens Discord Server URL Link String
 static std::string DiscordServerLinkAddress = "https://discord.gg/3zq3zXFA8B";
 
-// Applikationens Preset Fil Navn ->
+// Preset file name of the application ->
 static std::string Application_PresetFileName = "IRCAMApplicationPreset.txt";
 
 // Applikationens Information ->
@@ -25,7 +25,7 @@ static std::string Application_Revision = "";
 static std::string Application_VersionMonth = "September";
 static std::string Application_VersionYear = "2026";
 
-// GUI Informations og versions string (Vises i toppen af GUIen)
+// GUI information and version string (shown at the top of the GUI)
 static std::string ApplicationInformationString = Application_Name + " - [Developed & Written By: Rune Mark Glendorf, " + Application_VersionMonth + " " + Application_VersionYear + " - Version " + Application_VersionNumber + Application_Revision + "]";
 
 #endif /* RMH_Application_Information_H */

@@ -1,6 +1,6 @@
 #pragma once
 
-// Inkluderede Blblioteker
+// Included libraries
 #include "GlobalObjectsAndVariables.h"
 #include "RMH_Application_ColorBarAndPalette.h"
 #include "RMH_OpenGL_ColorBar.h"
@@ -10,7 +10,7 @@
 
 namespace IRCAMThermalViewer {
 
-	// Tilhørende namespaces
+	// Associated namespaces
 	using namespace System;
 	using namespace System::ComponentModel;
 	using namespace System::Collections;
@@ -21,19 +21,19 @@ namespace IRCAMThermalViewer {
 	// Summary for Form - LiveViewStream
 	public ref class LiveViewStream : public System::Windows::Forms::Form {
 
-		// ------------------------------ Lokale Form Reference Struktur ------------------------------ //
+		// ------------------------------ Local Form Reference Structure ------------------------------ //
 
-		// Lokale Reference struktur
+		// Local reference structure
 		ref struct ManagedLocals {
 
-			// Live View Tools Form statiske Objekter og variabler
+			// Live view tools form static objects and variables
 			static IRCAMThermalViewer::LiveViewTools^ LiveViewToolsForm;
 
 		};
 
-		// ----------------------------- Lokale Form Reference Variabler ------------------------------ //
+		// ----------------------------- Local Form Reference Variables ------------------------------ //
 
-		// Private Globale klasse objekter og variabler
+		// Private global class objects and variables
 		bool LiveViewSplitViewToggleflag = true;
 		#define _LiveViewStream_DefaultSplitterDistanceRatio          0.50
 
@@ -45,9 +45,9 @@ namespace IRCAMThermalViewer {
 
 		LiveViewStream(void) {
 
-			// Init GUI komponenter og objekter
+			// Init GUI components and objects
 			InitializeComponent();
-			// Formater arrays Og Objekter af winform komponenter til global brug
+			// Format arrays and objects of WinForms components for global use
 			InitializeComponentArraysAndGlobalObjects();
 
 			// Aktiver Applikationens TitelBars Dark Mode
@@ -64,13 +64,13 @@ namespace IRCAMThermalViewer {
 
 		}
 
-		// ---------------------------- Diverse Tilhørende Klasse Metoder ----------------------------- //
+		// ---------------------------- Miscellaneous Associated Class Methods ----------------------------- //
 
 		void InitializeComponentArraysAndGlobalObjects(void) {
 
-			// Routinen formaterer arrays af winform komponenter til global brug
+			// This routine formats arrays of WinForms components for global use
 
-			// Initiliser globale form objekter
+			// Initialize global form objects
 			GlobalVariables::OpenGLRender = gcnew OpenGLWinForms::RMHOpenGLWF(this->LiveViewStreamPanel, 4);
 			GlobalVariables::OpenGLColorBar = gcnew OpenGLColorBar::RMHOpenGLColorBar(this->ColorBarMainPanel, 2);
 			GlobalVariables::OpenGLHistogram = gcnew OpenGLHistogram::RMHOpenGLHistogram(this->LiveViewHistogramPanel, 2);
@@ -108,7 +108,7 @@ namespace IRCAMThermalViewer {
 			// Opdater Live View Tools panelets synligheds flag
 			LiveViewToolsPanelVisibilityFlag = true;
 
-			// Gør Live View Tools Panelet syneligt
+			// Make the live view tools panel visible
 			this->LiveViewToolsPanel->Visible = LiveViewToolsPanelVisibilityFlag;
 
 			// Dock Live View Tools Form i Live View Formen ved start-op
@@ -118,12 +118,12 @@ namespace IRCAMThermalViewer {
 
 		void HandleLiveViewButtonsHotKeyFunctions(System::Windows::Forms::KeyPressEventArgs^ e) {
 
-			// Routinen håndterer live view funktions knappernes HotKeys 
+			// This routine handles the hotkeys of the live view function buttons 
 
-			// Hvilken knap er blevet trykket
+			// Which button has been pressed
 			switch (e->KeyChar) {
 
-				// Eksikver Hot Key funktion
+				// Execute the hotkey function
 				case '9': ManagedLocals::LiveViewToolsForm->DualColorPaletteButton_Click(nullptr, nullptr);										break; // Live View Dual Color Palette - HotKey: 9
 				case '8': ManagedLocals::LiveViewToolsForm->CursorTempTrackButton_Click(nullptr, nullptr);										break; // Mouse Point Temp Tracking - HotKey: 8
 				case '7': ManagedLocals::LiveViewToolsForm->AddROIMeasButton_Click(nullptr, nullptr);											break; // Add Live View ROI - HotKey: 7
@@ -166,7 +166,7 @@ namespace IRCAMThermalViewer {
 				case 'p':
 				case 'P': ManagedLocals::LiveViewToolsForm->PeriodicTimerTriggerButton_Click(nullptr, nullptr);									break; // Live View Periodisk Trigger - HotKey: P & p
 				case 'r':
-				case 'R': GlobalVariables::OpenGLRender->RMH_OpenGL_RotateLiveViewCW();															break; // Roter Live view billedet med 90 grader CW - HotKey: R & r
+				case 'R': GlobalVariables::OpenGLRender->RMH_OpenGL_RotateLiveViewCW();															break; // Rotate the live view image by 90 degrees CW - hotkey: R & r
 
 			}
 
@@ -174,65 +174,65 @@ namespace IRCAMThermalViewer {
 
 		void HandleFormsOpeningDockingAndUndocking(System::Windows::Forms::Form^ FormObject, System::Windows::Forms::Panel^ ParentPanel, bool* FormOpenedFlag, bool* FormDockedFlag, bool* FormUndockedFlag, unsigned short FormState) {
 
-			// Routinen håndterer Docking og Undocking af de forskellige Forms
+			// This routine handles docking and undocking of the different forms
 
 			// ---------------------------------------------------------------- Docking/Undocking Procedure ---------------------------------------------------------------- //
 
-			// Skal en Form Dockes til parent panelet
+			// Should a form be docked to the parent panel
 			if (FormState == _FormDockingState_DockForm) {
 
-				// Hvis Valgte Form allerede er åben
+				// If the selected form is already open
 				if (*FormOpenedFlag == true) {
 
-					// Luk valgte Formen før docking
+					// Close the selected form before docking
 					RMH_Winforms_CloseForm(FormObject, FormOpenedFlag, FormDockedFlag, FormUndockedFlag);
 
 				}
 
-				// Åben og dock form i main GUIens Main Panel
+				// Open and dock the form in the main panel of the main GUI
 				RMH_Winforms_OpenAndDockFormInParentPanel(FormObject, ParentPanel, FormOpenedFlag, FormDockedFlag, FormUndockedFlag);
 
 			}
 
-			// Skal en Form Undockes fra parent panelet
+			// Should a form be undocked from the parent panel
 			if (FormState == _FormDockingState_UndockForm) {
 
-				// Hvis Main View panelet er parent til valgte Form Objekt
+				// If the main view panel is the parent of the selected form object
 				if (FormObject->Parent == ParentPanel) {
 
-					// Nulstil Formens Parent 
+					// Reset the parent of the form 
 					FormObject->Parent = nullptr;
-					// Fjern Formen som en "Control" fra givet "Parent" Panel
+					// Remove the form as a "control" from the given "parent" panel
 					ParentPanel->Controls->Clear();
 
 				}
 
-				// Kontroller om formen er åben, med ikke docked
+				// Check whether the form is open, but not docked
 				if (*FormOpenedFlag == true && *FormDockedFlag == false) {
 
-					// Luk Formen
+					// Close the form
 					RMH_Winforms_CloseForm(FormObject, FormOpenedFlag, FormDockedFlag, FormUndockedFlag);
 
-					// Undock Formen og åben i seperat vindue
+					// Undock the form and open it in a separate window
 					RMH_Winforms_OpenFormInSeperateWindow(FormObject, FormOpenedFlag, FormDockedFlag, FormUndockedFlag);
 
 				}
 
-				// Kontroller om formen er åben og docked
+				// Check whether the form is open and docked
 				if (*FormOpenedFlag == true && *FormDockedFlag == true) {
 
-					// Luk Formen
+					// Close the form
 					RMH_Winforms_CloseForm(FormObject, FormOpenedFlag, FormDockedFlag, FormUndockedFlag);
 
-					// Undock Formen fra Parent panelet og åben i seperat vindue
+					// Undock the form from the parent panel and open it in a separate window
 					RMH_Winforms_UndockFormFromParentPanel(FormObject, ParentPanel, FormOpenedFlag, FormDockedFlag, FormUndockedFlag, System::Windows::Forms::FormBorderStyle::FixedToolWindow);
 
 				}
 
-				// Kontroller om formen ikke er åben og ikke er docked
+				// Check whether the form is not open and not docked
 				if (*FormOpenedFlag == false && *FormDockedFlag == false) {
 
-					// Undock Formen og åben i seperat vindue
+					// Undock the form and open it in a separate window
 					RMH_Winforms_OpenFormInSeperateWindow(FormObject, FormOpenedFlag, FormDockedFlag, FormUndockedFlag);
 
 				}
@@ -254,7 +254,7 @@ namespace IRCAMThermalViewer {
 
 			if (components) {
 
-				// Slet alle Form Komponenter
+				// Delete all form components
 				delete components;
 
 			}
@@ -2587,14 +2587,14 @@ namespace IRCAMThermalViewer {
 		// Live View Stream Form Opstartnings Callback Routine -> 
 		private: System::Void LiveViewStream_Shown(System::Object^ sender, System::EventArgs^ e) {
 
-			// Opdater Aktivering eller deaktivering af label baggrunden - fra læst sessions data
+			// Update the enabling or disabling of the label background - from the session data read
 			GlobalVariables::OpenGLRender->RMH_OpenGL_EnableLabelBackground(EnableLabelBackgroundFlag);
-			// Opdater Live view labels farve - fra læst sessions data
+			// Update the live view label color - from the session data read
 			GlobalVariables::OpenGLRender->RMH_OpenGL_ChangeRenderedLabelsColor(CommonLabelColorR, CommonLabelColorG, CommonLabelColorB);
-			// Opdater Live view labels baggrunds farve - fra læst sessions data
+			// Update the live view label background color - from the session data read
 			GlobalVariables::OpenGLRender->RMH_OpenGL_ChangeLabelBackgroundColor(CommonLabelBackgroundColorR, CommonLabelBackgroundColorG, CommonLabelBackgroundColorB);
 
-			// Opdater tilhørende form Flag
+			// Update the associated form flag
 			isLiveViewStreamFormOpen = true;
 
 		}
@@ -2602,24 +2602,24 @@ namespace IRCAMThermalViewer {
 	    // Live View Stream Form Nedluknings Callback Routine -> 
 		private: System::Void LiveViewStream_FormClosing(System::Object^ sender, System::Windows::Forms::FormClosingEventArgs^ e) {
 
-			// Opdater tilhørende form Flag
+			// Update the associated form flag
 			isLiveViewStreamFormOpen = false;
 			isLiveViewStreamFormDocked = false;
 			isLiveViewStreamFormUndocked = false;
 
-			// Når Formen lukkes - Gem Formen
+			// When the form is closed - hide the form
 			this->Hide();
-			// Deaktiver "Disposing" Af Form Objektet
+			// Disable "disposing" of the form object
 			e->Cancel = true;
 
 		}
 
 	    // -------------------- Color Palette & ColorBar Event & Callback Routiner -------------------- //
 		
-		// Histogram Antal Bins Context Menu Strip Callback Routine -> 
+		// Histogram number of bins context menu strip callback routine -> 
 		private: System::Void HistogramNumberOfBinsContextMenu_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Indstil Histogrammets Antal Rendereret Bins
+			// Set the number of bins rendered by the histogram
 			GlobalVariables::OpenGLHistogram->RMH_OpenGL_SetHistogramNumberOfBins(sender);
 
 		}
@@ -2629,19 +2629,19 @@ namespace IRCAMThermalViewer {
 		// Toggle Live View Tools panel synlighed Callback Routine -> 
 		private: System::Void toggleToolsPanelVisibilityToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Kontroller om Live View Tools panelet er undocked
+			// Check whether the live view tools panel is undocked
 			if (isLiveViewToolsFormUndocked != true) {
 
 				// Toggle Live View Tools panelets synligheds flag
 				LiveViewToolsPanelVisibilityFlag = !LiveViewToolsPanelVisibilityFlag;
 
-				// Gør Live View Tools Panelet usyneligt/usyneligt
+				// Make the live view tools panel visible/invisible
 				this->LiveViewToolsPanel->Visible = LiveViewToolsPanelVisibilityFlag;
 
 			}
 			else {
 
-				// Skriv GUI Status Meddelse
+				// Write GUI status message
 				RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "Live View Tools Panel Is Undocked.", _StatusMessageType_Warning);
 
 			}
@@ -2654,7 +2654,7 @@ namespace IRCAMThermalViewer {
 			// Toggle ColorBar panelets synligheds flag
 			ColorBarPanelVisibilityFlag = !ColorBarPanelVisibilityFlag;
 
-			// Gør Live View Tools Panelet usyneligt/usyneligt
+			// Make the live view tools panel visible/invisible
 			ColorBarMainPanel->Visible = ColorBarPanelVisibilityFlag;
 
 		}
@@ -2668,55 +2668,55 @@ namespace IRCAMThermalViewer {
 			// Opdater Live View Tools panelets synligheds flag
 			LiveViewToolsPanelVisibilityFlag = false;
 
-			// Gør Live View Tools Panelet usyneligt
+			// Make the live view tools panel invisible
 			this->LiveViewToolsPanel->Visible = LiveViewToolsPanelVisibilityFlag;
 
 		}
 
-		// Live View Billede CW Roterings Callback Routine ->
+		// Live view image CW rotation callback routine ->
 		private: System::Void RotateLiveViewCWStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Roter Live view billedet med 90 grader CW
+			// Rotate the live view image by 90 degrees CW
 			GlobalVariables::OpenGLRender->RMH_OpenGL_RotateLiveViewCW();
 
 		}
 
-		// Live View Billede CCW Roterings Callback Routine ->
+		// Live view image CCW rotation callback routine ->
 		private: System::Void RotateLiveViewCCWStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Roter Live view billedet med 90 grader CCW
+			// Rotate the live view image by 90 degrees CCW
 			GlobalVariables::OpenGLRender->RMH_OpenGL_RotateLiveViewCCW();
 
 		}
 
-		// Aktiver/Deaktiver Mus Hjul Live View Roterings Feature Callback Routine ->
+		// Enable/disable mouse wheel live view rotation feature callback routine ->
 		private: System::Void EnableDisableMouseWheelRotation_Click(System::Object^ sender, System::EventArgs^ e) {
 
 			// Cast Sender objekt som Forms Tool Strip objekt
 			System::Windows::Forms::ToolStripMenuItem^ EnableFlagItemTag = (System::Windows::Forms::ToolStripMenuItem^)sender;
 
-			// Læs Sub Context Menu identifikations tag og indstil globale enable flag
+			// Read the sub context menu identification tag and set the global enable flag
 			bool MouseWheelRotationEnableFlag = Convert::ToBoolean(Convert::ToDouble(EnableFlagItemTag->Tag));
 
-			// Aktiver eller deaktiver live view billede rotering ved brug af Mus Scrol-Hjulet
+			// Enable or disable live view image rotation using the mouse scroll wheel
 			GlobalVariables::OpenGLRender->RMH_LiveView_EnableScrollWheelRotation(MouseWheelRotationEnableFlag);
 
 		}
 
-		// Live View Context Menu Alle Crosshair Farve Callback Routine ->
+		// Live view context menu all crosshair color callback routine ->
 		private: System::Void changeAllLabelsToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 
 			// Lokalt fare variabel
 			bool DialogAbortFlag = false;
 			System::Drawing::Color^ SelectedColor;
 
-			// Åben Farve dialog og læs valgte farve
+			// Open the color dialog and read the selected color
 			SelectedColor = RMH_Winforms_ShowAndReadColorDialog(&DialogAbortFlag);
 
 			// Kontroller farve dialog abort flag
 			if (DialogAbortFlag == false) {
 
-				// Indstil Farve til globale variabel
+				// Set the color to the global variable
 				MaxCrosshairColorR = SelectedColor->R;
 				MaxCrosshairColorG = SelectedColor->G;
 				MaxCrosshairColorB = SelectedColor->B;
@@ -2741,13 +2741,13 @@ namespace IRCAMThermalViewer {
 			bool DialogAbortFlag = false;
 			System::Drawing::Color^ SelectedColor;
 
-			// Åben Farve dialog og læs valgte farve
+			// Open the color dialog and read the selected color
 			SelectedColor = RMH_Winforms_ShowAndReadColorDialog(&DialogAbortFlag);
 
 			// Kontroller farve dialog abort flag
 			if (DialogAbortFlag == false) {
 
-				// Indstil Farve til globale variabel
+				// Set the color to the global variable
 				MaxCrosshairColorR = SelectedColor->R;
 				MaxCrosshairColorG = SelectedColor->G;
 				MaxCrosshairColorB = SelectedColor->B;
@@ -2763,13 +2763,13 @@ namespace IRCAMThermalViewer {
 			bool DialogAbortFlag = false;
 			System::Drawing::Color^ SelectedColor;
 
-			// Åben Farve dialog og læs valgte farve
+			// Open the color dialog and read the selected color
 			SelectedColor = RMH_Winforms_ShowAndReadColorDialog(&DialogAbortFlag);
 
 			// Kontroller farve dialog abort flag
 			if (DialogAbortFlag == false) {
 
-				// Indstil Farve til globale variabel
+				// Set the color to the global variable
 				MinCrosshairColorR = SelectedColor->R;
 				MinCrosshairColorG = SelectedColor->G;
 				MinCrosshairColorB = SelectedColor->B;
@@ -2785,13 +2785,13 @@ namespace IRCAMThermalViewer {
 			bool DialogAbortFlag = false;
 			System::Drawing::Color^ SelectedColor;
 
-			// Åben Farve dialog og læs valgte farve
+			// Open the color dialog and read the selected color
 			SelectedColor = RMH_Winforms_ShowAndReadColorDialog(&DialogAbortFlag);
 
 			// Kontroller farve dialog abort flag
 			if (DialogAbortFlag == false) {
 
-				// Indstil Farve til globale variabel
+				// Set the color to the global variable
 				CenterCrosshairColorR = SelectedColor->R;
 				CenterCrosshairColorG = SelectedColor->G;
 				CenterCrosshairColorB = SelectedColor->B;
@@ -2800,20 +2800,20 @@ namespace IRCAMThermalViewer {
 
 		}
 
-		// Opdater ROIers Valgte Farve Callback Routine ->
+		// Update the selected color of the ROIs callback routine ->
 		private: System::Void selectedColorToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 
 			// Lokalt fare variabel
 			bool DialogAbortFlag = false;
 			System::Drawing::Color^ SelectedColor;
 
-			// Åben Farve dialog og læs valgte farve
+			// Open the color dialog and read the selected color
 			SelectedColor = RMH_Winforms_ShowAndReadColorDialog(&DialogAbortFlag);
 
 			// Kontroller farve dialog abort flag
 			if (DialogAbortFlag == false) {
 
-				// Indstil Farve til globale variabel
+				// Set the color to the global variable
 				ROISelectedColorR = SelectedColor->R;
 				ROISelectedColorG = SelectedColor->G;
 				ROISelectedColorB = SelectedColor->B;
@@ -2822,20 +2822,20 @@ namespace IRCAMThermalViewer {
 
 		}
 
-		// Opdater ROIers Passive Farve Callback Routine ->
+		// Update the passive color of the ROIs callback routine ->
 		private: System::Void passiveColorToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 
 			// Lokalt fare variabel
 			bool DialogAbortFlag = false;
 			System::Drawing::Color^ SelectedColor;
 
-			// Åben Farve dialog og læs valgte farve
+			// Open the color dialog and read the selected color
 			SelectedColor = RMH_Winforms_ShowAndReadColorDialog(&DialogAbortFlag);
 
 			// Kontroller farve dialog abort flag
 			if (DialogAbortFlag == false) {
 
-				// Indstil Farve til globale variabel
+				// Set the color to the global variable
 				ROIPassiveColorR = SelectedColor->R;
 				ROIPassiveColorG = SelectedColor->G;
 				ROIPassiveColorB = SelectedColor->B;
@@ -2844,20 +2844,20 @@ namespace IRCAMThermalViewer {
 
 		}
 
-		// Opdater Temperatur Målingernes valgte Crosshair Farve Callback Routine ->
+		// Update the selected crosshair color of the temperature measurements callback routine ->
 		private: System::Void labelSeletedColorToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 
 			// Lokalt fare variabel
 			bool DialogAbortFlag = false;
 			System::Drawing::Color^ SelectedColor;
 
-			// Åben Farve dialog og læs valgte farve
+			// Open the color dialog and read the selected color
 			SelectedColor = RMH_Winforms_ShowAndReadColorDialog(&DialogAbortFlag);
 
 			// Kontroller farve dialog abort flag
 			if (DialogAbortFlag == false) {
 
-				// Indstil Farve til globale variabel
+				// Set the color to the global variable
 				TempMeasCrosshairSelectedColorR = SelectedColor->R;
 				TempMeasCrosshairSelectedColorG = SelectedColor->G;
 				TempMeasCrosshairSelectedColorB = SelectedColor->B;
@@ -2866,20 +2866,20 @@ namespace IRCAMThermalViewer {
 
 		}
 
-		// Opdater Temperatur Målingernes passive Crosshair Farve Callback Routine ->
+		// Update the passive crosshair color of the temperature measurements callback routine ->
 		private: System::Void labelPassiveColorToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 
 			// Lokalt fare variabel
 			bool DialogAbortFlag = false;
 			System::Drawing::Color^ SelectedColor;
 
-			// Åben Farve dialog og læs valgte farve
+			// Open the color dialog and read the selected color
 			SelectedColor = RMH_Winforms_ShowAndReadColorDialog(&DialogAbortFlag);
 
 			// Kontroller farve dialog abort flag
 			if (DialogAbortFlag == false) {
 
-				// Indstil Farve til globale variabel
+				// Set the color to the global variable
 				TempMeasCrosshairPassiveColorR = SelectedColor->R;
 				TempMeasCrosshairPassiveColorG = SelectedColor->G;
 				TempMeasCrosshairPassiveColorB = SelectedColor->B;
@@ -2888,34 +2888,34 @@ namespace IRCAMThermalViewer {
 
 		}
 
-		// Aktiver Label baggrund Context menu Callback Routine ->
+		// Enable label background context menu callback routine ->
 		private: System::Void enableBackgroundToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 
 			// Cast Sender objekt som Forms Tool Strip objekt
 			System::Windows::Forms::ToolStripMenuItem^ TagEnableLabelBackGround = (System::Windows::Forms::ToolStripMenuItem^)sender;
 
-			// Læs Sub Context Menu identifikations tag og indstil globale enable flag
+			// Read the sub context menu identification tag and set the global enable flag
 			EnableLabelBackgroundFlag = Convert::ToBoolean(Convert::ToDouble(TagEnableLabelBackGround->Tag));
 
-			// Aktiver eller deaktiver label baggrunden
+			// Enable or disable the label background
 			GlobalVariables::OpenGLRender->RMH_OpenGL_EnableLabelBackground(EnableLabelBackgroundFlag);
 
 		}
 
-		// Opdater Temperatur Linjernes valgte Label Farve Callback Routine ->
+		// Update the selected label color of the temperature lines callback routine ->
 		private: System::Void selectedColorToolStripMenuItem1_Click(System::Object^ sender, System::EventArgs^ e) {
 
 			// Lokalt fare variabel
 			bool DialogAbortFlag = false;
 			System::Drawing::Color^ SelectedColor;
 
-			// Åben Farve dialog og læs valgte farve
+			// Open the color dialog and read the selected color
 			SelectedColor = RMH_Winforms_ShowAndReadColorDialog(&DialogAbortFlag);
 
 			// Kontroller farve dialog abort flag
 			if (DialogAbortFlag == false) {
 
-				// Indstil Farve til globale variabel
+				// Set the color to the global variable
 				TempLinesSelectedColorR = SelectedColor->R;
 				TempLinesSelectedColorG = SelectedColor->G;
 				TempLinesSelectedColorB = SelectedColor->B;
@@ -2924,20 +2924,20 @@ namespace IRCAMThermalViewer {
 
 		}
 
-		// Opdater Temperatur Linjernes passive Label Farve Callback Routine ->
+		// Update the passive label color of the temperature lines callback routine ->
 		private: System::Void passiveColorToolStripMenuItem1_Click(System::Object^ sender, System::EventArgs^ e) {
 
 			// Lokalt fare variabel
 			bool DialogAbortFlag = false;
 			System::Drawing::Color^ SelectedColor;
 
-			// Åben Farve dialog og læs valgte farve
+			// Open the color dialog and read the selected color
 			SelectedColor = RMH_Winforms_ShowAndReadColorDialog(&DialogAbortFlag);
 
 			// Kontroller farve dialog abort flag
 			if (DialogAbortFlag == false) {
 
-				// Indstil Farve til globale variabel
+				// Set the color to the global variable
 				TempLinesPassiveColorR = SelectedColor->R;
 				TempLinesPassiveColorG = SelectedColor->G;
 				TempLinesPassiveColorB = SelectedColor->B;
@@ -2946,20 +2946,20 @@ namespace IRCAMThermalViewer {
 
 		}
 
-		// Opdater Live View Temperatur Labels farve Callback Routine ->
+		// Update the live view temperature labels color callback routine ->
 		private: System::Void changeLabelColorsToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 
 			// Lokalt fare variabel
 			bool DialogAbortFlag = false;
 			System::Drawing::Color^ SelectedColor;
 
-			// Åben Farve dialog og læs valgte farve
+			// Open the color dialog and read the selected color
 			SelectedColor = RMH_Winforms_ShowAndReadColorDialog(&DialogAbortFlag);
 
 			// Kontroller farve dialog abort flag
 			if (DialogAbortFlag == false) {
 
-				// Indstil Live View fælles label farve til globale variabel
+				// Set the common live view label color to the global variable
 				CommonLabelColorR = SelectedColor->R;
 				CommonLabelColorG = SelectedColor->G;
 				CommonLabelColorB = SelectedColor->B;
@@ -2971,20 +2971,20 @@ namespace IRCAMThermalViewer {
 
 		}
 
-		// Opdater Live View Labels baggrunds farve Callback Routine ->
+		// Update the live view labels background color callback routine ->
 		private: System::Void changeLabelBackgroundColorToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 
 			// Lokalt fare variabel
 			bool DialogAbortFlag = false;
 			System::Drawing::Color^ SelectedColor;
 
-			// Åben Farve dialog og læs valgte farve
+			// Open the color dialog and read the selected color
 			SelectedColor = RMH_Winforms_ShowAndReadColorDialog(&DialogAbortFlag);
 
 			// Kontroller farve dialog abort flag
 			if (DialogAbortFlag == false) {
 
-				// Indstil Live View fælles label farve til globale variabel
+				// Set the common live view label color to the global variable
 				CommonLabelBackgroundColorR = SelectedColor->R;
 				CommonLabelBackgroundColorG = SelectedColor->G;
 				CommonLabelBackgroundColorB = SelectedColor->B;
@@ -2996,64 +2996,64 @@ namespace IRCAMThermalViewer {
 
 		}
 
-		// Slet Valgte ROI Context Menu Callback Routine ->
+		// Delete selected ROI context menu callback routine ->
 		private: System::Void rOI1ToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Slet valgte ROI Tag fra Live View streamen
+			// Delete the selected ROI tag from the live view stream
 			RMH_ThermalViewer_DeleteRegionOfInterestBoxFromLiveView(sender);
 
 		}
 		
-		// Slet Alle ROI Context Menu Callback Routine ->
+		// Delete all ROIs context menu callback routine ->
 		private: System::Void deleteAllToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Slet alle aktive ROIer fra Live View streamen
+			// Delete all active ROIs from the live view stream
 			RMH_ThermalViewer_DeleteAllRegionOfInterestBoxFromLiveView();
 
 		}
 
-		// Slet Valgte Temperatur Måling Context Menu Callback Routine ->
+		// Delete selected temperature measurement context menu callback routine ->
 		private: System::Void tempMeas1ToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Slet valgte Temperatur Målings Tag fra Live View streamen
+			// Delete the selected temperature measurement tag from the live view stream
 			RMH_ThermalViewer_DeleteTemperatureMeasurementFromLiveView(sender);
 
 		}
 
-		// Slet Alle Temperatur Målinger Context Menu Callback Routine ->
+		// Delete all temperature measurements context menu callback routine ->
 		private: System::Void deleteAllToolStripMenuItem1_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Slet alle aktive Temperatur målinger fra Live View streamen
+			// Delete all active temperature measurements from the live view stream
 			RMH_ThermalViewer_DeleteAllTemperatureMeasurementFromLiveView();
 
 		}
 		
-		// Slet Valgte Temperatur linje Context Menu Callback Routine ->
+		// Delete selected temperature line context menu callback routine ->
 		private: System::Void line1ToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Slet alle aktive Temperatur linjer fra Live View streamen 
+			// Delete all active temperature lines from the live view stream 
 			RMH_ThermalViewer_DeleteTemperatureLineFromLiveView(sender);
 
 		}
 
-		// Slet Alle Temperatur linjer Context Menu Callback Routine ->
+		// Delete all temperature lines context menu callback routine ->
 		private: System::Void deleteAllToolStripMenuItem3_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Slet alle aktive Temperatur linjer fra Live View streamen 
+			// Delete all active temperature lines from the live view stream 
 			RMH_ThermalViewer_DeleteAllTemperatureLinesFromLiveView();
 
 		}
 
-		// Slet alle ROIer, Linjer og Temperatur labels Context Menu Callback Routine ->
+		// Delete all ROIs, lines and temperature labels context menu callback routine ->
 		private: System::Void deleteAllToolStripMenuItem2_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Slet alle aktive ROIer fra Live View streamen
+			// Delete all active ROIs from the live view stream
 			RMH_ThermalViewer_DeleteAllRegionOfInterestBoxFromLiveView();
 
-			// Slet alle aktive Temperatur linjer fra Live View streamen 
+			// Delete all active temperature lines from the live view stream 
 			RMH_ThermalViewer_DeleteAllTemperatureLinesFromLiveView();
 
-			// Slet alle aktive Temperatur målinger fra Live View streamen
+			// Delete all active temperature measurements from the live view stream
 			RMH_ThermalViewer_DeleteAllTemperatureMeasurementFromLiveView();
 
 		}
@@ -3061,60 +3061,60 @@ namespace IRCAMThermalViewer {
 		// ROI "Bring-To-Front" Context Menu Callback Routine ->
 		private: System::Void rOIBringToFrontToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Opdater objekt rendererings Z-ordnen for Positions justerbare Rektangler, Crosshairs Og Linjer
+			// Update the object rendering Z-order for position-adjustable rectangles, crosshairs and lines
 			GlobalVariables::OpenGLRender->RMH_OpenGL_UpdateRenderedObjectsZOrder(_ZOrden_RectanglesInFront);
 
 		}
 
-		// Temperatur Målinger "Bring-To-Front" Context Menu Callback Routine ->
+		// Temperature measurements "bring to front" context menu callback routine ->
 		private: System::Void bringToFrontToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Opdater objekt rendererings Z-ordnen for Positions justerbare Rektangler, Crosshairs Og Linjer
+			// Update the object rendering Z-order for position-adjustable rectangles, crosshairs and lines
 			GlobalVariables::OpenGLRender->RMH_OpenGL_UpdateRenderedObjectsZOrder(_ZOrden_CrosshairsInFront);
 
 		}
 		
-		// Temperatur Målinger "Bring-To-Front" Context Menu Callback Routine ->
+		// Temperature measurements "bring to front" context menu callback routine ->
 		private: System::Void bringToFrontToolStripMenuItem1_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Opdater objekt rendererings Z-ordnen for Positions justerbare Rektangler, Crosshairs Og Linjer
+			// Update the object rendering Z-order for position-adjustable rectangles, crosshairs and lines
 			GlobalVariables::OpenGLRender->RMH_OpenGL_UpdateRenderedObjectsZOrder(_ZOrden_LinesInFront);
 
 		}
 
-		// Indstil Billede Sharpening Styrke Context Menu Callback Routine ->
+		// Set image sharpening strength context menu callback routine ->
 		private: System::Void imageSharpeningStrengthToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Lokale Klasse variabler
+			// Local class variables
 			bool DummyFlag = false;
 
-			// Åben Inout værdi Dialog formen - For at indstille billede sharpenings styrke værdien
+			// Open the input value dialog form - to set the image sharpening strength value
 			ManagedLocals::LiveViewToolsForm->ShowInputValueDialogForm("Set Sharpening Strength", "Value Range: " + _GaussianUnSharpStrength_MinRangeValue.ToString() + " To " + _GaussianUnSharpStrength_MaxRangeValue.ToString(),
 				_GaussianUnSharpStrength_MaxRangeValue, _GaussianUnSharpStrength_MinRangeValue, &ImageSharpeningStrength, &DummyFlag);
 
 		}
 
-		// Indstil Billede Sharpening Standard Deviation Context Menu Callback Routine ->
+		// Set image sharpening standard deviation context menu callback routine ->
 		private: System::Void SetSharpStdDivToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Åben Input værdi Dialog formen - For at indstille billede sharpenings standard deviation værdien
+			// Open the input value dialog form - to set the image sharpening standard deviation value
 			ManagedLocals::LiveViewToolsForm->ShowInputValueDialogForm("Set UnSharp Standart Deviation", "Value Range: " + _GaussianStandardDeviation_MinRangeValue.ToString() + " To " + _GaussianStandardDeviation_MaxRangeValue.ToString(),
 				_GaussianStandardDeviation_MaxRangeValue, _GaussianStandardDeviation_MinRangeValue, &ImageUnSharpeningSigma, &NewGaussianKernelMaskGenerateFlag);
 
 		}
    
-		// Aktiver Visning Det filtrerede Unsharpened Billede Context Menu Callback Routine ->
+		// Enable display of the filtered unsharpened image context menu callback routine ->
 		private: System::Void ShowUnsharpTrueToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Opdater Visning af Gaussian Unsharp Maske billedet
+			// Update the display of the Gaussian unsharp mask image
 			ShowUnsharpenMaskImageFlag = true;
 
 		}
 
-		// Deaktiver Visning Det filtrerede Unsharpened Billede Context Menu Callback Routine ->
+		// Disable display of the filtered unsharpened image context menu callback routine ->
 		private: System::Void ShowUnsharpFalseToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Opdater Visning af Gaussian Unsharp Maske billedet
+			// Update the display of the Gaussian unsharp mask image
 			ShowUnsharpenMaskImageFlag = false;
 
 		}
@@ -3122,7 +3122,7 @@ namespace IRCAMThermalViewer {
 		// Inverter Color Palette Context Menu Callback Routine ->
 		private: System::Void invertLiveViewPaletteToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Inverter valgte Live View eller ColorBar color palette flag
+			// Invert the selected live view or colorbar color palette flag
 			RMH_ColorPalette_InvertColorPalettes(sender);
 
 		}
@@ -3138,22 +3138,22 @@ namespace IRCAMThermalViewer {
 			// Toggel Globalt Live View Split View Feature Flaget
 			LiveViewSplitViewEnableFlag = LiveViewSplitViewToggleflag ^ 1;
 
-			// Går Live View Split View panelet synlig
+			// Make the live view split view panel visible
 			this->LiveViewSplitContainer->Panel2Collapsed = LiveViewSplitViewToggleflag;
 
 			// Indstil Split panelets splitter default start position
 			this->LiveViewSplitContainer->SplitterDistance = LiveViewSplitPanelSplitterDistance;
 
-			// Kontroller om live view split view er aktiverede
+			// Check whether live view split view is enabled
 			if (LiveViewSplitViewEnableFlag == true) {
 
-				// Aktiver tilhørende label Sub Context Menu Drop Down List Item 
+				// Enable the associated label sub context menu drop-down list item 
 				GlobalVariables::GlobalhistogramSourceToolStripMenuItem->DropDownItems[15]->Enabled = true;
 
 			}
 			else {
 
-				// Deaktiver tilhørende label Sub Context Menu Drop Down List Item 
+				// Disable the associated label sub context menu drop-down list item 
 				GlobalVariables::GlobalhistogramSourceToolStripMenuItem->DropDownItems[15]->Enabled = false;
 
 			}
@@ -3162,15 +3162,15 @@ namespace IRCAMThermalViewer {
 
 		// ------------------- Colorbar Context Menu Strip Event Callback Routiner -------------------- //
 		
-		// Colorbar Auto temperatur Range Context Menu Callback Routine ->
+		// Colorbar auto temperature range context menu callback routine ->
 		private: System::Void autoToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Opdater Colorbar Temperatur Range flag
+			// Update the colorbar temperature range flag
 			ColorBarManualRangeFlag = false;
 			ColorBarManualHighRangeFlag = false;
 			ColorBarManualLowRangeFlag = false;
 
-			// Deaktiver ColorBar Temperatur Ranges Dialog Context Menu Item
+			// Disable the ColorBar temperature ranges dialog context menu item
 			this->setColorBarRangesToolStripMenuItem->Enabled = false;
 
 			// Opdater Colorbarens tick linje farve
@@ -3178,108 +3178,108 @@ namespace IRCAMThermalViewer {
 
 		}
 
-		// Colorbar Manual temperatur Range Context Menu Callback Routine ->
+		// Colorbar manual temperature range context menu callback routine ->
 		private: System::Void manualToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Opdater Colorbar Temperatur Range flag
+			// Update the colorbar temperature range flag
 			ColorBarManualRangeFlag = true;
 			ColorBarManualHighRangeFlag = false;
 			ColorBarManualLowRangeFlag = false;
 
-			// Aktiver ColorBar Temperatur Ranges Dialog Context Menu Item
+			// Enable the ColorBar temperature ranges dialog context menu item
 			this->setColorBarRangesToolStripMenuItem->Enabled = true;
 
-			// Nulstil colorbarens maximum og minimum temperatur range offset værdier
+			// Reset the colorbar maximum and minimum temperature range offset values
 			GlobalVariables::OpenGLColorBar->RMH_OpenGL_ResetColorbarMaxMinRangeOffsetValues();
 
-			// Opdater Colorbarens start Manuelle Temperatur range værdier til frame Max/Min Temperaturerne ved Range Skift 
+			// Update the start manual temperature range values of the colorbar to the frame max/min temperatures on range change 
 			ColorBarInitialManualRangeMaxTemp = MaximumTemperature;
 			ColorBarInitialManualRangeMinTemp = MinimumTemperature;
 
 		}
 		
-		// Colorbar Manual High temperatur Range Context Menu Callback Routine ->
+		// Colorbar manual high temperature range context menu callback routine ->
 		private: System::Void manualHighRangeToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Opdater Colorbar Temperatur Range flag
+			// Update the colorbar temperature range flag
 			ColorBarManualRangeFlag = false;
 			ColorBarManualHighRangeFlag = true;
 			ColorBarManualLowRangeFlag = false;
 
-			// Aktiver ColorBar Temperatur Ranges Dialog Context Menu Item
+			// Enable the ColorBar temperature ranges dialog context menu item
 			this->setColorBarRangesToolStripMenuItem->Enabled = true;
 
-			// Nulstil colorbarens maximum og minimum temperatur range offset værdier
+			// Reset the colorbar maximum and minimum temperature range offset values
 			GlobalVariables::OpenGLColorBar->RMH_OpenGL_ResetColorbarMaxMinRangeOffsetValues();
 
-			// Opdater Colorbarens start Manuelle Temperatur range værdier til frame Max/Min Temperaturerne ved Range Skift 
+			// Update the start manual temperature range values of the colorbar to the frame max/min temperatures on range change 
 			ColorBarInitialManualRangeMaxTemp = MaximumTemperature;
 			ColorBarInitialManualRangeMinTemp = MinimumTemperature;
 
 		}
 
-		// Colorbar Manual Low temperatur Range Context Menu Callback Routine ->
+		// Colorbar manual low temperature range context menu callback routine ->
 		private: System::Void manualLowRangeToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Opdater Colorbar Temperatur Range flag
+			// Update the colorbar temperature range flag
 			ColorBarManualRangeFlag = false;
 			ColorBarManualHighRangeFlag = false;
 			ColorBarManualLowRangeFlag = true;
 
-			// Aktiver ColorBar Temperatur Ranges Dialog Context Menu Item
+			// Enable the ColorBar temperature ranges dialog context menu item
 			this->setColorBarRangesToolStripMenuItem->Enabled = true;
 
-			// Nulstil colorbarens maximum og minimum temperatur range offset værdier
+			// Reset the colorbar maximum and minimum temperature range offset values
 			GlobalVariables::OpenGLColorBar->RMH_OpenGL_ResetColorbarMaxMinRangeOffsetValues();
 
-			// Opdater Colorbarens start Manuelle Temperatur range værdier til frame Max/Min Temperaturerne ved Range Skift 
+			// Update the start manual temperature range values of the colorbar to the frame max/min temperatures on range change 
 			ColorBarInitialManualRangeMaxTemp = MaximumTemperature;
 			ColorBarInitialManualRangeMinTemp = MinimumTemperature;
 
 		}
 
-		// Aktiver Colorbar Center temperatur tracking Context Menu Callback Routine ->
+		// Enable colorbar center temperature tracking context menu callback routine ->
 		private: System::Void enableToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Opdater Colorbar center Temperatur tracking flag
+			// Update the colorbar center temperature tracking flag
 			ColorBarCenterTrackEnableFlag = true;
 
 		}
 
-		// Deaktiver Colorbar Center temperatur tracking Context Menu Callback Routine ->
+		// Disable colorbar center temperature tracking context menu callback routine ->
 		private: System::Void disableToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Opdater Colorbar center Temperatur tracking flag
+			// Update the colorbar center temperature tracking flag
 			ColorBarCenterTrackEnableFlag = false;
 
 		}
 
-		// Sæt Colorbar Manual Maximum Og Minimum Temperatur Ranges Context Menu Callback Routine ->
+		// Set colorbar manual maximum and minimum temperature ranges context menu callback routine ->
 		private: System::Void setColorBarRangesToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Nulstil colorbarens maximum og minimum temperatur range offset værdier
+			// Reset the colorbar maximum and minimum temperature range offset values
 			//GlobalVariables::OpenGLColorBar->RMH_OpenGL_ResetColorbarMaxMinRangeOffsetValues();
 
-			// Initiliser og vis Colorbarens temperatur range dialog formen
+			// Initialize and show the temperature range dialog form of the colorbar
 			ManagedLocals::LiveViewToolsForm->ShowColorbarTemperatureRangeDialogForm();
 
-			// Opdater ColorBar Range Dialogen med relavante værdier og indstiller temperatur enheds stringet
+			// Update the ColorBar range dialog with relevant values and set the temperature unit string
 			ManagedLocals::LiveViewToolsForm->ColorBarRangeDialogForm->UpdateColorBarTempRangeDialogValues(MaximumTemperature, MinimumTemperature, GlobalVariables::DefaultTempUnitString);
 
 		}
 
-		// Colorbar Manual Temperatur Ranges Mus Wheel Step Størrelses Context Menu Callback Routine ->
+		// Colorbar manual temperature ranges mouse wheel step size context menu callback routine ->
 		private: System::Void stepSize1ToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Opdater colorbarens Mus Wheel temperatur Step størrelse
+			// Update the mouse wheel temperature step size of the colorbar
 			RMH_ColorBar_ChangeManualRangeMouseWheelStepSize(sender);
 
 		}
 
-		// Colorbar Antal Temperatur Ticks Context Menu Callback Routine ->
+		// Colorbar number of temperature ticks context menu callback routine ->
 		private: System::Void ticksToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Opdater antallet af colorbar temperatur ticks
+			// Update the number of colorbar temperature ticks
 			RMH_ColorBar_ChangeColorBarAmountOfTemperatureTick(sender);
 
 		}
@@ -3290,12 +3290,12 @@ namespace IRCAMThermalViewer {
 			// Cast Sender objekt som Forms Tool Strip objekt
 			System::Windows::Forms::ToolStripMenuItem^ TagAdaptFullColorBarPaletteRangeContext = (System::Windows::Forms::ToolStripMenuItem^)sender;
 
-			// Læs Sub Context Menu identifikations tag og indstil globale enable flag
+			// Read the sub context menu identification tag and set the global enable flag
 			AdaptFullColorBarPaletteRangeFlag = Convert::ToBoolean(Convert::ToDouble(TagAdaptFullColorBarPaletteRangeContext->Tag));
 
 		}
 
-		// Aktiver Justering af Live view color palette colorbar range 
+		// Enable adjustment of the live view color palette colorbar range 
 		private: System::Void enableDefaultToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 
 			// Aktiver live view color palette skalering
@@ -3303,7 +3303,7 @@ namespace IRCAMThermalViewer {
 
 		}
 
-		// Deaktiver Justering af Live view color palette colorbar range 
+		// Disable adjustment of the live view color palette colorbar range 
 		private: System::Void disableToolStripMenuItem2_Click(System::Object^ sender, System::EventArgs^ e) {
 
 			// Deaktiver live view color palette skalering
@@ -3311,7 +3311,7 @@ namespace IRCAMThermalViewer {
 
 		}
 
-		// Aktiver Justering af dual color palette colorbar range 
+		// Enable adjustment of the dual color palette colorbar range 
 		private: System::Void enableToolStripMenuItem2_Click(System::Object^ sender, System::EventArgs^ e) {
 
 			// Aktiver Dual live view color palette skalering
@@ -3319,7 +3319,7 @@ namespace IRCAMThermalViewer {
 
 		}
 
-		// Aktiver Justering af dual color palette colorbar range 
+		// Enable adjustment of the dual color palette colorbar range 
 		private: System::Void disableDefaultToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 
 			// Deaktiver Dual live view color palette skalering
@@ -3332,7 +3332,7 @@ namespace IRCAMThermalViewer {
 		// Histogram Source Data Context Menu Callback Routine ->
 		private: System::Void liveViewToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Opdater histogrammets data source 
+			// Update the data source of the histogram 
 			RMH_ThermalViewer_ChangeHistoramDataSource(sender);
 
 			// Opdater histogrammets color palette inverterings stadie
@@ -3340,10 +3340,10 @@ namespace IRCAMThermalViewer {
 			
 		}
 
-		// Histogram Vis Ranged Palette Context Menu Callback Routine ->
+		// Histogram show ranged palette context menu callback routine ->
 		private: System::Void showRangedPaletteToolStripMenuItem1_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Opdater Histogram Vis Ranged Palette flag 
+			// Update the histogram show ranged palette flag 
 			HistogramShowRangedPaletteFlag = true;
 
 			// Opdater histogrammets color palette inverterings stadie
@@ -3351,10 +3351,10 @@ namespace IRCAMThermalViewer {
 
 		}
 
-		// Histogram Vis totale color Palette Context Menu Callback Routine ->
+		// Histogram show total color palette context menu callback routine ->
 		private: System::Void showFullPaletteToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Opdater Histogram Vis Ranged Palette flag 
+			// Update the histogram show ranged palette flag 
 			HistogramShowRangedPaletteFlag = false;
 
 			// Opdater histogrammets color palette inverterings stadie
@@ -3365,7 +3365,7 @@ namespace IRCAMThermalViewer {
 		// Histogram Benyt Live view Palette Context Menu Callback Routine ->
 		private: System::Void useLiveViewPaletteToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Opdater Histogram Live View Eller Dual Palette flag 
+			// Update the histogram live view or dual palette flag 
 			HistogramDualOrLiveViewPaletteFlag = false;
 
 			// Opdater histogrammets color palette inverterings stadie
@@ -3376,7 +3376,7 @@ namespace IRCAMThermalViewer {
 		// Histogram Benyt Dual Palette Context Menu Callback Routine ->
 		private: System::Void useDualPaletteToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Opdater Histogram Live View Eller Dual Palette flag 
+			// Update the histogram live view or dual palette flag 
 			HistogramDualOrLiveViewPaletteFlag = true;
 
 			// Opdater histogrammets color palette inverterings stadie

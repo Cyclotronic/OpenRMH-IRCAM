@@ -1,11 +1,11 @@
 #pragma once
 
-// Inkluderede Blblioteker
+// Included libraries
 #include "GlobalObjectsAndVariables.h"
 
 namespace IRCAMThermalViewer {
 
-	// Tilhørende namespaces
+	// Associated namespaces
 	using namespace System;
 	using namespace System::ComponentModel;
 	using namespace System::Collections;
@@ -22,7 +22,7 @@ namespace IRCAMThermalViewer {
 
 		StatisticsWindow(void) {
 
-			// Init GUI komponenter og objekter
+			// Init GUI components and objects
 			InitializeComponent();
 
 			// Aktiver Applikationens TitelBars Dark Mode
@@ -31,13 +31,13 @@ namespace IRCAMThermalViewer {
 			// Opdaterer Teksten i toppen af Dialogen
 			RMH_Winforms_ChangeFormTitleBarText(this, "Live View Statistics:");
 			
-			// Indstil globale objekter fra denne Form til global brug
+			// Set global objects from this form for global use
 			InitializeGlobalFormsObjects();
 
-			// Opdater Konstante statistik værdier og tilhørende labels
+			// Update constant statistics values and associated labels
 			UpdateConstantStatisticsValueLabels();
 
-			// Opdater tilhørende form er aktiv flag
+			// Update the associated form active flag
 			LiveViewStatisticsWindowIsShownFlag = true;
 
 		}
@@ -46,9 +46,9 @@ namespace IRCAMThermalViewer {
 
 		void UpdateConstantStatisticsValueLabels() {
 
-			// Routinen Opdaterer Labels for de konstante værdier i statistik vinduet
+			// This routine updates the labels of the constant values in the statistics window
 
-			// Opdater konstante værdi labels i statistik vinduet
+			// Update the constant value labels in the statistics window
 			this->CameraNameLabel->Text = RMH_Conversion_StdStringToSystemString(IRCamera.CameraDeviceName);
 			this->CalValue0Label->Text = IRCamera.CalValue0.ToString("F1");
 			this->CalValue1Label->Text = IRCamera.CalValue1.ToString("F6");
@@ -57,17 +57,17 @@ namespace IRCAMThermalViewer {
 			this->CalValue4Label->Text = IRCamera.CalValue4.ToString("F6");
 			this->CalValue5Label->Text = IRCamera.CalValue5.ToString("F6");
 
-			// Hvis Live View Ultra Opløsnings Mode er aktiverede
+			// If live view ultra resolution mode is enabled
 			if (UltraResolutionEnableFlag == true) {
 
-				// Opdater konstante værdi labels i statistik vinduet
+				// Update the constant value labels in the statistics window
 				this->WidthLabel->Text = (IRCamera.FrameWidth * UltraResolutionScaleFactor).ToString() + " Pixels";
 				this->HeightLabel->Text = ((IRCamera.FrameHeight - IRCamera.FrameMetadataSize) * UltraResolutionScaleFactor).ToString() + " Pixels";
 
 			}
 			else {
 
-				// Opdater konstante værdi labels i statistik vinduet
+				// Update the constant value labels in the statistics window
 				this->WidthLabel->Text = IRCamera.FrameWidth.ToString() + " Pixels";
 				this->HeightLabel->Text = (IRCamera.FrameHeight - IRCamera.FrameMetadataSize).ToString() + " Pixels";
 
@@ -77,10 +77,10 @@ namespace IRCAMThermalViewer {
 
 		void InitializeGlobalFormsObjects() {
 
-			// Routinen indstiller globale objekter fra denne form
-			// Så disse kan blve tilgået fra andre Forms
+			// This routine sets global objects from this form
+			// so that these can be accessed from other forms
 
-			// Initiliser Globale objeker til tilhørende Form Objekter
+			// Initialize global objects to the associated form objects
 			GlobalVariables::GlobalFrameRateLabel = this->FrameRateLabel;
 			GlobalVariables::GlobalNumberOfFramesLabel = this->NumberOfFramesLabel;
 			GlobalVariables::GlobalSpanLabel = this->SpanLabel;
@@ -102,12 +102,12 @@ namespace IRCAMThermalViewer {
 		/// </summary>
 		~StatisticsWindow() {
 
-			// Opdater tilhørende form er aktiv flag
+			// Update the associated form active flag
 			LiveViewStatisticsWindowIsShownFlag = false;
 
 			if (components) {
 
-				// Slet alle Form Komponenter
+				// Delete all form components
 				delete components;
 
 			}
@@ -842,26 +842,26 @@ namespace IRCAMThermalViewer {
 
 		// -------------------------- Statistik Vindue GUI Callback Routiner -------------------------- //
 		
-		// Live View Statistik Vindue Max Peak værdi Click Callback Routine ->
+		// Live view statistics window max peak value click callback routine ->
 		private: System::Void MaxPeakLabel_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Nulstil Maksimum Peak Værdien
+			// Reset the maximum peak value
 			MaxPeakTemperature = 0;
 
 		}
 
-		// Live View Statistik Vindue Min Peak værdi Click Callback Routine ->
+		// Live view statistics window min peak value click callback routine ->
 		private: System::Void MinPeakLabel_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Nulstil Minimum Peak Værdien
+			// Reset the minimum peak value
 			MinPeakTemperature = 2000.0;
 
 		}
 
-		// Live View Statistik Vindue "Always In Front" Checkbox Callback Routine ->
+		// Live view statistics window "always in front" checkbox callback routine ->
 		private: System::Void TopMostCheckBox_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
 
-			// Opdater Live View Statistik Vindue formens "Top Most" konfiguration
+			// Update the "top most" configuration of the live view statistics window form
 			this->TopMost = this->TopMostCheckBox->Checked;
 
 		}

@@ -1,12 +1,12 @@
 #pragma once
 
-// Inkluderede Blblioteker
+// Included libraries
 #include "GlobalObjectsAndVariables.h"
 #include "RMH_Winforms_Library.h"
 
 namespace IRCAMThermalViewer {
 
-	// Tilhørende namespaces
+	// Associated namespaces
 	using namespace System;
 	using namespace System::ComponentModel;
 	using namespace System::Collections;
@@ -21,7 +21,7 @@ namespace IRCAMThermalViewer {
 
 		ColorBarRangeDialog(void) {
 
-			// Init GUI komponenter og objekter
+			// Init GUI components and objects
 			InitializeComponent();
 
 			// Aktiver Applikationens TitelBars Dark Mode
@@ -30,21 +30,21 @@ namespace IRCAMThermalViewer {
 			// Opdaterer Teksten i toppen af Dialogen
 			RMH_Winforms_ChangeFormTitleBarText(this, "Set ColorBar Temperature Ranges:");
 
-			// Opdater tilhørende form er aktiv flag
+			// Update the associated form active flag
 			ColorBarDialogIsShownFlag = true;
 			
 		}
 
-		// ----------------------- Diverse Tilhørende Klasse Metoder ----------------------- //
+		// ----------------------- Miscellaneous Associated Class Methods ----------------------- //
 
 		System::Void UpdateColorBarTempRangeDialogValues(double MaximumTemperature, double MinimumTemperature, System::String^ DefaultTempUnitString) {
 
-			// Routinen opdaterer formens numeriske UpDowns med start værdier og indstiller temperatur enheds stringet
+			// This routine updates the numeric UpDowns of the form with start values and sets the temperature unit string
 
-			// Error håndtering (Double til System::Decimal)
+			// Error handling (double to System::Decimal)
 			try {
 
-				// Indstil Maximum og Minimum Temperatur range værdierne i UpDowns
+				// Set the maximum and minimum temperature range values in the UpDowns
 				this->ColorBarMaxRangeUpDown->Value = (System::Decimal)MaximumTemperature;
 				this->ColorBarMinRangeUpDown->Value = (System::Decimal)MinimumTemperature;
 
@@ -55,10 +55,10 @@ namespace IRCAMThermalViewer {
 			}
 			catch (System::Exception^ Ex) {
 				
-				// Skriv GUI Status Meddelse - Filen er en .png fil
+				// Write GUI status message - the file is a .png file
 				RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "Values Entered Were to Large Or To Low!", _StatusMessageType_Error);
 
-				// Indstil Range UpDown værdier til General Range værdier
+				// Set the range UpDown values to the general range values
 				this->ColorBarMaxRangeUpDown->Value = (System::Decimal)50.0;
 				this->ColorBarMinRangeUpDown->Value = (System::Decimal)20.0;
 
@@ -75,12 +75,12 @@ namespace IRCAMThermalViewer {
 		/// </summary>
 		~ColorBarRangeDialog() {
 
-			// Opdater tilhørende form er aktiv flag
+			// Update the associated form active flag
 			ColorBarDialogIsShownFlag = false;
 
 			if (components) {
 
-				// Slet alle Form Komponenter
+				// Delete all form components
 				delete components;
 
 			}
@@ -444,28 +444,28 @@ namespace IRCAMThermalViewer {
 
 #pragma endregion
 
-		// Sæt ColorBar Maximum og Minimum Temperatur Range Callback Routine ->
+		// Set colorbar maximum and minimum temperature range callback routine ->
 		private: System::Void SetColorBarTempRangesButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Nulstil colorbarens maximum og minimum temperatur range offset værdier
+			// Reset the colorbar maximum and minimum temperature range offset values
 			GlobalVariables::OpenGLColorBar->RMH_OpenGL_ResetColorbarMaxMinRangeOffsetValues();
 
-			// Indstil Colorbarens start Manuelle Temperatur range værdier til frame Max/Min Temperaturerne ved Range Skift 
+			// Set the start manual temperature range values of the colorbar to the frame max/min temperatures on range change 
 			ColorBarInitialManualRangeMaxTemp = (double)this->ColorBarMaxRangeUpDown->Value;
 			ColorBarInitialManualRangeMinTemp = (double)this->ColorBarMinRangeUpDown->Value;
 
-			// Luk Dialog
+			// Close the dialog
 			this->Close();
 
 		}
 
-		// Apply ColorBar Maximum og Minimum Temperatur Range Callback Routine ->
+		// Apply colorbar maximum and minimum temperature range callback routine ->
 		private: System::Void ApplyValueButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Nulstil colorbarens maximum og minimum temperatur range offset værdier
+			// Reset the colorbar maximum and minimum temperature range offset values
 			GlobalVariables::OpenGLColorBar->RMH_OpenGL_ResetColorbarMaxMinRangeOffsetValues();
 
-			// Indstil Colorbarens start Manuelle Temperatur range værdier til frame Max/Min Temperaturerne ved Range Skift 
+			// Set the start manual temperature range values of the colorbar to the frame max/min temperatures on range change 
 			ColorBarInitialManualRangeMaxTemp = (double)this->ColorBarMaxRangeUpDown->Value;
 			ColorBarInitialManualRangeMinTemp = (double)this->ColorBarMinRangeUpDown->Value;
 

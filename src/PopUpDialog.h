@@ -1,12 +1,12 @@
 #pragma once
 
-// Inkluderede Blblioteker
+// Included libraries
 #include "GlobalObjectsAndVariables.h"
 #include "RMH_Winforms_Library.h"
 
 namespace IRCAMThermalViewer {
 
-	// Tilhørende namespaces
+	// Associated namespaces
 	using namespace System;
 	using namespace System::ComponentModel;
 	using namespace System::Collections;
@@ -21,7 +21,7 @@ namespace IRCAMThermalViewer {
 
 		PopUpDialog(std::string DialogTitleText, System::String^ DialogInfoText) {
 
-			// Init GUI komponenter og objekter
+			// Init GUI components and objects
 			InitializeComponent();
 
 			// Aktiver Applikationens TitelBars Dark Mode
@@ -35,7 +35,7 @@ namespace IRCAMThermalViewer {
 			
 		}
 
-		// ----------------------- Diverse Tilhørende Klasse Metoder ----------------------- //
+		// ----------------------- Miscellaneous Associated Class Methods ----------------------- //
 
 		// --------------------------------------------------------------------------------- //
 
@@ -187,10 +187,10 @@ namespace IRCAMThermalViewer {
 
 #pragma endregion
 
-		// Pop-Up Dialog OK knap Callback Routine ->
+		// Pop-up dialog OK button callback routine ->
 		private: System::Void PopUpDialogOKButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Luk Pop-Up Dialogen
+			// Close the pop-up dialog
 			this->Close();
 			// Garbage collect
 			GC::Collect();
@@ -200,7 +200,7 @@ namespace IRCAMThermalViewer {
 		// Pop-Up Dialog "Dont Show" Check Box Callback Routine ->
 		private: System::Void PopUpDontShowChechBox_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
 
-			// Opdater flaget for om Pop-Up Dialogen skal vises
+			// Update the flag for whether the pop-up dialog should be shown
 			PopUpDialogDontShowFlag = (bool)this->PopUpDontShowChechBox->Checked;
 
 		}

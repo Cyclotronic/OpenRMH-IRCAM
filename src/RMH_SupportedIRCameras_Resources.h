@@ -8,7 +8,7 @@
 
 #pragma once
 
- // Inkluderede Blbiloteker
+ // Included libraries
 #include <string>
 #include <vector>
 
@@ -16,7 +16,7 @@
 #ifndef RMH_SupportedIRCameras_Resources_H 
 #define RMH_SupportedIRCameras_Resources_H
 
-// -------------------- Fælles Supporterede IR Kamera Reference Macroer --------------------- //
+// -------------------- Common Supported IR Camera Reference Macros --------------------- //
 
 // Aspect Ratio Konstant for InfiRay & HTI Termiske kameraer
 #define _FixedThermalCameraFrame_AspectRatio_Pool_1      1.33333333
@@ -33,7 +33,7 @@
 #define _ThermalCameraPool3_RangeSwitchReadyTimeMs       5000
 #define _ThermalCameraPool4_RangeSwitchReadyTimeMs       5000
 
-// IR kamera temperatur udregnings parameter reference macroer
+// IR camera temperature calculation parameter reference macros
 #define _IRThermalCameraDefault_TemperatureCorrectionValue      0.0
 #define _IRThermalCameraDefault_AmbientTemperatureValue         25.1    
 #define _IRThermalCameraDefault_ReflectedTemperatureValue       25.1        
@@ -47,7 +47,7 @@
 #define _SupportedThermalCameras_Pool_3                   3
 #define _SupportedThermalCameras_Pool_4                   4
 
-// Termisk Kamera Temperatur Range Reference Macroer 
+// Thermal camera temperature range reference macros 
 #define _ThermalCamera_TemperatureRange_HighRange         1
 #define _ThermalCamera_TemperatureRange_LowRange          0
 
@@ -78,13 +78,13 @@
 #define _SupportedThermalCamera_Victor328B                23 
 #define _SupportedThermalCamera_LODESTARL2                24
 
-// Supporterer Termiske kamera En Højere Temperatur Range Reference Macroer
+// Reference macros for whether a thermal camera supports a higher temperature range
 #define _SupportedThermalCamera_InfiRayT2L_SupportsHighRange                false      
 #define _SupportedThermalCamera_InfiRayT2LV2_SupportsHighRange              false  
 #define _SupportedThermalCamera_InfiRayT2Search_SupportsHighRange           false 
 #define _SupportedThermalCamera_InfiRayT2SearchV2_SupportsHighRange         false 
 #define _SupportedThermalCamera_InfiRayT2Sp_SupportsHighRange               true 
-#define _SupportedThermalCamera_InfiRayT2SpV2_SupportsHighRange             true  // Skal tilføjes, når jeg finder ud af Udregningerne 
+#define _SupportedThermalCamera_InfiRayT2SpV2_SupportsHighRange             true  // To be added when I figure out the calculations 
 #define _SupportedThermalCamera_InfiRayT2Pro_SupportsHighRange              false 
 #define _SupportedThermalCamera_InfiRayT2ProV2_SupportsHighRange            false 
 #define _SupportedThermalCamera_InfiRayT3Search_SupportsHighRange           false          
@@ -134,11 +134,11 @@
 #define _SupporteredeThermalCameraPool1_FrameWidthPixelOffset       0  
 #define _SupporteredeThermalCameraPool1_FrameHeightPixelOffset      0 
 
-// IR Camera Temperatur Range Macroer - For Supporterede Kamera Pool 1
+// IR camera temperature range macros - for supported camera pool 1
 #define _IRCameraPool1_TemperatureRange_HighRangeREG           0x8021
 #define _IRCameraPool1_TemperatureRange_LowRangeREG            0x8020
 
-// Interne IR Kamera Konfigurations Parameter Addresser - For Supporterede Kamera Pool 1
+// Internal IR camera configuration parameter addresses - for supported camera pool 1
 #define _IRCameraPool1_ConfigParameterAddress_TempCorrREG      0x0000     
 #define _IRCameraPool1_ConfigParameterAddress_ReflTempREG      0x0004      
 #define _IRCameraPool1_ConfigParameterAddress_AmbTempREG       0x0008        
@@ -163,11 +163,11 @@
 #define _SupporteredeThermalCameraPool3_FrameWidthPixelOffset       0  
 #define _SupporteredeThermalCameraPool3_FrameHeightPixelOffset      0 
 
-// IR Camera Temperatur Range Macroer - For Supporterede Kamera Pool 3
+// IR camera temperature range macros - for supported camera pool 3
 #define _IRCameraPool3_TemperatureRange_HighRangeREG           0x8021
 #define _IRCameraPool3_TemperatureRange_LowRangeREG            0x8020
 
-// Interne IR Kamera Konfigurations Parameter Addresser - For Supporterede Kamera Pool 3
+// Internal IR camera configuration parameter addresses - for supported camera pool 3
 #define _IRCameraPool3_ConfigParameterAddress_TempCorrREG      0x0000     
 #define _IRCameraPool3_ConfigParameterAddress_ReflTempREG      0x0004      
 #define _IRCameraPool3_ConfigParameterAddress_AmbTempREG       0x0008        
@@ -186,9 +186,9 @@
 #define _SupporteredeThermalCameraPool4_FrameWidthPixelOffset            0  
 #define _SupporteredeThermalCameraPool4_FrameHeightPixelOffset           194  
 
-// ------------------- Supporterede IR Kamera Device Navne & Producenter -------------------- //
+// ------------------- Supported IR Camera Device Names & Manufacturers -------------------- //
 
-// Supporterede Termiske Kamera model navne ->
+// Supported thermal camera model names ->
 static std::vector<std::string> SupportedCamerasModelNames = { "Snapshot Analysis Mode",
                                                                "Recording Analysis Mode", 
                                                                "InfiRay T2L",
@@ -215,73 +215,73 @@ static std::vector<std::string> SupportedCamerasModelNames = { "Snapshot Analysi
                                                                "Victor 328B", 
                                                                "LODESTAR L2"};
 
-// Supporterede Kamera Device Navne - InfiRay T2L - Supporterede Pool 1
+// Supported camera device names - InfiRay T2L - supported pool 1
 static std::vector<std::string> InfiRayT2LDeviceNames = { "T2L-A4L", "T2L-A6L", "T2L-A8L", "T2L", "T2L-A4L_R", "T2L-A4L_A", "T2L-A4L_C" };
 
-// Supporterede Kamera Device Navne - InfiRay T2L V2 - Supporterede Pool 3
+// Supported camera device names - InfiRay T2L V2 - supported pool 3
 static std::vector<std::string> InfiRayT2LV2DeviceNames = { "T2L-A4L", "T2L-A6L", "T2L-A8L", "T2L_V2", "T2L", "T2L_A2", "T2L-A4L_A2", "T2L-A4L_V2" };
 
-// Supporterede Kamera Device Navne - InfiRay T2-Search - Supporterede Pool 1
+// Supported camera device names - InfiRay T2-Search - supported pool 1
 static std::vector<std::string> InfiRayT2SearchDeviceNames = { "T2-Search", "T2", "T2S"};
 
-// Supporterede Kamera Device Navne - InfiRay T2-Search V2 - Supporterede Pool 3
+// Supported camera device names - InfiRay T2-Search V2 - supported pool 3
 static std::vector<std::string> InfiRayT2SearchV2DeviceNames = { "T2_V2", "T2-Search", "T2", "T2S", "T2_A2", "T2S_A2" };
 
-// Supporterede Kamera Device Navne - InfiRay T2S+ - Supporterede Pool 1  
+// Supported camera device names - InfiRay T2S+ - supported pool 1  
 static std::vector<std::string> InfiRayT2SpDeviceNames = { "T2S+", "T2Sp", "T2S+_A", "T2S+_C", "T2S+_R", "T2SPro" };
 
-// Supporterede Kamera Device Navne - InfiRay T2S+ V2 - Supporterede Pool 3  
+// Supported camera device names - InfiRay T2S+ V2 - supported pool 3  
 static std::vector<std::string> InfiRayT2SpV2DeviceNames = { "T2S+_V2", "T2S+_A", "T2S+_A2", "T2S+", "T2Sp", "T2SPro" };
 
-// Supporterede Kamera Device Navne - InfiRay T2Pro - Supporterede Pool 1
+// Supported camera device names - InfiRay T2Pro - supported pool 1
 static std::vector<std::string> InfiRayT2ProDeviceNames = { "T2Pro", "T2+", "T2p", "T2P", "T2SPro" };
 
-// Supporterede Kamera Device Navne - InfiRay T2Pro V2 - Supporterede Pool 3
+// Supported camera device names - InfiRay T2Pro V2 - supported pool 3
 static std::vector<std::string> InfiRayT2ProV2DeviceNames = { "T2Pro_V2", "T2Pro_A1", "T2Pro_A2", "T2Pro", "T2pro", "T2P", "T2SPro"};
 
-// Supporterede Kamera Device Navne - InfiRay T3-Search - Supporterede Pool 1
+// Supported camera device names - InfiRay T3-Search - supported pool 1
 static std::vector<std::string> InfiRayT3SearchDeviceNames = { "T3-Search", "T3" };
 
-// Supporterede Kamera Device Navne - InfiRay T3S - Supporterede Pool 1
+// Supported camera device names - InfiRay T3S - supported pool 1
 static std::vector<std::string> InfiRayT3SDeviceNames = { "Xtherm-T3S", "T3S-A68", "T3S-A13", "T3S", "T3S-A13_A", "T3S-A13_C", "T3S-A13_R" };
 
-// Supporterede Kamera Device Navne - InfiRay T3Pro - Supporterede Pool 1
+// Supported camera device names - InfiRay T3Pro - supported pool 1
 static std::vector<std::string> InfiRayT3ProDeviceNames = { "T3Pro-A13", "T3Pro-A68", "T3Pro", "T3Pro-A13_C", "T3Pro-A13_A", "T3Pro-A13_R" };
 
-// Supporterede Kamera Device Navne - InfiRay P2 - Supporterede Pool 2
+// Supported camera device names - InfiRay P2 - supported pool 2
 static std::vector<std::string> InfiRayP2DeviceNames = { "USB Camera", "Camera" };
 
-// Supporterede Kamera Device Navne - Therma lMaster P2 - Supporterede Pool 4
+// Supported camera device names - Thermal Master P2 - supported pool 4
 static std::vector<std::string> ThermalMasterP2DeviceNames = { "Camera" };
 
-// Supporterede Kamera Device Navne - InfiRay P2Pro - Supporterede Pool 2 
+// Supported camera device names - InfiRay P2Pro - supported pool 2 
 static std::vector<std::string> InfiRayP2ProDeviceNames = { "USB Camera", "Camera" };
 
-// Supporterede Kamera Device Navne - InfiRay DV-DL13 - Supporterede Pool 1
+// Supported camera device names - InfiRay DV-DL13 - supported pool 1
 static std::vector<std::string> InfiRayDVDL13DeviceNames = { "VirtualBox Webcam - DV-DL13", "DV-DL13" };
 
-// Supporterede Kamera Device Navne - InfiRay S0 Series - Supporterede Pool 1
+// Supported camera device names - InfiRay S0 Series - supported pool 1
 static std::vector<std::string> InfiRayS0SeriesDeviceNames = { "S0-90W", "S0-40", "S0-68", "S0-90" };
 
-// Supporterede Kamera Device Navne - InfiRay Tiny1-C - Supporterede Pool 2
+// Supported camera device names - InfiRay Tiny1-C - supported pool 2
 static std::vector<std::string> InfiRayTiny1CDeviceNames = { "USB Camera", "Tiny1C" };
 
-// Supporterede Kamera Device Navne - HTI HT-301 - Supporterede Pool 1
+// Supported camera device names - HTI HT-301 - supported pool 1
 static std::vector<std::string> HTIHT301DeviceNames = { "T3", "T3-317-13", "T3-317-68", "HT-301"};
 
-// Supporterede Kamera Device Navne - UNI-T UTi260M - Supporterede Pool 2
+// Supported camera device names - UNI-T UTi260M - supported pool 2
 static std::vector<std::string> UNITUTi260MDeviceNames = { "USB Camera" };
 
-// Supporterede Kamera Device Navne - TOPDON TC001 - Supporterede Pool 2
+// Supported camera device names - TOPDON TC001 - supported pool 2
 static std::vector<std::string> TOPDONTC001DeviceNames = { "USB Camera", "TC001" };
 
-// Supporterede Kamera Device Navne - TOPDON TC002 - Supporterede Pool 2
+// Supported camera device names - TOPDON TC002 - supported pool 2
 static std::vector<std::string> TOPDONTC002DeviceNames = { "USB Camera", "TC002", "TC003"};
 
-// Supporterede Kamera Device Navne - Victor 328B - Supporterede Pool 2
+// Supported camera device names - Victor 328B - supported pool 2
 static std::vector<std::string> Victor328BDeviceNames = { "USB Camera" };
 
-// Supporterede Kamera Device Navne - LODESTAR L2 - Supporterede Pool 2
+// Supported camera device names - LODESTAR L2 - supported pool 2
 static std::vector<std::string> LODESTARL2DeviceNames = { "USB Camera" };
 
 // ------------------------------------------------------------------------------------------ //

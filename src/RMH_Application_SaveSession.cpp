@@ -7,7 +7,7 @@
  *
  */
 
-// Inkluderede Blbiloteker
+// Included libraries
 #include "RMH_Application_SaveSession.h"
 #include "RMH_MathConversions_Library.h"
 #include "RMH_Winforms_Library.h"
@@ -15,40 +15,40 @@
 #include <iostream>
 #include <vector>
 
-// Inkluderede Resourcer
+// Included resources
 #include "GlobalObjectsAndVariables.h"
 #include "RMH_Application_Information.h"
 #include "RMH_2DPlotDataSetSources_Resources.h"
 
-// Gemt Applikations sessions data fil linje længde
+// Saved application session data file line length
 #define _SavedSessionCSVFileLineLength          79 + 1 + 1 // Index nummer + Top Header + Bund Header 
 
-// ------------ Routiner Til Håndtering Af Gemt Applikations Sessions Parametere ------------- //
+// ------------ Routines For Handling Saved Application Session Parameters ------------- //
 
 void RMH_Application_SaveLastSessionConfigToFile() {
 
-	// Routinen genererer og gemmer seneste applikations sessions konfiguration i "Documents" Mappen i windows
-	// værdier og opsætning i en CSV Fil i executable fil lokationen. 
-	// Denne kan derefter læses ved start-op for at sætte sidste aktive applikations konfiguration
+	// This routine generates and saves the latest application session configuration in the "Documents" folder in Windows
+	// values and setup in a CSV file at the executable file location. 
+	// This can then be read at start-up to set the last active application configuration
 
-	// Læs MyDocuments windows path 
+	// Read the MyDocuments Windows path 
 	System::String^ Path = System::Environment::GetFolderPath(System::Environment::SpecialFolder::MyDocuments);
 	// Konverter Path System::String Til Std::String
 	std::string StdPathString = RMH_Conversion_SystemStringToStdString(Path);
 	// Restat karakter "\" med karekter "\" i Path String
 	std::replace(StdPathString.begin(), StdPathString.end(), '\\', '/');
 
-	// ------------- Data Som Skal Gemmes I Applikations Preset CSV Fil -------------- //
+	// ------------- Data To Be Saved In The Application Preset CSV File -------------- //
 
-	// String med Applikations Opsætnings Data 
+	// String with application setup data 
 	std::vector<std::string> SavedSessionDescription = {
 
-		// Fil Start Header
+		// File start header
 		"- IRCAM Thermal Viewer: Application Configuration Data -",
 
-		// ----------------------- Valgte Termiske Kamera ------------------------ //
+		// ----------------------- Selected Thermal Camera ------------------------ //
 
-		// Valgte Termiske Kamera Index - Row Index 1
+		// Selected thermal camera index - row index 1
 		RMH_Conversion_IntToStdString(SelectedThermalCameraIndex),
 
 		// ---------------------------- Color Palette ---------------------------- //
@@ -56,14 +56,14 @@ void RMH_Application_SaveLastSessionConfigToFile() {
 		// Valgte Color Palette Index - Row Index 2
 		RMH_Conversion_IntToStdString(SelectedColorPaletteIndex),
 
-		// -------------------- Temperatur Korrektions Værdi --------------------- //
+		// -------------------- Temperature Correction Value --------------------- //
 
-		// Gem sat temperatur korrektions værdi - Row Index 3
+		// Save the set temperature correction value - row index 3
 		RMH_Conversion_FloatToStdString(SavedTempCorrectionSetting, 5),
 
-		// ---------------------- Aspect Ratio Indstilling ----------------------- //
+		// ---------------------- Aspect Ratio Setting ----------------------- //
 
-		// Gem Sessionens Aspect ratio indstilling  - Row Index 4
+		// Save the aspect ratio setting of the session - row index 4
 		RMH_Conversion_SystemStringToStdString(FixedLiveViewAspectRatio.ToString()),
 
 		// ------------------------- Dual Color Palette -------------------------- //
@@ -73,22 +73,22 @@ void RMH_Application_SaveLastSessionConfigToFile() {
 
 		// ---------------------- Enhanced Resolution Flag ----------------------- //
 
-		// Gem Sessionens Enhanced Resolution indstilling  - Row Index 6
+		// Save the enhanced resolution setting of the session - row index 6
 		RMH_Conversion_SystemStringToStdString(EnhancedResEnableFlag.ToString()),
 
 		// ------------------------- SnapShot Save Path -------------------------- //
 
-		// Gem Sessionens Snapshot Fil Path String  - Row Index 7
+		// Save the snapshot file path string of the session - row index 7
 		RMH_Conversion_SystemStringToStdString(GlobalVariables::SnapShotDefaultPath),
 
 		// ------------------------ Data Logging Save Path ----------------------- //
 
-		// Gem Sessionens Data Loggings Fil Path String  - Row Index 8
+		// Save the data logging file path string of the session - row index 8
 		RMH_Conversion_SystemStringToStdString(GlobalVariables::LoggingCSVDefaultPath),
 
-		// ------------------ Temperatur 2D Plot Indstillinger ------------------- //
+		// ------------------ Temperature 2D Plot Settings ------------------- //
 
-		// Gem 2D Plot Sættenes Linje farver
+		// Save the line colors of the 2D plot data sets
 		RMH_Conversion_SystemStringToStdString(Plot2DDataSetLineColorsR[_2DPlotDataSet_1].ToString()), RMH_Conversion_SystemStringToStdString(Plot2DDataSetLineColorsG[_2DPlotDataSet_1].ToString()), RMH_Conversion_SystemStringToStdString(Plot2DDataSetLineColorsB[_2DPlotDataSet_1].ToString()),    // Index 9 - 11
 		RMH_Conversion_SystemStringToStdString(Plot2DDataSetLineColorsR[_2DPlotDataSet_2].ToString()), RMH_Conversion_SystemStringToStdString(Plot2DDataSetLineColorsG[_2DPlotDataSet_2].ToString()), RMH_Conversion_SystemStringToStdString(Plot2DDataSetLineColorsB[_2DPlotDataSet_2].ToString()),    // Index 12 - 14
 		RMH_Conversion_SystemStringToStdString(Plot2DDataSetLineColorsR[_2DPlotDataSet_3].ToString()), RMH_Conversion_SystemStringToStdString(Plot2DDataSetLineColorsG[_2DPlotDataSet_3].ToString()), RMH_Conversion_SystemStringToStdString(Plot2DDataSetLineColorsB[_2DPlotDataSet_3].ToString()),    // Index 15 - 17
@@ -142,27 +142,27 @@ void RMH_Application_SaveLastSessionConfigToFile() {
 
 		// ----------------------- ColorBar Indstillinger ------------------------ //
 
-		// Gem ColorBarens "Full Palette" Range justerings indstilling
+		// Save the "full palette" range adjustment setting of the ColorBar
 		RMH_Conversion_SystemStringToStdString(AdaptFullColorBarPaletteRangeFlag.ToString()), // Index 73
 
 		// --------------------- Video Optagnings Save Path ---------------------- //
 
-		// Gem Sessionens Snapshot Fil Path String  - Row Index 74
+		// Save the snapshot file path string of the session - row index 74
 		RMH_Conversion_SystemStringToStdString(GlobalVariables::RecordingDefaultPath), // Index 74
 
 		// ------------------ Full Frame Data CSV Indstillinger ------------------ //
 
-		// Gem Sessionens Full Frame CSV Data Delimiter Index værdi  - Row Index 75
+		// Save the full frame CSV data delimiter index value of the session - row index 75
 		RMH_Conversion_SystemStringToStdString(SelectedFullFrameTempCSVDataDelimiterIndex.ToString()), // Index 75
 
-		// ------------------- Kamera Info Pop-Up Vis-Ikke Flag ------------------- //
+		// ------------------- Camera Info Pop-Up "Do Not Show" Flag ------------------- //
 
-		// Gem Sessionens Kamera Info Pop-Up "Vis Ikke" Flag  - Row Index 76
+		// Save the camera info pop-up "do not show" flag of the session - row index 76
 		RMH_Conversion_SystemStringToStdString(PopUpDialogDontShowFlag.ToString()),
 
 		// --------------------- Data Loggings Indstillinger --------------------- //
 
-		// Gem Sessionens Data Logging CSV Data Delimiter Index værdi  - Row Index 77
+		// Save the data logging CSV data delimiter index value of the session - row index 77
 		RMH_Conversion_SystemStringToStdString(SelectedDataLoggingCSVDataDelimiterIndex.ToString()), // Index 77
 
 		// ------------------- Diverse Indstillings Parametere ------------------- //
@@ -173,100 +173,100 @@ void RMH_Application_SaveLastSessionConfigToFile() {
 
 		// ----------------------------------------------------------------------- //
 
-		// Fil Slut Header
+		// File end header
 		"- End Of Session Configuration - "
 	};
 
 	// ------------------------------------------------------------------------------- //
 
-	// Generer Og Gem Applikations Data i Preset CSV Fil
+	// Generate and save the application data in the preset CSV file
 	RMH_Winforms_GenerateAndWriteCSVFile(StdPathString, Application_PresetFileName, SavedSessionDescription);
 
 }
 
 void RMH_Application_SetSavedSessionConfigToApplication(System::Windows::Forms::RichTextBox^ GUIInfoTextArea) {
 
-	// Routinen læser den gemte applikation session konfigurations fil
-	// Og indstiller de relavante applikations værdier og objekter ved start 
+	// This routine reads the saved application session configuration file
+	// and sets the relevant application values and objects at start-up 
 
-	// Lokale Fil data objekt
+	// Local file data object
 	RMHWinformsLib::FileReadFormat PresetFile;
 
-	// Læs MyDocuments windows path 
+	// Read the MyDocuments Windows path 
 	System::String^ Path = System::Environment::GetFolderPath(System::Environment::SpecialFolder::MyDocuments);
 	// Konverter Path System::String Til Std::String
 	std::string StdPathString = RMH_Conversion_SystemStringToStdString(Path);
 	// Restat karakter "\" med karekter "\" i Path String
 	std::replace(StdPathString.begin(), StdPathString.end(), '\\', '/');
 
-	// Læs Data fra applikationens Preset fil
+	// Read the data from the application preset file
 	PresetFile = RMH_Winforms_ReadLinesFromCSVFile(StdPathString, Application_PresetFileName);
 
-	// Håndtering af fil fejl
+	// Handling of file errors
 	try {
 
-		// Blev en gyldig konfigurations fil læst 
+		// Was a valid configuration file read 
 		if (PresetFile.FileReadSuccess == true) {
 
-			// Skriv GUI Status Meddelse
+			// Write GUI status message
 			RMH_Winforms_RichTextBox_WriteLine(GUIInfoTextArea, "Session Configuration File Found.", _StatusMessageType_Normal);
 
-			// Kontroller at filen ikke er Tom og har korrekt længde
+			// Check that the file is not empty and has the correct length
 			if ((PresetFile.FileLineLength != 0 || PresetFile.FileZeroLengthFlag == true) && PresetFile.FileLineLength == _SavedSessionCSVFileLineLength) {
 
-				// Skriv GUI Status Meddelse
+				// Write GUI status message
 				RMH_Winforms_RichTextBox_WriteLine(GUIInfoTextArea, "Loading Last Session Configuration...", _StatusMessageType_Normal);
 
 				/*
-				 *  Indstilling Af Fil Konfigurations Data ->
+				 *  Setting of the file configuration data ->
 				 */
 
-				 // ----------------------- Valgte Termiske Kamera ------------------------ //
+				 // ----------------------- Selected Thermal Camera ------------------------ //
 
-				 // Læs Gemte Camera Source Item index
+				 // Read the saved camera source item index
 				SelectedThermalCameraIndex = RMH_Conversion_StdStringToInt(PresetFile.FileStrings[1]);
 
 				// ---------------------------- Color Palette ---------------------------- //
 
-				// Læs Gemte Color Palette Item index
+				// Read the saved color palette item index
 				SelectedColorPaletteIndex = RMH_Conversion_StdStringToInt(PresetFile.FileStrings[2]);
 
-				// -------------------- Temperatur Korrektions Værdi --------------------- //
+				// -------------------- Temperature Correction Value --------------------- //
 
-				// Indstil Gemt Temp korrektions værdi til Kamera config UpDown
+				// Set the saved temperature correction value to the camera config UpDown
 				SavedTempCorrectionSetting = RMH_Conversion_StdStringToFloat(PresetFile.FileStrings[3]);
 
-				// ---------------------- Aspect Ratio Indstilling ----------------------- //
+				// ---------------------- Aspect Ratio Setting ----------------------- //
 
-				// Indstil Gemt Aspect Ratio Indstilling
+				// Set the saved aspect ratio setting
 				FixedLiveViewAspectRatio = RMH_Conversion_StdStringToBoolean(PresetFile.FileStrings[4]);
 
 				// ------------------------- Dual Color Palette -------------------------- //
 
-				// Læs Gemte Dual Color Palette Item index
+				// Read the saved dual color palette item index
 				SelectedDualColorPaletteIndex = RMH_Conversion_StdStringToInt(PresetFile.FileStrings[5]);
 
 				// ---------------------- Enhanced Resolution Flag ----------------------- //
 
-				// Læs Gemte Enhanced Resolution Mode Indstilling
+				// Read the saved enhanced resolution mode setting
 				EnhancedResEnableFlag = RMH_Conversion_StdStringToBoolean(PresetFile.FileStrings[6]);
 
 				// ------------------------- SnapShot Save Path -------------------------- //
 
-				// Læs Gemte Snapshot Fil path string
+				// Read the saved snapshot file path string
 				GlobalVariables::SnapShotDefaultPath = RMH_Conversion_StdStringToSystemString(PresetFile.FileStrings[7]);
 
 				// ------------------------ Data Logging Save Path ----------------------- //
 
-				// Læs Gemte Data Logging Fil path string
+				// Read the saved data logging file path string
 				GlobalVariables::LoggingCSVDefaultPath = RMH_Conversion_StdStringToSystemString(PresetFile.FileStrings[8]);
 
-				// ------------------ Temperatur 2D Plot Indstillinger ------------------- //
+				// ------------------ Temperature 2D Plot Settings ------------------- //
 
-				// Læs Gemte 2D Plot Linje Farve Data
+				// Read the saved 2D plot line color data
 				for (unsigned int i = 0, j = 0; i < _2DPlotMaxNumberOfDataSets; i++, j += 3) {
 
-					// Skriv Gemte 2D Plot Linje Farve Data til globale arrays
+					// Write the saved 2D plot line color data to the global arrays
 					Plot2DDataSetLineColorsR[i] = RMH_Conversion_StdStringToInt(PresetFile.FileStrings[9 + j]);
 					Plot2DDataSetLineColorsG[i] = RMH_Conversion_StdStringToInt(PresetFile.FileStrings[10 + j]);
 					Plot2DDataSetLineColorsB[i] = RMH_Conversion_StdStringToInt(PresetFile.FileStrings[11 + j]);
@@ -275,10 +275,10 @@ void RMH_Application_SetSavedSessionConfigToApplication(System::Windows::Forms::
 
 				// ------------------- Live View Farver Indstillinger -------------------- //
 
-				// Læs live view label baggrunds indstillingen
+				// Read the live view label background setting
 				EnableLabelBackgroundFlag = RMH_Conversion_StdStringToBoolean(PresetFile.FileStrings[39]);
 
-				// Læs Live View Label, Baggrund, Crosshair mm. Farve data
+				// Read the live view label, background, crosshair etc. color data
 				CommonLabelColorR = RMH_Conversion_StdStringToInt(PresetFile.FileStrings[40]);
 				CommonLabelColorG = RMH_Conversion_StdStringToInt(PresetFile.FileStrings[41]);
 				CommonLabelColorB = RMH_Conversion_StdStringToInt(PresetFile.FileStrings[42]);
@@ -315,27 +315,27 @@ void RMH_Application_SetSavedSessionConfigToApplication(System::Windows::Forms::
 
 				// ----------------------- ColorBar Indstillinger ------------------------ //
 
-				// Læs ColorBarens "Full Palette" Range justerings indstilling
+				// Read the "full palette" range adjustment setting of the ColorBar
 				AdaptFullColorBarPaletteRangeFlag = RMH_Conversion_StdStringToBoolean(PresetFile.FileStrings[73]);
 
 				// --------------------- Video Optagnings Save Path ---------------------- //
 
-				// Læs Gemte Snapshot Fil path string
+				// Read the saved snapshot file path string
 				GlobalVariables::RecordingDefaultPath = RMH_Conversion_StdStringToSystemString(PresetFile.FileStrings[74]);
 
 				// ------------------ Full Frame Data CSV Indstillinger ------------------ //
 
-				// Læs Gemte Full Frame CSV Data Delimiter Index værdi
+				// Read the saved full frame CSV data delimiter index value
 				SelectedFullFrameTempCSVDataDelimiterIndex = RMH_Conversion_StdStringToInt(PresetFile.FileStrings[75]);
 
-				// ------------------- Kamera Info Pop-Up Vis-Ikke Flag ------------------- //
+				// ------------------- Camera Info Pop-Up "Do Not Show" Flag ------------------- //
 
-				// Læs Gemte Kamera Info Pop-Up "Vis Ikke" Flag
+				// Read the saved camera info pop-up "do not show" flag
 				PopUpDialogDontShowFlag = RMH_Conversion_StdStringToBoolean(PresetFile.FileStrings[76]);
 
 				// --------------------- Data Loggings Indstillinger --------------------- //
 
-				// Læs Gemte Data Logging CSV Data Delimiter Index værdi
+				// Read the saved data logging CSV data delimiter index value
 				SelectedDataLoggingCSVDataDelimiterIndex = RMH_Conversion_StdStringToInt(PresetFile.FileStrings[77]);
 
 				// ------------------- Diverse Indstillings Parametere ------------------- //
@@ -346,25 +346,25 @@ void RMH_Application_SetSavedSessionConfigToApplication(System::Windows::Forms::
 
 				// ----------------------------------------------------------------------- //
 
-				// Skriv GUI Status Meddelse
+				// Write GUI status message
 				RMH_Winforms_RichTextBox_WriteLine(GUIInfoTextArea, "Session Configuration Set.", _StatusMessageType_Normal);
 
 			}
 			else {
-				// Skriv GUI Status Meddelse
+				// Write GUI status message
 				RMH_Winforms_RichTextBox_WriteLine(GUIInfoTextArea, "Session Configuration File Is Empty Or Length Error!", _StatusMessageType_Normal);
 			}
 
 		}
 		else {
-			// Skriv GUI Status Meddelse
+			// Write GUI status message
 			RMH_Winforms_RichTextBox_WriteLine(GUIInfoTextArea, "No Session Configuration File Found!", _StatusMessageType_Normal);
 		}
 
 	}
 	catch (System::Exception^ Ex) {
 
-		// Skriv GUI Status Meddelse
+		// Write GUI status message
 		RMH_Winforms_RichTextBox_WriteLine(GUIInfoTextArea, "Session Configuration File Format Error! ", _StatusMessageType_Error);
 
 	}

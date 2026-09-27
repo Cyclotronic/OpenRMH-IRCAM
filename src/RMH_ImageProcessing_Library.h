@@ -13,19 +13,19 @@
 #ifndef RMH_ImageProcessing_Library_H 
 #define RMH_ImageProcessing_Library_H
 
-// Tilhørende Biblioteker
+// Associated libraries
 #include "RMH_ThermalCameraSupport_Library.h"
 
-// ----------------------- Billede Opløsnings Format Reference Matricer ---------------------- //
+// ----------------------- Image Resolution Format Reference Matrices ---------------------- //
 
-// Billede Opløsnings Format Reference Macroer
+// Image resolution format reference macros
 #define _ImageProcessing_ImageResolution_8Bit           255
 #define _ImageProcessing_ImageResolution_14Bit          16383
 #define _ImageProcessing_ImageResolution_16Bit          65535
 
 // ---------------- Billede Processerings Kernal Koordinat Reference Matricer ---------------- //
 
-// Billede Kernel Makse Størrelses Macroer
+// Image kernel mask size macros
 #define _ImageKernelMaskFilter_Size3x3            3 * 3
 #define _ImageKernelMaskFilter_Size5x5            5 * 5
 
@@ -76,7 +76,7 @@ static float Kernel5x5MatrixYCoordinates[_ImageKernelMaskFilter_Size5x5] = {
 #define _LaplacianImageSharpening_MinNmbOfKernelMasks     1
 #define _LaplacianImageSharpening_MaxNmbOfKernelMasks     3
 
-// Tilgængelige Laplacian Kernal Masker Macroer
+// Available Laplacian kernel mask macros
 #define _LaplacianImageKernel_3x3KernalMask1              1
 #define _LaplacianImageKernel_3x3KernalMask2              2
 #define _LaplacianImageKernel_5x5KernalMask1              3
@@ -140,7 +140,7 @@ static float Gaussian5x5KernelMask[_ImageKernelMaskFilter_Size5x5] = {
 
 };
 
-// ------------------------------ Billede Udregnings Routiner ------------------------------- //
+// ------------------------------ Image Calculation Routines ------------------------------- //
 
 double RMH_ImageCalculations_CalMeanOfImage16Bit(unsigned short* ImageData, unsigned int FrameWidth, unsigned int FrameHeight);
 
@@ -150,7 +150,7 @@ void RMH_ImageNonUniformityCorrection_ConvertBaselineImageTo16Bit(unsigned char*
 double RMH_ImageNonUniformityCorrection_CalNonUniformityMap(unsigned short* BaselineImageData, unsigned int FrameWidth, unsigned int FrameHeight, unsigned int FrameMetaDataSize, double* OutputNonUniformityMap);
 void RMH_ImageNonUniformityCorrection_ZeroNonUniformityMapArrayData(double* OutputNonUniformityMap, unsigned int FrameWidth, unsigned int FrameHeight);
 
-// ----------------------------- Billede Konverterings Routiner ----------------------------- //
+// Return the mean value of the CMOS baseline measurement
 
 void RMH_ImageConversion_ArrangeYUY2ToRGB24(unsigned char* YUY2in,unsigned char* RGBout, unsigned int FrameWidth, unsigned int FrameHeight);
 void RMH_ImageConversion_ConvertYUY2ToGrayscaleRGB24(unsigned char* YUY2in, unsigned char* GrayscaleOut, unsigned int FrameWidth, unsigned int FrameHeight);
@@ -164,12 +164,12 @@ void RMH_ImageProcessing_ApplyOverlayedPaletteToGrayScaleImageData(unsigned shor
 void RMH_ImageProcessing_DisplayColorPaletteInPictureBox(unsigned char ColorPalette[3][256], System::Windows::Forms::PictureBox^ PictureBox);
 void RMH_ImageProcessing_FormatColorPaletteRangeInsideBackgroundPalette(unsigned short MainPalette[3][16384], bool MainPaletteInvertFlag, bool AdaptFullPaletteWithinRange, unsigned short BackPalette[3][16384], bool BackPaletteInvertFlag, unsigned short MainPaletteMaxRange, unsigned short MainPaletteMinRange, unsigned short(*OutputPalette)[16384]);
 
-// ----------------------------- Billede Processerings Routiner ----------------------------- //
+// Should the background palette be inverted
 
 void RMH_ImageProcessing_LinearAutomaticGainControlRaw(unsigned short* ThermalData, unsigned short* GainGrayscale, unsigned int FrameWidth, unsigned int FrameHeight, double MaxOutPixelVal, double MinOutPixelVal, double MaxInPixelVal, double MinInPixelVal);
 unsigned char RMH_ImageProcessing_GetKernelPixelOverlayPixelValue(unsigned char* ImageData, unsigned int ImageDataWidth, unsigned int ImageDataHeight, float XPos, float YPos);
 
-// --- Gaussian Billede Filtrerings Processering --->
+// Local variables
 
 void RMH_ImageProcessing_2DGaussian3x3KernelBlur(unsigned char* ImageData, unsigned int ImageDataWidth, unsigned int ImageDataHeight, unsigned char* BluredImage);
 
@@ -178,15 +178,15 @@ void RMH_ImageProcessing_2DGaussian3x3KernelBlur(unsigned char* ImageData, unsig
 bool RMH_ImageProcessing_GenerateUnsharpKernelMask(unsigned char KernelMaskSize, float Sigma, float* KernelMaskPointer);
 void RMH_ImageProcessing_2DUnsharpMaskKernelImageSharpening(unsigned short* ImageData, unsigned int ImageResolution, unsigned int ImageDataWidth, unsigned int ImageDataHeight, unsigned char KernelMaskSize, float* KernelMaskPointer, float SharpeningStrength, bool OutputUnsharpMaskFlag, unsigned short* SharpenedImage);
 
-// --- Laplacian Billede Sharpening Processering --->
+// Should the unsharp mask pixel values be written to the output array
 
 void RMH_ImageProcessing_LaplacianImageSharpening(unsigned char* ImageData, unsigned int ImageDataWidth, unsigned int ImageDataHeight, unsigned char KernelMask, float SharpeningStreangth, bool ShowFilteredMaks, unsigned char* SharpenedImage);
 
-// --- Billede Median Filtrerings Processering --->
+// Write the sharpened image data to the pointer array
 
 void RMH_ImageProcessing_ImageMedianFiltering(unsigned char* ImageData, unsigned int ImageDataWidth, unsigned int ImageDataHeight, unsigned char* MedianFilteredImage);
 
-// --- Billede 2D Interpolation Processering --->
+// Read the pixel values of the median filter kernel matrix
 
 void RMH_ImageProcessing_2DBilinearInterpolation(unsigned short* ImageData, unsigned int ImageDataWidth, unsigned int ImageDataHeight, unsigned int InterpolatedImageWidth, unsigned int InterpolatedImageHeight, unsigned short* InterpolatedImage);
 

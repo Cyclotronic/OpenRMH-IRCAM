@@ -8,13 +8,13 @@
  *
  */
 
-// Inkluderede Biblioteker
+// Included libraries
 #include <windows.h>
 #include <GL/GLU.h>
 #include <GL/GL.h>
 #include <iostream>
 
- // Tilhørende Name spaces
+ // Associated namespaces
 using namespace System::Windows::Forms;
 using namespace std;
 
@@ -22,7 +22,7 @@ using namespace std;
 #define _ColorBarMaxNumberOfTicks       20 // Major Ticks + Minor Ticks
 #define _NumberOfMovableTags            2
 
-// Statiske Globale arrays og variabler
+// Static global arrays and variables
 static GLfloat MinorTickLabelXPos[_ColorBarMaxNumberOfTicks];
 static GLfloat MinorTickLabelYPos[_ColorBarMaxNumberOfTicks];
 static unsigned short FirstColorPaletteData[16384 * 4];
@@ -34,7 +34,7 @@ static std::string MinimumTagStdString = "MIN";
 // OpenGL Klasse definition
 namespace OpenGLColorBar {
 
-	// ------------------------- Globale Klasse Struktur Objekter -------------------------- //
+	// ------------------------- Global Class Structure Objects -------------------------- //
 
 	// ColorBar Tag Positions Data Klasse struktur
 	class ColorBarTagPosition {
@@ -58,13 +58,13 @@ namespace OpenGLColorBar {
 
 	// ----------------- Privat Custom Winforms Gennemsigtigt Panel Klasse ----------------- //
 
-	// Tilhørende lokalt klasse Name space objekt
+	// Associated local class namespace object
 	namespace NativeForm = System::Windows::Forms;
 
-	// Gennemsigtig overlay panel klasse til billede rendererings panel
+	// Transparent overlay panel class for the image rendering panel
 	private ref class TextureOverlayPanel : System::Windows::Forms::Panel {
 
-		// Lokale klasse objekter
+		// Local class objects
 		protected: System::Drawing::Graphics^ graphics;
 
 		protected: virtual property NativeForm::CreateParams^ CreateParams {
@@ -72,12 +72,12 @@ namespace OpenGLColorBar {
 			// Overskriv panelets konfigurations parametere
 			NativeForm::CreateParams^ get() override {
 
-				// Læs panelets kontrol parametere
+				// Read the control parameters of the panel
 				NativeForm::CreateParams^ PanalParams = __super::CreateParams;
-				// Panelets udviddet style skal være gennemsigtid
+				// The extended style of the panel must be transparent
 				PanalParams->ExStyle |= WS_EX_TRANSPARENT;
 
-				// Retuner Panalets config parametere
+				// Return the config parameters of the panel
 				return PanalParams;
 
 			}
@@ -92,27 +92,27 @@ namespace OpenGLColorBar {
 
 		virtual void OnPaintBackground(PaintEventArgs^ e) override {
 
-			// Ingen baggrund skal tegnes
+			// No background should be drawn
 
 		}
 
 		protected: virtual void OnPaint(PaintEventArgs^ e) override {
 
-			// Ingen yderligere grafik skal genereres til panelet 
+			// No additional graphics should be generated for the panel 
 
 		}
 
 	};
 
-	// --------------------------- Primære OpenGL ColorBar Klasse -------------------------- //
+	// --------------------------- Main OpenGL ColorBar Class -------------------------- //
 
 	public ref class RMHOpenGLColorBar : public System::Windows::Forms::NativeWindow {
 
 	private:
 
-		// ------------------------ Lokale Form Reference Struktur ------------------------- //
+		// ------------------------ Local Form Reference Structure ------------------------- //
 
-		// Lokale Reference struktur
+		// Local reference structure
 		ref struct PrivateLocals {
 
 			// ColorBar Major Og Minor tick Label array
@@ -130,7 +130,7 @@ namespace OpenGLColorBar {
 		private: unsigned int ColorBarPaletteResolution = 16384;
 		private: unsigned int ColorBarPaletteIntegerRange = 65535;
 
-		// Private Globale klasse objekter og variabler
+		// Private global class objects and variables
 		private: HDC m_hDC;
 		private: HGLRC m_hglrc;
 		private: GLuint BaseFont;
@@ -153,7 +153,7 @@ namespace OpenGLColorBar {
 		private: CreateParams^ ControlParams = gcnew CreateParams;
 		private: TextureOverlayPanel^ OverlayPanel = gcnew TextureOverlayPanel();
 
-		// ColorBar Panel, Textur, Tick Linje Og Positions konfigurations variabler
+		// ColorBar panel, texture, tick line and position configuration variables
 		private: GLfloat ColorBarPanelTextureWidth = 24;
 		private: GLfloat ColorBarPanelTexturePadding = 8;
 		private: GLfloat ColorBarX0TexturePos = 9;
@@ -175,7 +175,7 @@ namespace OpenGLColorBar {
 		private: GLfloat TagLabelXOffset = 4;
 		private: GLfloat TagLabelYOffset = 0.7;
 
-		// Diverse ColorBar Variabler
+		// Miscellaneous ColorBar variables
 		private: GLfloat ColorBarAreaX0;
 		private: GLfloat ColorBarAreaY0;
 		private: GLfloat ColorBarAreaWidth;
@@ -210,7 +210,7 @@ namespace OpenGLColorBar {
 		private: bool InvertFirstPaletteFlag = false;
 		private: bool InvertSecondPaletteFlag = false;
 
-		// Globale ColorBar Farve Variabler (Sæt til Default farve værdier)
+		// Global ColorBar color variables (set to default color values)
 		private: GLubyte TickLineColorR = 255;
 		private: GLubyte TickLineColorG = 255;
 		private: GLubyte TickLineColorB = 255;
@@ -251,31 +251,31 @@ namespace OpenGLColorBar {
 
 		RMHOpenGLColorBar(System::Windows::Forms::Panel^ TexturePanel, unsigned char ResolutionScaleFactor) {
 
-			// Routinen opsætter et OpenGL Supporterede grafisk område til renderering
-			// Et Winforms Panel er givet som det fysiske textur areal.
+			// This routine sets up an OpenGL-supported graphics area for rendering
+			// A WinForms panel is given as the physical texture area.
 
 			// Initialiser Colorbar Tick Labels array med start strings
 			RMH_OpenGL_InitCliArray(PrivateLocals::ColorBarTickLabels, "N/A");
 
-			// Indstil start værdier for Max/Min Tag Y-Positioner
+			// Set start values for the max/min tag Y positions
 			MovableTagY0[MaxTagID] = ColorBarPanelTexturePadding;
 			MovableTagY0[MinTagID] = ColorBarPixelHeight + ColorBarPanelTexturePadding;
 
-			// Indstil start værdier for Colorbarent Max/Min/Center Pilenes Y-Positioner
+			// Set start values for the Y positions of the colorbar max/min/center arrows
 			ColorBarMaxArrowYPos = ColorBarPanelTexturePadding;
 			ColorBarMinArrowYPos = ColorBarPixelHeight + ColorBarPanelTexturePadding;
 			ColorBarCntArrowYPos = ((ColorBarPixelHeight + ColorBarPanelTexturePadding) - ColorBarPanelTexturePadding) / 2.0f;
 
-			// Sæt Textur initielle parametere
+			// Set the initial texture parameters
 			InitialTextureWidth = (GLdouble)TexturePanel->Width;
 			InitialTextureHeight = (GLdouble)TexturePanel->Height;
 			TextureResScaleFactor = (GLdouble)ResolutionScaleFactor;
 
-			// Udregn den totale skallerbar textur hæjde og bredde
+			// Calculate the total scalable texture height and width
 			TotalTextureScalableWidth = InitialTextureWidth * TextureResScaleFactor;
 			TotalTextureScalableHeight = InitialTextureHeight * TextureResScaleFactor;
 
-			// Sæt positionen af kontrol klassen
+			// Set the position of the control class
 			ControlParams->X = 0;
 			ControlParams->Y = 0;
 			ControlParams->Width = (GLdouble)TexturePanel->Width * TextureResScaleFactor;
@@ -283,43 +283,43 @@ namespace OpenGLColorBar {
 
 			// Konfigurer Textur parent handler
 			ControlParams->Parent = TexturePanel->Handle;
-			// Skab "Child" af valgte "parent" og gør denne OpenGL compliant
+			// Create a "child" of the selected "parent" and make it OpenGL compliant
 			ControlParams->Style = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN;
 
-			// Generer tekstur vindue handler
+			// Generate the texture window handle
 			this->CreateHandle(ControlParams);
 
-			// Pointer til textur handler
+			// Pointer to the texture handle
 			m_hDC = GetDC((HWND)this->Handle.ToPointer());
 
-			// Er denne handler aktiv
+			// Is this handle active
 			if (m_hDC) {
 
 				// Konfigurer Textur Pixel format
 				RMH_OpenGL_SetTexturePixelFormat(m_hDC);
-				// Konfigurer texturens størrelse
+				// Configure the size of the texture
 				RMH_OpenGL_ResizeOpenGLWinformsScene(ControlParams->Width, ControlParams->Height);
 				// Initialisere OpenGL for Winforms C++
 				RMH_OpenGL_Init();
 
 			}
 
-			// Tilføj et overlejede gennemsigtigt panel til textur panalet
+			// Add an overlaid transparent panel to the texture panel
 			RMH_OpenGL_AddOverlayPanelToMainTexturePanel(TexturePanel);
 
-			// Opsæt ColorBar textur området til grafisk renderering
+			// Set up the ColorBar texture area for graphics rendering
 			RMH_OpenGL_InitColorBarTexture(ColorBarPanelTextureWidth, ColorBarPanelTexturePadding + ColorBarPixelHeight + ColorBarPanelTexturePadding);
 
 		}
 
 		private: GLvoid RMH_OpenGL_InitCliArray(cli::array<System::String^>^ InputArray, System::String^ InitString) {
 
-			// Routinen initialiserer givet array med start værdier
+			// This routine initializes the given array with start values
 
-			// Loop til og med arrayets maksimale længde
+			// Loop up to and including the maximum length of the array
 			for (unsigned int i = 0; i < _ColorBarMaxNumberOfTicks; i++) {
 
-				// Skriv string til array index
+				// Write the string to the array index
 				InputArray[i] = InitString;
 
 			}
@@ -328,20 +328,20 @@ namespace OpenGLColorBar {
 
 		private: GLvoid RMH_OpenGL_AddOverlayPanelToMainTexturePanel(System::Windows::Forms::Panel^ TexturePanel) {
 
-			// Routinen tilføjer et overlejede gennemsigtigt panel til textur panalet
-			// Dette overlejede panel benyttes til manipulerer objekter på billede texturen
+			// This routine adds an overlaid transparent panel to the texture panel
+			// This overlaid panel is used to manipulate objects on the image texture
 
-			// Overlejede panel skal ikke have nogen margin eller padding
+			// The overlaid panel must not have any margin or padding
 			OverlayPanel->Margin = System::Windows::Forms::Padding(0, 0, 0, 0);
 			OverlayPanel->Padding = System::Windows::Forms::Padding(0, 0, 0, 0);
 
-			// Det overlejede gennemsigtigt panel skal fylde hele textur panelet
+			// The overlaid transparent panel must fill the whole texture panel
 			OverlayPanel->Dock = System::Windows::Forms::DockStyle::Fill;
 
-			// Tilføj det overlejede gennemsigtigt panel som et "Child" til textur panelet
+			// Add the overlaid transparent panel as a "child" of the texture panel
 			TexturePanel->Controls->Add(OverlayPanel);
 
-			// Aktiver Mus handler events til det gennemsigtige panel
+			// Enable mouse handler events for the transparent panel
 			OverlayPanel->MouseDown += gcnew System::Windows::Forms::MouseEventHandler(this, &RMHOpenGLColorBar::TexturePanel_MouseDown);
 			OverlayPanel->MouseUp += gcnew System::Windows::Forms::MouseEventHandler(this, &RMHOpenGLColorBar::TexturePanel_MouseUp);
 			OverlayPanel->MouseMove += gcnew System::Windows::Forms::MouseEventHandler(this, &RMHOpenGLColorBar::TexturePanel_MouseMove);
@@ -353,9 +353,9 @@ namespace OpenGLColorBar {
 
 		private: GLdouble RMH_OpenGL_TranslateOverlayPanelMouseXPosToTextureXPos(System::Windows::Forms::MouseEventArgs^ OverlayPanelMouseEvent) {
 
-			// Routinen oversætter overlejede panel Mus positioner til aktuel Textur Panel Mus Positioner
+			// This routine translates the overlaid panel mouse positions to the actual texture panel mouse positions
 
-			// Lokale Variabler
+			// Local variables
 			GLdouble MouseTextureXPos = 0.0;
 			GLdouble PanelsWidthDifference = 0.0;
 
@@ -365,19 +365,19 @@ namespace OpenGLColorBar {
 			// Konverter overlejede panel Mus position til aktuel Textur Panel Mus Position
 			MouseTextureXPos = (OverlayPanelMouseEvent->X + PanelsWidthDifference) * (TextureWidth / CurrentTexturePanelWidth);
 
-			// Håndtering ved minimum textur Mus Position 
+			// Handling at the minimum texture mouse position 
 			if (MouseTextureXPos <= 0) {
-				// Sæt Mus position til minimum værdi
+				// Set the mouse position to the minimum value
 				MouseTextureXPos = 0;
 			}
 
-			// Håndtering ved maksimal textur Mus Position 
+			// Handling at the maximum texture mouse position 
 			if (MouseTextureXPos >= TextureWidth) {
-				// Sæt Mus position til maksimal værdi
+				// Set the mouse position to the maximum value
 				MouseTextureXPos = TextureWidth;
 			}
 
-			// Rund Mus position op til nærmeste integer
+			// Round the mouse position up to the nearest integer
 			MouseTextureXPos = RMH_Math_Round(MouseTextureXPos);
 
 			// Retuner aktuel Textur Panel Mus Position
@@ -387,9 +387,9 @@ namespace OpenGLColorBar {
 
 		private: GLdouble RMH_OpenGL_TranslateOverlayPanelMouseYPosToTextureYPos(System::Windows::Forms::MouseEventArgs^ OverlayPanelMouseEvent) {
 
-			// Routinen oversætter overlejede panel Mus positioner til aktuel Textur Panel Mus Positioner
+			// This routine translates the overlaid panel mouse positions to the actual texture panel mouse positions
 
-			// Lokale Variabler
+			// Local variables
 			GLdouble MouseTextureYPos = 0.0;
 			GLdouble PanelsHeightDifference = 0.0;
 
@@ -399,19 +399,19 @@ namespace OpenGLColorBar {
 			// Konverter overlejede panel Mus position til aktuel Textur Panel Mus Position
 			MouseTextureYPos = (OverlayPanelMouseEvent->Y + PanelsHeightDifference) * (TextureHeight / CurrentTexturePanelHeight);
 
-			// Håndtering ved minimum textur Mus Position 
+			// Handling at the minimum texture mouse position 
 			if (MouseTextureYPos <= 0) {
-				// Sæt Mus position til minimum værdi
+				// Set the mouse position to the minimum value
 				MouseTextureYPos = 0;
 			}
 
-			// Håndtering ved maksimal textur Mus Position 
+			// Handling at the maximum texture mouse position 
 			if (MouseTextureYPos >= TextureHeight) {
-				// Sæt Mus position til maksimal værdi
+				// Set the mouse position to the maximum value
 				MouseTextureYPos = TextureHeight;
 			}
 
-			// Rund Mus position op til nærmeste integer
+			// Round the mouse position up to the nearest integer
 			MouseTextureYPos = RMH_Math_Round(MouseTextureYPos);
 
 			// Retuner aktuel Textur Panel Mus Position
@@ -419,50 +419,50 @@ namespace OpenGLColorBar {
 
 		}
 
-		// ----------------- Textur Initiliserings Og Håndterings Routiner ----------------- //
+		// ----------------- Texture Initialization And Handling Routines ----------------- //
 
 		private: GLvoid RMH_OpenGL_MakeRenderContextCurrent() {
 
-			// Routinen Gør Tilhørende Render kontekst det nuværende render kontekst
+			// This routine makes the associated render context the current render context
 
-			// Gør Tilhørende Render kontekst det nuværende render kontekst
+			// Make the associated render context the current render context
 			wglMakeCurrent(m_hDC, m_hglrc);
 
 		}
 
 		private: GLvoid RMH_OpenGL_MakeRenderContextNULL() {
 
-			// Routinen nulstiller tilhørende Render kontekst
+			// This routine resets the associated render context
 
-			// Nulstil Render kontekst
+			// Reset the render context
 			wglMakeCurrent(NULL, NULL);
 
 		}
 
 		private: GLvoid RMH_OpenGL_InitColorBarTexture(unsigned int ColorBarTextureWidth, unsigned int ColorBarTextureHeight) {
 
-			// Routinen benyttes til at opsætte en OpenGL textur til grafisk renderering
+			// This routine is used to set up an OpenGL texture for graphics rendering
 
-			// Sæt Textur Parameter - Width og Height skal være et multiplum af 2
+			// Set the texture parameters - width and height must be a multiple of 2
 			ColorBarTexture = new GLuint[1];
 			TextureWidth = ColorBarTextureWidth;
 			TextureHeight = ColorBarTextureHeight;
 			ColorBarTexture_t = (GLfloat)ColorBarPixelWidth / (GLfloat)TextureWidth;
 			ColorBarTexture_u = (GLfloat)ColorBarPaletteResolution / ((ColorBarPanelTexturePadding + (GLfloat)ColorBarPaletteResolution) + ColorBarPanelTexturePadding);
 
-			// Gør Tilhørende Render kontekst det nuværende render kontekst
+			// Make the associated render context the current render context
 			wglMakeCurrent(m_hDC, m_hglrc);
 
-			// Brug Texturen som skal rendererer Colorbarens data
+			// Use the texture that renders the colorbar data
 			glGenTextures(1, ColorBarTexture);
 
-			// Aktiver OpenGL 2D Texture
+			// Enable OpenGL 2D texture
 			glEnable(GL_TEXTURE_2D);
 
-			// Aktiver Textur Blending
+			// Enable texture blending
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-			// Bind Texturen som et 2D textur
+			// Bind the texture as a 2D texture
 			glBindTexture(GL_TEXTURE_2D, ColorBarTexture[0]);
 
 			// Konfigurer Textur parametere
@@ -473,7 +473,7 @@ namespace OpenGLColorBar {
 			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
 
-			// Deaktiver Texture
+			// Disable the texture
 			glDisable(GL_TEXTURE_2D);
 
 		}
@@ -482,7 +482,7 @@ namespace OpenGLColorBar {
 
 			// Routinen indstiller texturens syns vinkel for display i control handler komponentet
 
-			// Lokale Variabler
+			// Local variables
 			GLdouble PlaneXLook = 0.0;
 			GLdouble PlaneYLook = 0.0;
 			GLdouble PlaneFieldOfView = 60.0;
@@ -491,7 +491,7 @@ namespace OpenGLColorBar {
 			GLdouble PlaneDistance = 0.0;
 			GLdouble PlaneAspectRatio = 0.0;
 
-			// Læs data framens højde og bredde
+			// Read the height and width of the data frame
 			PlaneXLook = (GLdouble)TextureWidth * 0.5;
 			PlaneYLook = (GLdouble)TextureHeight * 0.5;
 
@@ -501,7 +501,7 @@ namespace OpenGLColorBar {
 			// Udregn affstanden imellem Frame data planet og textur planet
 			PlaneDistance = (GLdouble)TextureHeight * TanHalfFieldOfView;
 
-			// Opdater Texturens syns vinkel
+			// Update the viewing angle (field of view) of the texture
 			glMatrixMode(GL_PROJECTION);
 			glLoadIdentity();
 			gluPerspective(PlaneFieldOfView, PlaneAspectRatio, 0.01f, 2000.0);
@@ -511,51 +511,51 @@ namespace OpenGLColorBar {
 
 		}
 
-		// ------------------ Label Rendererings Og Håndterings Routiner ------------------- //
+		// ------------------ Label Rendering And Handling Routines ------------------- //
 
 		private: GLvoid RMH_OpenGL_glPrint(const char* CharArray) {
 
-			// Routinen Renderer et sæt karakterer på et OpenGL textur 
+			// This routine renders a set of characters on an OpenGL texture 
 
-			// Tilføj FONT Liste Egenskaber
+			// Add the font list properties
 			glPushAttrib(GL_LIST_BIT);
 			// Benyt FONT Base List
 			glListBase(BaseFont - 32);
-			// Eksikver og renderer karakterer på textur
+			// Execute and render the characters on the texture
 			glCallLists(strlen(CharArray), GL_UNSIGNED_BYTE, CharArray);
-			// Genopret Liste Egenskaber
+			// Restore the list properties
 			glPopAttrib();
 
 		}
 
 		private: GLvoid RMH_OpenGL_RenderStringOnTexture(GLfloat StringX, GLfloat StringY, std::string DisplayString, GLubyte ColorR, GLubyte ColorG, GLubyte ColorB) {
 
-			// Routinen rendererer et givet string på et OpenGL Textur
+			// This routine renders a given string on an OpenGL texture
 
 			// Konfigurer Textens Farve
 			glColor3ub(ColorR, ColorG, ColorB);
-			// Indstil textens position på textur
+			// Set the position of the text on the texture
 			glRasterPos2f(StringX, StringY);
 
-			// Render givet string på textur
+			// Render the given string on the texture
 			RMH_OpenGL_glPrint(DisplayString.c_str());
 
 		}
 
 		private: GLvoid RMH_OpenGL_RenderStringOnTextureCompensated(GLfloat StringX, GLfloat StringY, std::string DisplayString, GLubyte ColorR, GLubyte ColorG, GLubyte ColorB) {
 
-			// Routinen rendererer et givet string på et OpenGL Textur
+			// This routine renders a given string on an OpenGL texture
 
-			// Udregn String Position ved skallering af textur vinduet
+			// Calculate the string position when scaling the texture window
 			StringX = StringX * TextureToPanelScaleWidthFactor;
 			StringY = StringY * TextureToPanelScaleHeightFactor;
 
 			// Konfigurer Textens Farve
 			glColor3ub(ColorR, ColorG, ColorB);
-			// Indstil textens position på textur
+			// Set the position of the text on the texture
 			glRasterPos2f(StringX, StringY);
 
-			// Render givet string på textur
+			// Render the given string on the texture
 			RMH_OpenGL_glPrint(DisplayString.c_str());
 
 		}
@@ -564,7 +564,7 @@ namespace OpenGLColorBar {
 
 		private: GLvoid RMH_OpenGL_ClearTextureBuffer() {
 
-			// Routinen rydder tilhørende textur buffere
+			// This routine clears the associated texture buffers
 
 			// Ryd Textur farve og bit buffere
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -573,9 +573,9 @@ namespace OpenGLColorBar {
 
 		private: GLvoid RMH_OpenGL_StartColorBarRender() {
 
-			// Routinen er start tilstande af OpenGL colorbar Rendereringen
+			// This routine is the start state of the OpenGL colorbar rendering
 
-			// Roter Textur Til at matche korrekt billede orientation
+			// Rotate the texture to match the correct image orientation
 			glTranslatef(0.0f, (GLdouble)TextureHeight, 0.0f);
 			glRotatef(180.0f, 1.0f, 0.0f, 0.0f);
 
@@ -583,7 +583,7 @@ namespace OpenGLColorBar {
 		
 		private: GLvoid RMH_OpenGL_RenderColorBarPalette(GLfloat ColorBarX0, GLfloat ColorBarY0, GLfloat ColorBarWidth, GLfloat ColorBarHeight, unsigned short* PaletteData, bool InvertColorPalette) {
 
-			// Routinen Render en givet colorbar palette
+			// This routine renders a given colorbar palette
 
 			// Lager X/Y/W/H i globale variabler
 			ColorBarAreaX0 = (GLfloat)ColorBarX0 * TextureToPanelScaleWidthFactor;
@@ -591,18 +591,18 @@ namespace OpenGLColorBar {
 			ColorBarAreaWidth = (GLfloat)ColorBarWidth * TextureToPanelScaleWidthFactor;
 			ColorBarAreaHeight = (GLfloat)ColorBarHeight * TextureToPanelScaleHeightFactor;
 
-			// Opdater Textur data med billede data
+			// Update the texture data with the image data
 			glEnable(GL_TEXTURE_2D);
 			glEnable(GL_BLEND);
 			glBindTexture(GL_TEXTURE_2D, ColorBarTexture[0]);
 
-			// Skriv Color Palette data til textur
+			// Write the color palette data to the texture
 			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, ColorBarPixelWidth, ColorBarPaletteResolution, GL_RGBA, GL_UNSIGNED_SHORT, PaletteData);
 			
 			// Begynd Renderering
 			glBegin(GL_QUADS);
 
-			// Skal visningen af color paletten inverteres
+			// Should the display of the color palette be inverted
 			if (InvertColorPalette == true) {
 
 				// Opdater render textur kordinater - inverterede
@@ -618,7 +618,7 @@ namespace OpenGLColorBar {
 			}
 			else {
 
-				// Opdater render textur kordinater - ikke inverterede
+				// Update the render texture coordinates - not inverted
 				glTexCoord2f(0.0, 0.0);
 				glVertex2f(ColorBarAreaX0 + ColorBarAreaWidth, ColorBarAreaY0 + ColorBarAreaHeight);
 				glTexCoord2f(ColorBarTexture_t, 0.0);
@@ -633,7 +633,7 @@ namespace OpenGLColorBar {
 			// Konfiguration Slut
 			glEnd();
 
-			// Deaktiver 2D Texture
+			// Disable 2D texture
 			glDisable(GL_TEXTURE_2D);
 			glDisable(GL_BLEND);	
 
@@ -641,20 +641,20 @@ namespace OpenGLColorBar {
 
 		private: GLvoid RMH_OpenGL_RenderColorBarTickLinesAndLabels(GLfloat TickLineX0, GLfloat TickLineY0, GLfloat TickLineHeight, unsigned int NmbOfMinorTicks, GLubyte ColorR, GLubyte ColorG, GLubyte ColorB) {
 
-			// Routinen renderer en tick linje på højre side af colorbaren, samt tilhørende givet antal minor ticks
+			// This routine renders a tick line on the right side of the colorbar, as well as the associated given number of minor ticks
 
-			// Lokale variabler
+			// Read the temporary array data and sort the kernel array
 			unsigned int i = 0;
 
-			// Hvis givet antal minor ticks er højere end tiladte antal colorbar ticks - 2
+			// If the given number of minor ticks is higher than the allowed number of colorbar ticks - 2
 			if (NmbOfMinorTicks > _ColorBarMaxNumberOfTicks - 2) {
 
-				// Brgræns til Maximale tiladte antal minor colorbar ticks
+				// Limit to the maximum allowed number of minor colorbar ticks
 				NmbOfMinorTicks = _ColorBarMaxNumberOfTicks - 2;
 
 			}
 
-			// Formater ColorBar Tick Linje Max/Min Tick Linje Positioner - skaller med textur vinduet
+			// Format the ColorBar tick line max/min tick line positions - scale with the texture window
 			ColorBarMaxTickXPos = TickLineX0 * TextureToPanelScaleWidthFactor;
 			ColorBarMaxTickYPos = TickLineY0 * TextureToPanelScaleHeightFactor;
 			ColorBarMinTickXPos = TickLineX0 * TextureToPanelScaleWidthFactor;
@@ -665,23 +665,23 @@ namespace OpenGLColorBar {
 
 			// Inkrementer givet input Antal ticks 
 			NmbOfMinorTicks = NmbOfMinorTicks + 1;
-			// Udregn Major Tick Linjens Længde
+			// Calculate the length of the major tick line
 			MajorTickLinePixelSize = ColorBarMinTickYPos - ColorBarMaxTickYPos;
-			// Udregn Minor Tick Linjernes Y positions opløsning
+			// Calculate the Y position resolution of the minor tick lines
 			MinorTickPixelRes = MajorTickLinePixelSize / NmbOfMinorTicks;
 
-			// Aktiver OpenGL 1D Texture
+			// Enable OpenGL 1D texture
 			glEnable(GL_TEXTURE_1D);
 
-			// Indstil linjens Farve
+			// Set the color of the line
 			glColor3ub(ColorR, ColorG, ColorB);
-			// Indstil Linjens tykkelse
+			// Set the thickness of the line
 			glLineWidth(1);
 
-			// Render Linje på textur
+			// Render the line on the texture
 			glBegin(GL_LINES);
 
-			// Render Primære ColorBar Tick Linje
+			// Render the primary ColorBar tick line
 			glVertex2f(ColorBarMaxTickXPos, ColorBarMaxTickYPos);
 			glVertex2f(ColorBarMaxTickXPos, ColorBarMinTickYPos);
 
@@ -719,26 +719,26 @@ namespace OpenGLColorBar {
 
 			// Konfiguration Slut
 			glEnd();
-			// Deaktiver 1D Texture
+			// Disable the 1D texture
 			glDisable(GL_TEXTURE_1D);
 
-			// Render Colorbarens temperatur labels
+			// Render the temperature labels of the colorbar
 			RMH_OpenGL_RenderColorBarLabels(NmbOfMinorTicks, ColorR, ColorG, ColorB);
 
 		}
 
 		private: GLvoid RMH_OpenGL_RenderColorBarLabels(unsigned int NmbOfMinorTicks, GLubyte ColorR, GLubyte ColorG, GLubyte ColorB) {
 
-			// Routinen renderer Colorbarens temperatur labels
+			// This routine renders the temperature labels of the colorbar
 
-			// Lokale variabler
+			// Read the temporary array data and sort the kernel array
 			unsigned int i = 0;
 
 			// Render Colorbarens Maximums temperatur label
 			RMH_OpenGL_RenderStringOnTexture(MinorTickLabelXPos[0], MinorTickLabelYPos[0] + 1, 
 				RMH_Conversion_SystemStringToStdString(PrivateLocals::ColorBarTickLabels[0]), ColorR, ColorG, ColorB);
 
-			// Loop igennem antallet af Minor colorbar ticks
+			// Loop through the number of minor colorbar ticks
 			for (i = 0; i < NmbOfMinorTicks - 1; i++) {
 
 				// Render Colorbarens minor tick labels
@@ -755,15 +755,15 @@ namespace OpenGLColorBar {
 
 		private: GLvoid RMH_OpenGL_RenderColorBarLimitTag(GLfloat TagX0, GLfloat TagY0, GLfloat TagLength, GLfloat TagHeight, GLfloat ArrowLength, GLubyte ColorR, GLubyte ColorG, GLubyte ColorB) {
 
-			// Routinen Rendererer et Color Bar Tag på givet position
+			// This routine renders a ColorBar tag at the given position
 
-			// Lokale variabler
+			// Read the temporary array data and sort the kernel array
 			GLfloat TagPos1 = 0.0f;
 			GLfloat TagPos2 = 0.0f;
 			GLfloat TagPos3 = 0.0f;
 			GLfloat TagPos4 = 0.0f;
 
-			// Udregn Tag størrelse ved skallering af textur vinduet
+			// Calculate the tag size when scaling the texture window
 			TagX0 = TagX0 * TextureToPanelScaleWidthFactor;
 			TagY0 = TagY0 * TextureToPanelScaleHeightFactor;
 			ArrowLength = ArrowLength * TextureToPanelScaleWidthFactor;
@@ -776,15 +776,15 @@ namespace OpenGLColorBar {
 			TagPos3 = (TagY0 - (TagHeight * 0.5));
 			TagPos4 = (TagY0 + (TagHeight * 0.5));
 
-			// Aktiver OpenGL 1D Texture
+			// Enable OpenGL 1D texture
 			glEnable(GL_TEXTURE_1D);
 
-			// Indstil polygon Farve
+			// Set the polygon color
 			glColor3ub(ColorR, ColorG, ColorB);
-			// Indstil polygon Linjens tykkelse
+			// Set the polygon line thickness
 			glLineWidth(1);
 
-			// Render Polygon på textur
+			// Render the polygon on the texture
 			glBegin(GL_POLYGON);
 
 			// Render Tag Polygon linjer
@@ -801,32 +801,32 @@ namespace OpenGLColorBar {
 
 			// Konfiguration Slut
 			glEnd();
-			// Deaktiver 1D Texture
+			// Disable the 1D texture
 			glDisable(GL_TEXTURE_1D);
 
 		}
 
 		private: GLvoid RMH_OpenGL_RenderArrowWithLabel(GLfloat ArrowX0, GLfloat ArrowY0, GLfloat ArrowLength, GLfloat ArrowHeadFactor, std::string ArrowLabel, GLubyte LineColorR, GLubyte LineColorG, GLubyte LineColorB, GLubyte LabelColorR, GLubyte LabelColorG, GLubyte LabelColorB) {
 
-			// Routinen renderer en højre orinterede horinzontal pil, med et tilhørende label
+			// This routine renders a right-oriented horizontal arrow, with an associated label
 
-			// Udregn Pilens parameter ved skallering af textur vinduet
+			// Calculate the arrow parameters when scaling the texture window
 			ArrowX0 = ArrowX0 * TextureToPanelScaleWidthFactor;
 			ArrowY0 = ArrowY0 * TextureToPanelScaleHeightFactor;
 			ArrowLength = ArrowLength * TextureToPanelScaleWidthFactor;
 
-			// Aktiver OpenGL 1D Texture
+			// Enable OpenGL 1D texture
 			glEnable(GL_TEXTURE_1D);
 
-			// Indstil pilens Farve
+			// Set the color of the arrow
 			glColor3ub(LineColorR, LineColorG, LineColorB);
-			// Indstil pilens Linjens tykkelse
+			// Set the line thickness of the arrow
 			glLineWidth(1);
 
-			// Render linjer på textur
+			// Render lines on the texture
 			glBegin(GL_LINES);
 
-			// Render pilens primære linje
+			// Render the primary line of the arrow
 			glVertex2f(ArrowX0, ArrowY0);
 			glVertex2f(ArrowX0 - ArrowLength, ArrowY0);
 			
@@ -838,33 +838,33 @@ namespace OpenGLColorBar {
 
 			// Konfiguration Slut
 			glEnd();
-			// Deaktiver 1D Texture
+			// Disable the 1D texture
 			glDisable(GL_TEXTURE_1D);
 
-			// Render Pilens tilhørende label
+			// Render the associated label of the arrow
 			RMH_OpenGL_RenderStringOnTexture(ArrowX0 - ArrowLength, ArrowY0 - 0.5, ArrowLabel, LabelColorR, LabelColorG, LabelColorB);
 
 		}
 
 		private: GLvoid RMH_OpenGL_RenderMaxArrowOutsideIndicator(GLfloat X0Pos, GLfloat Y0Pos, GLfloat Height, GLfloat Width, GLubyte ColorR, GLubyte ColorG, GLubyte ColorB) {
 
-			// Routinen renderer en indikator som indikerer om Maximum track pilen er udenfor colorbar arealet
+			// This routine renders an indicator that shows whether the maximum tracking arrow is outside the colorbar area
 
-			// Udregn indikatorens parameter ved skallering af textur vinduet
+			// Calculate the indicator parameters when scaling the texture window
 			X0Pos = X0Pos * TextureToPanelScaleWidthFactor;
 			Y0Pos = Y0Pos * TextureToPanelScaleHeightFactor;
 			Width = Width * TextureToPanelScaleWidthFactor;
 			Height = Height * TextureToPanelScaleHeightFactor;
 
-			// Aktiver OpenGL 1D Texture
+			// Enable OpenGL 1D texture
 			glEnable(GL_TEXTURE_1D);
 
-			// Indstil polygon Farve
+			// Set the polygon color
 			glColor3ub(ColorR, ColorG, ColorB);
-			// Indstil polygon Linjens tykkelse
+			// Set the polygon line thickness
 			glLineWidth(1);
 
-			// Render Polygon på textur
+			// Render the polygon on the texture
 			glBegin(GL_POLYGON);
 
 			// Render Indikator Polygon linjer
@@ -877,30 +877,30 @@ namespace OpenGLColorBar {
 
 			// Konfiguration Slut
 			glEnd();
-			// Deaktiver 1D Texture
+			// Disable the 1D texture
 			glDisable(GL_TEXTURE_1D);
 
 		}
 
 		private: GLvoid RMH_OpenGL_RenderMinArrowOutsideIndicator(GLfloat X0Pos, GLfloat Y0Pos, GLfloat Height, GLfloat Width, GLubyte ColorR, GLubyte ColorG, GLubyte ColorB) {
 
-			// Routinen renderer en indikator som indikerer om Maximum track pilen er udenfor colorbar arealet
+			// This routine renders an indicator that shows whether the maximum tracking arrow is outside the colorbar area
 
-			// Udregn indikatorens parameter ved skallering af textur vinduet
+			// Calculate the indicator parameters when scaling the texture window
 			X0Pos = X0Pos * TextureToPanelScaleWidthFactor;
 			Y0Pos = Y0Pos * TextureToPanelScaleHeightFactor;
 			Width = Width * TextureToPanelScaleWidthFactor;
 			Height = Height * TextureToPanelScaleHeightFactor;
 
-			// Aktiver OpenGL 1D Texture
+			// Enable OpenGL 1D texture
 			glEnable(GL_TEXTURE_1D);
 
-			// Indstil polygon Farve
+			// Set the polygon color
 			glColor3ub(ColorR, ColorG, ColorB);
-			// Indstil polygon Linjens tykkelse
+			// Set the polygon line thickness
 			glLineWidth(1);
 
-			// Render Polygon på textur
+			// Render the polygon on the texture
 			glBegin(GL_POLYGON);
 
 			// Render Indikator Polygon linjer
@@ -913,65 +913,65 @@ namespace OpenGLColorBar {
 
 			// Konfiguration Slut
 			glEnd();
-			// Deaktiver 1D Texture
+			// Disable the 1D texture
 			glDisable(GL_TEXTURE_1D);
 
 		}
 
-		// ------------- Positions Justerbar Colorbar Tag Håndterings Routiner ------------- //
+		// ------------- Position-Adjustable Colorbar Tag Handling Routines ------------- //
 
 		private: bool RMH_OpenGL_IsCursorInsideTag(GLdouble MouseXPosition, GLdouble MouseYPosition, GLfloat TagX0, GLfloat TagY0, GLfloat TagLength, GLfloat TagHeight, GLfloat ArrowLength) {
 
-			// Routinen kontrolerer om Mus Cursoren er indenfor Tag arealet
+			// This routine checks whether the mouse cursor is within the tag area
 
-			// Lokale variabler
+			// Read the temporary array data and sort the kernel array
 			bool IsInsideStatus = false;
 
-			// Kontroller om Mus Cursoren er inde i Tag areal - X Koordinat
+			// Check whether the mouse cursor is inside the tag area - X coordinate
 			if (MouseXPosition >= TagX0 - ArrowLength - TagLength && MouseXPosition <= TagX0) {
 
-				// Kontroller om Mus Cursoren er inde i Tag areal - Y Koordinat
+				// Check whether the mouse cursor is inside the tag area - Y coordinate
 				if (MouseYPosition >= TagY0 - (TagHeight / 2.0) && 
 					MouseYPosition <= TagY0 + (TagHeight / 2.0)) {
 
-					// Opdater Cursor positions status
+					// Update the cursor position status
 					IsInsideStatus = true;
 
 				}
 
 			}
 
-			// Retuner Cursor positions status
+			// Return the cursor position status
 			return IsInsideStatus;
 
 		}
 
 		private: GLvoid RMH_OpenGL_HandleTagMouseDownEvents(GLdouble MouseXPosition, GLdouble MouseYPosition) {
 
-			// Routinen håndterer events og stadier når det klikkes på et positions justerbar Tag
+			// This routine handles events and states when a position-adjustable tag is clicked
 
-			// Er Tag Bevægelse ikke aktiverede 
+			// Is tag movement not enabled 
 			if (ColorBarTagMoveEnableFlag == false) {
 
-				// Fortsæt ikke
+				// Do not continue
 				return;
 
 			}
 
-			// Nulstil Valgte Tag Index værdi
+			// Reset the selected tag index value
 			SelectedTagIndex = 0;
 
-			// Loop Igennem alle aktive Tags
+			// Loop through all active tags
 			for (unsigned short i = 0; i < _NumberOfMovableTags + 1; i++) {
 
-				// Kontroller om Mus Cursoren er inde i aktiv Tag areal 
+				// Check whether the mouse cursor is inside the active tag area 
 				if (RMH_OpenGL_IsCursorInsideTag(MouseXPosition, MouseYPosition, MaxMinTagX0Pos - MaxMinTagX0Offset,
 					MovableTagY0[i], MaxMinTagLength, MaxMinTagHeight, MaxMinTagArrowLength)) {
 
-					// Opdater Tag Move flag
+					// Update the tag move flag
 					TagMoveFlag = true;
 
-					// Lager Valgte Tag Index
+					// Store the selected tag index
 					SelectedTagIndex = i;
 
 					// Bryd For Loop
@@ -981,35 +981,35 @@ namespace OpenGLColorBar {
 
 			}
 
-			// Læs nuværende Tag kordinater/positioner ved nyt klick
+			// Read the current tag coordinates/positions on a new click
 			ClickTagYPositionOffset = MouseYPosition - MovableTagY0[SelectedTagIndex];
 
 		}
 
 		private: GLvoid RMH_OpenGL_HandleTagMouseMoveEvents(GLdouble MouseXPosition, GLdouble MouseYPosition) {
 
-			// Routinen håndterer events og stadier når et Klikkede Tag skal bevære sig
+			// This routine handles events and states when a clicked tag is to move
 
-			// Tilføj Tag Klik Offset Til Mus Positionen
+			// Add the tag click offset to the mouse position
 			MouseYPosition = MouseYPosition - ClickTagYPositionOffset;
 
-			// Hvis der endnu ikke er blevet klippet på panalet, eller hvis Tag Bevægelse ikke er aktiverede 
+			// If the panel has not yet been clicked, or if tag movement is not enabled 
 			if (OverlayPanelIsClick == false || ColorBarTagMoveEnableFlag == false) {
 
-				// Fortsæt ikke
+				// Do not continue
 				return;
 
 			}
 
-			// Skal ColorBar Taget bevæge sig
+			// Should the ColorBar tag move
 			if (TagMoveFlag == true) {
 
-				// Opdater Tagets X og Y kordinater
+				// Update the X and Y coordinates of the tag
 				MovableTagY0[SelectedTagIndex] = MouseYPosition;
 
 			}
 
-			// Begræns Positionen af Taget til colorbar området og håndter fælles positionering
+			// Limit the position of the tag to the colorbar area and handle the common positioning
 			if (MovableTagY0[SelectedTagIndex] <= ColorBarPanelTexturePadding) { MovableTagY0[SelectedTagIndex] = ColorBarPanelTexturePadding; }
 			if (MovableTagY0[SelectedTagIndex] >= ColorBarPixelHeight + ColorBarPanelTexturePadding) { MovableTagY0[SelectedTagIndex] = ColorBarPixelHeight + ColorBarPanelTexturePadding; }
 			if ((MovableTagY0[MaxTagID] + (MaxMinTagHeight / 2) >= MovableTagY0[MinTagID] - (MaxMinTagHeight / 2)) && SelectedTagIndex == MinTagID) {
@@ -1031,7 +1031,7 @@ namespace OpenGLColorBar {
 
 		private: GLvoid RMH_OpenGL_RenderMovableColorBarTag(GLfloat TagX0, GLfloat TagXOffset, GLfloat TagLength, GLfloat TagHeight, GLfloat ArrowLength, unsigned char TagID, GLubyte ColorR, GLubyte ColorG, GLubyte ColorB) {
 
-			// Routinen renderer et positions justerbar colorbar tag
+			// This routine renders a position-adjustable colorbar tag
 
 			// Render Colorbar Tag
 			RMH_OpenGL_RenderColorBarLimitTag(TagX0 - TagXOffset, MovableTagY0[TagID], TagLength, TagHeight, ArrowLength, ColorR, ColorG, ColorB);
@@ -1042,14 +1042,14 @@ namespace OpenGLColorBar {
 
 		private: GLvoid TexturePanel_MouseDown(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e) {
 
-			// Læs Mus Cursor Positionen
+			// Read the mouse cursor position
 			GLdouble MouseXPosition = RMH_OpenGL_TranslateOverlayPanelMouseXPosToTextureXPos(e);
 			GLdouble MouseYPosition = RMH_OpenGL_TranslateOverlayPanelMouseYPosToTextureYPos(e);
 			
 			// Opdater overlay panel click flag
 			OverlayPanelIsClick = true;
 
-			// Håndter events når det klikkes på et positions justerbar Tag
+			// Handle events when a position-adjustable tag is clicked
 			RMH_OpenGL_HandleTagMouseDownEvents(MouseXPosition, MouseYPosition);
 
 		}
@@ -1059,25 +1059,25 @@ namespace OpenGLColorBar {
 			// Opdater overlay panel click flag
 			OverlayPanelIsClick = false;
 
-			// Nulstil Tag Move flag
+			// Reset the tag move flag
 			TagMoveFlag = false;
 		
 		}
 
 		private: GLvoid TexturePanel_MouseMove(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e) {
 
-			// Læs Mus Cursor Positionen
+			// Read the mouse cursor position
 			GLdouble MouseXPosition = RMH_OpenGL_TranslateOverlayPanelMouseXPosToTextureXPos(e);
 			GLdouble MouseYPosition = RMH_OpenGL_TranslateOverlayPanelMouseYPosToTextureYPos(e);
 
-			// Håndterer events når et Klikkede Tag skal bevære sig
+			// Handle events when a clicked tag is to move
 			RMH_OpenGL_HandleTagMouseMoveEvents(MouseXPosition, MouseYPosition);
 
 		}
 
 		private: GLvoid TexturePanel_MouseWheel(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e) {
 
-			// Lokale variabler
+			// Read the temporary array data and sort the kernel array
 			bool MouseWheelPolNegativeFlag = false;
 			GLfloat ColorBarPanelHeight = ColorBarPixelHeight + (ColorBarPanelTexturePadding * 2.0f);
 			GLfloat ColorBarPanelMiddle = ColorBarPanelHeight / 2.0f;
@@ -1100,22 +1100,22 @@ namespace OpenGLColorBar {
 
 			}
 
-			// Kontroller om Musen er i øvereste eller nedereste del af colorbar panelet
+			// Check whether the mouse is in the top or bottom part of the colorbar panel
 			if (RMH_OpenGL_TranslateOverlayPanelMouseYPosToTextureYPos(e) > ColorBarPanelMiddle) {
 
 				// Er Mus Hjulets polaritet positiv
 				if (MouseWheelPolNegativeFlag == false) {
 
-					// Er color barens Min temp range indstilling lavere end Max temp indstillingen
+					// Is the min temperature range setting of the colorbar lower than the max temperature setting
 					if (ColorBarMinTempRange < ColorBarMaxTempRange) {
 
-						// Opdater Colorbarens Minimum Temperatur offset værdi fra læst poloritet
+						// Update the minimum temperature offset value of the colorbar from the polarity read
 						ColorBarMinRangeOffsetValue = ColorBarMinRangeOffsetValue + MouseWheelScrollPolarity;
 
 					}
 					else {
 
-						// Indstil Min Range værdien til Max Range værdien
+						// Set the min range value to the max range value
 						ColorBarMinTempRange = ColorBarMaxTempRange;
 
 					}
@@ -1123,7 +1123,7 @@ namespace OpenGLColorBar {
 				}
 				else {
 
-					// Opdater Colorbarens Minimum Temperatur offset værdi fra læst poloritet
+					// Update the minimum temperature offset value of the colorbar from the polarity read
 					ColorBarMinRangeOffsetValue = ColorBarMinRangeOffsetValue + MouseWheelScrollPolarity;
 
 				}
@@ -1134,16 +1134,16 @@ namespace OpenGLColorBar {
 				// Er Mus Hjulets polaritet negativt
 				if (MouseWheelPolNegativeFlag == true) {
 
-					// Er color barens Max temp range indstilling højere end Min temp indstillingen
+					// Is the max temperature range setting of the colorbar higher than the min temperature setting
 					if (ColorBarMaxTempRange > ColorBarMinTempRange) {
 
-						// Opdater Colorbarens Maximum Temperatur offset værdi fra læst poloritet
+						// Update the maximum temperature offset value of the colorbar from the polarity read
 						ColorBarMaxRangeOffsetValue = ColorBarMaxRangeOffsetValue + MouseWheelScrollPolarity;
 
 					}
 					else {
 
-						// Indstil Max Range værdien til Min Range værdien
+						// Set the max range value to the min range value
 						ColorBarMaxTempRange = ColorBarMinTempRange;
 
 					}
@@ -1151,7 +1151,7 @@ namespace OpenGLColorBar {
 				}
 				else {
 
-					// Opdater Colorbarens Maximum Temperatur offset værdi fra læst poloritet
+					// Update the maximum temperature offset value of the colorbar from the polarity read
 					ColorBarMaxRangeOffsetValue = ColorBarMaxRangeOffsetValue + MouseWheelScrollPolarity;
 
 				}
@@ -1160,16 +1160,16 @@ namespace OpenGLColorBar {
 
 		}
 
-		// ---------------------- ColorBar Data Håndterings Routiner ----------------------- //
+		// ---------------------- ColorBar Data Handling Routines ----------------------- //
 		
 		public: GLvoid RMH_OpenGL_LoadFirstColorPalettesData(unsigned short ColorPalette[3][16384]) {
 
-			// Routinen loader givet color palette data til globale color palette array
+			// This routine loads the given color palette data into the global color palette array
 
-			// Loop til og med størrelsen af givet color palettes
+			// Loop up to and including the size of the given color palettes
 			for (unsigned int i = 0, j = 0; j < ColorBarPaletteResolution; i += 32, j += 8) {
 	
-				// Skriv første color palette data til globalt palette array
+				// Write the first color palette data to the global palette array
 				FirstColorPaletteData[i + 0] = ColorPalette[0][j];
 				FirstColorPaletteData[i + 1] = ColorPalette[1][j];
 				FirstColorPaletteData[i + 2] = ColorPalette[2][j];
@@ -1209,12 +1209,12 @@ namespace OpenGLColorBar {
 		
 		public: GLvoid RMH_OpenGL_LoadSecondColorPalettesData(unsigned short ColorPalette[3][16384]) {
 
-			// Routinen loader givet color palette data til globale color palette array
+			// This routine loads the given color palette data into the global color palette array
 
-			// Loop til og med størrelsen af givet color palettes
+			// Loop up to and including the size of the given color palettes
 			for (unsigned int i = 0, j = 0; j < ColorBarPaletteResolution; i += 32, j += 8) {
 
-				// Skriv første color palette data til globalt palette array
+				// Write the first color palette data to the global palette array
 				SecondColorPaletteData[i + 0] = ColorPalette[0][j];
 				SecondColorPaletteData[i + 1] = ColorPalette[1][j];
 				SecondColorPaletteData[i + 2] = ColorPalette[2][j];
@@ -1254,66 +1254,66 @@ namespace OpenGLColorBar {
 		
 		public: ColorBarTagPosition RMH_OpenGL_ReadColorBarTagsPositions() {
 
-			// Routinen læser og retunerer Colorbarens Max/Min Tags Positioner på colorbaren
+			// This routine reads and returns the positions of the colorbar max/min tags on the colorbar
 
-			// Lokale variabler
+			// Read the temporary array data and sort the kernel array
 			ColorBarTagPosition TagPositions;
 
-			// Læs Maximum og Minimum Tag Positionerne
+			// Read the maximum and minimum tag positions
 			TagPositions.MaximumTagPos = (MovableTagY0[MaxTagID] - ColorBarPanelTexturePadding) * ((GLfloat)ColorBarPaletteResolution / ColorBarPixelHeight);
 			TagPositions.MinimumTagPos = (MovableTagY0[MinTagID] - ColorBarPanelTexturePadding) * ((GLfloat)ColorBarPaletteResolution / ColorBarPixelHeight);
 
-			// Retuner Positioner
+			// Return the positions
 			return TagPositions;
 
 		}
 
 		public: GLvoid RMH_OpenGL_SetColorBarMaxMinRangeTemperature(GLfloat MaxTemperature, GLfloat MinTemperature) {
 
-			// Routinen indstiller colorbarens maximum og minimum temperature range
+			// This routine sets the maximum and minimum temperature range of the colorbar
 
-			// Er manual colorbar temperatur range aktiverede
+			// Is the manual colorbar temperature range enabled
 			if (BarManualRangeFlag == true && BarManualHighRangeFlag == false && BarManualLowRangeFlag == false) {
 
-				// Læs og lager maximum og minimum temperaturer globalt i klasse
+				// Read and store the maximum and minimum temperatures globally in the class
 				ColorBarMaxTempRange = MaxTemperature + ColorBarMaxRangeOffsetValue;
 				ColorBarMinTempRange = MinTemperature + ColorBarMinRangeOffsetValue;
 
 			}
 			else if (BarManualRangeFlag == false && BarManualHighRangeFlag == true && BarManualLowRangeFlag == false) {
 
-				// Læs og lager maximum og minimum temperaturer globalt i klasse
+				// Read and store the maximum and minimum temperatures globally in the class
 				ColorBarMaxTempRange = MaxTemperature + ColorBarMaxRangeOffsetValue;
 				ColorBarMinTempRange = MinTemperature;
 
 			}
 			else if (BarManualRangeFlag == false && BarManualHighRangeFlag == false && BarManualLowRangeFlag == true) {
 
-				// Læs og lager maximum og minimum temperaturer globalt i klasse
+				// Read and store the maximum and minimum temperatures globally in the class
 				ColorBarMaxTempRange = MaxTemperature;
 				ColorBarMinTempRange = MinTemperature + ColorBarMinRangeOffsetValue;
 
 			}
 			else {
 
-				// Læs og lager maximum og minimum temperaturer globalt i klasse
+				// Read and store the maximum and minimum temperatures globally in the class
 				ColorBarMaxTempRange = MaxTemperature;
 				ColorBarMinTempRange = MinTemperature;
 
 			}
 
-			// Er color barens Max temp range indstilling højere end Min temp indstillingen
+			// Is the max temperature range setting of the colorbar higher than the min temperature setting
 			if (ColorBarMaxTempRange <= ColorBarMinTempRange) {
 
-				// Indstil Max Range værdien til Min Range værdien
+				// Set the max range value to the min range value
 				ColorBarMaxTempRange = ColorBarMinTempRange;
 
 			}
 
-			// Er color barens Min temp range indstilling lavere end Max temp indstillingen
+			// Is the min temperature range setting of the colorbar lower than the max temperature setting
 			if (ColorBarMinTempRange >= ColorBarMaxTempRange) {
 
-				// Indstil Min Range værdien til Max Range værdien
+				// Set the min range value to the max range value
 				ColorBarMinTempRange = ColorBarMaxTempRange;
 
 			}
@@ -1322,9 +1322,9 @@ namespace OpenGLColorBar {
 
 		public: GLvoid RMH_OpenGL_ResetColorbarMaxMinRangeOffsetValues() {
 
-			// Routinen nulstiller maximum og minimum temperatur range offset værdierne for manual range mode
+			// This routine resets the maximum and minimum temperature range offset values for manual range mode
 
-			// Nulstil maximum og minimum temperatur range offset værdier
+			// Reset the maximum and minimum temperature range offset values
 			ColorBarMaxRangeOffsetValue = 0.0;
 			ColorBarMinRangeOffsetValue = 0.0;
 
@@ -1332,9 +1332,9 @@ namespace OpenGLColorBar {
 		
 		public: GLvoid RMH_OpenGL_FormatColorBarTickAndTagLabelStrings(System::String^ TempUnitString) {
 
-			// Routinen formaterer colorbarens Major og Minor tick label strings
+			// This routine formats the major and minor tick label strings of the colorbar
 
-			// Lokale variabler
+			// Read the temporary array data and sort the kernel array
 			unsigned char i = 0;
 			GLfloat TempDifference;
 			GLfloat TempTickStepDiff;
@@ -1343,10 +1343,10 @@ namespace OpenGLColorBar {
 			ColorBarTagPosition MaxMinTagsPositions;
 			GLfloat TickTemperature = ColorBarMaxTempRange;
 
-			// Læs Colorbarens Tag Positioner
+			// Read the tag positions of the colorbar
 			MaxMinTagsPositions = RMH_OpenGL_ReadColorBarTagsPositions();
 
-			// Udregn Temperatur differensen fra Max til Min
+			// Calculate the temperature difference from max to min
 			TempDifference = ColorBarMaxTempRange - ColorBarMinTempRange;
 			// Udregn Temperatur tick step differensen 
 			TempTickStepDiff = TempDifference / ((GLfloat)(NmbOfColorBarTicks - 1));
@@ -1358,10 +1358,10 @@ namespace OpenGLColorBar {
 			// Formater Colorbarens Maximum temperatur tick label 
 			PrivateLocals::ColorBarTickLabels[0] = ColorBarMaxTempRange.ToString("F2") + " " + TempUnitString;
 
-			// Loop for valgte antal Colorbar Minor ticks
+			// Loop for the selected number of colorbar minor ticks
 			for (i = 0; i < NmbOfColorBarTicks - 2; i++) {
 
-				// Dekrementer Minor Tick Temperatur værdi
+				// Decrement the minor tick temperature value
 				TickTemperature = TickTemperature - TempTickStepDiff;
 
 				// Formater Colorbarens Minor temperatur tick labels 
@@ -1376,10 +1376,10 @@ namespace OpenGLColorBar {
 			MaximumTagSystemString = MaxTagTemperature.ToString("F1") + TempUnitString;
 			MinimumTagSystemString = MinTagTemperature.ToString("F1") + TempUnitString;
 
-			// Hvis Maximum Tag temperaturen er lig med colorbarens maximum temperatur
+			// If the maximum tag temperature is equal to the maximum temperature of the colorbar
 			if ((unsigned int)(MaxTagTemperature * 1000.0) == (unsigned int)(ColorBarMaxTempRange * 1000.0)) {
 
-				// Indstil Tag String til Fast string
+				// Set the tag string to a fixed string
 				MaximumTagStdString = "MAX";
 
 			}
@@ -1390,10 +1390,10 @@ namespace OpenGLColorBar {
 
 			}
 
-			// Hvis Minimum Tag temperaturen er lig med colorbarens minimum temperatur
+			// If the minimum tag temperature is equal to the minimum temperature of the colorbar
 			if ((unsigned int)(MinTagTemperature * 1000.0) == (unsigned int)(ColorBarMinTempRange * 1000.0)) {
 
-				// Indstil Tag String til Fast string
+				// Set the tag string to a fixed string
 				MinimumTagStdString = "MIN";
 
 			}
@@ -1408,9 +1408,9 @@ namespace OpenGLColorBar {
 
 		public: GLvoid RMH_OpenGL_UpdateColorBarMaxMinCenterTempArrowsPos(GLfloat FrameMaxTemp, GLfloat FrameMinTemp, GLfloat FrameCenterTemp) {
 
-			// Routinen opdaterer positionerne for Colorbarens Maximum, Minimum og Center temperatur Pilene 
+			// This routine updates the positions of the maximum, minimum and center temperature arrows of the colorbar 
 
-			// Lokale variabler
+			// Read the temporary array data and sort the kernel array
 			GLfloat LinearScaleFactor;
 			GLfloat OffsetScale;
 
@@ -1419,7 +1419,7 @@ namespace OpenGLColorBar {
 			// Udregn linear Offset skalleringen (b Parameter)
 			OffsetScale = -ColorBarMaxTempRange * LinearScaleFactor + ColorBarPanelTexturePadding;
 
-			// Udregn og opdater Colorbarens Maximum, Minimum Og Center temperatur Piles positioner
+			// Calculate and update the positions of the maximum, minimum and center temperature arrows of the colorbar
 			ColorBarMaxArrowYPos = LinearScaleFactor * FrameMaxTemp + OffsetScale;
 			ColorBarMinArrowYPos = LinearScaleFactor * FrameMinTemp + OffsetScale;
 			ColorBarCntArrowYPos = LinearScaleFactor * FrameCenterTemp + OffsetScale;
@@ -1428,34 +1428,34 @@ namespace OpenGLColorBar {
 		
 		public: ColorBarManualRangeTemps RMH_OpenGL_ReadColorBarRangeMaxMinValues() {
 
-			// Routinen læser og retunerer maximum og minimum colorbar range værdierne
+			// This routine reads and returns the maximum and minimum colorbar range values
 
-			// Lokale variabler
+			// Read the temporary array data and sort the kernel array
 			ColorBarManualRangeTemps TempRangeValues;
 
-			// Læs maximum og minimum colorbar range værdierne
+			// Read the maximum and minimum colorbar range values
 			TempRangeValues.ManualMaxRangeTemp = ColorBarMaxTempRange;
 			TempRangeValues.ManualMinRangeTemp = ColorBarMinTempRange;
 
-			// Retuner maximum og minimum colorbar range værdierne
+			// Return the maximum and minimum colorbar range values
 			return TempRangeValues;
 
 		}
 
 		public: GLvoid RMH_OpenGL_SetMouseWheelTempOffsetStepSize(GLfloat StepSize) {
 
-			// Routinen indstiller temperatur offset step størrelsen for colorbarens Mus Scroll funktionen
+			// This routine sets the temperature offset step size for the mouse scroll function of the colorbar
 
-			// Indstil temperatur offset step størrelsen for colorbarens Mus Scroll funktionen
+			// Set the temperature offset step size for the mouse scroll function of the colorbar
 			MouseWheelStepSize = StepSize;
 
 		}
 
 		public: GLvoid RMH_OpenGL_InvertColorBarPalettes(bool InvertFirstPalette, bool InvertSecondPalette) {
 
-			// Routinen konfigurerer inverteringen af de to ColorBar color paletter
+			// This routine configures the inversion of the two ColorBar color palettes
 
-			// Opdater lokale klasse variabler - inverterings variabler
+			// Update the local class variables - inversion variables
 			InvertFirstPaletteFlag = InvertFirstPalette;
 			InvertSecondPaletteFlag = InvertSecondPalette;
 
@@ -1476,7 +1476,7 @@ namespace OpenGLColorBar {
 
 		public: GLvoid RMH_OpenGL_SetColorBarMaxTagColor(GLubyte ColorR, GLubyte ColorG, GLubyte ColorB) {
 
-			// Routinen indstiller farven for colorbarens Maximum Temperatur Tag
+			// This routine sets the color of the maximum temperature tag of the colorbar
 
 			// Indstil colorbarens maximum tag farve
 			MaxTagColorR = ColorR;
@@ -1487,7 +1487,7 @@ namespace OpenGLColorBar {
 
 		public: GLvoid RMH_OpenGL_SetColorBarMinTagColor(GLubyte ColorR, GLubyte ColorG, GLubyte ColorB) {
 
-			// Routinen indstiller farven for colorbarens Minimum Temperatur Tag
+			// This routine sets the color of the minimum temperature tag of the colorbar
 
 			// Indstil colorbarens maximum tag farve
 			MinTagColorR = ColorR;
@@ -1498,9 +1498,9 @@ namespace OpenGLColorBar {
 
 		public: GLvoid RMH_OpenGL_SetColorBarMaxArrowColor(GLubyte ColorR, GLubyte ColorG, GLubyte ColorB) {
 
-			// Routinen indstiller farven for colorbarens Maximum Temperatur Trackings pil
+			// This routine sets the color of the maximum temperature tracking arrow of the colorbar
 
-			// Indstil colorbarens Maximum Temperatur Trackings pils farve
+			// Set the color of the maximum temperature tracking arrow of the colorbar
 			MaxTrackArrowColorR = ColorR;
 			MaxTrackArrowColorG = ColorG;
 			MaxTrackArrowColorB = ColorB;
@@ -1509,9 +1509,9 @@ namespace OpenGLColorBar {
 
 		public: GLvoid RMH_OpenGL_SetColorBarMinArrowColor(GLubyte ColorR, GLubyte ColorG, GLubyte ColorB) {
 
-			// Routinen indstiller farven for colorbarens Minimum Temperatur Trackings pil
+			// This routine sets the color of the minimum temperature tracking arrow of the colorbar
 
-			// Indstil colorbarens Minimum Temperatur Trackings pils farve
+			// Set the color of the minimum temperature tracking arrow of the colorbar
 			MinTrackArrowColorR = ColorR;
 			MinTrackArrowColorG = ColorG;
 			MinTrackArrowColorB = ColorB;
@@ -1520,9 +1520,9 @@ namespace OpenGLColorBar {
 
 		public: GLvoid RMH_OpenGL_SetColorBarCenterArrowColor(GLubyte ColorR, GLubyte ColorG, GLubyte ColorB) {
 
-			// Routinen indstiller farven for colorbarens Center Temperatur Trackings pil
+			// This routine sets the color of the center temperature tracking arrow of the colorbar
 
-			// Indstil colorbarens Center Temperatur Trackings pils farve
+			// Set the color of the center temperature tracking arrow of the colorbar
 			CntTrackArrowColorR = ColorR;
 			CntTrackArrowColorG = ColorG;
 			CntTrackArrowColorB = ColorB;
@@ -1531,9 +1531,9 @@ namespace OpenGLColorBar {
 
 		public: GLvoid RMH_OpenGL_SetColorBarMaxArrowLabelColor(GLubyte ColorR, GLubyte ColorG, GLubyte ColorB) {
 
-			// Routinen indstiller farven for colorbarens Maximum Temperatur Trackings pil Label
+			// This routine sets the color of the label of the maximum temperature tracking arrow of the colorbar
 
-			// Indstil colorbarens Maximum Temperatur Trackings pils Label farve
+			// Set the label color of the maximum temperature tracking arrow of the colorbar
 			MaxTrackArrowLabelColorR = ColorR;
 			MaxTrackArrowLabelColorG = ColorG;
 			MaxTrackArrowLabelColorB = ColorB;
@@ -1542,9 +1542,9 @@ namespace OpenGLColorBar {
 
 		public: GLvoid RMH_OpenGL_SetColorBarMinArrowLabelColor(GLubyte ColorR, GLubyte ColorG, GLubyte ColorB) {
 
-			// Routinen indstiller farven for colorbarens Minimum Temperatur Trackings pil Label
+			// This routine sets the color of the label of the minimum temperature tracking arrow of the colorbar
 
-			// Indstil colorbarens Minimum Temperatur Trackings pils Label farve
+			// Set the label color of the minimum temperature tracking arrow of the colorbar
 			MinTrackArrowLabelColorR = ColorR;
 			MinTrackArrowLabelColorG = ColorG;
 			MinTrackArrowLabelColorB = ColorB;
@@ -1553,9 +1553,9 @@ namespace OpenGLColorBar {
 
 		public: GLvoid RMH_OpenGL_SetColorBarCenterLabelArrowColor(GLubyte ColorR, GLubyte ColorG, GLubyte ColorB) {
 
-			// Routinen indstiller farven for colorbarens Center Temperatur Trackings pil Label
+			// This routine sets the color of the label of the center temperature tracking arrow of the colorbar
 
-			// Indstil colorbarens Center Temperatur Trackings pils Label farve
+			// Set the label color of the center temperature tracking arrow of the colorbar
 			CntTrackArrowLabelColorR = ColorR;
 			CntTrackArrowLabelColorG = ColorG;
 			CntTrackArrowLabelColorB = ColorB;
@@ -1566,10 +1566,10 @@ namespace OpenGLColorBar {
 
 		public: GLvoid RMH_OpenGL_RenderColorBar(unsigned int TexturePanelWidth, unsigned int TexturePanelHeight, bool DualPaletteEnableFlag, unsigned char NmbOfMinorTicks, bool EnableCenterArrowFlag, bool ManualRangeFlag, bool ManualRangeHighFlag, bool ManualRangeLowFlag) {
 
-			// Routinen rendererer alle colorbarens grafiske objekter
-			// Her kan yderligere konfigureres forskellige grafiske offset parameter og værdier
+			// This routine renders all graphical objects of the colorbar
+			// Various graphical offset parameters and values can be further configured here
 
-			// Læs Nuværende textur Panels pixel højde og bredde 
+			// Read the current pixel height and width of the texture panel 
 			CurrentTexturePanelHeight = (GLdouble)TexturePanelHeight;
 			CurrentTexturePanelWidth = (GLdouble)TexturePanelWidth;
 
@@ -1577,7 +1577,7 @@ namespace OpenGLColorBar {
 			TextureToPanelScaleWidthFactor = CurrentTexturePanelWidth / TotalTextureScalableWidth;
 			TextureToPanelScaleHeightFactor = CurrentTexturePanelHeight / TotalTextureScalableHeight;
 
-			// Gør Tilhørende Render kontekst det nuværende render kontekst
+			// Make the associated render context the current render context
 			RMH_OpenGL_MakeRenderContextCurrent();
 			// Ryd Textur farve og bit buffere
 			RMH_OpenGL_ClearTextureBuffer();
@@ -1587,13 +1587,13 @@ namespace OpenGLColorBar {
 			// Bind OpenGL textur og Start OpenGL renderering
 			RMH_OpenGL_StartColorBarRender();
 
-			// Render primære ColorBar
+			// Render the primary ColorBar
 			RMH_OpenGL_RenderColorBarPalette(ColorBarX0TexturePos, ColorBarPanelTexturePadding, ColorBarTextureWidth, ColorBarPixelHeight, &FirstColorPaletteData[0], InvertFirstPaletteFlag);
 
 			// Skal Dual color palette vises
 			if (DualPaletteEnableFlag == true) {
 
-				// Render sekundære ColorBar
+				// Render the secondary ColorBar
 				RMH_OpenGL_RenderColorBarPalette(ColorBarX0TexturePos, ColorBarPanelTexturePadding, ColorBarTextureWidth / 2.0f, ColorBarPixelHeight, &SecondColorPaletteData[0], InvertSecondPaletteFlag);
 
 			}
@@ -1602,28 +1602,28 @@ namespace OpenGLColorBar {
 			RMH_OpenGL_RenderColorBarTickLinesAndLabels(ColorBarX0TexturePos + ColorBarTextureWidth + TickLineColorBarOffset, ColorBarPanelTexturePadding,
 				ColorBarPixelHeight, NmbOfMinorTicks, TickLineColorR, TickLineColorG, TickLineColorB);
 
-			// Nulstil Colorbarens "Temperatur Trackings Pile Er udenfor Colorbar arealet" indikator flag 
+			// Reset the colorbar "temperature tracking arrow is outside the colorbar area" indicator flag 
 			ShowTopOutsideIndicatorFlag = false;
 			ShowButOutsideIndicatorFlag = false;
 
-			// Indstil Colorbarens Range Flag
+			// Set the range flag of the colorbar
 			BarManualRangeFlag = ManualRangeFlag;
 			BarManualHighRangeFlag = ManualRangeHighFlag;
 			BarManualLowRangeFlag = ManualRangeLowFlag;
 
-			// Er Manual colorbar temperatur range aktiverede
+			// Is the manual colorbar temperature range enabled
 			if (BarManualRangeFlag == true && BarManualHighRangeFlag == false && BarManualLowRangeFlag == false) {
 
-				// Render kun maximum indikator, hvis den er indenfor colorbarens Y areal
+				// Render the maximum indicator only if it is within the Y area of the colorbar
 				if (ColorBarMaxArrowYPos < ColorBarPanelTexturePadding) {
 
-					// Maximum temp trackings pilen er over maximum range temperaturen
+					// The maximum temperature tracking arrow is above the maximum range temperature
 					ShowTopOutsideIndicatorFlag = true;
 
 				}
 				else {
 
-					// Render kun maximum indikator, hvis den er indenfor colorbarens Y areal
+					// Render the maximum indicator only if it is within the Y area of the colorbar
 					if (ColorBarMaxArrowYPos < ColorBarPixelHeight + ColorBarPanelTexturePadding) {
 
 						// Render Colorbarens Maximum temperatur indikator pil
@@ -1634,23 +1634,23 @@ namespace OpenGLColorBar {
 					}
 					else {
 
-						// Maximum temp trackings pilen er under minimum range temperaturen
+						// The maximum temperature tracking arrow is below the minimum range temperature
 						ShowButOutsideIndicatorFlag = true;
 
 					}
 
 				}
 
-				// Render kun minimum indikator, hvis den er indenfor colorbarens Y areal
+				// Render the minimum indicator only if it is within the Y area of the colorbar
 				if (ColorBarMinArrowYPos > ColorBarPixelHeight + ColorBarPanelTexturePadding) {
 
-					// Minimum temp trackings pilen er under minimum range temperaturen
+					// The minimum temperature tracking arrow is below the minimum range temperature
 					ShowButOutsideIndicatorFlag = true;
 
 				}
 				else {
 
-					// Render kun minimum indikator, hvis den er indenfor colorbarens Y areal
+					// Render the minimum indicator only if it is within the Y area of the colorbar
 					if (ColorBarMinArrowYPos > ColorBarPanelTexturePadding) {
 
 						// Render Colorbarens Minimum temperatur indikator pil
@@ -1661,7 +1661,7 @@ namespace OpenGLColorBar {
 					}
 					else {
 
-						// Minimum temp trackings pilen er over maximum range temperaturen
+						// The minimum temperature tracking arrow is above the maximum range temperature
 						ShowTopOutsideIndicatorFlag = true;
 
 					}
@@ -1671,16 +1671,16 @@ namespace OpenGLColorBar {
 			}
 			else if (BarManualRangeFlag == false && BarManualHighRangeFlag == true && BarManualLowRangeFlag == false) {
 
-				// Render kun maximum indikator, hvis den er indenfor colorbarens Y areal
+				// Render the maximum indicator only if it is within the Y area of the colorbar
 				if (ColorBarMaxArrowYPos < ColorBarPanelTexturePadding) {
 
-					// Maximum temp trackings pilen er over maximum range temperaturen
+					// The maximum temperature tracking arrow is above the maximum range temperature
 					ShowTopOutsideIndicatorFlag = true;
 
 				}
 				else {
 
-					// Render kun maximum indikator, hvis den er indenfor colorbarens Y areal
+					// Render the maximum indicator only if it is within the Y area of the colorbar
 					if (ColorBarMaxArrowYPos < ColorBarPixelHeight + ColorBarPanelTexturePadding) {
 
 						// Render Colorbarens Maximum temperatur indikator pil
@@ -1691,7 +1691,7 @@ namespace OpenGLColorBar {
 					}
 					else {
 
-						// Maximum temp trackings pilen er under minimum range temperaturen
+						// The maximum temperature tracking arrow is below the minimum range temperature
 						ShowButOutsideIndicatorFlag = true;
 
 					}
@@ -1701,16 +1701,16 @@ namespace OpenGLColorBar {
 			}
 			else if (BarManualRangeFlag == false && BarManualHighRangeFlag == false && BarManualLowRangeFlag == true) {
 
-				// Render kun minimum indikator, hvis den er indenfor colorbarens Y areal
+				// Render the minimum indicator only if it is within the Y area of the colorbar
 				if (ColorBarMinArrowYPos > ColorBarPixelHeight + ColorBarPanelTexturePadding) {
 
-					// Minimum temp trackings pilen er under minimum range temperaturen
+					// The minimum temperature tracking arrow is below the minimum range temperature
 					ShowButOutsideIndicatorFlag = true;
 
 				}
 				else {
 
-					// Render kun minimum indikator, hvis den er indenfor colorbarens Y areal
+					// Render the minimum indicator only if it is within the Y area of the colorbar
 					if (ColorBarMinArrowYPos > ColorBarPanelTexturePadding) {
 
 						// Render Colorbarens Minimum temperatur indikator pil
@@ -1721,7 +1721,7 @@ namespace OpenGLColorBar {
 					}
 					else {
 
-						// Minimum temp trackings pilen er over maximum range temperaturen
+						// The minimum temperature tracking arrow is above the maximum range temperature
 						ShowTopOutsideIndicatorFlag = true;
 
 					}
@@ -1730,13 +1730,13 @@ namespace OpenGLColorBar {
 
 			}
 
-			// Er Center Colorbar temperatur indikator pilen aktiverede
+			// Is the center colorbar temperature indicator arrow enabled
 			if (EnableCenterArrowFlag == true) {
 
-				// Render kun Center indikator, hvis den er indenfor colorbarens Y areal
+				// Render the center indicator only if it is within the Y area of the colorbar
 				if (ColorBarCntArrowYPos > ColorBarPanelTexturePadding) {
 
-					// Render kun Center indikator, hvis den er indenfor colorbarens Y areal
+					// Render the center indicator only if it is within the Y area of the colorbar
 					if (ColorBarCntArrowYPos < ColorBarPixelHeight + ColorBarPanelTexturePadding) {
 
 						// Render Colorbarens Center temperatur indikator pil
@@ -1747,7 +1747,7 @@ namespace OpenGLColorBar {
 					}
 					else {
 
-						// Center temp trackings pilen er under minimum range temperaturen
+						// The center temperature tracking arrow is below the minimum range temperature
 						ShowButOutsideIndicatorFlag = true;
 
 					}
@@ -1755,36 +1755,36 @@ namespace OpenGLColorBar {
 				}
 				else {
 
-					// Center temp trackings pilen er over maximum range temperaturen
+					// The center temperature tracking arrow is above the maximum range temperature
 					ShowTopOutsideIndicatorFlag = true;
 
 				}
 
 			}
 
-			// Er en eller flere trakings pile over maximum range temperaturen
+			// Are one or more tracking arrows above the maximum range temperature
 			if (ShowTopOutsideIndicatorFlag == true) {
 
-				// Render indikator som indikerer at Max/Min/center track pilene er udenfor colorbar arealet
+				// Render an indicator showing that the max/min/center tracking arrows are outside the colorbar area
 				RMH_OpenGL_RenderMaxArrowOutsideIndicator(4, 3, 4, 4, MaxTrackArrowColorR, MaxTrackArrowColorG, MaxTrackArrowColorB);
 
 			}
 
-			// Er en eller flere trakings pile under minimum range temperaturen
+			// Are one or more tracking arrows below the minimum range temperature
 			if (ShowButOutsideIndicatorFlag == true) {
 
-				// Render indikator som indikerer at Max/Min/center track pilene er udenfor colorbar arealet
+				// Render an indicator showing that the max/min/center tracking arrows are outside the colorbar area
 				RMH_OpenGL_RenderMinArrowOutsideIndicator(4, ColorBarPixelHeight + ColorBarPanelTexturePadding + 3, 4, 4, MinTrackArrowColorR, MinTrackArrowColorG, MinTrackArrowColorB);
 					
 			}
 
-			// Render Colorbar Maximum og Minimum Justerbar Tags og tilhørende label strings
+			// Render the colorbar maximum and minimum adjustable tags and the associated label strings
 			RMH_OpenGL_RenderMovableColorBarTag(MaxMinTagX0Pos, MaxMinTagX0Offset, MaxMinTagLength, MaxMinTagHeight, MaxMinTagArrowLength, MaxTagID, MaxTagColorR, MaxTagColorG, MaxTagColorB);
 			RMH_OpenGL_RenderMovableColorBarTag(MaxMinTagX0Pos, MaxMinTagX0Offset, MaxMinTagLength, MaxMinTagHeight, MaxMinTagArrowLength, MinTagID, MinTagColorR, MinTagColorG, MinTagColorB);
 			RMH_OpenGL_RenderStringOnTexture(ColorBarAreaX0 - TagLabelXOffset, (MovableTagY0[MaxTagID] * TextureToPanelScaleHeightFactor) + TagLabelYOffset, MaximumTagStdString, TickLineColorR, TickLineColorG, TickLineColorB);
 			RMH_OpenGL_RenderStringOnTexture(ColorBarAreaX0 - TagLabelXOffset, (MovableTagY0[MinTagID] * TextureToPanelScaleHeightFactor) + TagLabelYOffset, MinimumTagStdString, TickLineColorR, TickLineColorG, TickLineColorB);
 
-			// Marker enden på en OpenGL rendererins sekvens
+			// Mark the end of an OpenGL rendering sequence
 			RMH_OpenGL_RenderingFinishedMark();
 
 		}
@@ -1793,22 +1793,22 @@ namespace OpenGLColorBar {
 
 		private: GLvoid RMH_OpenGL_SwapOpenGLBuffers(GLvoid) {
 
-			// Routinen bytter rundt på Front/Backend bufferene
+			// This routine swaps the front/back buffers
 
-			// Byt Rundt på buffere
+			// Swap the buffers
 			SwapBuffers(m_hDC);
 
 		}
 
 		private: GLvoid RMH_OpenGL_RenderingFinishedMark(GLvoid) {
 
-			// Routinen markerer enden på en OpenGL rendererins sekvens
-			// Og skal altid kaldes til sidst, når alle objekt rendereringer er blevet eksikverede
+			// This routine marks the end of an OpenGL rendering sequence
+			// and must always be called last, when all object renderings have been executed
 
 			// Swap Textur buffere
 			RMH_OpenGL_SwapOpenGLBuffers();
 
-			// Nulstil Render kontekst
+			// Reset the render context
 			//this->RMH_OpenGL_MakeRenderContextNULL();
 
 		}
@@ -1817,11 +1817,11 @@ namespace OpenGLColorBar {
 
 	private:
 
-		// ------------- Yderligerer OpenGL Håndterings Og Opsætnings Routiner ------------- //
+		// ------------- Additional OpenGL Handling And Setup Routines ------------- //
 
 		~RMHOpenGLColorBar(GLvoid) {
 
-			// Slet OpenGL Context
+			// Delete the OpenGL context
 			DeleteOpenGL();
 
 			// Destruer OpenGL Handler objekt
@@ -1836,22 +1836,22 @@ namespace OpenGLColorBar {
 
 			// Routinen sletter alt OpenGL Context
 
-			// Lokale variabler
+			// Read the temporary array data and sort the kernel array
 			HGLRC hglrc;
 			HDC  hdc;
 
-			// Læs Thread Context
+			// Read the thread context
 			hglrc = wglGetCurrentContext();
-			// Læs tilhørende Device Context 
+			// Read the associated device context 
 			hdc = wglGetCurrentDC();
-			// Gør render contexten den nuværende context
+			// Make the render context the current context
 			wglMakeCurrent(NULL, NULL);
 			// Frigiv Device context
 			ReleaseDC(NULL, hdc);
-			// Slet Render Context
+			// Delete the render context
 			wglDeleteContext(hglrc);
 
-			// Nulstil Context variabler
+			// Reset the context variables
 			m_hglrc = nullptr;
 			m_hDC = nullptr;
 
@@ -1861,97 +1861,97 @@ namespace OpenGLColorBar {
 
 			// Routinen konfigurerer Texturens Pixel format
 
-			// Formatet fortæller windows hvordan textur dataen skal oversættes
+			// The format tells Windows how the texture data should be interpreted
 			PIXELFORMATDESCRIPTOR pfd = {
 
-				sizeof(PIXELFORMATDESCRIPTOR),				// Størrelse af denne pixel format beskrivelse
+				sizeof(PIXELFORMATDESCRIPTOR),				// Size of this pixel format descriptor
 				1,											// Formatets Versions Nummer 
-				PFD_DRAW_TO_WINDOW |						// Formatet skal supporterer Windows
-				PFD_SUPPORT_OPENGL |						// Formatet skal supporterer OpenGL
+				PFD_DRAW_TO_WINDOW |						// The format must support Windows
+				PFD_SUPPORT_OPENGL |						// The format must support OpenGL
 				PFD_DOUBLEBUFFER,							// Formatet skal supporterer "Double Buffering"
-				PFD_TYPE_RGBA,								// Anmod om et RGBa Format
-				16,										    // Vælg "Color Depth" (16Bit)
-				0, 0, 0, 0, 0, 0,							// Farve Bits skal Ignoreres
-				0,											// Ingen "Alpha Buffer"
-				0,											// Shift Bit skal Ignoreres
-				0,											// Ingen "Accumulation Buffer"
-				0, 0, 0, 0,									// Accumulator Bits skal Ignoreres
+				PFD_TYPE_RGBA,								// Request an RGBA format
+				16,										    // Select the "color depth" (16-bit)
+				0, 0, 0, 0, 0, 0,							// Color bits are to be ignored
+				0,											// No "alpha buffer"
+				0,											// Shift bit is to be ignored
+				0,											// No "accumulation buffer"
+				0, 0, 0, 0,									// Accumulator bits are to be ignored
 				16,											// 16Bit Z-Buffer (Buffer dybde)  
-				0,											// Ingen "Stencil Buffer"
-				0,											// Ingen "Auxiliary Buffer"
-				PFD_MAIN_PLANE,								// Sæt som det primære "Drawing" lag
+				0,											// No "stencil buffer"
+				0,											// No "auxiliary buffer"
+				PFD_MAIN_PLANE,								// Set as the main "drawing" layer
 				0,											// Reserved
-				0, 0, 0										// Lag "Masks" skal Ignoreres
+				0, 0, 0										// Layer "masks" are to be ignored
 
 			};
 
-			// Vælg pixel formatet til control handler
+			// Select the pixel format for the control handler
 			if ((iPixelFormat = ChoosePixelFormat(hdc, &pfd)) == 0) {
-				// Skriv fejl meddelse - hvis fejl er registreret
+				// Write error message - if an error is registered
 				MessageBox::Show("ChoosePixelFormat Failed");
-				// Retuner Fejl
+				// Return error
 				return false;
 			}
 
-			// Sæt pixel formatet til control handler 
+			// Set the pixel format for the control handler 
 			if (SetPixelFormat(hdc, iPixelFormat, &pfd) == FALSE) {
-				// Skriv fejl meddelse - hvis fejl er registreret
+				// Write error message - if an error is registered
 				MessageBox::Show("SetPixelFormat Failed");
-				// Retuner Fejl
+				// Return error
 				return false;
 			}
 
 			if ((m_hglrc = wglCreateContext(hdc)) == NULL) {
-				// Skriv fejl meddelse - hvis fejl er registreret
+				// Write error message - if an error is registered
 				MessageBox::Show("wglCreateContext Failed");
-				// Retuner Fejl
+				// Return error
 				return false;
 			}
 
 			if ((wglMakeCurrent(hdc, m_hglrc)) == NULL) {
-				// Skriv fejl meddelse - hvis fejl er registreret
+				// Write error message - if an error is registered
 				MessageBox::Show("wglMakeCurrent Failed");
-				// Retuner Fejl
+				// Return error
 				return false;
 			}
 
-			// Retuner Status OK
+			// Return status OK
 			return true;
 		}
 
 		private: GLvoid RMH_OpenGL_ResizeOpenGLWinformsScene(unsigned int TotalTextureWidth, unsigned int TotalTextureHeight) {
 
-			// Formater Størrelsen og Initialisere OpenGL Vinduet i Winforms
+			// Format the size and initialize the OpenGL window in WinForms
 
-			// Forhindre division med '0'
+			// Prevent division by '0'
 			if (TotalTextureHeight == 0) {
-				// Piel højden er altid mindst '1'
+				// The pixel height is always at least '1'
 				TotalTextureHeight = 1;
 			}
 
-			// Nulstil nuværende "Viewport"
+			// Reset the current "viewport"
 			glViewport(0, 0, TotalTextureWidth, TotalTextureHeight);
-			// Vælg Projektions matricen
+			// Select the projection matrix
 			glMatrixMode(GL_PROJECTION);
-			// Nulstil Projektions matricen
+			// Reset the projection matrix
 			glLoadIdentity();
 			// Udregn vinduets aspect ratio
 			gluPerspective(60.0f, (GLfloat)TotalTextureWidth / (GLfloat)TotalTextureHeight, 0.1, 500.0);
-			// Vælg "Model View" matricen
+			// Select the "model view" matrix
 			glMatrixMode(GL_MODELVIEW);
-			// Nulstil "Model View" matricen
+			// Reset the "model view" matrix
 			glLoadIdentity();
 
 		}
 
 		private: GLvoid RMH_OpenGL_BuildFont(GLvoid) {
 
-			// Routinen Generer FONT til display i OpenGL Textur
+			// This routine generates the FONT for display in the OpenGL texture
 
-			// Lokale variabler
+			// Read the temporary array data and sort the kernel array
 			HFONT TextureFont;
 
-			// Opdater Font Liste
+			// Update the font list
 			BaseFont = glGenLists(96);
 
 			// Generer Strutureret Font Objekt
@@ -1971,7 +1971,7 @@ namespace OpenGLColorBar {
 				FF_ROMAN | DEFAULT_PITCH,		// nPitchAndFamily
 				L"Arial");				        // lpszFacename
 
-			// Indstil FONT Til OpenGL Objekt Struktur
+			// Set the FONT to the OpenGL object structure
 			SelectObject(m_hDC, TextureFont);
 			// Generer Bitmap Display FONT Liste
 			wglUseFontBitmaps(m_hDC, 32, 96, BaseFont);
@@ -1982,13 +1982,13 @@ namespace OpenGLColorBar {
 
 			// Routinen Initialisere OpenGL I Winforms C++/CLR
 
-			// Aktiver "Flat Shader" Mode
+			// Enable "flat shader" mode
 			glShadeModel(GL_SMOOTH);
 			// Default Baggrund farve
 			glClearColor(0.13725f, 0.13725f, 0.13725f, 1.0f);
-			// Opsætning af "Depth Buffer"
+			// Set up the "depth buffer"
 			glClearDepth(1.0f);
-			// Deaktiver OpenGL "Depth Testing"
+			// Disable OpenGL "depth testing"
 			glDisable(GL_DEPTH_TEST);
 			// For perspektiv - Fortag "Very Nice" udregniner
 			glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
@@ -1996,7 +1996,7 @@ namespace OpenGLColorBar {
 			// Generer FONT Objekt
 			RMH_OpenGL_BuildFont();
 
-			// Retuner "OpenGl Opsætning" Færdig flag
+			// Return the "OpenGL setup" finished flag
 			return true;
 
 		}

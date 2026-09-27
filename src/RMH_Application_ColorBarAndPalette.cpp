@@ -7,14 +7,14 @@
  *
  */
 
-// Inkluderede Biblioteker
+// Included libraries
 #include "RMH_Application_ColorBarAndPalette.h"
 #include "RMH_ThermalCameraSupport_Library.h"
 #include "RMH_ImageProcessing_Library.h"
 #include "RMH_Winforms_Library.h"
 #include <iostream>
 
-// Inkluderede Resourcer
+// Included resources
 #include "GlobalObjectsAndVariables.h"
 #include "RMH_CustomColorPalette_Resources.h"
 
@@ -22,31 +22,31 @@
 using namespace System;
 using namespace std;
 
-// --------------------------- Color Palette Håndterings Routiner --------------------------- //
+// --------------------------- Color Palette Handling Routines --------------------------- //
 
 void RMH_ColorPalette_LoadColorPalettesToCombiBox(System::Windows::Forms::ComboBox^ ColorPaletteComboBox) {
 
-	// Routinen loader tilgængelige Color Palette navne, fra resourcer, til tilhørende CombiBox
+	// This routine loads the available color palette names, from resources, into the associated ComboBox
 
-	// Indsæt listen over de tilgængelige Color Palettes i "Color Palette" ComboBox
+	// Insert the list of available color palettes into the "Color Palette" ComboBox
 	RMH_Winforms_CombiBox_AddArrayOfItemStrings(ColorPaletteComboBox, ColorPaletteNames);
 
 }
 
 void RMH_ColorPalette_ChangeColorPalette(System::Windows::Forms::ComboBox^ ColorPaletteComboBox) {
 
-	// Routinen indstiller valgte Color Palette til Live View Picture Boxen
+	// This routine sets the selected color palette to the live view PictureBox
 
-	// Læs valgte Color Palette
+	// Read the selected color palette
 	unsigned int ColorPaletteIndex = ColorPaletteComboBox->SelectedIndex;
 
-	// Indstilling af valgte Color Palette
+	// Setting of the selected color palette
 	switch (ColorPaletteIndex) {
 
 		// Color Palette: Parula
 		case _ColorPaletteIndex_Parula:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorPalettePtr = RMH_CustomPalette_Parula;
 
 		break;
@@ -54,7 +54,7 @@ void RMH_ColorPalette_ChangeColorPalette(System::Windows::Forms::ComboBox^ Color
 		// Color Palette: Turbo
 		case _ColorPaletteIndex_Turbo:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorPalettePtr = RMH_CustomPalette_Turbo;
 
 		break;
@@ -62,7 +62,7 @@ void RMH_ColorPalette_ChangeColorPalette(System::Windows::Forms::ComboBox^ Color
 		// Color Palette: Jet
 		case _ColorPaletteIndex_Jet:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorPalettePtr = RMH_CustomPalette_Jet;
 
 		break;
@@ -70,7 +70,7 @@ void RMH_ColorPalette_ChangeColorPalette(System::Windows::Forms::ComboBox^ Color
 		// Color Palette: HSV
 		case _ColorPaletteIndex_HSV:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorPalettePtr = RMH_CustomPalette_HSV;
 
 		break;
@@ -78,7 +78,7 @@ void RMH_ColorPalette_ChangeColorPalette(System::Windows::Forms::ComboBox^ Color
 		// Color Palette: Hot
 		case _ColorPaletteIndex_Hot:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorPalettePtr = RMH_CustomPalette_Hot;
 
 		break;
@@ -86,7 +86,7 @@ void RMH_ColorPalette_ChangeColorPalette(System::Windows::Forms::ComboBox^ Color
 		// Color Palette: Cool
 		case _ColorPaletteIndex_Cool:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorPalettePtr = RMH_CustomPalette_Cool;
 
 		break;
@@ -94,7 +94,7 @@ void RMH_ColorPalette_ChangeColorPalette(System::Windows::Forms::ComboBox^ Color
 		// Color Palette: Spring
 		case _ColorPaletteIndex_Spring:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorPalettePtr = RMH_CustomPalette_Spring;
 
 		break;
@@ -102,7 +102,7 @@ void RMH_ColorPalette_ChangeColorPalette(System::Windows::Forms::ComboBox^ Color
 		// Color Palette: Summer
 		case _ColorPaletteIndex_Summer:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorPalettePtr = RMH_CustomPalette_Summer;
 
 		break;
@@ -110,7 +110,7 @@ void RMH_ColorPalette_ChangeColorPalette(System::Windows::Forms::ComboBox^ Color
 		// Color Palette: Autumn
 		case _ColorPaletteIndex_Autumn:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorPalettePtr = RMH_CustomPalette_Autumn;
 
 		break;
@@ -118,7 +118,7 @@ void RMH_ColorPalette_ChangeColorPalette(System::Windows::Forms::ComboBox^ Color
 		// Color Palette: Winter
 		case _ColorPaletteIndex_Winter:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorPalettePtr = RMH_CustomPalette_Winter;
 
 		break;
@@ -126,7 +126,7 @@ void RMH_ColorPalette_ChangeColorPalette(System::Windows::Forms::ComboBox^ Color
 		// Color Palette: Gray
 		case _ColorPaletteIndex_Gray:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorPalettePtr = RMH_CustomPalette_Gray;
 
 		break;
@@ -134,7 +134,7 @@ void RMH_ColorPalette_ChangeColorPalette(System::Windows::Forms::ComboBox^ Color
 		// Color Palette: Bone
 		case _ColorPaletteIndex_Bone:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorPalettePtr = RMH_CustomPalette_Bone;
 
 		break;
@@ -142,7 +142,7 @@ void RMH_ColorPalette_ChangeColorPalette(System::Windows::Forms::ComboBox^ Color
 		// Color Palette: Copper
 		case _ColorPaletteIndex_Copper:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorPalettePtr = RMH_CustomPalette_Copper;
 
 		break;
@@ -150,7 +150,7 @@ void RMH_ColorPalette_ChangeColorPalette(System::Windows::Forms::ComboBox^ Color
 		// Color Palette: Pink
 		case _ColorPaletteIndex_Pink:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorPalettePtr = RMH_CustomPalette_Pink;
 
 		break;
@@ -158,7 +158,7 @@ void RMH_ColorPalette_ChangeColorPalette(System::Windows::Forms::ComboBox^ Color
 		// Color Palette: Custom DarkHot
 		case _ColorPaletteIndex_DarkHot:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorPalettePtr = RMH_CustomPalette_DarkHot;
 
 		break;
@@ -166,7 +166,7 @@ void RMH_ColorPalette_ChangeColorPalette(System::Windows::Forms::ComboBox^ Color
 		// Color Palette: Custom ColdSpot
 		case _ColorPaletteIndex_ColdSpot:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorPalettePtr = RMH_CustomPalette_ColdSpot;
 
 		break;
@@ -174,7 +174,7 @@ void RMH_ColorPalette_ChangeColorPalette(System::Windows::Forms::ComboBox^ Color
 		// Color Palette: Custom ColdHotSpot
 		case _ColorPaletteIndex_ColdHotSpot:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorPalettePtr = RMH_CustomPalette_ColdHotSpot;
 
 		break;
@@ -182,7 +182,7 @@ void RMH_ColorPalette_ChangeColorPalette(System::Windows::Forms::ComboBox^ Color
 		// Color Palette: Custom BlackRed
 		case _ColorPaletteIndex_BlackRed:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorPalettePtr = RMH_CustomPalette_BlackRed;
 
 		break;
@@ -190,7 +190,7 @@ void RMH_ColorPalette_ChangeColorPalette(System::Windows::Forms::ComboBox^ Color
 		// Color Palette: Custom Inferno
 		case _ColorPaletteIndex_Inferno:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorPalettePtr = RMH_CustomPalette_Inferno;
 
 		break;
@@ -198,7 +198,7 @@ void RMH_ColorPalette_ChangeColorPalette(System::Windows::Forms::ComboBox^ Color
 		// Color Palette: Custom Magma
 		case _ColorPaletteIndex_Magma:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorPalettePtr = RMH_CustomPalette_Magma;
 
 		break;
@@ -206,7 +206,7 @@ void RMH_ColorPalette_ChangeColorPalette(System::Windows::Forms::ComboBox^ Color
 		// Color Palette: Custom Plasma
 		case _ColorPaletteIndex_Plasma:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorPalettePtr = RMH_CustomPalette_Plasma;
 
 		break;
@@ -214,7 +214,7 @@ void RMH_ColorPalette_ChangeColorPalette(System::Windows::Forms::ComboBox^ Color
 		// Color Palette: Custom Lava
 		case _ColorPaletteIndex_Lava:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorPalettePtr = RMH_CustomPalette_Lava;
 
 		break;
@@ -222,7 +222,7 @@ void RMH_ColorPalette_ChangeColorPalette(System::Windows::Forms::ComboBox^ Color
 		// Color Palette: Custom LavaHT
 		case _ColorPaletteIndex_LavaHT:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorPalettePtr = RMH_CustomPalette_LavaHT;
 
 		break;
@@ -230,7 +230,7 @@ void RMH_ColorPalette_ChangeColorPalette(System::Windows::Forms::ComboBox^ Color
 		// Color Palette: Custom InfiRay
 		case _ColorPaletteIndex_InfiRay:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorPalettePtr = RMH_CustomPalette_InfiRay;
 
 		break;
@@ -238,7 +238,7 @@ void RMH_ColorPalette_ChangeColorPalette(System::Windows::Forms::ComboBox^ Color
 		// Color Palette: Custom BowHC
 		case _ColorPaletteIndex_BowHC:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorPalettePtr = RMH_CustomPalette_BowHC;
 
 		break;
@@ -246,7 +246,7 @@ void RMH_ColorPalette_ChangeColorPalette(System::Windows::Forms::ComboBox^ Color
 		// Color Palette: Custom RainHC
 		case _ColorPaletteIndex_RainHC:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorPalettePtr = RMH_CustomPalette_RainHC;
 
 		break;
@@ -254,7 +254,7 @@ void RMH_ColorPalette_ChangeColorPalette(System::Windows::Forms::ComboBox^ Color
 		// Color Palette: Custom RainHT
 		case _ColorPaletteIndex_RainHT:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorPalettePtr = RMH_CustomPalette_RainHT;
 
 		break;
@@ -262,7 +262,7 @@ void RMH_ColorPalette_ChangeColorPalette(System::Windows::Forms::ComboBox^ Color
 		// Color Palette: Custom Iron
 		case _ColorPaletteIndex_Iron:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorPalettePtr = RMH_CustomPalette_Iron;
 
 		break;
@@ -270,7 +270,7 @@ void RMH_ColorPalette_ChangeColorPalette(System::Windows::Forms::ComboBox^ Color
 		// Color Palette: Custom Viridis
 		case _ColorPaletteIndex_Viridis:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorPalettePtr = RMH_CustomPalette_Viridis;
 
 		break;
@@ -278,7 +278,7 @@ void RMH_ColorPalette_ChangeColorPalette(System::Windows::Forms::ComboBox^ Color
 		// Color Palette: Custom Tesla
 		case _ColorPaletteIndex_Tesla:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorPalettePtr = RMH_CustomPalette_Tesla;
 
 		break;
@@ -286,7 +286,7 @@ void RMH_ColorPalette_ChangeColorPalette(System::Windows::Forms::ComboBox^ Color
 		// Color Palette: Custom Helix
 		case _ColorPaletteIndex_Helix:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorPalettePtr = RMH_CustomPalette_Helix;
 
 		break;
@@ -294,7 +294,7 @@ void RMH_ColorPalette_ChangeColorPalette(System::Windows::Forms::ComboBox^ Color
 		// Color Palette: Custom Grey10
 		case _ColorPaletteIndex_Grey10:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorPalettePtr = RMH_CustomPalette_Grey10;
 
 		break;
@@ -302,7 +302,7 @@ void RMH_ColorPalette_ChangeColorPalette(System::Windows::Forms::ComboBox^ Color
 		// Color Palette: Custom GreyRed
 		case _ColorPaletteIndex_GreyRed:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorPalettePtr = RMH_CustomPalette_GreyRed;
 
 		break;
@@ -310,7 +310,7 @@ void RMH_ColorPalette_ChangeColorPalette(System::Windows::Forms::ComboBox^ Color
 		// Color Palette: Custom Iron10
 		case _ColorPaletteIndex_Iron10:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorPalettePtr = RMH_CustomPalette_Iron10;
 
 		break;
@@ -318,7 +318,7 @@ void RMH_ColorPalette_ChangeColorPalette(System::Windows::Forms::ComboBox^ Color
 		// Color Palette: Custom Medical
 		case _ColorPaletteIndex_Medical1:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorPalettePtr = RMH_CustomPalette_Medical1;
 
 		break;
@@ -326,7 +326,7 @@ void RMH_ColorPalette_ChangeColorPalette(System::Windows::Forms::ComboBox^ Color
 		// Color Palette: Custom Medical
 		case _ColorPaletteIndex_Medical2:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorPalettePtr = RMH_CustomPalette_Medical2;
 
 		break;
@@ -334,7 +334,7 @@ void RMH_ColorPalette_ChangeColorPalette(System::Windows::Forms::ComboBox^ Color
 		// Color Palette: Custom MIdGrey
 		case _ColorPaletteIndex_MidGrey:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorPalettePtr = RMH_CustomPalette_MidGrey;
 
 		break;
@@ -342,7 +342,7 @@ void RMH_ColorPalette_ChangeColorPalette(System::Windows::Forms::ComboBox^ Color
 		// Color Palette: Custom Prism
 		case _ColorPaletteIndex_Prism:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorPalettePtr = RMH_CustomPalette_Prism;
 
 		break;
@@ -350,7 +350,7 @@ void RMH_ColorPalette_ChangeColorPalette(System::Windows::Forms::ComboBox^ Color
 		// Color Palette: Custom Rain
 		case _ColorPaletteIndex_Rain:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorPalettePtr = RMH_CustomPalette_Rain;
 
 		break;
@@ -358,7 +358,7 @@ void RMH_ColorPalette_ChangeColorPalette(System::Windows::Forms::ComboBox^ Color
 		// Color Palette: Custom Rain10
 		case _ColorPaletteIndex_Rain10:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorPalettePtr = RMH_CustomPalette_Rain10;
 
 		break;
@@ -366,7 +366,7 @@ void RMH_ColorPalette_ChangeColorPalette(System::Windows::Forms::ComboBox^ Color
 		// Color Palette: Custom DarkRed
 		case _ColorPaletteIndex_DarkRed:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorPalettePtr = RMH_CustomPalette_DarkRed;
 
 		break;
@@ -374,7 +374,7 @@ void RMH_ColorPalette_ChangeColorPalette(System::Windows::Forms::ComboBox^ Color
 		// Color Palette: Custom Lambda
 		case _ColorPaletteIndex_Lambda:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorPalettePtr = RMH_CustomPalette_Lambda;
 
 		break;
@@ -382,7 +382,7 @@ void RMH_ColorPalette_ChangeColorPalette(System::Windows::Forms::ComboBox^ Color
 		// Color Palette: Custom AllWhite
 		case _ColorPaletteIndex_AllWhite:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorPalettePtr = RMH_CustomPalette_AllWhite;
 
 		break;
@@ -390,7 +390,7 @@ void RMH_ColorPalette_ChangeColorPalette(System::Windows::Forms::ComboBox^ Color
 		// Color Palette: Custom AllBlack
 		case _ColorPaletteIndex_AllBlack:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorPalettePtr = RMH_CustomPalette_AllBlack;
 
 		break;
@@ -398,7 +398,7 @@ void RMH_ColorPalette_ChangeColorPalette(System::Windows::Forms::ComboBox^ Color
 		// Color Palette: Custom InfernoEX
 		case _ColorPaletteIndex_InfernoEX:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorPalettePtr = RMH_CustomPalette_InfernoEX;
 
 		break;
@@ -406,7 +406,7 @@ void RMH_ColorPalette_ChangeColorPalette(System::Windows::Forms::ComboBox^ Color
 		// Color Palette: Custom IsoRainBow1
 		case _ColorPaletteIndex_IsoRainBow1:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorPalettePtr = RMH_CustomPalette_IsoRainBow1;
 
 		break;
@@ -414,7 +414,7 @@ void RMH_ColorPalette_ChangeColorPalette(System::Windows::Forms::ComboBox^ Color
 		// Color Palette: Custom IsoRainBow2
 		case _ColorPaletteIndex_IsoRainBow2:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorPalettePtr = RMH_CustomPalette_IsoRainBow2;
 
 		break;
@@ -422,7 +422,7 @@ void RMH_ColorPalette_ChangeColorPalette(System::Windows::Forms::ComboBox^ Color
 		// Color Palette: Custom IsoTropic
 		case _ColorPaletteIndex_IsoTropic:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorPalettePtr = RMH_CustomPalette_IsoTropic;
 
 		break;
@@ -430,7 +430,7 @@ void RMH_ColorPalette_ChangeColorPalette(System::Windows::Forms::ComboBox^ Color
 		// Color Palette: Custom UAVFlying
 		case _ColorPaletteIndex_UAVFlying:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorPalettePtr = RMH_CustomPalette_UAVFlying;
 
 		break;
@@ -438,7 +438,7 @@ void RMH_ColorPalette_ChangeColorPalette(System::Windows::Forms::ComboBox^ Color
 		// Color Palette: Custom SpectrumHot
 		case _ColorPaletteIndex_SpectrumHot:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorPalettePtr = RMH_CustomPalette_SpectrumHot;
 
 		break;
@@ -446,7 +446,7 @@ void RMH_ColorPalette_ChangeColorPalette(System::Windows::Forms::ComboBox^ Color
 		// Color Palette: Custom Epsilon
 		case _ColorPaletteIndex_Epsilon:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorPalettePtr = RMH_CustomPalette_Epsilon;
 
 		break;
@@ -454,7 +454,7 @@ void RMH_ColorPalette_ChangeColorPalette(System::Windows::Forms::ComboBox^ Color
 		// Color Palette: Custom EmissivityMap
 		case _ColorPaletteIndex_EmissivityMap:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorPalettePtr = RMH_CustomPalette_EmissivityMap;
 
 		break;
@@ -465,18 +465,18 @@ void RMH_ColorPalette_ChangeColorPalette(System::Windows::Forms::ComboBox^ Color
 
 void RMH_ColorPalette_ChangeDualColorPalette(System::Windows::Forms::ComboBox^ DualColorPaletteComboBox) {
 
-	// Routinen indstiller valgte Dual Color Palette til Live View Picture Boxen
+	// This routine sets the selected dual color palette to the live view PictureBox
 
-	// Læs valgte Dual Color Palette
+	// Read the selected dual color palette
 	unsigned int ColorPaletteIndex = DualColorPaletteComboBox->SelectedIndex;
 
-	// Indstilling af valgte Color Palette
+	// Setting of the selected color palette
 	switch (ColorPaletteIndex) {
 
 		// Color Palette: Parula
 		case _ColorPaletteIndex_Parula:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			DualColorPalettePtr = RMH_CustomPalette_Parula;
 
 		break;
@@ -484,7 +484,7 @@ void RMH_ColorPalette_ChangeDualColorPalette(System::Windows::Forms::ComboBox^ D
 		// Color Palette: Turbo
 		case _ColorPaletteIndex_Turbo:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			DualColorPalettePtr = RMH_CustomPalette_Turbo;
 
 		break;
@@ -492,7 +492,7 @@ void RMH_ColorPalette_ChangeDualColorPalette(System::Windows::Forms::ComboBox^ D
 		// Color Palette: Jet
 		case _ColorPaletteIndex_Jet:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			DualColorPalettePtr = RMH_CustomPalette_Jet;
 
 		break;
@@ -500,7 +500,7 @@ void RMH_ColorPalette_ChangeDualColorPalette(System::Windows::Forms::ComboBox^ D
 		// Color Palette: HSV
 		case _ColorPaletteIndex_HSV:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			DualColorPalettePtr = RMH_CustomPalette_HSV;
 
 		break;
@@ -508,7 +508,7 @@ void RMH_ColorPalette_ChangeDualColorPalette(System::Windows::Forms::ComboBox^ D
 		// Color Palette: Hot
 		case _ColorPaletteIndex_Hot:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			DualColorPalettePtr = RMH_CustomPalette_Hot;
 
 		break;
@@ -516,7 +516,7 @@ void RMH_ColorPalette_ChangeDualColorPalette(System::Windows::Forms::ComboBox^ D
 		// Color Palette: Cool
 		case _ColorPaletteIndex_Cool:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			DualColorPalettePtr = RMH_CustomPalette_Cool;
 
 		break;
@@ -524,7 +524,7 @@ void RMH_ColorPalette_ChangeDualColorPalette(System::Windows::Forms::ComboBox^ D
 		// Color Palette: Spring
 		case _ColorPaletteIndex_Spring:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			DualColorPalettePtr = RMH_CustomPalette_Spring;
 
 		break;
@@ -532,7 +532,7 @@ void RMH_ColorPalette_ChangeDualColorPalette(System::Windows::Forms::ComboBox^ D
 		// Color Palette: Summer
 		case _ColorPaletteIndex_Summer:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			DualColorPalettePtr = RMH_CustomPalette_Summer;
 
 		break;
@@ -540,7 +540,7 @@ void RMH_ColorPalette_ChangeDualColorPalette(System::Windows::Forms::ComboBox^ D
 		// Color Palette: Autumn
 		case _ColorPaletteIndex_Autumn:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			DualColorPalettePtr = RMH_CustomPalette_Autumn;
 
 		break;
@@ -548,7 +548,7 @@ void RMH_ColorPalette_ChangeDualColorPalette(System::Windows::Forms::ComboBox^ D
 		// Color Palette: Winter
 		case _ColorPaletteIndex_Winter:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			DualColorPalettePtr = RMH_CustomPalette_Winter;
 
 		break;
@@ -556,7 +556,7 @@ void RMH_ColorPalette_ChangeDualColorPalette(System::Windows::Forms::ComboBox^ D
 		// Color Palette: Gray
 		case _ColorPaletteIndex_Gray:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			DualColorPalettePtr = RMH_CustomPalette_Gray;
 
 		break;
@@ -564,7 +564,7 @@ void RMH_ColorPalette_ChangeDualColorPalette(System::Windows::Forms::ComboBox^ D
 		// Color Palette: Bone
 		case _ColorPaletteIndex_Bone:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			DualColorPalettePtr = RMH_CustomPalette_Bone;
 
 		break;
@@ -572,7 +572,7 @@ void RMH_ColorPalette_ChangeDualColorPalette(System::Windows::Forms::ComboBox^ D
 		// Color Palette: Copper
 		case _ColorPaletteIndex_Copper:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			DualColorPalettePtr = RMH_CustomPalette_Copper;
 
 		break;
@@ -580,7 +580,7 @@ void RMH_ColorPalette_ChangeDualColorPalette(System::Windows::Forms::ComboBox^ D
 		// Color Palette: Pink
 		case _ColorPaletteIndex_Pink:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			DualColorPalettePtr = RMH_CustomPalette_Pink;
 
 		break;
@@ -588,7 +588,7 @@ void RMH_ColorPalette_ChangeDualColorPalette(System::Windows::Forms::ComboBox^ D
 		// Color Palette: Custom DarkHot
 		case _ColorPaletteIndex_DarkHot:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			DualColorPalettePtr = RMH_CustomPalette_DarkHot;
 
 		break;
@@ -596,7 +596,7 @@ void RMH_ColorPalette_ChangeDualColorPalette(System::Windows::Forms::ComboBox^ D
 		// Color Palette: Custom ColdSpot
 		case _ColorPaletteIndex_ColdSpot:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			DualColorPalettePtr = RMH_CustomPalette_ColdSpot;
 
 		break;
@@ -604,7 +604,7 @@ void RMH_ColorPalette_ChangeDualColorPalette(System::Windows::Forms::ComboBox^ D
 		// Color Palette: Custom ColdHotSpot
 		case _ColorPaletteIndex_ColdHotSpot:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			DualColorPalettePtr = RMH_CustomPalette_ColdHotSpot;
 
 		break;
@@ -612,7 +612,7 @@ void RMH_ColorPalette_ChangeDualColorPalette(System::Windows::Forms::ComboBox^ D
 		// Color Palette: Custom BlackRed
 		case _ColorPaletteIndex_BlackRed:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			DualColorPalettePtr = RMH_CustomPalette_BlackRed;
 
 		break;
@@ -620,7 +620,7 @@ void RMH_ColorPalette_ChangeDualColorPalette(System::Windows::Forms::ComboBox^ D
 		// Color Palette: Custom Inferno
 		case _ColorPaletteIndex_Inferno:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			DualColorPalettePtr = RMH_CustomPalette_Inferno;
 
 		break;
@@ -628,7 +628,7 @@ void RMH_ColorPalette_ChangeDualColorPalette(System::Windows::Forms::ComboBox^ D
 		// Color Palette: Custom Magma
 		case _ColorPaletteIndex_Magma:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			DualColorPalettePtr = RMH_CustomPalette_Magma;
 
 		break;
@@ -636,7 +636,7 @@ void RMH_ColorPalette_ChangeDualColorPalette(System::Windows::Forms::ComboBox^ D
 		// Color Palette: Custom Plasma
 		case _ColorPaletteIndex_Plasma:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			DualColorPalettePtr = RMH_CustomPalette_Plasma;
 
 		break;
@@ -644,7 +644,7 @@ void RMH_ColorPalette_ChangeDualColorPalette(System::Windows::Forms::ComboBox^ D
 		// Color Palette: Custom Lava
 		case _ColorPaletteIndex_Lava:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			DualColorPalettePtr = RMH_CustomPalette_Lava;
 
 		break;
@@ -652,7 +652,7 @@ void RMH_ColorPalette_ChangeDualColorPalette(System::Windows::Forms::ComboBox^ D
 		// Color Palette: Custom LavaHT
 		case _ColorPaletteIndex_LavaHT:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			DualColorPalettePtr = RMH_CustomPalette_LavaHT;
 
 		break;
@@ -660,7 +660,7 @@ void RMH_ColorPalette_ChangeDualColorPalette(System::Windows::Forms::ComboBox^ D
 		// Color Palette: Custom InfiRay
 		case _ColorPaletteIndex_InfiRay:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			DualColorPalettePtr = RMH_CustomPalette_InfiRay;
 
 		break;
@@ -668,7 +668,7 @@ void RMH_ColorPalette_ChangeDualColorPalette(System::Windows::Forms::ComboBox^ D
 		// Color Palette: Custom BowHC
 		case _ColorPaletteIndex_BowHC:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			DualColorPalettePtr = RMH_CustomPalette_BowHC;
 
 		break;
@@ -676,7 +676,7 @@ void RMH_ColorPalette_ChangeDualColorPalette(System::Windows::Forms::ComboBox^ D
 		// Color Palette: Custom RainHC
 		case _ColorPaletteIndex_RainHC:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			DualColorPalettePtr = RMH_CustomPalette_RainHC;
 
 		break;
@@ -684,7 +684,7 @@ void RMH_ColorPalette_ChangeDualColorPalette(System::Windows::Forms::ComboBox^ D
 		// Color Palette: Custom RainHT
 		case _ColorPaletteIndex_RainHT:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			DualColorPalettePtr = RMH_CustomPalette_RainHT;
 
 		break;
@@ -692,7 +692,7 @@ void RMH_ColorPalette_ChangeDualColorPalette(System::Windows::Forms::ComboBox^ D
 		// Color Palette: Custom Iron
 		case _ColorPaletteIndex_Iron:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			DualColorPalettePtr = RMH_CustomPalette_Iron;
 
 		break;
@@ -700,7 +700,7 @@ void RMH_ColorPalette_ChangeDualColorPalette(System::Windows::Forms::ComboBox^ D
 		// Color Palette: Custom Viridis
 		case _ColorPaletteIndex_Viridis:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			DualColorPalettePtr = RMH_CustomPalette_Viridis;
 
 		break;
@@ -708,7 +708,7 @@ void RMH_ColorPalette_ChangeDualColorPalette(System::Windows::Forms::ComboBox^ D
 		// Color Palette: Custom Tesla
 		case _ColorPaletteIndex_Tesla:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			DualColorPalettePtr = RMH_CustomPalette_Tesla;
 			 
 		break;
@@ -716,7 +716,7 @@ void RMH_ColorPalette_ChangeDualColorPalette(System::Windows::Forms::ComboBox^ D
 		// Color Palette: Custom Helix
 		case _ColorPaletteIndex_Helix:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			DualColorPalettePtr = RMH_CustomPalette_Helix;
 
 		break;
@@ -724,7 +724,7 @@ void RMH_ColorPalette_ChangeDualColorPalette(System::Windows::Forms::ComboBox^ D
 		// Color Palette: Custom Grey10
 		case _ColorPaletteIndex_Grey10:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			DualColorPalettePtr = RMH_CustomPalette_Grey10;
 
 		break;
@@ -732,7 +732,7 @@ void RMH_ColorPalette_ChangeDualColorPalette(System::Windows::Forms::ComboBox^ D
 		// Color Palette: Custom GreyRed
 		case _ColorPaletteIndex_GreyRed:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			DualColorPalettePtr = RMH_CustomPalette_GreyRed;
 
 		break;
@@ -740,7 +740,7 @@ void RMH_ColorPalette_ChangeDualColorPalette(System::Windows::Forms::ComboBox^ D
 		// Color Palette: Custom Iron10
 		case _ColorPaletteIndex_Iron10:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			DualColorPalettePtr = RMH_CustomPalette_Iron10;
 
 		break;
@@ -748,7 +748,7 @@ void RMH_ColorPalette_ChangeDualColorPalette(System::Windows::Forms::ComboBox^ D
 		// Color Palette: Custom Medical 1
 		case _ColorPaletteIndex_Medical1:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			DualColorPalettePtr = RMH_CustomPalette_Medical1;
 
 		break;
@@ -756,7 +756,7 @@ void RMH_ColorPalette_ChangeDualColorPalette(System::Windows::Forms::ComboBox^ D
 		// Color Palette: Custom Medical 2
 		case _ColorPaletteIndex_Medical2:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			DualColorPalettePtr = RMH_CustomPalette_Medical2;
 
 		break;
@@ -764,7 +764,7 @@ void RMH_ColorPalette_ChangeDualColorPalette(System::Windows::Forms::ComboBox^ D
 		// Color Palette: Custom MIdGrey
 		case _ColorPaletteIndex_MidGrey:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			DualColorPalettePtr = RMH_CustomPalette_MidGrey;
 
 		break;
@@ -772,7 +772,7 @@ void RMH_ColorPalette_ChangeDualColorPalette(System::Windows::Forms::ComboBox^ D
 		// Color Palette: Custom Prism
 		case _ColorPaletteIndex_Prism:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			DualColorPalettePtr = RMH_CustomPalette_Prism;
 
 		break;
@@ -780,7 +780,7 @@ void RMH_ColorPalette_ChangeDualColorPalette(System::Windows::Forms::ComboBox^ D
 		// Color Palette: Custom Rain
 		case _ColorPaletteIndex_Rain:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			DualColorPalettePtr = RMH_CustomPalette_Rain;
 
 		break;
@@ -788,7 +788,7 @@ void RMH_ColorPalette_ChangeDualColorPalette(System::Windows::Forms::ComboBox^ D
 		// Color Palette: Custom Rain10
 		case _ColorPaletteIndex_Rain10:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			DualColorPalettePtr = RMH_CustomPalette_Rain10;
 
 		break;
@@ -796,7 +796,7 @@ void RMH_ColorPalette_ChangeDualColorPalette(System::Windows::Forms::ComboBox^ D
 		// Color Palette: Custom DarkRed
 		case _ColorPaletteIndex_DarkRed:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			DualColorPalettePtr = RMH_CustomPalette_DarkRed;
 
 		break;
@@ -804,7 +804,7 @@ void RMH_ColorPalette_ChangeDualColorPalette(System::Windows::Forms::ComboBox^ D
 		// Color Palette: Custom Lambda
 		case _ColorPaletteIndex_Lambda:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			DualColorPalettePtr = RMH_CustomPalette_Lambda;
 
 		break;
@@ -812,7 +812,7 @@ void RMH_ColorPalette_ChangeDualColorPalette(System::Windows::Forms::ComboBox^ D
 		// Color Palette: Custom AllWhite
 		case _ColorPaletteIndex_AllWhite:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			DualColorPalettePtr = RMH_CustomPalette_AllWhite;
 
 		break;
@@ -820,7 +820,7 @@ void RMH_ColorPalette_ChangeDualColorPalette(System::Windows::Forms::ComboBox^ D
 		// Color Palette: Custom AllBlack
 		case _ColorPaletteIndex_AllBlack:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			DualColorPalettePtr = RMH_CustomPalette_AllBlack;
 
 		break;
@@ -828,7 +828,7 @@ void RMH_ColorPalette_ChangeDualColorPalette(System::Windows::Forms::ComboBox^ D
 		// Color Palette: Custom InfernoEX
 		case _ColorPaletteIndex_InfernoEX:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			DualColorPalettePtr = RMH_CustomPalette_InfernoEX;
 
 		break;
@@ -836,7 +836,7 @@ void RMH_ColorPalette_ChangeDualColorPalette(System::Windows::Forms::ComboBox^ D
 		// Color Palette: Custom IsoRainBow1
 		case _ColorPaletteIndex_IsoRainBow1:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			DualColorPalettePtr = RMH_CustomPalette_IsoRainBow1;
 
 		break;
@@ -844,7 +844,7 @@ void RMH_ColorPalette_ChangeDualColorPalette(System::Windows::Forms::ComboBox^ D
 		// Color Palette: Custom IsoRainBow2
 		case _ColorPaletteIndex_IsoRainBow2:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			DualColorPalettePtr = RMH_CustomPalette_IsoRainBow2;
 
 		break;
@@ -852,7 +852,7 @@ void RMH_ColorPalette_ChangeDualColorPalette(System::Windows::Forms::ComboBox^ D
 		// Color Palette: Custom IsoTropic
 		case _ColorPaletteIndex_IsoTropic:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			DualColorPalettePtr = RMH_CustomPalette_IsoTropic;
 
 		break;
@@ -860,7 +860,7 @@ void RMH_ColorPalette_ChangeDualColorPalette(System::Windows::Forms::ComboBox^ D
 		// Color Palette: Custom UAVFlying
 		case _ColorPaletteIndex_UAVFlying:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			DualColorPalettePtr = RMH_CustomPalette_UAVFlying;
 
 		break;
@@ -868,7 +868,7 @@ void RMH_ColorPalette_ChangeDualColorPalette(System::Windows::Forms::ComboBox^ D
 		// Color Palette: Custom SpectrumHot
 		case _ColorPaletteIndex_SpectrumHot:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			DualColorPalettePtr = RMH_CustomPalette_SpectrumHot;
 
 		break;
@@ -876,7 +876,7 @@ void RMH_ColorPalette_ChangeDualColorPalette(System::Windows::Forms::ComboBox^ D
 		// Color Palette: Custom Epsilon
 		case _ColorPaletteIndex_Epsilon:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			DualColorPalettePtr = RMH_CustomPalette_Epsilon;
 
 		break;
@@ -884,7 +884,7 @@ void RMH_ColorPalette_ChangeDualColorPalette(System::Windows::Forms::ComboBox^ D
 		// Color Palette: Custom EmissivityMap
 		case _ColorPaletteIndex_EmissivityMap:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			DualColorPalettePtr = RMH_CustomPalette_EmissivityMap;
 
 		break;
@@ -895,18 +895,18 @@ void RMH_ColorPalette_ChangeDualColorPalette(System::Windows::Forms::ComboBox^ D
 
 void RMH_ColorPalette_ChangeColorBarBackgroundColorPalette(System::Windows::Forms::ComboBox^ ColorBarBackPaletteComboBox) {
 
-	// Routinen indstiller valgte Color Palette som baggrunds palette til colorbaren
+	// This routine sets the selected color palette as the background palette of the colorbar
 
-	// Læs valgte colorbar baggrunds Color Palette
+	// Read the selected colorbar background color palette
 	unsigned int ColorPaletteIndex = ColorBarBackPaletteComboBox->SelectedIndex;
 
-	// Indstilling af valgte Color Palette
+	// Setting of the selected color palette
 	switch (ColorPaletteIndex) {
 
 		// Color Palette: Parula
 		case _ColorPaletteIndex_Parula:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorBarBackPalettePtr = RMH_CustomPalette_Parula;
 
 		break;
@@ -914,7 +914,7 @@ void RMH_ColorPalette_ChangeColorBarBackgroundColorPalette(System::Windows::Form
 		// Color Palette: Turbo
 		case _ColorPaletteIndex_Turbo:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorBarBackPalettePtr = RMH_CustomPalette_Turbo;
 
 		break;
@@ -922,7 +922,7 @@ void RMH_ColorPalette_ChangeColorBarBackgroundColorPalette(System::Windows::Form
 		// Color Palette: Jet
 		case _ColorPaletteIndex_Jet:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorBarBackPalettePtr = RMH_CustomPalette_Jet;
 
 		break;
@@ -930,7 +930,7 @@ void RMH_ColorPalette_ChangeColorBarBackgroundColorPalette(System::Windows::Form
 		// Color Palette: HSV
 		case _ColorPaletteIndex_HSV:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorBarBackPalettePtr = RMH_CustomPalette_HSV;
 
 		break;
@@ -938,7 +938,7 @@ void RMH_ColorPalette_ChangeColorBarBackgroundColorPalette(System::Windows::Form
 		// Color Palette: Hot
 		case _ColorPaletteIndex_Hot:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorBarBackPalettePtr = RMH_CustomPalette_Hot;
 
 		break;
@@ -946,7 +946,7 @@ void RMH_ColorPalette_ChangeColorBarBackgroundColorPalette(System::Windows::Form
 		// Color Palette: Cool
 		case _ColorPaletteIndex_Cool:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorBarBackPalettePtr = RMH_CustomPalette_Cool;
 
 		break;
@@ -954,7 +954,7 @@ void RMH_ColorPalette_ChangeColorBarBackgroundColorPalette(System::Windows::Form
 		// Color Palette: Spring
 		case _ColorPaletteIndex_Spring:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorBarBackPalettePtr = RMH_CustomPalette_Spring;
 
 		break;
@@ -962,7 +962,7 @@ void RMH_ColorPalette_ChangeColorBarBackgroundColorPalette(System::Windows::Form
 		// Color Palette: Summer
 		case _ColorPaletteIndex_Summer:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorBarBackPalettePtr = RMH_CustomPalette_Summer;
 
 		break;
@@ -970,7 +970,7 @@ void RMH_ColorPalette_ChangeColorBarBackgroundColorPalette(System::Windows::Form
 		// Color Palette: Autumn
 		case _ColorPaletteIndex_Autumn:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorBarBackPalettePtr = RMH_CustomPalette_Autumn;
 
 		break;
@@ -978,7 +978,7 @@ void RMH_ColorPalette_ChangeColorBarBackgroundColorPalette(System::Windows::Form
 		// Color Palette: Winter
 		case _ColorPaletteIndex_Winter:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorBarBackPalettePtr = RMH_CustomPalette_Winter;
 
 		break;
@@ -986,7 +986,7 @@ void RMH_ColorPalette_ChangeColorBarBackgroundColorPalette(System::Windows::Form
 		// Color Palette: Gray
 		case _ColorPaletteIndex_Gray:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorBarBackPalettePtr = RMH_CustomPalette_Gray;
 
 		break;
@@ -994,7 +994,7 @@ void RMH_ColorPalette_ChangeColorBarBackgroundColorPalette(System::Windows::Form
 		// Color Palette: Bone
 		case _ColorPaletteIndex_Bone:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorBarBackPalettePtr = RMH_CustomPalette_Bone;
 
 		break;
@@ -1002,7 +1002,7 @@ void RMH_ColorPalette_ChangeColorBarBackgroundColorPalette(System::Windows::Form
 		// Color Palette: Copper
 		case _ColorPaletteIndex_Copper:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorBarBackPalettePtr = RMH_CustomPalette_Copper;
 
 		break;
@@ -1010,7 +1010,7 @@ void RMH_ColorPalette_ChangeColorBarBackgroundColorPalette(System::Windows::Form
 		// Color Palette: Pink
 		case _ColorPaletteIndex_Pink:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorBarBackPalettePtr = RMH_CustomPalette_Pink;
 
 		break;
@@ -1018,7 +1018,7 @@ void RMH_ColorPalette_ChangeColorBarBackgroundColorPalette(System::Windows::Form
 		// Color Palette: Custom DarkHot
 		case _ColorPaletteIndex_DarkHot:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorBarBackPalettePtr = RMH_CustomPalette_DarkHot;
 
 		break;
@@ -1026,7 +1026,7 @@ void RMH_ColorPalette_ChangeColorBarBackgroundColorPalette(System::Windows::Form
 		// Color Palette: Custom ColdSpot
 		case _ColorPaletteIndex_ColdSpot:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorBarBackPalettePtr = RMH_CustomPalette_ColdSpot;
 
 		break;
@@ -1034,7 +1034,7 @@ void RMH_ColorPalette_ChangeColorBarBackgroundColorPalette(System::Windows::Form
 		// Color Palette: Custom ColdHotSpot
 		case _ColorPaletteIndex_ColdHotSpot:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorBarBackPalettePtr = RMH_CustomPalette_ColdHotSpot;
 
 		break;
@@ -1042,7 +1042,7 @@ void RMH_ColorPalette_ChangeColorBarBackgroundColorPalette(System::Windows::Form
 		// Color Palette: Custom BlackRed
 		case _ColorPaletteIndex_BlackRed:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorBarBackPalettePtr = RMH_CustomPalette_BlackRed;
 
 		break;
@@ -1050,7 +1050,7 @@ void RMH_ColorPalette_ChangeColorBarBackgroundColorPalette(System::Windows::Form
 		// Color Palette: Custom Inferno
 		case _ColorPaletteIndex_Inferno:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorBarBackPalettePtr = RMH_CustomPalette_Inferno;
 
 		break;
@@ -1058,7 +1058,7 @@ void RMH_ColorPalette_ChangeColorBarBackgroundColorPalette(System::Windows::Form
 		// Color Palette: Custom Magma
 		case _ColorPaletteIndex_Magma:
 	
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorBarBackPalettePtr = RMH_CustomPalette_Magma;
 
 		break;
@@ -1066,7 +1066,7 @@ void RMH_ColorPalette_ChangeColorBarBackgroundColorPalette(System::Windows::Form
 		// Color Palette: Custom Plasma
 		case _ColorPaletteIndex_Plasma:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorBarBackPalettePtr = RMH_CustomPalette_Plasma;
 
 		break;
@@ -1074,7 +1074,7 @@ void RMH_ColorPalette_ChangeColorBarBackgroundColorPalette(System::Windows::Form
 		// Color Palette: Custom Lava
 		case _ColorPaletteIndex_Lava:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorBarBackPalettePtr = RMH_CustomPalette_Lava;
 
 		break;
@@ -1082,7 +1082,7 @@ void RMH_ColorPalette_ChangeColorBarBackgroundColorPalette(System::Windows::Form
 		// Color Palette: Custom LavaHT
 		case _ColorPaletteIndex_LavaHT:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorBarBackPalettePtr = RMH_CustomPalette_LavaHT;
 
 		break;
@@ -1090,7 +1090,7 @@ void RMH_ColorPalette_ChangeColorBarBackgroundColorPalette(System::Windows::Form
 		// Color Palette: Custom InfiRay
 		case _ColorPaletteIndex_InfiRay:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorBarBackPalettePtr = RMH_CustomPalette_InfiRay;
 
 		break;
@@ -1098,7 +1098,7 @@ void RMH_ColorPalette_ChangeColorBarBackgroundColorPalette(System::Windows::Form
 		// Color Palette: Custom BowHC
 		case _ColorPaletteIndex_BowHC:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorBarBackPalettePtr = RMH_CustomPalette_BowHC;
 
 		break;
@@ -1106,7 +1106,7 @@ void RMH_ColorPalette_ChangeColorBarBackgroundColorPalette(System::Windows::Form
 		// Color Palette: Custom RainHC
 		case _ColorPaletteIndex_RainHC:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorBarBackPalettePtr = RMH_CustomPalette_RainHC;
 
 		break;
@@ -1114,7 +1114,7 @@ void RMH_ColorPalette_ChangeColorBarBackgroundColorPalette(System::Windows::Form
 		// Color Palette: Custom RainHT
 		case _ColorPaletteIndex_RainHT:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorBarBackPalettePtr = RMH_CustomPalette_RainHT;
 
 		break;
@@ -1122,7 +1122,7 @@ void RMH_ColorPalette_ChangeColorBarBackgroundColorPalette(System::Windows::Form
 		// Color Palette: Custom Iron
 		case _ColorPaletteIndex_Iron:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorBarBackPalettePtr = RMH_CustomPalette_Iron;
 
 		break;
@@ -1130,7 +1130,7 @@ void RMH_ColorPalette_ChangeColorBarBackgroundColorPalette(System::Windows::Form
 		// Color Palette: Custom Viridis
 		case _ColorPaletteIndex_Viridis:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorBarBackPalettePtr = RMH_CustomPalette_Viridis;
 
 		break;
@@ -1138,7 +1138,7 @@ void RMH_ColorPalette_ChangeColorBarBackgroundColorPalette(System::Windows::Form
 		// Color Palette: Custom Tesla
 		case _ColorPaletteIndex_Tesla:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorBarBackPalettePtr = RMH_CustomPalette_Tesla;
 
 		break;
@@ -1146,7 +1146,7 @@ void RMH_ColorPalette_ChangeColorBarBackgroundColorPalette(System::Windows::Form
 		// Color Palette: Custom Helix
 		case _ColorPaletteIndex_Helix:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorBarBackPalettePtr = RMH_CustomPalette_Helix;
 
 		break;
@@ -1154,7 +1154,7 @@ void RMH_ColorPalette_ChangeColorBarBackgroundColorPalette(System::Windows::Form
 		// Color Palette: Custom Grey10
 		case _ColorPaletteIndex_Grey10:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorBarBackPalettePtr = RMH_CustomPalette_Grey10;
 
 		break;
@@ -1162,7 +1162,7 @@ void RMH_ColorPalette_ChangeColorBarBackgroundColorPalette(System::Windows::Form
 		// Color Palette: Custom GreyRed
 		case _ColorPaletteIndex_GreyRed:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorBarBackPalettePtr = RMH_CustomPalette_GreyRed;
 
 		break;
@@ -1170,7 +1170,7 @@ void RMH_ColorPalette_ChangeColorBarBackgroundColorPalette(System::Windows::Form
 		// Color Palette: Custom Iron10
 		case _ColorPaletteIndex_Iron10:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorBarBackPalettePtr = RMH_CustomPalette_Iron10;
 
 		break;
@@ -1178,7 +1178,7 @@ void RMH_ColorPalette_ChangeColorBarBackgroundColorPalette(System::Windows::Form
 		// Color Palette: Custom Medical 1
 		case _ColorPaletteIndex_Medical1:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorBarBackPalettePtr = RMH_CustomPalette_Medical1;
 
 		break;
@@ -1186,7 +1186,7 @@ void RMH_ColorPalette_ChangeColorBarBackgroundColorPalette(System::Windows::Form
 		// Color Palette: Custom Medical 2
 		case _ColorPaletteIndex_Medical2:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorBarBackPalettePtr = RMH_CustomPalette_Medical2;
 
 			break;
@@ -1194,7 +1194,7 @@ void RMH_ColorPalette_ChangeColorBarBackgroundColorPalette(System::Windows::Form
 		// Color Palette: Custom MIdGrey
 		case _ColorPaletteIndex_MidGrey:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorBarBackPalettePtr = RMH_CustomPalette_MidGrey;
 
 		break;
@@ -1202,7 +1202,7 @@ void RMH_ColorPalette_ChangeColorBarBackgroundColorPalette(System::Windows::Form
 		// Color Palette: Custom Prism
 		case _ColorPaletteIndex_Prism:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorBarBackPalettePtr = RMH_CustomPalette_Prism;
 
 		break;
@@ -1210,7 +1210,7 @@ void RMH_ColorPalette_ChangeColorBarBackgroundColorPalette(System::Windows::Form
 		// Color Palette: Custom Rain
 		case _ColorPaletteIndex_Rain:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorBarBackPalettePtr = RMH_CustomPalette_Rain;
 
 		break;
@@ -1218,7 +1218,7 @@ void RMH_ColorPalette_ChangeColorBarBackgroundColorPalette(System::Windows::Form
 		// Color Palette: Custom Rain10
 		case _ColorPaletteIndex_Rain10:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorBarBackPalettePtr = RMH_CustomPalette_Rain10;
 
 		break;
@@ -1226,7 +1226,7 @@ void RMH_ColorPalette_ChangeColorBarBackgroundColorPalette(System::Windows::Form
 		// Color Palette: Custom DarkRed
 		case _ColorPaletteIndex_DarkRed:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorBarBackPalettePtr = RMH_CustomPalette_DarkRed;
 
 		break;
@@ -1234,7 +1234,7 @@ void RMH_ColorPalette_ChangeColorBarBackgroundColorPalette(System::Windows::Form
 			// Color Palette: Custom Lambda
 		case _ColorPaletteIndex_Lambda:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorBarBackPalettePtr = RMH_CustomPalette_Lambda;
 
 		break;
@@ -1242,7 +1242,7 @@ void RMH_ColorPalette_ChangeColorBarBackgroundColorPalette(System::Windows::Form
 		// Color Palette: Custom AllWhite
 		case _ColorPaletteIndex_AllWhite:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorBarBackPalettePtr = RMH_CustomPalette_AllWhite;
 
 		break;
@@ -1250,7 +1250,7 @@ void RMH_ColorPalette_ChangeColorBarBackgroundColorPalette(System::Windows::Form
 			// Color Palette: Custom AllBlack
 		case _ColorPaletteIndex_AllBlack:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorBarBackPalettePtr = RMH_CustomPalette_AllBlack;
 
 		break;
@@ -1258,7 +1258,7 @@ void RMH_ColorPalette_ChangeColorBarBackgroundColorPalette(System::Windows::Form
 		// Color Palette: Custom InfernoEX
 		case _ColorPaletteIndex_InfernoEX:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorBarBackPalettePtr = RMH_CustomPalette_InfernoEX;
 
 		break;
@@ -1266,7 +1266,7 @@ void RMH_ColorPalette_ChangeColorBarBackgroundColorPalette(System::Windows::Form
 		// Color Palette: Custom IsoRainBow1
 		case _ColorPaletteIndex_IsoRainBow1:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorBarBackPalettePtr = RMH_CustomPalette_IsoRainBow1;
 
 		break;
@@ -1274,7 +1274,7 @@ void RMH_ColorPalette_ChangeColorBarBackgroundColorPalette(System::Windows::Form
 		// Color Palette: Custom IsoRainBow2
 		case _ColorPaletteIndex_IsoRainBow2:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorBarBackPalettePtr = RMH_CustomPalette_IsoRainBow2;
 
 		break;
@@ -1282,7 +1282,7 @@ void RMH_ColorPalette_ChangeColorBarBackgroundColorPalette(System::Windows::Form
 		// Color Palette: Custom IsoTropic
 		case _ColorPaletteIndex_IsoTropic:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorBarBackPalettePtr = RMH_CustomPalette_IsoTropic;
 
 		break;
@@ -1290,7 +1290,7 @@ void RMH_ColorPalette_ChangeColorBarBackgroundColorPalette(System::Windows::Form
 		// Color Palette: Custom UAVFlying
 		case _ColorPaletteIndex_UAVFlying:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorBarBackPalettePtr = RMH_CustomPalette_UAVFlying;
 
 		break;
@@ -1298,7 +1298,7 @@ void RMH_ColorPalette_ChangeColorBarBackgroundColorPalette(System::Windows::Form
 		// Color Palette: Custom SpectrumHot
 		case _ColorPaletteIndex_SpectrumHot:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorBarBackPalettePtr = RMH_CustomPalette_SpectrumHot;
 
 		break;
@@ -1306,7 +1306,7 @@ void RMH_ColorPalette_ChangeColorBarBackgroundColorPalette(System::Windows::Form
 		// Color Palette: Custom Epsilon
 		case _ColorPaletteIndex_Epsilon:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorBarBackPalettePtr = RMH_CustomPalette_Epsilon;
 
 		break;
@@ -1314,7 +1314,7 @@ void RMH_ColorPalette_ChangeColorBarBackgroundColorPalette(System::Windows::Form
 		// Color Palette: Custom EmissivityMap
 		case _ColorPaletteIndex_EmissivityMap:
 
-			// Opdater Color Palette Pointer
+			// Update the color palette pointer
 			ColorBarBackPalettePtr = RMH_CustomPalette_EmissivityMap;
 
 		break;
@@ -1325,23 +1325,23 @@ void RMH_ColorPalette_ChangeColorBarBackgroundColorPalette(System::Windows::Form
 
 void RMH_ColorPalette_EnableDualColorPalettes(System::Windows::Forms::Button^ DualColorPaletteButton) {
 
-	// Routinen Håndterer event ved aktivering af Dual live View Color Palettes
+	// This routine handles the event when dual live view color palettes are enabled
 
-	// Skal Dual Color Palette aktiveres eller deaktiveres
+	// Should the dual color palette be enabled or disabled
 	if (DualColorPaletteEnableFlag == true) {
 
-		// Opdater Dual Color Palette Knap Border Farve
+		// Update the border color of the dual color palette button
 		DualColorPaletteButton->FlatAppearance->BorderColor = System::Drawing::Color::Lime;
 
 	}
 	else {
 
-		// Nulstil Dual Color Palette Knap Border Farve
+		// Reset the border color of the dual color palette button
 		DualColorPaletteButton->FlatAppearance->BorderColor = System::Drawing::Color::FromArgb(255, 40, 40, 40);
 
 	}
 
-	// Opdater Dual Color Palette Knap grafik
+	// Update the graphic of the dual color palette button
 	DualColorPaletteButton->Refresh();
 
 }
@@ -1350,8 +1350,8 @@ void RMH_ColorPalette_UpdateHistogramColorPaletteInvertionState() {
 
 	// Routinen opdaterer histogrammets color palettes inverterings stadie
 
-	// Kontroller hvilken color palette som histogrammet benytter
-	// Hvis histogrammet color palette er indstillet som Dual Color paletten
+	// Check which color palette the histogram uses
+	// If the histogram color palette is set to the dual color palette
 	if (HistogramDualOrLiveViewPaletteFlag == true) {
 
 		// Skal Dual color paletten inverteres for Histogrammet
@@ -1391,18 +1391,18 @@ void RMH_ColorPalette_UpdateHistogramColorPaletteInvertionState() {
 
 void RMH_ColorPalette_InvertColorPalettes(System::Object^ sender) {
 
-	// Routinen opdaterer det inverterede stadie for en valgt color palette
+	// This routine updates the inverted state of a selected color palette
 
 	// Cast Sender objekt som Forms ToolStripMenuItem objekt
 	System::Windows::Forms::ToolStripMenuItem^ InvertMenuItem = (System::Windows::Forms::ToolStripMenuItem^)sender;
 
-	// Læs Tool Strip Menuens identifikations tag
+	// Read the identification tag of the tool strip menu
 	unsigned int InvertMenuItemTag = Convert::ToInt32(InvertMenuItem->Tag);
 
-	// Hvilken color palette skal inverteres
+	// Which color palette should be inverted
 	switch (InvertMenuItemTag) {
 
-		// Inveter valgte color palette
+		// Invert the selected color palette
 		case 0: InvertLiveViewPaletteFlag = !InvertLiveViewPaletteFlag;						break;
 		case 1: InvertLiveViewDualPaletteFlag = !InvertLiveViewDualPaletteFlag;				break;
 		case 2: InvertColorBarBackgroundPaletteFlag = !InvertColorBarBackgroundPaletteFlag; break;
@@ -1417,25 +1417,25 @@ void RMH_ColorPalette_InvertColorPalettes(System::Object^ sender) {
 
 }
 
-// -------------------------- Color Bar Panel Håndterings Routiner -------------------------- //
+// -------------------------- Color Bar Panel Handling Routines --------------------------- //
 
 void RMH_ColorBar_ChangeManualRangeMouseWheelStepSize(System::Object^ sender) {
 
-	// Routinen indstiller colorbarens Mus Wheel temperatur Step størrelse
+	// This routine sets the mouse wheel temperature step size of the colorbar
 
-	// Lokale variabler
+	// Read the temporary array data and sort the kernel array
 	float MouseWheelStepSize = 0.0;
 
 	// Cast Sender objekt som Forms Tool Strip objekt
 	System::Windows::Forms::ToolStripMenuItem^ MenuStripIndex = (System::Windows::Forms::ToolStripMenuItem^)sender;
 
-	// Læs Sub Context Menu identifikations tag
+	// Read the sub context menu identification tag
 	unsigned int IndexTag = Convert::ToInt32(MenuStripIndex->Tag);
 
-	// Opdater til valgte Step Størrelse
+	// Update to the selected step size
 	switch (IndexTag) {
 
-		// Konfigurer Step Størrelse
+		// Configure the step size
 		case 1: MouseWheelStepSize = 10.0; break;
 		case 2: MouseWheelStepSize = 5.0;  break;
 		case 3: MouseWheelStepSize = 1.0;  break;
@@ -1445,28 +1445,28 @@ void RMH_ColorBar_ChangeManualRangeMouseWheelStepSize(System::Object^ sender) {
 
 	}
 
-	// Opdater colorbarens Mus Wheel temperatur Step størrelse
+	// Update the mouse wheel temperature step size of the colorbar
 	GlobalVariables::OpenGLColorBar->RMH_OpenGL_SetMouseWheelTempOffsetStepSize(MouseWheelStepSize);
 
 }
 
 void RMH_ColorBar_ChangeColorBarAmountOfTemperatureTick(System::Object^ sender) {
 
-	// Routinen indstiller antallet af colorbar temperatur ticks til nogle faste værdier
+	// This routine sets the number of colorbar temperature ticks to some fixed values
 
-	// Lokale variabler
+	// Read the temporary array data and sort the kernel array
 	unsigned char ColorBarTempTicks = 0;
 
 	// Cast Sender objekt som Forms Tool Strip objekt
 	System::Windows::Forms::ToolStripMenuItem^ MenuStripIndex = (System::Windows::Forms::ToolStripMenuItem^)sender;
 
-	// Læs Sub Context Menu identifikations tag
+	// Read the sub context menu identification tag
 	unsigned int IndexTag = Convert::ToInt32(MenuStripIndex->Tag);
 
-	// Opdater til valgte antal ticks
+	// Update to the selected number of ticks
 	switch (IndexTag) {
 
-		// Konfigurer Step Størrelse
+		// Configure the step size
 		case 1: ColorBarTempTicks = 5;  break;
 		case 2: ColorBarTempTicks = 10; break;
 		case 3: ColorBarTempTicks = 15; break;
@@ -1474,7 +1474,7 @@ void RMH_ColorBar_ChangeColorBarAmountOfTemperatureTick(System::Object^ sender) 
 
 	}
 
-	// Opdater colorbarens antal af temperatur ticks
+	// Update the number of temperature ticks of the colorbar
 	NmbOfColorBarTempTicks = ColorBarTempTicks;
 
 }

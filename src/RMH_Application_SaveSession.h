@@ -13,7 +13,7 @@
 #ifndef RMH_Application_SaveSession_H 
 #define RMH_Application_SaveSession_H
 
-// ------------ Routiner Til Håndtering Af Gemt Applikations Sessions Parametere ------------- //
+// ------------ Routines For Handling Saved Application Session Parameters ------------- //
 
 void RMH_Application_SaveLastSessionConfigToFile();
 void RMH_Application_SetSavedSessionConfigToApplication(System::Windows::Forms::RichTextBox^ GUIInfoTextArea);

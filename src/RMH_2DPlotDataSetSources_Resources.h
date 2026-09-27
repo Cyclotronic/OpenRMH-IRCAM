@@ -13,12 +13,12 @@
 #ifndef RMH_CustomColorPalette_Resources_H 
 #define RMH_CustomColorPalette_Resources_H
 
-// --------------------- Tilgængelige Temperatur Plot Data Sæt Sources ---------------------- //
+// --------------------- Available Temperature Plot Data Set Sources ---------------------- //
 
-// 2D Plot Maximale Antal Data Sæt Macro
+// Maximum number of 2D plot data sets macro
 #define _2DPlotMaxNumberOfDataSets              10
 
-// 2D Plot Data Sæt Macroer
+// 2D plot data set macros
 #define _2DPlotDataSet_1                        0
 #define _2DPlotDataSet_2                        1
 #define _2DPlotDataSet_3                        2
@@ -93,7 +93,7 @@
 #define _2DPlotDataSource_MousePositionTemp		59
 #define _2DPlotDataSource_ThermalSensorDrift    60
 
-// Tilgængelige 2D PLot Data Set Sources Navne Strings ->
+// Available 2D plot data set source name strings ->
 static std::vector<std::string> PlorDataSetSources = { "Maximum Temp",
 													   "Minimum Temp", 
 													   "Average Temp",

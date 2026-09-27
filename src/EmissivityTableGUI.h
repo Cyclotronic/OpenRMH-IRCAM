@@ -1,15 +1,15 @@
 #pragma once
 
-// Inkluderede Blblioteker
+// Included libraries
 #include "RMH_Winforms_Library.h"
 
-// Inkluderede applikations Resourcer
+// Included application resources
 #include "RMH_EmissivityTable_Resources.h"
 
 // Klasse Namespace
 namespace IRCAMThermalViewer {
 
-	// Tilhørende namespaces
+	// Associated namespaces
 	using namespace System;
 	using namespace System::ComponentModel;
 	using namespace System::Collections;
@@ -26,13 +26,13 @@ namespace IRCAMThermalViewer {
 
 		EmissivityTableGUI(void) {
 
-			// Init GUI komponenter og objekter
+			// Init GUI components and objects
 			InitializeComponent();
 
 			// Aktiver Applikationens TitelBars Dark Mode
 			RMH_Winforms_EnableTitleBarDarkMode(this->Handle);
 
-			// Indlæs Data til Emissivity Tabellen
+			// Load data into the emissivity table
 			RMH_Winforms_DataGridView_Display2ColumnDataGridView(
 				this->EmissivityDataGridView, EmissivityTableHeaderStrings, 
 				"Type:", 14, 12, 10, System::Drawing::Color::White, 
@@ -55,7 +55,7 @@ namespace IRCAMThermalViewer {
 
 			if (components) {
 
-				// Slet alle Form Komponenter
+				// Delete all form components
 				delete components;
 
 			}
@@ -183,7 +183,7 @@ namespace IRCAMThermalViewer {
 		// Emissivity Tabel GUI Opstartnings Callback Routine -> 
 		private: System::Void EmissivityTableGUI_Shown(System::Object^ sender, System::EventArgs^ e) {
 
-			// Opdater tilhørende form Flag
+			// Update the associated form flag
 			isEmissivityTableFormOpen = true;
 
 		}
@@ -191,14 +191,14 @@ namespace IRCAMThermalViewer {
 		// Emissivity Tabel GUI Nedluknings Callback Routine ->
 		private: System::Void EmissivityTableGUI_FormClosing(System::Object^ sender, System::Windows::Forms::FormClosingEventArgs^ e) {
 
-			// Opdater tilhørende form Flag
+			// Update the associated form flag
 			isEmissivityTableFormOpen = false;
 			isEmissivityTableFormDocked = false;
 			isEmissivityTableFormUndocked = false;
 
-			// Når Formen lukkes - Gem Formen
+			// When the form is closed - hide the form
 			this->Hide();
-			// Deaktiver "Disposing" Af Form Objektet
+			// Disable "disposing" of the form object
 			e->Cancel = true;
 
 		}
@@ -208,7 +208,7 @@ namespace IRCAMThermalViewer {
 		// Emissivity Tabel Celle Double Click Event Callback Routine ->
 		private: System::Void EmissivityDataGridView_CellDoubleClick(System::Object^ sender, System::Windows::Forms::DataGridViewCellEventArgs^ e) {
 
-			// Indstil Valgte Emissivity Værdi Til Termiske Kamera
+			// Set the selected emissivity value to the thermal camera
 			RMH_ThermalViewer_LoadEmissivisyTableValueToThermalCamera(e);
 
 		}

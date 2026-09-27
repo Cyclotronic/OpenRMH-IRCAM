@@ -1,12 +1,12 @@
 #pragma once
 
-// Inkluderede Blblioteker
+// Included libraries
 #include "GlobalObjectsAndVariables.h"
 #include "RMH_Application_ThermalViewer.h"
 
 namespace IRCAMThermalViewer {
 
-	// Tilhørende namespaces
+	// Associated namespaces
 	using namespace System;
 	using namespace System::ComponentModel;
 	using namespace System::Collections;
@@ -23,9 +23,9 @@ namespace IRCAMThermalViewer {
 
 		SurfacePlotGUI() {
 
-			// Init GUI komponenter og objekter
+			// Init GUI components and objects
 			InitializeComponent();
-			// Formater arrays Og Objekter af winform komponenter til global brug
+			// Format arrays and objects of WinForms components for global use
 			InitializeComponentArraysAndGlobalObjects();
 
 			// Aktiver Applikationens TitelBars Dark Mode
@@ -36,13 +36,13 @@ namespace IRCAMThermalViewer {
 
 		}
 
-		// ---------------------------- Diverse Tilhørende Klasse Metoder ----------------------------- //
+		// ---------------------------- Miscellaneous Associated Class Methods ----------------------------- //
 
 		void InitializeComponentArraysAndGlobalObjects(void) {
 
-			// Routinen formaterer arrays af winform komponenter til global brug
+			// This routine formats arrays of WinForms components for global use
 
-			// Initiliser Globale form objekter
+			// Initialize global form objects
 			GlobalVariables::OpenGLSurfacePlot = gcnew OpenGLSurfacePlot::RMHOpenGLSurfacePlot(this->SurfacePlotPanel, 4, 4);
 			GlobalVariables::GlobalSurfacePlotPanel = this->SurfacePlotPanel;
 
@@ -59,7 +59,7 @@ namespace IRCAMThermalViewer {
 
 			if (components) {
 
-				// Slet alle Form Komponenter
+				// Delete all form components
 				delete components;
 
 			}
@@ -709,7 +709,7 @@ namespace IRCAMThermalViewer {
 		// Surface Plot Form Opstartnings Callback Routine -> 
 		private: System::Void SurfacePlotGUI_Shown(System::Object^ sender, System::EventArgs^ e) {
 
-			// Opdater tilhørende form Flag
+			// Update the associated form flag
 			isSurfacePlotFormOpen = true;
 
 		}
@@ -717,14 +717,14 @@ namespace IRCAMThermalViewer {
 		// Surface Plot Form Nedluknings Callback Routine ->
 		private: System::Void SurfacePlotGUI_FormClosing(System::Object^ sender, System::Windows::Forms::FormClosingEventArgs^ e) {
 
-			// Opdater tilhørende form Flag
+			// Update the associated form flag
 			isSurfacePlotFormOpen = false;
 			isSurfacePlotFormDocked = false;
 			isSurfacePlotFormUndocked = false;
 
-			// Når Formen lukkes - Gem Formen
+			// When the form is closed - hide the form
 			this->Hide();
-			// Deaktiver "Disposing" Af Form Objektet
+			// Disable "disposing" of the form object
 			e->Cancel = true;
 
 		}
@@ -739,18 +739,18 @@ namespace IRCAMThermalViewer {
 
 		}
 
-		// Surface Plot polygon mode Punkt størrelses callback routine ->
+		// Surface plot polygon mode point size callback routine ->
 		private: System::Void toolStripMenuItem2_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Indstil punkt størrelsen i tilhørende polygon mode
+			// Set the point size in the associated polygon mode
 			GlobalVariables::OpenGLSurfacePlot->RMH_OpenGL_SetSurfacePlotPolygonModePointSize(sender);
 
 		}
 
-		// Surface Plot polygon mode Linje størrelses callback routine ->
+		// Surface plot polygon mode line size callback routine ->
 		private: System::Void size1ToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Indstil linje størrelsen i tilhørende polygon mode
+			// Set the line size in the associated polygon mode
 			GlobalVariables::OpenGLSurfacePlot->RMH_OpenGL_SetSurfacePlotPolygonModeLineSize(sender);
 
 		}
@@ -758,7 +758,7 @@ namespace IRCAMThermalViewer {
 		// Reset surface plot view context menu callback routine ->
 		private: System::Void resetToDefaultViewToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Nulstil surface plot view
+			// Reset the surface plot view
 			GlobalVariables::OpenGLSurfacePlot->RMH_OpenGL_ResetSurfacePlotView();
 
 		}
@@ -766,7 +766,7 @@ namespace IRCAMThermalViewer {
 		// Surface plot Snapshot context menu callback routine ->
 		private: System::Void saveSnapshotToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Gem et 3D surface Plot snapshot
+			// Save a 3D surface plot snapshot
 			RMH_ThermalViewer_SaveSurfacePlotSnapshot();
 
 		}
@@ -774,7 +774,7 @@ namespace IRCAMThermalViewer {
 		// Surface Plot Z-Data Skala context menu callback routine ->
 		private: System::Void ZDataScaleMenuItem2_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Opdater Surface plottets maksimale Z højde
+			// Update the maximum Z height of the surface plot
 			GlobalVariables::OpenGLSurfacePlot->RMH_OpenGL_UpdateSurfacePlotMaxZHeight(sender);
 
 		}

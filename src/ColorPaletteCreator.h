@@ -1,15 +1,15 @@
 #pragma once
 
-// Inkluderede Blblioteker
+// Included libraries
 
-// Inkluderede applikations Resourcer
+// Included application resources
 
-// Inkluderede Form Headere
+// Included form headers
 
 // Klasse Namespace
 namespace IRCAMThermalViewer {
 
-	// Tilhørende namespaces
+	// Associated namespaces
 	using namespace System;
 	using namespace System::ComponentModel;
 	using namespace System::Collections;
@@ -27,9 +27,9 @@ namespace IRCAMThermalViewer {
 
 		ColorPaletteCreator(void) {
 
-			// Init GUI komponenter og objekter
+			// Init GUI components and objects
 			InitializeComponent();
-			// Indstil globale objekter fra denne Form til global brug
+			// Set global objects from this form for global use
 			InitializeGlobalFormsObjects();
 			
 		}
@@ -38,8 +38,8 @@ namespace IRCAMThermalViewer {
 
 		void InitializeGlobalFormsObjects() {
 
-			// Routinen indstiller globale objekter fra denne form
-			// Så disse kan blve tilgået fra andre Forms
+			// This routine sets global objects from this form
+			// so that these can be accessed from other forms
 
 
 
@@ -56,7 +56,7 @@ namespace IRCAMThermalViewer {
 
 			if (components) {
 
-				// Slet alle Form Komponenter
+				// Delete all form components
 				delete components;
 			}
 		}

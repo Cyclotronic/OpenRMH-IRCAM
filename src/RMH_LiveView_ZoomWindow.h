@@ -8,7 +8,7 @@
  *
  */
 
-// Inkluderede Biblioteker
+// Included libraries
 #include <windows.h>
 #include <GL/GLU.h>
 #include <GL/GL.h>
@@ -18,7 +18,7 @@
 #include "RMH_MathConversions_Library.h"
 #include "GlobalObjectsAndVariables.h"
 
-// Tilhørende Name spaces
+// Associated namespaces
 using namespace System;
 using namespace System::Windows::Forms;
 using namespace std;
@@ -29,7 +29,7 @@ static GLuint PBOIDs[2];
 // OpenGL Klasse definition
 namespace LiveViewZoomWindow {
 
-	// ---------------------------------- Globale Klasse Struktur Objekter --------------------------------- //
+	// ---------------------------------- Global Class Structure Objects --------------------------------- //
 
 	// ----------------------------------------------------------------------------------------------------- //
 
@@ -37,7 +37,7 @@ namespace LiveViewZoomWindow {
 
 	private:
 
-		// Private Globale klasse objekter og variabler
+		// Private global class objects and variables
 		private: HDC m_hDC;
 		private: HGLRC m_hglrc;
 		private: GLuint BaseFont;
@@ -49,7 +49,7 @@ namespace LiveViewZoomWindow {
 		private: GLfloat TextureToPanelHeightOffset = 0.0;
 		private: CreateParams^ ControlParams = gcnew CreateParams;
 
-		// Live View Zoom vindue Rendererings Positions Variabler
+		// Live view zoom window rendering position variables
 		private: GLdouble TextureResScaleFactor = 32;
 		private: GLdouble LiveViewZoomWindowPosX0 = 0.0;
 		private: GLdouble LiveViewZoomWindowPosY0 = 0.0;
@@ -105,13 +105,13 @@ namespace LiveViewZoomWindow {
 
 		RMHLiveViewZoomWindow(System::Windows::Forms::Panel^ TexturePanel) {
 
-			// Routinen er Initiliserings Routinen for klassen
+			// This routine is the initialization routine of the class
 			
-			// Udregn den totale skallerbar textur hæjde og bredde
+			// Calculate the total scalable texture height and width
 			TotalTextureScalableWidth = 1.0 / ((GLdouble)TexturePanel->Width * TextureResScaleFactor);
 			TotalTextureScalableHeight = 1.0 / ((GLdouble)TexturePanel->Height * TextureResScaleFactor);
 
-			// Sæt positionen af kontrol klassen
+			// Set the position of the control class
 			ControlParams->X = 0;
 			ControlParams->Y = 0;
 			ControlParams->Width = (GLdouble)TexturePanel->Width * TextureResScaleFactor;
@@ -119,21 +119,21 @@ namespace LiveViewZoomWindow {
 	
 			// Konfigurer Textur parent handler
 			ControlParams->Parent = TexturePanel->Handle;
-			// Skab "Child" af valgte "parent" og gør denne OpenGL compliant
+			// Create a "child" of the selected "parent" and make it OpenGL compliant
 			ControlParams->Style = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN;
 
-			// Generer tekstur vindue handler
+			// Generate the texture window handle
 			this->CreateHandle(ControlParams);
 
-			// Pointer til textur handler
+			// Pointer to the texture handle
 			m_hDC = GetDC((HWND)this->Handle.ToPointer());
 
-			// Er denne handler aktiv
+			// Is this handle active
 			if (m_hDC) {
 
 				// Konfigurer Textur Pixel format
 				RMH_OpenGL_SetTexturePixelFormat(m_hDC);
-				// Konfigurer texturens størrelse
+				// Configure the size of the texture
 				RMH_OpenGL_ResizeOpenGLWinformsScene(ControlParams->Width, ControlParams->Height);
 				// Initialisere OpenGL
 				RMH_OpenGL_Init();
@@ -142,29 +142,29 @@ namespace LiveViewZoomWindow {
 
 		}
 
-		// ----------------- Textur Initiliserings Og Håndterings Routiner ----------------- //
+		// ----------------- Texture Initialization And Handling Routines ----------------- //
 
 		private: GLvoid RMH_OpenGL_MakeRenderContextCurrent() {
 
-			// Routinen Gør Tilhørende Render kontekst det nuværende render kontekst
+			// This routine makes the associated render context the current render context
 
-			// Gør Tilhørende Render kontekst det nuværende render kontekst
+			// Make the associated render context the current render context
 			wglMakeCurrent(m_hDC, m_hglrc);
 
 		}
 
 		private: GLvoid RMH_OpenGL_MakeRenderContextNULL() {
 
-			// Routinen nulstiller tilhørende Render kontekst
+			// This routine resets the associated render context
 
-			// Nulstil Render kontekst
+			// Reset the render context
 			wglMakeCurrent(NULL, NULL);
 
 		}
 
 		private: GLvoid RMH_OpenGL_ClearTextureBuffer() {
 
-			// Routinen rydder tilhørende textur buffere
+			// This routine clears the associated texture buffers
 
 			// Ryd Textur farve og bit buffere
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -175,7 +175,7 @@ namespace LiveViewZoomWindow {
 
 			// Routinen indstiller texturens syns vinkel for display i control handler komponentet
 
-			// Lokale Variabler
+			// Local variables
 			GLdouble PlaneXLook = 0.0;
 			GLdouble PlaneYLook = 0.0;
 			GLdouble PlaneFieldOfView = 60.0;
@@ -184,7 +184,7 @@ namespace LiveViewZoomWindow {
 			GLdouble PlaneDistance = 0.0;
 			GLdouble PlaneAspectRatio = 0.0;
 
-			// Læs data framens højde og bredde
+			// Read the height and width of the data frame
 			PlaneXLook = (GLdouble)LiveViewZoomTextureWidth * 0.5;
 			PlaneYLook = (GLdouble)LiveViewZoomTextureHeight * 0.5;
 
@@ -194,7 +194,7 @@ namespace LiveViewZoomWindow {
 			// Udregn affstanden imellem Frame data planet og textur planet
 			PlaneDistance = (GLdouble)LiveViewZoomTextureHeight * TanHalfFieldOfView;
 
-			// Opdater Texturens syns vinkel
+			// Update the viewing angle (field of view) of the texture
 			glMatrixMode(GL_PROJECTION);
 			glLoadIdentity();
 			gluPerspective(PlaneFieldOfView, PlaneAspectRatio, 0.1, 500.0);
@@ -206,14 +206,14 @@ namespace LiveViewZoomWindow {
 
 		public: GLvoid RMH_OpenGL_InitLiveViewZoomWindow(unsigned int FrameWidth, unsigned int FrameHeight) {
 
-			// Routinen benyttes til at opsætte en OpenGL textur til grafisk renderering
+			// This routine is used to set up an OpenGL texture for graphics rendering
 
-			// Sæt Textur Parameter og reference varaibler
+			// Set the texture parameters and reference variables
 			LiveViewZoomTexture = new GLuint[1];
 			LiveViewZoomTextureWidth = FrameWidth;
 			LiveViewZoomTextureHeight = FrameHeight;
 
-			// Gør Tilhørende Render kontekst det nuværende render kontekst
+			// Make the associated render context the current render context
 			RMH_OpenGL_MakeRenderContextCurrent();
 
 			//Generer Textur ID
@@ -222,7 +222,7 @@ namespace LiveViewZoomWindow {
 			// Bind Texturen til genereret textus ID
 			glBindTexture(GL_TEXTURE_2D, LiveViewZoomTexture[0]);
 
-			// Alloker hukommelse til textur generering (FrameWidth * UltraResolutionTextureScaleFactor, FrameHeight * UltraResolutionTextureScaleFactor - Ultra Opløsning)
+			// Allocate memory for texture generation (FrameWidth * UltraResolutionTextureScaleFactor, FrameHeight * UltraResolutionTextureScaleFactor - ultra resolution)
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16, FrameWidth * UltraResolutionTextureScaleFactor, FrameHeight * UltraResolutionTextureScaleFactor, 0, GL_RGB, GL_UNSIGNED_SHORT, nullptr);
 
 			// Konfigurer textur wrapping og filter indstillinger
@@ -231,7 +231,7 @@ namespace LiveViewZoomWindow {
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-			// Afbind textuxen, forhindre ændring af textur
+			// Unbind the texture, prevent changes to the texture
 			glBindTexture(GL_TEXTURE_2D, 0);
 
 			// ------------------------------------ Generer Og Bind PBO (Pixel Buffer Object) ------------------------------------ //
@@ -242,7 +242,7 @@ namespace LiveViewZoomWindow {
 			// Loop igennem begge genereret PBO Buffere (Double Buffer Objekt)
 			for (int i = 0; i < 2; ++i) {
 
-				// Bind buffer til tilhørende PBO ID
+				// Bind the buffer to the associated PBO ID
 				glBindBuffer(GL_PIXEL_UNPACK_BUFFER, PBOIDs[i]);
 
 				// Generer nyt data lager for begge PBO buffere (GL_RGB Format W * H * RGB * Size)
@@ -257,41 +257,41 @@ namespace LiveViewZoomWindow {
 
 		}
 
-		// ---------------- CrossHair Rendererings Og Håndterings Routiner ----------------- //
+		// ---------------- CrossHair Rendering And Handling Routines ----------------- //
 	
 		private: GLvoid RMH_LiveView_glPrint(const char* CharArray) {
 
-			// Routinen Renderer et sæt karakterer på et OpenGL textur 
+			// This routine renders a set of characters on an OpenGL texture 
 
-			// Tilføj FONT Liste Egenskaber
+			// Add the font list properties
 			glPushAttrib(GL_LIST_BIT);
 			// Benyt FONT Base List
 			glListBase(BaseFont - 32);
-			// Eksikver og renderer karakterer på textur
+			// Execute and render the characters on the texture
 			glCallLists(strlen(CharArray), GL_UNSIGNED_BYTE, CharArray);
-			// Genopret Liste Egenskaber
+			// Restore the list properties
 			glPopAttrib();
 
 		}
 
 		private: GLvoid RMH_LiveView_RenderStringOnTexture(GLfloat StringX, GLfloat StringY, std::string DisplayString, GLubyte ColorR, GLubyte ColorG, GLubyte ColorB) {
 
-			// Routinen rendererer et givet string på et OpenGL Textur
+			// This routine renders a given string on an OpenGL texture
 
 			// Konfigurer Textens Farve
 			glColor3ub(ColorR, ColorG, ColorB);
 
-			// Indstil textens position på textur
+			// Set the position of the text on the texture
 			glRasterPos2f(StringX, StringY);
 
-			// Render givet string på textur
+			// Render the given string on the texture
 			RMH_LiveView_glPrint(DisplayString.c_str());
 
 		}
 		
 		public: GLvoid RMH_LiveView_EnableLabelBackground(bool EnableFlag) {
 
-			// Routinen aktiverer rendereringen af en baggrunds rektangel til alle rendererede text labels
+			// This routine enables the rendering of a background rectangle for all rendered text labels
 
 			// Opdater Label Baggrunds aktiverings flag
 			EnableLabelBackgroundFlag = EnableFlag;
@@ -300,9 +300,9 @@ namespace LiveViewZoomWindow {
 
 		public: GLvoid RMH_LiveView_ChangeRenderedLabelsColor(GLubyte LabelColorR, GLubyte LabelColorG, GLubyte LabelColorB) {
 
-			// Routinen opdaterer farven for alle rendereret text labels
+			// This routine updates the color of all rendered text labels
 
-			// Opdater farven for alle rendereret text labels
+			// Update the color of all rendered text labels
 			CommonLabelColorR = LabelColorR;
 			CommonLabelColorG = LabelColorG;
 			CommonLabelColorB = LabelColorB;
@@ -313,7 +313,7 @@ namespace LiveViewZoomWindow {
 
 			// Routinen opdaterer label baggrundens farve
 
-			// Indstil label baggrundens farve
+			// Set the color of the label background
 			LabelBackgroundColorR = BackgroundColorR;
 			LabelBackgroundColorG = BackgroundColorG;
 			LabelBackgroundColorB = BackgroundColorB;
@@ -322,43 +322,43 @@ namespace LiveViewZoomWindow {
 
 		public: GLvoid RMH_LiveView_RenderCrossHairWithLabel(GLfloat X, GLfloat Y, bool EnableLabel, System::String^ LabelString, GLubyte CrosshairColorR, GLubyte CrosshairColorG, GLubyte CrosshairColorB) {
 
-			// Routinen Rendererer et Crosshair på Texturen, med eller uden tilhørende label
+			// This routine renders a crosshair on the texture, with or without an associated label
 
-			// Lokale variabler
+			// Read the temporary array data and sort the kernel array
 			GLfloat QuadrantXOffset = 0.0;
 			GLfloat QuadrantYOffset = 0.0;
 
-			// Skal en laben tilføjes til crosshairet
+			// Should a label be added to the crosshair
 			if (EnableLabel == true) {
 
-				// Kontroller om positionen er i kvardrant 1
+				// Check whether the position is in quadrant 1
 				if (X >= ((GLfloat)ImageDataPixelWidth * 0.5) && Y <= ((GLfloat)ImageDataPixelHeight * 0.5)) {
 
 					// Kontroller Live View Roterings Indstillingen
 					if (LiveViewZoomWindowRotationDegrees == 0) {
 
-						// Opdater Kvardrant Offset værdier - 0 grader rotation
+						// Update the quadrant offset values - 0 degrees rotation
 						QuadrantXOffset = MovableLineQuadrant1LabelXOffset;
 						QuadrantYOffset = MovableLineQuadrant1LabelYOffset;
 
 					}
 					if (LiveViewZoomWindowRotationDegrees == 90) {
 
-						// Opdater Kvardrant Offset værdier - 90 grader rotation
+						// Update the quadrant offset values - 90 degrees rotation
 						QuadrantXOffset = MovableLineQuadrant2LabelXOffset;
 						QuadrantYOffset = MovableLineQuadrant2LabelYOffset;
 
 					}
 					if (LiveViewZoomWindowRotationDegrees == 180) {
 
-						// Opdater Kvardrant Offset værdier - 180 grader rotation
+						// Update the quadrant offset values - 180 degrees rotation
 						QuadrantXOffset = MovableLineQuadrant3LabelXOffset;
 						QuadrantYOffset = MovableLineQuadrant3LabelYOffset;
 
 					}
 					if (LiveViewZoomWindowRotationDegrees == 270) {
 
-						// Opdater Kvardrant Offset værdier - 270 grader rotation
+						// Update the quadrant offset values - 270 degrees rotation
 						QuadrantXOffset = MovableLineQuadrant4LabelXOffset;
 						QuadrantYOffset = MovableLineQuadrant4LabelYOffset;
 
@@ -366,34 +366,34 @@ namespace LiveViewZoomWindow {
 
 				}
 
-				// Kontroller om positionen er i kvardrant 2
+				// Check whether the position is in quadrant 2
 				if (X <= ((GLfloat)ImageDataPixelWidth * 0.5) && Y <= ((GLfloat)ImageDataPixelHeight * 0.5)) {
 
 					// Kontroller Live View Roterings Indstillingen
 					if (LiveViewZoomWindowRotationDegrees == 0) {
 
-						// Opdater Kvardrant Offset værdier - 0 grader rotation
+						// Update the quadrant offset values - 0 degrees rotation
 						QuadrantXOffset = MovableLineQuadrant2LabelXOffset;
 						QuadrantYOffset = MovableLineQuadrant2LabelYOffset;
 
 					}
 					if (LiveViewZoomWindowRotationDegrees == 90) {
 
-						// Opdater Kvardrant Offset værdier - 90 grader rotation
+						// Update the quadrant offset values - 90 degrees rotation
 						QuadrantXOffset = MovableLineQuadrant3LabelXOffset;
 						QuadrantYOffset = MovableLineQuadrant3LabelYOffset;
 
 					}
 					if (LiveViewZoomWindowRotationDegrees == 180) {
 
-						// Opdater Kvardrant Offset værdier - 180 grader rotation
+						// Update the quadrant offset values - 180 degrees rotation
 						QuadrantXOffset = MovableLineQuadrant4LabelXOffset;
 						QuadrantYOffset = MovableLineQuadrant4LabelYOffset;
 
 					}
 					if (LiveViewZoomWindowRotationDegrees == 270) {
 
-						// Opdater Kvardrant Offset værdier - 1270 grader rotation
+						// Update the quadrant offset values - 270 degrees rotation
 						QuadrantXOffset = MovableLineQuadrant1LabelXOffset;
 						QuadrantYOffset = MovableLineQuadrant1LabelYOffset;
 
@@ -401,34 +401,34 @@ namespace LiveViewZoomWindow {
 
 				}
 
-				// Kontroller om positionen er i kvardrant 3
+				// Check whether the position is in quadrant 3
 				if (X <= ((GLfloat)ImageDataPixelWidth * 0.5) && Y >= ((GLfloat)ImageDataPixelHeight * 0.5)) {
 
 					// Kontroller Live View Roterings Indstillingen
 					if (LiveViewZoomWindowRotationDegrees == 0) {
 
-						// Opdater Kvardrant Offset værdier - 0 grader rotation
+						// Update the quadrant offset values - 0 degrees rotation
 						QuadrantXOffset = MovableLineQuadrant3LabelXOffset;
 						QuadrantYOffset = MovableLineQuadrant3LabelYOffset;
 
 					}
 					if (LiveViewZoomWindowRotationDegrees == 90) {
 
-						// Opdater Kvardrant Offset værdier - 90 grader rotation
+						// Update the quadrant offset values - 90 degrees rotation
 						QuadrantXOffset = MovableLineQuadrant4LabelXOffset;
 						QuadrantYOffset = MovableLineQuadrant4LabelYOffset;
 
 					}
 					if (LiveViewZoomWindowRotationDegrees == 180) {
 
-						// Opdater Kvardrant Offset værdier - 180 grader rotation
+						// Update the quadrant offset values - 180 degrees rotation
 						QuadrantXOffset = MovableLineQuadrant1LabelXOffset;
 						QuadrantYOffset = MovableLineQuadrant1LabelYOffset;
 
 					}
 					if (LiveViewZoomWindowRotationDegrees == 270) {
 
-						// Opdater Kvardrant Offset værdier - 270 grader rotation
+						// Update the quadrant offset values - 270 degrees rotation
 						QuadrantXOffset = MovableLineQuadrant2LabelXOffset;
 						QuadrantYOffset = MovableLineQuadrant2LabelYOffset;
 
@@ -436,34 +436,34 @@ namespace LiveViewZoomWindow {
 
 				}
 
-				// Kontroller om positionen er i kvardrant 4
+				// Check whether the position is in quadrant 4
 				if (X >= ((GLfloat)ImageDataPixelWidth * 0.5) && Y >= ((GLfloat)ImageDataPixelHeight * 0.5)) {
 
 					// Kontroller Live View Roterings Indstillingen
 					if (LiveViewZoomWindowRotationDegrees == 0) {
 
-						// Opdater Kvardrant Offset værdier - 0 grader rotation
+						// Update the quadrant offset values - 0 degrees rotation
 						QuadrantXOffset = MovableLineQuadrant4LabelXOffset;
 						QuadrantYOffset = MovableLineQuadrant4LabelYOffset;
 
 					}
 					if (LiveViewZoomWindowRotationDegrees == 90) {
 
-						// Opdater Kvardrant Offset værdier - 90 grader rotation
+						// Update the quadrant offset values - 90 degrees rotation
 						QuadrantXOffset = MovableLineQuadrant1LabelXOffset;
 						QuadrantYOffset = MovableLineQuadrant1LabelYOffset;
 
 					}
 					if (LiveViewZoomWindowRotationDegrees == 180) {
 
-						// Opdater Kvardrant Offset værdier - 180 grader rotation
+						// Update the quadrant offset values - 180 degrees rotation
 						QuadrantXOffset = MovableLineQuadrant2LabelXOffset;
 						QuadrantYOffset = MovableLineQuadrant2LabelYOffset;
 
 					}
 					if (LiveViewZoomWindowRotationDegrees == 270) {
 
-						// Opdater Kvardrant Offset værdier - 270 grader rotation
+						// Update the quadrant offset values - 270 degrees rotation
 						QuadrantXOffset = MovableLineQuadrant3LabelXOffset;
 						QuadrantYOffset = MovableLineQuadrant3LabelYOffset;
 
@@ -473,29 +473,29 @@ namespace LiveViewZoomWindow {
 
 			}
 
-			// Kontroller valgt indstilling for Aspect Ratio
+			// Check the selected aspect ratio setting
 			if (LocalAspectRatioFlag == true) {
 
 				// Kontroller Live View Roterings Indstillingen
 				if (LiveViewZoomWindowRotationDegrees == 0) {
 
-					// Hvis der skal kompenseres for horizontal Aspect ratio
+					// If horizontal aspect ratio compensation is needed
 					if (LiveViewZoomWindowPosX0 <= 0.0) {
 
-						// Udregn Crosshair Y Kordinat ved skallering af textur vinduet - fast aspect ratio mode
+						// Calculate the crosshair Y coordinate when scaling the texture window - fixed aspect ratio mode
 						Y = Y * CurrentPanelHeightFixedAspect * TotalTextureScalableHeight;
 						Y = Y + AspectRatioHeightOffSet;
 
-						// Udregn Crosshair X Kordinat ved skallering af textur vinduet
+						// Calculate the crosshair X coordinate when scaling the texture window
 						X = X * CurrentTexturePanelWidth * TotalTextureScalableWidth;
 
 					}
 					else {
 
-						// Udregn Crosshair Y Kordinat ved skallering af textur vinduet
+						// Calculate the crosshair Y coordinate when scaling the texture window
 						Y = Y * CurrentTexturePanelHeight * TotalTextureScalableHeight;
 
-						// Udregn Crosshair X Kordinat ved skallering af textur vinduet - fast aspect ratio mode
+						// Calculate the crosshair X coordinate when scaling the texture window - fixed aspect ratio mode
 						X = X * CurrentPanelWidthFixedAspect * TotalTextureScalableWidth;
 						X = X + AspectRatioWidthOffSet;
 
@@ -508,22 +508,22 @@ namespace LiveViewZoomWindow {
 					X = X / ImageDataPixelAspectRatio;
 					Y = Y * ImageDataPixelAspectRatio;
 
-					// Hvis der skal kompenseres for horizontal Aspect ratio
+					// If horizontal aspect ratio compensation is needed
 					if (LiveViewZoomWindowPosX0 <= 0.0) {
 
-						// Udregn Crosshair Y Kordinat ved skallering af textur vinduet - fast aspect ratio mode
+						// Calculate the crosshair Y coordinate when scaling the texture window - fixed aspect ratio mode
 						X = X * CurrentPanelHeightFixedAspect * TotalTextureScalableHeight;
 
-						// Udregn Crosshair X Kordinat ved skallering af textur vinduet
+						// Calculate the crosshair X coordinate when scaling the texture window
 						Y = Y * CurrentTexturePanelWidth * TotalTextureScalableWidth;
 
 					}
 					else {
 
-						// Udregn Crosshair Y Kordinat ved skallering af textur vinduet
+						// Calculate the crosshair Y coordinate when scaling the texture window
 						X = X * CurrentTexturePanelHeight * TotalTextureScalableHeight;
 
-						// Udregn Crosshair X Kordinat ved skallering af textur vinduet - fast aspect ratio mode
+						// Calculate the crosshair X coordinate when scaling the texture window - fixed aspect ratio mode
 						Y = Y * CurrentPanelWidthFixedAspect * TotalTextureScalableWidth;
 						Y = Y + AspectRatioWidthOffSet;
 
@@ -539,23 +539,23 @@ namespace LiveViewZoomWindow {
 					Y = ImageDataPixelHeight - Y;
 					X = ImageDataPixelWidth - X;
 
-					// Hvis der skal kompenseres for horizontal Aspect ratio
+					// If horizontal aspect ratio compensation is needed
 					if (LiveViewZoomWindowPosX0 <= 0.0) {
 
-						// Udregn Crosshair Y Kordinat ved skallering af textur vinduet - fast aspect ratio mode
+						// Calculate the crosshair Y coordinate when scaling the texture window - fixed aspect ratio mode
 						Y = Y * CurrentPanelHeightFixedAspect * TotalTextureScalableHeight;
 						Y = Y + AspectRatioHeightOffSet;
 
-						// Udregn Crosshair X Kordinat ved skallering af textur vinduet
+						// Calculate the crosshair X coordinate when scaling the texture window
 						X = X * CurrentTexturePanelWidth * TotalTextureScalableWidth;
 
 					}
 					else {
 
-						// Udregn Crosshair Y Kordinat ved skallering af textur vinduet
+						// Calculate the crosshair Y coordinate when scaling the texture window
 						Y = Y * CurrentTexturePanelHeight * TotalTextureScalableHeight;
 
-						// Udregn Crosshair X Kordinat ved skallering af textur vinduet - fast aspect ratio mode
+						// Calculate the crosshair X coordinate when scaling the texture window - fixed aspect ratio mode
 						X = X * CurrentPanelWidthFixedAspect * TotalTextureScalableWidth;
 						X = X + AspectRatioWidthOffSet;
 
@@ -568,22 +568,22 @@ namespace LiveViewZoomWindow {
 					X = (ImageDataPixelWidth - X) / ImageDataPixelAspectRatio;
 					Y = (ImageDataPixelHeight - Y) * ImageDataPixelAspectRatio;
 
-					// Hvis der skal kompenseres for horizontal Aspect ratio
+					// If horizontal aspect ratio compensation is needed
 					if (LiveViewZoomWindowPosX0 <= 0.0) {
 
-						// Udregn Crosshair Y Kordinat ved skallering af textur vinduet - fast aspect ratio mode
+						// Calculate the crosshair Y coordinate when scaling the texture window - fixed aspect ratio mode
 						X = X * CurrentPanelHeightFixedAspect * TotalTextureScalableHeight;
 
-						// Udregn Crosshair X Kordinat ved skallering af textur vinduet
+						// Calculate the crosshair X coordinate when scaling the texture window
 						Y = Y * CurrentTexturePanelWidth * TotalTextureScalableWidth;
 
 					}
 					else {
 
-						// Udregn Crosshair Y Kordinat ved skallering af textur vinduet
+						// Calculate the crosshair Y coordinate when scaling the texture window
 						X = X * CurrentTexturePanelHeight * TotalTextureScalableHeight;
 
-						// Udregn Crosshair X Kordinat ved skallering af textur vinduet - fast aspect ratio mode
+						// Calculate the crosshair X coordinate when scaling the texture window - fixed aspect ratio mode
 						Y = Y * CurrentPanelWidthFixedAspect * TotalTextureScalableWidth;
 						Y = Y + AspectRatioWidthOffSet;
 
@@ -600,10 +600,10 @@ namespace LiveViewZoomWindow {
 				// Kontroller Live View Roterings Indstillingen
 				if (LiveViewZoomWindowRotationDegrees == 0) {
 
-					// Udregn Crosshair Y Kordinat ved skallering af textur vinduet
+					// Calculate the crosshair Y coordinate when scaling the texture window
 					Y = Y * CurrentTexturePanelHeight * TotalTextureScalableHeight;
 
-					// Udregn Crosshair X Kordinat ved skallering af textur vinduet - Auto aspect ratio mode
+					// Calculate the crosshair X coordinate when scaling the texture window - auto aspect ratio mode
 					X = X * CurrentTexturePanelWidth * TotalTextureScalableWidth;
 
 				}
@@ -613,10 +613,10 @@ namespace LiveViewZoomWindow {
 					X = X / ImageDataPixelAspectRatio;
 					Y = Y * ImageDataPixelAspectRatio;
 
-					// Udregn Crosshair Y Kordinat ved skallering af textur vinduet
+					// Calculate the crosshair Y coordinate when scaling the texture window
 					Y = Y * CurrentTexturePanelWidth * TotalTextureScalableWidth;
 
-					// Udregn Crosshair X Kordinat ved skallering af textur vinduet - Auto aspect ratio mode
+					// Calculate the crosshair X coordinate when scaling the texture window - auto aspect ratio mode
 					X = X * CurrentTexturePanelHeight * TotalTextureScalableHeight;
 
 					// Juster X Koordinat
@@ -629,10 +629,10 @@ namespace LiveViewZoomWindow {
 					Y = ImageDataPixelHeight - Y;
 					X = ImageDataPixelWidth - X;
 
-					// Udregn Crosshair Y Kordinat ved skallering af textur vinduet
+					// Calculate the crosshair Y coordinate when scaling the texture window
 					Y = Y * CurrentTexturePanelHeight * TotalTextureScalableHeight;
 
-					// Udregn Crosshair X Kordinat ved skallering af textur vinduet - Auto aspect ratio mode
+					// Calculate the crosshair X coordinate when scaling the texture window - auto aspect ratio mode
 					X = X * CurrentTexturePanelWidth * TotalTextureScalableWidth;
 
 				}
@@ -642,10 +642,10 @@ namespace LiveViewZoomWindow {
 					X = (ImageDataPixelWidth - X) / ImageDataPixelAspectRatio;
 					Y = (ImageDataPixelHeight - Y) * ImageDataPixelAspectRatio;
 
-					// Udregn Crosshair Y Kordinat ved skallering af textur vinduet
+					// Calculate the crosshair Y coordinate when scaling the texture window
 					Y = Y * CurrentTexturePanelWidth * TotalTextureScalableWidth;
 
-					// Udregn Crosshair X Kordinat ved skallering af textur vinduet - Auto aspect ratio mode
+					// Calculate the crosshair X coordinate when scaling the texture window - auto aspect ratio mode
 					X = X * CurrentTexturePanelHeight * TotalTextureScalableHeight;
 
 					// Juster X Koordinat
@@ -655,17 +655,17 @@ namespace LiveViewZoomWindow {
 
 			}
 
-			// Skal der rendereres en baggrund til lablen
+			// Should a background be rendered for the label
 			if (EnableLabelBackgroundFlag == true) {
 
-				// Aktiver OpenGL 1D Texture
+				// Enable OpenGL 1D texture
 				glEnable(GL_TEXTURE_1D);
 				glEnable(GL_BLEND);
 
-				// Indstil Label baggrundens Farve
+				// Set the color of the label background
 				glColor4ub(LabelBackgroundColorR, LabelBackgroundColorG, LabelBackgroundColorB, CommonLabelBackgroundAlpha);
 
-				// Render rektangel på textur
+				// Render the rectangle on the texture
 				glBegin(GL_QUADS);
 
 				// Kontroller Live View Roterings Indstillingen
@@ -708,52 +708,52 @@ namespace LiveViewZoomWindow {
 
 				// Konfiguration Slut
 				glEnd();
-				// Deaktiver 1D Texture
+				// Disable the 1D texture
 				glDisable(GL_TEXTURE_1D);
 				glDisable(GL_BLEND);
 
 			}
 
-			// Skal en label tilføjes til crosshairet
+			// Should a label be added to the crosshair
 			if (EnableLabel == true) {
 
 				// Kontroller Live View Roterings Indstillingen
 				if (LiveViewZoomWindowRotationDegrees == 0) {
 
-					// Tilføj Label til crosshair
+					// Add the label to the crosshair
 					RMH_LiveView_RenderStringOnTexture(X + QuadrantXOffset, Y + QuadrantYOffset, RMH_Conversion_SystemStringToStdString(LabelString), CommonLabelColorR, CommonLabelColorG, CommonLabelColorB);
 
 				}
 				if (LiveViewZoomWindowRotationDegrees == 90) {
 
-					// Tilføj Label til crosshair
+					// Add the label to the crosshair
 					RMH_LiveView_RenderStringOnTexture(Y + QuadrantXOffset, X + QuadrantYOffset, RMH_Conversion_SystemStringToStdString(LabelString), CommonLabelColorR, CommonLabelColorG, CommonLabelColorB);
 
 				}
 				if (LiveViewZoomWindowRotationDegrees == 180) {
 
-					// Tilføj Label til crosshair
+					// Add the label to the crosshair
 					RMH_LiveView_RenderStringOnTexture(X + QuadrantXOffset, Y + QuadrantYOffset, RMH_Conversion_SystemStringToStdString(LabelString), CommonLabelColorR, CommonLabelColorG, CommonLabelColorB);
 
 				}
 				if (LiveViewZoomWindowRotationDegrees == 270) {
 
-					// Tilføj Label til crosshair
+					// Add the label to the crosshair
 					RMH_LiveView_RenderStringOnTexture(Y + QuadrantXOffset, X + QuadrantYOffset, RMH_Conversion_SystemStringToStdString(LabelString), CommonLabelColorR, CommonLabelColorG, CommonLabelColorB);
 
 				}
 			}
 
-			// Aktiver OpenGL 1D Texture
+			// Enable OpenGL 1D texture
 			glEnable(GL_TEXTURE_1D);
 
-			// Indstil Crosshair Farve
+			// Set the crosshair color
 			glColor3ub(CrosshairColorR, CrosshairColorG, CrosshairColorB);
 
-			// Indstil CrossHair Linje tykkelsen
+			// Set the crosshair line thickness
 			glLineWidth(CrosshairLineWidth);
 
-			// Render Linje på textur
+			// Render the line on the texture
 			glBegin(GL_LINES);
 
 			// Kontroller Live View Roterings Indstillingen
@@ -804,59 +804,59 @@ namespace LiveViewZoomWindow {
 
 			// Konfiguration Slut
 			glEnd();
-			// Deaktiver 1D Texture
+			// Disable the 1D texture
 			glDisable(GL_TEXTURE_1D);
 
 		}
 
-		// -------------- Live View Zoom Vindue Grafiske Rendererings Routine -------------- //
+		// -------------- Live View Zoom Window Graphics Rendering Routine -------------- //
 
 		private: GLvoid RMH_LiveView_WriteImageDataToZoomWindow(unsigned short* FrameData, unsigned int FrameWidth, unsigned int FrameHeight) {
 
-			// Routinen skriver billede data til genereret Textur
+			// This routine writes image data to the generated texture
 			// PBO (Pixel Buffer Object) double buffer inplementering
 
-			// Bind buffer til tilhørende PBO ID
+			// Bind the buffer to the associated PBO ID
 			glBindBuffer(GL_PIXEL_UNPACK_BUFFER, PBOIDs[0]);
 
-			// Mapping af buffer data lageret til spesifik addresse rum
+			// Map the buffer data storage to a specific address space
 			void* AddressSpacePointer = glMapBuffer(GL_PIXEL_UNPACK_BUFFER, GL_WRITE_ONLY);
 
-			// Kontroller om addresse un pointer er gyldig
+			// Check whether the address pointer is valid
 			if (AddressSpacePointer) {
 
 				// Kopier "FrameData" til pointer addresse rum
 				memcpy(AddressSpacePointer, FrameData, FrameWidth * FrameHeight * 3 * sizeof(unsigned short));
 
-				// Afmapping af buffer data lageret fra spesifik addresse rum
+				// Unmap the buffer data storage from the specific address space
 				glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
 
 			}
 
 			// Bind texturen til texturets ID
 			glBindTexture(GL_TEXTURE_2D, LiveViewZoomTexture[0]);
-			// Opdater texturen med data fra PBO objekt
+			// Update the texture with data from the PBO object
 			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, FrameWidth, FrameHeight, GL_RGB, GL_UNSIGNED_SHORT, nullptr);
 
 			// Afbind Pixel Buffer Objecter
 			glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
 
-			// Swap imellem PBOer (Pixel Buffer Objecter) for næste iteration
+			// Swap between PBOs (pixel buffer objects) for the next iteration
 			std::swap(PBOIDs[0], PBOIDs[1]);
 
 		}
 
 		public: GLvoid RMH_LiveView_RenderZoomWindowTexture(GLdouble TexturePanelWidth, GLdouble TexturePanelHeight, GLdouble FrameWidth, GLdouble FrameHeight, bool FixedAspectRatio, GLfloat ZoomROIX0, GLfloat ZoomROIY0, GLfloat ZoomROIWidth, GLfloat ZoomROIHeight) {
 
-			// Routinen Renderer den konfigureret Textur i et givet område af den totale allokerede textur
+			// This routine renders the configured texture in a given area of the total allocated texture
 
-			// Lokale varaibler
+			// Local variables
 			GLfloat TextureZoomX0 = 0.0;
 			GLfloat TextureZoomY0 = 0.0;
 			GLfloat TextureZoomX1 = 0.0;
 			GLfloat TextureZoomY1 = 0.0;
 
-			// Nulstil Live view stream billede kordinater
+			// Reset the live view stream image coordinates
 			LiveViewZoomWindowPosX0 = 0.0;
 			LiveViewZoomWindowPosY0 = 0.0;
 			LiveViewZoomWindowPosX1 = 0.0;
@@ -865,59 +865,59 @@ namespace LiveViewZoomWindow {
 			// Nulstil Aspect-Ratio Offset parameter
 			AspectRatioWidthOffSet = 0.0;
 
-			// Læs Nuværende textur og data Panels pixel højde og bredde
+			// Read the current pixel height and width of the texture and data panel
 			ImageDataPixelWidth = FrameWidth;
 			ImageDataPixelHeight = FrameHeight;
 			CurrentTexturePanelWidth = TexturePanelWidth;
 			CurrentTexturePanelHeight = TexturePanelHeight;
 			ImageDataPixelAspectRatio = ImageDataPixelWidth / ImageDataPixelHeight;
 
-			// Opdater lokale klasse Aspect ratio status flag
+			// Update the local class aspect ratio status flag
 			LocalAspectRatioFlag = FixedAspectRatio;
 
-			// Udregn billedets Y1 positionen til at udfylde textur vinduet
+			// Calculate the Y1 position of the image to fill the texture window
 			LiveViewZoomWindowPosY1 = (FrameHeight * CurrentTexturePanelHeight * TotalTextureScalableHeight);
 
-			// Kontroller valgt indstilling for Aspect Ratio
+			// Check the selected aspect ratio setting
 			if (FixedAspectRatio == true) {
 
 				// Kontroller Live View Roterings Indstillingen
 				if (LiveViewZoomWindowRotationDegrees == 90 || LiveViewZoomWindowRotationDegrees == 270) {
 
-					// Udregn Aspect-Ratio kompenserede textur Panels pixel bredde og højde - For 90 og 270 Grader Rotering
+					// Calculate the aspect-ratio-compensated pixel width and height of the texture panel - for 90 and 270 degree rotation
 					CurrentPanelWidthFixedAspect = (FrameHeight * CurrentTexturePanelHeight) / FrameWidth;
 					CurrentPanelHeightFixedAspect = (FrameWidth * CurrentTexturePanelWidth) / FrameHeight;
 
 				}
 				else {
 
-					// Udregn Aspect-Ratio kompenserede textur Panels pixel bredde og højde 
+					// Calculate the aspect-ratio-compensated pixel width and height of the texture panel 
 					CurrentPanelWidthFixedAspect = (FrameWidth * CurrentTexturePanelHeight) / FrameHeight;
 					CurrentPanelHeightFixedAspect = (FrameHeight * CurrentTexturePanelWidth) / FrameWidth;
 
 				}
 
-				// Skaller Aspect ratio bredde/højde Offset til aktuel frame data aspect ratio offset - Divider med 2 for samlede højre og venstre margin billede offset
+				// Scale the aspect ratio width/height offset to the actual frame data aspect ratio offset - divide by 2 for the combined right and left margin image offset
 				AspectRatioWidthOffSet = (FrameWidth * (CurrentTexturePanelWidth - CurrentPanelWidthFixedAspect) * TotalTextureScalableWidth) * 0.5;
 				AspectRatioHeightOffSet = (FrameHeight * (CurrentTexturePanelHeight - CurrentPanelHeightFixedAspect) * TotalTextureScalableHeight) * 0.5;
 
-				// Udregn billedets X1 positionen til at udfylde textur vinduet i fast Aspectratio mode - Tilføj X1 aspect ratio margin i højre side at textur vinduet
+				// Calculate the X1 position of the image to fill the texture window in fixed aspect ratio mode - add the X1 aspect ratio margin on the right side of the texture window
 				LiveViewZoomWindowPosX1 = (FrameWidth * CurrentPanelWidthFixedAspect * TotalTextureScalableWidth) + AspectRatioWidthOffSet;
 
-				// Tilføj X0 aspect ratio margin i venstre side at textur vinduet
+				// Add the X0 aspect ratio margin on the left side of the texture window
 				LiveViewZoomWindowPosX0 = AspectRatioWidthOffSet;
 
 				// Kompenser for fast aspect ratio i horizontal retning
 				if (LiveViewZoomWindowPosX0 <= 0.0) {
 
-					// Nulstil X0 position
+					// Reset the X0 position
 					LiveViewZoomWindowPosX0 = 0.0;
-					// Fjern aspect ratio margin i højre side at textur vinduet
+					// Remove the aspect ratio margin on the right side of the texture window
 					LiveViewZoomWindowPosX1 = LiveViewZoomWindowPosX1 + AspectRatioWidthOffSet;
 
-					// Tilføj Y1 aspect ratio margin i bunden at textur vinduet
+					// Add the Y1 aspect ratio margin at the bottom of the texture window
 					LiveViewZoomWindowPosY1 = LiveViewZoomWindowPosY1 - AspectRatioHeightOffSet;
-					// Tilføj Y0 aspect ratio margin i Toppen at textur vinduet
+					// Add the Y0 aspect ratio margin at the top of the texture window
 					LiveViewZoomWindowPosY0 = AspectRatioHeightOffSet;
 
 				}
@@ -925,7 +925,7 @@ namespace LiveViewZoomWindow {
 			}
 			else {
 
-				// Udregn billedets X1 positionen til at udfylde textur vinduet
+				// Calculate the X1 position of the image to fill the texture window
 				LiveViewZoomWindowPosX1 = (FrameWidth * CurrentTexturePanelWidth * TotalTextureScalableWidth);
 
 			}
@@ -936,10 +936,10 @@ namespace LiveViewZoomWindow {
 			TextureZoomX1 = (ZoomROIX0 + ZoomROIWidth) / FrameWidth;
 			TextureZoomY1 = (ZoomROIY0 + ZoomROIHeight) / FrameHeight;
 
-			// Hvis Ultra Opløsnings Mode ikke er aktiverede
+			// If ultra resolution mode is not enabled
 			if (UntraResolutionModeEnabledFlag == false) {
 
-				// Skaller Zoom parametere til Ultra Opløsning
+				// Scale the zoom parameters to ultra resolution
 				TextureZoomX0 = TextureZoomX0 * 0.5;
 				TextureZoomY0 = TextureZoomY0 * 0.5;
 				TextureZoomX1 = TextureZoomX1 * 0.5;
@@ -950,12 +950,12 @@ namespace LiveViewZoomWindow {
 			// Ryd Textur farve og bit buffere
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-			// Aktiver OpenGL 2D Texture
+			// Enable OpenGL 2D texture
 			glEnable(GL_TEXTURE_2D);
-			// Bind Texturen som et 2D textur
+			// Bind the texture as a 2D texture
 			glBindTexture(GL_TEXTURE_2D, LiveViewZoomTexture[0]);
 
-			// Roter Textur Til at matche korrekt billede orientation
+			// Rotate the texture to match the correct image orientation
 			glTranslatef(0.0f, FrameHeight, 0.0f);
 			glRotatef(180.0f, 1.0f, 0.0f, 0.0f);
 
@@ -1018,7 +1018,7 @@ namespace LiveViewZoomWindow {
 
 			// Konfiguration Slut
 			glEnd();
-			// Deaktiver 2D Texture
+			// Disable 2D texture
 			glDisable(GL_TEXTURE_2D);
 
 		}
@@ -1030,18 +1030,18 @@ namespace LiveViewZoomWindow {
 			// Opdater Live View Zoom Roteringen
 			LiveViewZoomWindowRotationDegrees = LiveViewRotation;
 
-			// Nulstil lokalt "Ultra opløsnings mode" er aktiveret flaget
+			// Reset the local "ultra resolution mode" enabled flag
 			UntraResolutionModeEnabledFlag = false;
 
 			// ----------------------------- Render Live View Zoom Vindue ----------------------------- //
 			
-			// Gør Tilhørende Render kontekst det nuværende render kontekst
+			// Make the associated render context the current render context
 			RMH_OpenGL_MakeRenderContextCurrent();
-			// Skriv Billede data til Textur
+			// Write the image data to the texture
 			RMH_LiveView_WriteImageDataToZoomWindow(FrameData, FrameDataWidth, FrameDataHeight);
 			// Opdater Textur Field Of View
 			RMH_OpenGL_UpdateTextureFieldOfView(FrameDataWidth, FrameDataHeight);
-			// Render Textur Billede Data
+			// Render the texture image data
 			RMH_LiveView_RenderZoomWindowTexture(LiveViewZoomPanelWidth, LiveViewZoomPanelHeight, FrameDataWidth, FrameDataHeight, FixedAspectRatio, ZoomROIX0, ZoomROIY0, ZoomROIWidth, ZoomROIHeight);
 
 			// ---------------------------------------------------------------------------------------- //
@@ -1055,18 +1055,18 @@ namespace LiveViewZoomWindow {
 			// Opdater Live View Zoom Roteringen
 			LiveViewZoomWindowRotationDegrees = LiveViewRotation;
 
-			// Opdater lokalt "Ultra opløsnings mode" er aktiveret flaget
+			// Update the local "ultra resolution mode" enabled flag
 			UntraResolutionModeEnabledFlag = true;
 
 			// ----------------------------- Render Live View Zoom Vindue ----------------------------- //
 
-			// Gør Tilhørende Render kontekst det nuværende render kontekst
+			// Make the associated render context the current render context
 			RMH_OpenGL_MakeRenderContextCurrent();
-			// Skriv Billede data til Textur
+			// Write the image data to the texture
 			RMH_LiveView_WriteImageDataToZoomWindow(FrameData, UltraFrameWidth, UltraFrameHeight);
-			// Konfigurer Texturens Opløsning og FOV
+			// Configure the resolution and field of view (FOV) of the texture
 			RMH_OpenGL_UpdateTextureFieldOfView(NativeFrameWidth, NativeFrameHeight);
-			// Render Textur Billede Data
+			// Render the texture image data
 			RMH_LiveView_RenderZoomWindowTexture(LiveViewZoomPanelWidth, LiveViewZoomPanelHeight, NativeFrameWidth, NativeFrameHeight, FixedAspectRatio, ZoomROIX0, ZoomROIY0, ZoomROIWidth, ZoomROIHeight);
 
 			// ---------------------------------------------------------------------------------------- //
@@ -1077,17 +1077,17 @@ namespace LiveViewZoomWindow {
 
 		private: GLvoid RMH_OpenGL_SwapOpenGLBuffers(GLvoid) {
 
-			// Routinen bytter rundt på Front/Backend bufferene
+			// This routine swaps the front/back buffers
 
-			// Byt Rundt på buffere
+			// Swap the buffers
 			SwapBuffers(m_hDC);
 
 		}
 
 		public: GLvoid RMH_OpenGL_RenderingFinishedMark(GLvoid) {
 
-			// Routinen markerer enden på en OpenGL rendererins sekvens
-			// Og skal altid kaldes til sidst, når alle objekt rendereringer er blevet eksikverede
+			// This routine marks the end of an OpenGL rendering sequence
+			// and must always be called last, when all object renderings have been executed
 
 			// Swap Textur buffere
 			RMH_OpenGL_SwapOpenGLBuffers();
@@ -1098,11 +1098,11 @@ namespace LiveViewZoomWindow {
 
 	private:
 
-		// ------------- Yderligerer OpenGL Håndterings Og Opsætnings Routiner ------------- //
+		// ------------- Additional OpenGL Handling And Setup Routines ------------- //
 
 		~RMHLiveViewZoomWindow(GLvoid) {
 
-			// Slet OpenGL Context
+			// Delete the OpenGL context
 			DeleteOpenGL();
 
 			// Destruer OpenGL Handler objekt
@@ -1117,22 +1117,22 @@ namespace LiveViewZoomWindow {
 
 			// Routinen sletter alt OpenGL Context
 
-			// Lokale variabler
+			// Read the temporary array data and sort the kernel array
 			HGLRC hglrc;
 			HDC  hdc;
 
-			// Læs Thread Context
+			// Read the thread context
 			hglrc = wglGetCurrentContext();
-			// Læs tilhørende Device Context 
+			// Read the associated device context 
 			hdc = wglGetCurrentDC();
-			// Gør render contexten den nuværende context
+			// Make the render context the current context
 			wglMakeCurrent(NULL, NULL);
 			// Frigiv Device context
 			ReleaseDC(NULL, hdc);
-			// Slet Render Context
+			// Delete the render context
 			wglDeleteContext(hglrc);
 
-			// Nulstil Context variabler
+			// Reset the context variables
 			m_hglrc = nullptr;
 			m_hDC = nullptr;
 
@@ -1142,97 +1142,97 @@ namespace LiveViewZoomWindow {
 
 			// Routinen konfigurerer Texturens Pixel format
 
-			// Formatet fortæller windows hvordan textur dataen skal oversættes
+			// The format tells Windows how the texture data should be interpreted
 			PIXELFORMATDESCRIPTOR pfd = {
 
-				sizeof(PIXELFORMATDESCRIPTOR),				// Størrelse af denne pixel format beskrivelse
+				sizeof(PIXELFORMATDESCRIPTOR),				// Size of this pixel format descriptor
 				1,											// Formatets Versions Nummer 
-				PFD_DRAW_TO_WINDOW |						// Formatet skal supporterer Windows
-				PFD_SUPPORT_OPENGL |						// Formatet skal supporterer OpenGL
+				PFD_DRAW_TO_WINDOW |						// The format must support Windows
+				PFD_SUPPORT_OPENGL |						// The format must support OpenGL
 				PFD_DOUBLEBUFFER,							// Formatet skal supporterer "Double Buffering"
-				PFD_TYPE_RGBA,								// Anmod om et RGBa Format
-				16,										    // Vælg "Color Depth" (16Bit)
-				0, 0, 0, 0, 0, 0,							// Farve Bits skal Ignoreres
-				0,											// Ingen "Alpha Buffer"
-				0,											// Shift Bit skal Ignoreres
-				0,											// Ingen "Accumulation Buffer"
-				0, 0, 0, 0,									// Accumulator Bits skal Ignoreres
+				PFD_TYPE_RGBA,								// Request an RGBA format
+				16,										    // Select the "color depth" (16-bit)
+				0, 0, 0, 0, 0, 0,							// Color bits are to be ignored
+				0,											// No "alpha buffer"
+				0,											// Shift bit is to be ignored
+				0,											// No "accumulation buffer"
+				0, 0, 0, 0,									// Accumulator bits are to be ignored
 				16,											// 16Bit Z-Buffer (Buffer dybde)  
-				0,											// Ingen "Stencil Buffer"
-				0,											// Ingen "Auxiliary Buffer"
-				PFD_MAIN_PLANE,								// Sæt som det primære "Drawing" lag
+				0,											// No "stencil buffer"
+				0,											// No "auxiliary buffer"
+				PFD_MAIN_PLANE,								// Set as the main "drawing" layer
 				0,											// Reserved
-				0, 0, 0										// Lag "Masks" skal Ignoreres
+				0, 0, 0										// Layer "masks" are to be ignored
 
 			};
 
-			// Vælg pixel formatet til control handler
+			// Select the pixel format for the control handler
 			if ((iPixelFormat = ChoosePixelFormat(hdc, &pfd)) == 0) {
-				// Skriv fejl meddelse - hvis fejl er registreret
+				// Write error message - if an error is registered
 				MessageBox::Show("ChoosePixelFormat Failed");
-				// Retuner Fejl
+				// Return error
 				return false;
 			}
 
-			// Sæt pixel formatet til control handler 
+			// Set the pixel format for the control handler 
 			if (SetPixelFormat(hdc, iPixelFormat, &pfd) == FALSE) {
-				// Skriv fejl meddelse - hvis fejl er registreret
+				// Write error message - if an error is registered
 				MessageBox::Show("SetPixelFormat Failed");
-				// Retuner Fejl
+				// Return error
 				return false;
 			}
 
 			if ((m_hglrc = wglCreateContext(hdc)) == NULL) {
-				// Skriv fejl meddelse - hvis fejl er registreret
+				// Write error message - if an error is registered
 				MessageBox::Show("wglCreateContext Failed");
-				// Retuner Fejl
+				// Return error
 				return false;
 			}
 
 			if ((wglMakeCurrent(hdc, m_hglrc)) == NULL) {
-				// Skriv fejl meddelse - hvis fejl er registreret
+				// Write error message - if an error is registered
 				MessageBox::Show("wglMakeCurrent Failed");
-				// Retuner Fejl
+				// Return error
 				return false;
 			}
 
-			// Retuner Status OK
+			// Return status OK
 			return true;
 		}
 
 		private: GLvoid RMH_OpenGL_ResizeOpenGLWinformsScene(unsigned int TotalTextureWidth, unsigned int TotalTextureHeight) {
 
-			// Formater Størrelsen og Initialisere OpenGL Vinduet i Winforms
+			// Format the size and initialize the OpenGL window in WinForms
 
-			// Forhindre division med '0'
+			// Prevent division by '0'
 			if (TotalTextureHeight == 0) {
-				// Piel højden er altid mindst '1'
+				// The pixel height is always at least '1'
 				TotalTextureHeight = 1;
 			}
 
-			// Nulstil nuværende "Viewport"
+			// Reset the current "viewport"
 			glViewport(0, 0, TotalTextureWidth, TotalTextureHeight);
-			// Vælg Projektions matricen
+			// Select the projection matrix
 			glMatrixMode(GL_PROJECTION);
-			// Nulstil Projektions matricen
+			// Reset the projection matrix
 			glLoadIdentity();
 			// Udregn vinduets aspect ratio
 			gluPerspective(60.0f, (GLfloat)TotalTextureWidth / (GLfloat)TotalTextureHeight, 0.1, 500.0);
-			// Vælg "Model View" matricen
+			// Select the "model view" matrix
 			glMatrixMode(GL_MODELVIEW);
-			// Nulstil "Model View" matricen
+			// Reset the "model view" matrix
 			glLoadIdentity();
 
 		}
 
 		private: GLvoid RMH_OpenGL_BuildFont(GLvoid) {
 
-			// Routinen Generer FONT til display i OpenGL Textur
+			// This routine generates the FONT for display in the OpenGL texture
 
-			// Lokale variabler
+			// Read the temporary array data and sort the kernel array
 			HFONT TextureFont;
 
-			// Opdater Font Liste
+			// Update the font list
 			BaseFont = glGenLists(96);
 
 			// Generer Strutureret Font Objekt
@@ -1252,7 +1252,7 @@ namespace LiveViewZoomWindow {
 				FF_ROMAN | DEFAULT_PITCH,		// nPitchAndFamily
 				L"Arial");				        // lpszFacename
 
-			// Indstil FONT Til OpenGL Objekt Struktur
+			// Set the FONT to the OpenGL object structure
 			SelectObject(m_hDC, TextureFont);
 			// Generer Bitmap Display FONT Liste
 			wglUseFontBitmaps(m_hDC, 32, 96, BaseFont);
@@ -1263,16 +1263,16 @@ namespace LiveViewZoomWindow {
 
 			// Routinen Initialisere OpenGL I Winforms C++/CLR
 
-			// Konfigurer Og Initiliser GLEW
+			// Configure and initialize GLEW
 			glewInit();
 
-			// Aktiver "Flat Shader" Mode
+			// Enable "flat shader" mode
 			glShadeModel(GL_FLAT);
 			// Default Baggrund farve
 			glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-			// Opsætning af "Depth Buffer"
+			// Set up the "depth buffer"
 			glClearDepth(1.0f);
-			// Deaktiver OpenGL "Depth Testing"
+			// Disable OpenGL "depth testing"
 			glDisable(GL_DEPTH_TEST);
 			// For perspektiv - Fortag "Very Nice" udregniner
 			glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
@@ -1280,7 +1280,7 @@ namespace LiveViewZoomWindow {
 			// Generer FONT Objekt
 			RMH_OpenGL_BuildFont();
 
-			// Retuner "OpenGl Opsætning" Færdig flag
+			// Return the "OpenGL setup" finished flag
 			return true;
 
 		}

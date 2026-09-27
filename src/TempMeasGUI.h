@@ -1,12 +1,12 @@
 #pragma once
 
-// Inkluderede Blblioteker
+// Included libraries
 #include "GlobalObjectsAndVariables.h"
 
 // Klasse Namespace
 namespace IRCAMThermalViewer {
 
-	// Tilhørende namespaces
+	// Associated namespaces
 	using namespace System;
 	using namespace System::ComponentModel;
 	using namespace System::Collections;
@@ -23,9 +23,9 @@ namespace IRCAMThermalViewer {
 
 		TempMeasGUI(void) {
 
-			// Init GUI komponenter og objekter
+			// Init GUI components and objects
 			InitializeComponent();
-			// Formater arrays Og Objekter af winform komponenter til global brug
+			// Format arrays and objects of WinForms components for global use
 			InitializeComponentArraysAndGlobalObjects();
 
 			// Aktiver Applikationens TitelBars Dark Mode
@@ -36,11 +36,11 @@ namespace IRCAMThermalViewer {
 
 		}
 
-		// ---------------------------- Diverse Tilhørende Klasse Metoder ----------------------------- //
+		// ---------------------------- Miscellaneous Associated Class Methods ----------------------------- //
 
 		void InitializeComponentArraysAndGlobalObjects(void) {
 
-			// Routinen formaterer arrays af winform komponenter til global brug
+			// This routine formats arrays of WinForms components for global use
 
 			// Array Af 2D Plot Legend LAbels
 			GlobalVariables::Plot2DLegendLabels = gcnew cli::array<System::Windows::Forms::Label^>(10) {
@@ -59,10 +59,10 @@ namespace IRCAMThermalViewer {
 			// Generer textur til 2D plot OpenGL renderering
 			GlobalVariables::OpenGL2DPlot = gcnew OpenGL2DPlot::RMHOpenGL2DPlot(this->Temp2DPlotPanel, 4, 4);
 
-			// Sæt global data logging thread objekt
+			// Set the global data logging thread object
 			GlobalVariables::GlobalDataLoggingThread = this->DataLoggingThread;
 
-			// Opdater 2D Plot Legend
+			// Update the 2D plot legend
 			RMH_ThermalViewer_Update2DPlotLegendLabels();
 
 			// Opdater Temp Meas GUI ready flag
@@ -84,7 +84,7 @@ namespace IRCAMThermalViewer {
 
 			if (components) {
 
-				// Slet alle Form Komponenter
+				// Delete all form components
 				delete components;
 
 			}
@@ -808,7 +808,7 @@ namespace IRCAMThermalViewer {
 		// Temp Meas GUI Form Opstartnings Callback Routine -> 
 		private: System::Void TempMeasGUI_Shown(System::Object^ sender, System::EventArgs^ e) {
 
-			// Opdater tilhørende form Flag
+			// Update the associated form flag
 			isTempMeasurementsFormOpen = true;
 
 		}
@@ -816,14 +816,14 @@ namespace IRCAMThermalViewer {
 		// Temp Meas GUI Form Nedluknings Callback Routine ->
 		private: System::Void TempMeasGUI_FormClosing(System::Object^ sender, System::Windows::Forms::FormClosingEventArgs^ e) {
 
-			// Opdater tilhørende form Flag
+			// Update the associated form flag
 			isTempMeasurementsFormOpen = false;
 			isTempMeasurementsFormDocked = false;
 			isTempMeasurementsFormUndocked = false;
 
-			// Når Formen lukkes - Gem Formen
+			// When the form is closed - hide the form
 			this->Hide();
-			// Deaktiver "Disposing" Af Form Objektet
+			// Disable "disposing" of the form object
 			e->Cancel = true;
 
 		}
@@ -833,7 +833,7 @@ namespace IRCAMThermalViewer {
 		// X-Axis Number Of Ticks Context Menu Callback Routine ->
 		private: System::Void toolStripMenuItem2_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Opdater antallet af X Ticks
+			// Update the number of X ticks
 			GlobalVariables::OpenGL2DPlot->RMH_OpenGL_Set2DPlotNumberOfXTicks(sender);
 
 		}
@@ -841,28 +841,28 @@ namespace IRCAMThermalViewer {
 		// Y-Axis Number Of Ticks Context Menu Callback Routine ->
 		private: System::Void ticksToolStripMenuItem5_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Opdater antallet af X Ticks
+			// Update the number of X ticks
 			GlobalVariables::OpenGL2DPlot->RMH_OpenGL_Set2DPlotNumberOfYTicks(sender);
 
 		}
 
-		// Vis Plot Box Context Menu Callback Routine ->
+		// Show plot box context menu callback routine ->
 		private: System::Void showBoxToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Vis 2D Plottets grænse Box
+			// Show the border box of the 2D plot
 			GlobalVariables::OpenGL2DPlot->RMH_OpenGL_Enable2DPlotBox(true);
 
 		}
 
-		// Skjul Plot Box Context Menu Callback Routine ->
+		// Hide plot box context menu callback routine ->
 		private: System::Void hIdeBoxToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Skjul 2D Plottets grænse Box
+			// Hide the border box of the 2D plot
 			GlobalVariables::OpenGL2DPlot->RMH_OpenGL_Enable2DPlotBox(false);
 
 		}
 
-		// Vis Plot Grid Context Menu Callback Routine ->
+		// Show plot grid context menu callback routine ->
 		private: System::Void showGridToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 
 			// Vis 2D Plottets Grid linjer
@@ -870,7 +870,7 @@ namespace IRCAMThermalViewer {
 
 		}
 
-		// Skjul Plot Grid Context Menu Callback Routine ->
+		// Hide plot grid context menu callback routine ->
 		private: System::Void hideGridToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 
 			// Skjul 2D Plottets Grid linjer
@@ -881,7 +881,7 @@ namespace IRCAMThermalViewer {
 		// Ryd Plot Context Menu Callback Routine ->
 		private: System::Void clearPlotToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Nulstil 2D plottets data og ryd 2D plottet
+			// Reset the data of the 2D plot and clear the 2D plot
 			GlobalVariables::OpenGL2DPlot->RMH_OpenGL_Clear2DPlot();
 
 		}

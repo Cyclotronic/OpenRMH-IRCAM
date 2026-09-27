@@ -13,7 +13,7 @@
 #ifndef RMH_RecordingAnalysisMode_Routines_H 
 #define RMH_RecordingAnalysisMode_Routines_H
 
-// Inkluderede Biblioteker
+// Included libraries
 #include <opencv2/opencv.hpp>
 
 // RAW Optagning/Snapshot Identifikations Data Reference Macroer
@@ -56,7 +56,7 @@
 #define _VideoFileWriteObject_RecordingAnalysisModeFile                  1
 #define _VideoFileWriteObject_LiveViewStreamFile                         2
 
-// Læsning af video fil Error koder Reference Macroer
+// Video file read error codes reference macros
 #define _ReadAVIFile_StatusCode_FrameReadOK                              1
 #define _ReadAVIFile_StatusCode_FileIsNotOpen                            2
 #define _ReadAVIFile_StatusCode_FrameNumberOutOfRange                    3
@@ -64,10 +64,10 @@
 
 // --------------------------------------------------- Blbliotek Reference Klasser --------------------------------------------------- //
 
-// Læst RAW Video Fil Information Klasse struktur
+// Read RAW video file information class structure
 struct RAWVideoFileInfo {
 
-    // RAW Video Fil Variabler og objekter
+    // RAW video file variables and objects
     bool IsFileOpenFlag = false;
     bool IsAVIFileFlag = false;
     unsigned int FrameWidth = 0;
@@ -78,10 +78,10 @@ struct RAWVideoFileInfo {
 
 };
 
-// Læst RAW SnapShot Fil Information Klasse struktur
+// Read RAW snapshot file information class structure
 struct RAWSnapShotFileInfo {
 
-    // RAW Snapshot Fil Variabler og objekter
+    // RAW snapshot file variables and objects
     bool FileErrorFlag = false;
     bool IsFileReady = false;
     bool IsPNGFileFlag = false;
@@ -93,7 +93,7 @@ struct RAWSnapShotFileInfo {
 // RAW Video Fil Identifikations Klasse struktur
 struct RAWFileIDFormat {
 
-    // RAW Video Fil ID Variabler og objekter
+    // RAW video file ID variables and objects
     unsigned char RAWIDCharData[200] = { 0 };
     unsigned short CameraPoolID = 0;
     unsigned int FileMetaDataSizeID = 0;
@@ -108,7 +108,7 @@ struct RAWFileIDFormat {
 
 };
 
-// -------------------------------- Fælles Video Fil Optagnings Og Analysis Mode Håndterings Routiner -------------------------------- //
+// -------------------------------- Common Video File Recording And Analysis Mode Handling Routines -------------------------------- //
 
 void RMH_AnalysisMode_AddIDAndMetaDataToFrameArray(unsigned int FrameWidth, unsigned int FrameHeight, unsigned char* RAWFrameDataArray,
     unsigned short CameraPoolID, unsigned int MetaDataSizeID, unsigned int FrameWidthPixelOffsetID, unsigned int FrameHeightPixelOffsetID,
@@ -116,7 +116,7 @@ void RMH_AnalysisMode_AddIDAndMetaDataToFrameArray(unsigned int FrameWidth, unsi
 
 RAWFileIDFormat RMH_AnalysisMode_ReadRAWMetaData(unsigned int FrameWidth, unsigned int FrameHeight, unsigned char* RAWFrameDataArray);
 
-// ---------------------------- Video Fil Optagnings, Konfigurations, Indstillings Og Skrivnings Routiner ---------------------------- //
+// ---------------------------- Video File Recording, Configuration, Setting And Writing Routines ---------------------------- //
 
 bool RMH_VideoFileRecording_SetupRecordingAnalysisModeVideoFile(System::String^ FileSavePath, System::String^ FileName, unsigned int FrameWidth, unsigned int FrameHeight, double FrameRate);
 bool RMH_VideoFileRecording_SetupLiveViewCaptureVideoFile(System::String^ FileSavePath, System::String^ FileName, unsigned int FrameWidth, unsigned int FrameHeight, double FrameRate);
@@ -124,14 +124,14 @@ void RMH_VideoFileRecording_WriteDataToFile(unsigned short FileIndex, unsigned i
 void RMH_VideoFileRecording_WriteDataToFile16Bit(unsigned short FileIndex, unsigned int FrameWidth, unsigned int FrameHeight, unsigned short* CapturedFrameData);
 bool RMH_VideoFileRecording_CloseVideoFileWriting(unsigned short FileIndex);
 
-// ----------------------------- Video Fil Læsnings, Konfigurations, Indstillings Og Skrivnings Routiner ----------------------------- //
+// ----------------------------- Video File Reading, Configuration, Setting And Writing Routines ----------------------------- //
 
 bool RMH_VideoFileReading_IsRECAnalysisModeFileOpen();
 RAWVideoFileInfo RMH_VideoFileReading_SetupRecordingAnalysisModeVideoFileReader(System::String^ AVIFilePath);
 unsigned int RMH_VideoFileReading_ReadVideoFileFrame(unsigned long TargetFrameNumber, unsigned long FileTotalNumOfFrames, unsigned char* ReadFrameData);
 bool RMH_VideoFileReading_CloseRecordingAnalysisModeFile();
 
-// --------------------------- SnapShot Fil Læsnings, Konfigurations, Indstillings Og Skrivnings Routiner ---------------------------- //
+// --------------------------- Snapshot File Reading, Configuration, Setting And Writing Routines ---------------------------- //
 
 RAWSnapShotFileInfo RMH_AnalysisMode_ReadAndLoadPNGImage(System::String^ ImageFilePath, unsigned char* ImageData);
 

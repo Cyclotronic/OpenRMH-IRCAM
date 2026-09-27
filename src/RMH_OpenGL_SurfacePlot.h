@@ -8,7 +8,7 @@
  *
  */
 
-// Inkluderede Biblioteker
+// Included libraries
 #include "RMH_MathConversions_Library.h"
 #include <windows.h>
 #include <GL/GLU.h>
@@ -23,10 +23,10 @@
 #define _SurfacePlotStartAngle_XAngle     0
 #define _SurfacePlotStartAngle_YAngle     0
 
-// 3D Surface plottets maksimale Z højde konfig Macroer
-#define _SurfacePlotDefaultMaximumZHeight    0.5   // 50% af panelets højde
+// Maximum Z height configuration macros of the 3D surface plot
+#define _SurfacePlotDefaultMaximumZHeight    0.5   // 50% of the panel height
 
-// Tilhørende Name spaces
+// Associated namespaces
 using namespace System;
 using namespace System::Windows::Forms;
 using namespace std;
@@ -36,13 +36,13 @@ namespace OpenGLSurfacePlot {
 
 	// ------------------------- Privat Custom Winforms Gennemsigtigt Panel Klasse ------------------------- //
 
-	// Tilhørende lokalt klasse Name space objekt
+	// Associated local class namespace object
 	namespace NativeForm = System::Windows::Forms;
 
-	// Gennemsigtig overlay panel klasse til billede rendererings panel
+	// Transparent overlay panel class for the image rendering panel
 	private ref class TextureOverlayPanel : System::Windows::Forms::Panel {
 
-		// Lokale klasse objekter
+		// Local class objects
 		protected: System::Drawing::Graphics^ graphics;
 
 		protected: virtual property NativeForm::CreateParams^ CreateParams {
@@ -50,12 +50,12 @@ namespace OpenGLSurfacePlot {
 			// Overskriv panelets konfigurations parametere
 			NativeForm::CreateParams^ get() override {
 
-				// Læs panelets kontrol parametere
+				// Read the control parameters of the panel
 				NativeForm::CreateParams^ PanalParams = __super::CreateParams;
-				// Panelets udviddet style skal være gennemsigtid
+				// The extended style of the panel must be transparent
 				PanalParams->ExStyle |= WS_EX_TRANSPARENT;
 
-				// Retuner Panalets config parametere
+				// Return the config parameters of the panel
 				return PanalParams;
 
 			}
@@ -70,13 +70,13 @@ namespace OpenGLSurfacePlot {
 
 		virtual void OnPaintBackground(PaintEventArgs^ e) override {
 
-			// Ingen baggrund skal tegnes
+			// No background should be drawn
 
 		}
 
 		protected: virtual void OnPaint(PaintEventArgs^ e) override {
 
-			// Ingen yderligere grafik skal genereres til panelet 
+			// No additional graphics should be generated for the panel 
 
 		}
 
@@ -88,7 +88,7 @@ namespace OpenGLSurfacePlot {
 
 	private:
 
-		// Private Globale klasse objekter og variabler
+		// Private global class objects and variables
 		private: HDC m_hDC;
 		private: HGLRC m_hglrc;
 		private: GLuint BaseFont;
@@ -106,7 +106,7 @@ namespace OpenGLSurfacePlot {
 		private: CreateParams^ ControlParams = gcnew CreateParams;
 		private: TextureOverlayPanel^ OverlayPanel = gcnew TextureOverlayPanel();
 
-		// Generalle Surface Plot Objekter Og Variabler
+		// General surface plot objects and variables
 		private: GLdouble SurfacePlotAspectRatio = 0.0;
 		private: GLdouble AspectRatioCompensatedWidth = 0.0;
 		private: GLdouble TranstaledYSurfacePlotValue = 0.0;
@@ -142,62 +142,62 @@ namespace OpenGLSurfacePlot {
 
 		RMHOpenGLSurfacePlot(System::Windows::Forms::Panel^ TexturePanel, unsigned char WidthScaleFactor, unsigned char HeightScaleFactor) {
 
-			// Sæt positionen af kontrol klassen
+			// Set the position of the control class
 			ControlParams->X = 0;
 			ControlParams->Y = 0;
 			ControlParams->Width = (GLdouble)TexturePanel->Width * WidthScaleFactor;
 			ControlParams->Height = (GLdouble)TexturePanel->Height * HeightScaleFactor;
 
-			// Læs OpenGL vinduets Pixel bredde og højde
+			// Read the pixel width and height of the OpenGL window
 			OpenGLWindowWidth = ControlParams->Width;
 			OpenGLWindowHeight = ControlParams->Height;
 
 			// Konfigurer Textur parent handler
 			ControlParams->Parent = TexturePanel->Handle;
-			// Skab "Child" af valgte "parent" og gør denne OpenGL compliant
+			// Create a "child" of the selected "parent" and make it OpenGL compliant
 			ControlParams->Style = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN;
 
-			// Generer tekstur vindue handler
+			// Generate the texture window handle
 			this->CreateHandle(ControlParams);
 
-			// Pointer til textur handler
+			// Pointer to the texture handle
 			m_hDC = GetDC((HWND)this->Handle.ToPointer());
 
-			// Er denne handler aktiv
+			// Is this handle active
 			if (m_hDC) {
 
 				// Konfigurer Textur Pixel format
 				RMH_OpenGL_SetTexturePixelFormat(m_hDC);
-				// Konfigurer texturens størrelse
+				// Configure the size of the texture
 				RMH_OpenGL_ResizeOpenGLWinformsScene(ControlParams->Width, ControlParams->Height);
 				// Initialisere OpenGL
 				RMH_OpenGL_Init();
 
 			}
 
-			// Tilføj et overlejede gennemsigtigt panel til textur panalet
+			// Add an overlaid transparent panel to the texture panel
 			RMH_OpenGL_AddOverlayPanelToMainTexturePanel(TexturePanel);
 
 		}
 
-		// ----------- Textur Overlejede Gennemsigtigt Panel Opsætnings Routine ------------ //
+		// ----------- Texture Overlaid Transparent Panel Setup Routine ------------ //
 
 		private: GLvoid RMH_OpenGL_AddOverlayPanelToMainTexturePanel(System::Windows::Forms::Panel^ TexturePanel) {
 
-			// Routinen tilføjer et overlejede gennemsigtigt panel til textur panalet
-			// Dette overlejede panel benyttes til manipulerer objekter på billede texturen
+			// This routine adds an overlaid transparent panel to the texture panel
+			// This overlaid panel is used to manipulate objects on the image texture
 
-			// Overlejede panel skal ikke have nogen margin eller padding
+			// The overlaid panel must not have any margin or padding
 			OverlayPanel->Margin = System::Windows::Forms::Padding(0, 0, 0, 0);
 			OverlayPanel->Padding = System::Windows::Forms::Padding(0, 0, 0, 0);
 
-			// Det overlejede gennemsigtigt panel skal fylde hele textur panelet
+			// The overlaid transparent panel must fill the whole texture panel
 			OverlayPanel->Dock = System::Windows::Forms::DockStyle::Fill;
 
-			// Tilføj det overlejede gennemsigtigt panel som et "Child" til textur panelet
+			// Add the overlaid transparent panel as a "child" of the texture panel
 			TexturePanel->Controls->Add(OverlayPanel);
 
-			// Aktiver Mus handler events til det gennemsigtige panel
+			// Enable mouse handler events for the transparent panel
 			OverlayPanel->MouseDown += gcnew System::Windows::Forms::MouseEventHandler(this, &RMHOpenGLSurfacePlot::TexturePanel_MouseDown);
 			OverlayPanel->MouseUp += gcnew System::Windows::Forms::MouseEventHandler(this, &RMHOpenGLSurfacePlot::TexturePanel_MouseUp);
 			OverlayPanel->MouseMove += gcnew System::Windows::Forms::MouseEventHandler(this, &RMHOpenGLSurfacePlot::TexturePanel_MouseMove);
@@ -209,9 +209,9 @@ namespace OpenGLSurfacePlot {
 
 		private: GLdouble RMH_OpenGL_TranslateOverlayPanelMouseXPosToTextureXPos(System::Windows::Forms::MouseEventArgs^ OverlayPanelMouseEvent) {
 
-			// Routinen oversætter overlejede panel Mus positioner til aktuel Textur Panel Mus Positioner
+			// This routine translates the overlaid panel mouse positions to the actual texture panel mouse positions
 
-			// Lokale Variabler
+			// Local variables
 			GLdouble MouseTextureXPos = 0.0;
 			GLdouble PanelsWidthDifference = 0.0;
 
@@ -221,19 +221,19 @@ namespace OpenGLSurfacePlot {
 			// Konverter overlejede panel Mus position til aktuel Textur Panel Mus Position
 			MouseTextureXPos = (OverlayPanelMouseEvent->X + PanelsWidthDifference) * (ImageDataPixelWidth / CurrentTexturePanelWidth);
 
-			// Håndtering ved minimum textur Mus Position 
+			// Handling at the minimum texture mouse position 
 			if (MouseTextureXPos <= 0) {
-				// Sæt Mus position til minimum værdi
+				// Set the mouse position to the minimum value
 				MouseTextureXPos = 0;
 			}
 
-			// Håndtering ved maksimal textur Mus Position 
+			// Handling at the maximum texture mouse position 
 			if (MouseTextureXPos >= ImageDataPixelWidth) {
-				// Sæt Mus position til maksimal værdi
+				// Set the mouse position to the maximum value
 				MouseTextureXPos = ImageDataPixelWidth;
 			}
 
-			// Rund Mus position op til nærmeste integer
+			// Round the mouse position up to the nearest integer
 			MouseTextureXPos = RMH_Math_Round(MouseTextureXPos);
 
 			// Retuner aktuel Textur Panel Mus Position
@@ -243,9 +243,9 @@ namespace OpenGLSurfacePlot {
 
 		private: GLdouble RMH_OpenGL_TranslateOverlayPanelMouseYPosToTextureYPos(System::Windows::Forms::MouseEventArgs^ OverlayPanelMouseEvent) {
 
-			// Routinen oversætter overlejede panel Mus positioner til aktuel Textur Panel Mus Positioner
+			// This routine translates the overlaid panel mouse positions to the actual texture panel mouse positions
 
-			// Lokale Variabler
+			// Local variables
 			GLdouble MouseTextureYPos = 0.0;
 			GLdouble PanelsHeightDifference = 0.0;
 
@@ -255,19 +255,19 @@ namespace OpenGLSurfacePlot {
 			// Konverter overlejede panel Mus position til aktuel Textur Panel Mus Position
 			MouseTextureYPos = (OverlayPanelMouseEvent->Y + PanelsHeightDifference) * (ImageDataPixelHeight / CurrentTexturePanelHeight);
 
-			// Håndtering ved minimum textur Mus Position 
+			// Handling at the minimum texture mouse position 
 			if (MouseTextureYPos <= 0) {
-				// Sæt Mus position til minimum værdi
+				// Set the mouse position to the minimum value
 				MouseTextureYPos = 0;
 			}
 
-			// Håndtering ved maksimal textur Mus Position 
+			// Handling at the maximum texture mouse position 
 			if (MouseTextureYPos >= ImageDataPixelHeight) {
-				// Sæt Mus position til maksimal værdi
+				// Set the mouse position to the maximum value
 				MouseTextureYPos = ImageDataPixelHeight;
 			}
 
-			// Rund Mus position op til nærmeste integer
+			// Round the mouse position up to the nearest integer
 			MouseTextureYPos = RMH_Math_Round(MouseTextureYPos);
 
 			// Retuner aktuel Textur Panel Mus Position
@@ -275,22 +275,22 @@ namespace OpenGLSurfacePlot {
 
 		}
 
-		// ----------------- Textur Initiliserings Og Håndterings Routiner ----------------- //
+		// ----------------- Texture Initialization And Handling Routines ----------------- //
 
 		private: GLvoid RMH_OpenGL_MakeRenderContextCurrent() {
 
-			// Routinen Gør Tilhørende Render kontekst det nuværende render kontekst
+			// This routine makes the associated render context the current render context
 
-			// Gør Tilhørende Render kontekst det nuværende render kontekst
+			// Make the associated render context the current render context
 			wglMakeCurrent(m_hDC, m_hglrc);
 
 		}
 
 		private: GLvoid RMH_OpenGL_MakeRenderContextNULL() {
 
-			// Routinen nulstiller tilhørende Render kontekst
+			// This routine resets the associated render context
 
-			// Nulstil Render kontekst
+			// Reset the render context
 			wglMakeCurrent(NULL, NULL);
 
 		}
@@ -299,7 +299,7 @@ namespace OpenGLSurfacePlot {
 
 			// Routinen indstiller texturens syns vinkel for display i control handler komponentet
 
-			// Lokale Variabler
+			// Local variables
 			GLdouble PlaneXLook = 0.0;
 			GLdouble PlaneYLook = 0.0;
 			GLdouble PlaneFieldOfView = 60.0;
@@ -308,7 +308,7 @@ namespace OpenGLSurfacePlot {
 			GLdouble PlaneDistance = 0.0;
 			GLdouble PlaneAspectRatio = 0.0;
 
-			// Læs data framens højde og bredde
+			// Read the height and width of the data frame
 			PlaneXLook = (GLdouble)TextureWidth * 0.5;
 			PlaneYLook = (GLdouble)TextureHeight * 0.5;
 
@@ -318,7 +318,7 @@ namespace OpenGLSurfacePlot {
 			// Udregn affstanden imellem Frame data planet og textur planet
 			PlaneDistance = (GLdouble)TextureHeight * TanHalfFieldOfView;
 
-			// Opdater Texturens syns vinkel
+			// Update the viewing angle (field of view) of the texture
 			glMatrixMode(GL_PROJECTION);
 			glLoadIdentity();
 			gluPerspective(PlaneFieldOfView, PlaneAspectRatio, 5.0f, 10000.0);
@@ -332,7 +332,7 @@ namespace OpenGLSurfacePlot {
 
 		private: GLvoid RMH_OpenGL_ClearTextureBuffer() {
 
-			// Routinen rydder tilhørende textur buffere
+			// This routine clears the associated texture buffers
 
 			// Ryd Textur farve og bit buffere
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -343,7 +343,7 @@ namespace OpenGLSurfacePlot {
 
 			// Routinen Rendererer surface plottets pixel polygoner
 
-			// Lokale variabler
+			// Read the temporary array data and sort the kernel array
 			register GLfloat PolygonZ0Pos1 = 0.0;
 			register GLfloat PolygonZ0Pos2 = 0.0;
 			register GLfloat PolygonZ0Pos3 = 0.0;
@@ -381,28 +381,28 @@ namespace OpenGLSurfacePlot {
 			// Udregn ZAksens skallerings faktor
 			GLfloat ZAxesScaleFactor = 1.0 / ((MaxZDataValue - MinZDataValue) * (1.0 / (CurrentTexturePanelHeight * SurfacePlotMaxZHeight)));
 
-			// Udregn Surface plot polygonernes højde og bredde i pixels
+			// Calculate the height and width of the surface plot polygons in pixels
 			register GLfloat SurfacePolygonWidth = (GLfloat)TexturePanelWidth / (GLfloat)NmbOfHorizontalPolyGons;
 			register GLfloat SurfacePolygonHeight = (GLfloat)TexturePanelHeight / (GLfloat)NmbOfVerticalPolyGons;
 			
-			// Nulstil start polygonens X0 og Y0 koordinater inden rederering
+			// Reset the X0 and Y0 coordinates of the start polygon before rendering
 			register GLfloat SurfacePolygonX0 = -((GLfloat)TexturePanelWidth * 0.5);
 			register GLfloat SurfacePolygonY0 = -((GLfloat)TexturePanelHeight * 0.5);
 
-			// Nulstil antallet af rendereret polygoner
+			// Reset the number of polygons rendered
 			register unsigned int RenderedHorizontalPolygons = 0;
 			register unsigned int RenderedVerticalPolygons = 0;
 
-			// Render Polygoner på textur
+			// Render polygons on the texture
 			glBegin(GL_QUADS);
 
-			// Render antal givet polygoner
+			// Render the given number of polygons
 			for (unsigned int i = 0, j = 0; i < (NmbOfHorizontalPolyGons * NmbOfVerticalPolyGons); i += 8, j += 24) {
 
-				// Renderer ikke første Y polygon
+				// Do not render the first Y polygon
 				if (RenderedHorizontalPolygons != 0) {
 
-					// Indstil polygon farven til tilhørende pixel farve
+					// Set the polygon color to the associated pixel color
 					glColor3f(*(SurfacePolygonPixelData + j + 0) * ConversionFactor, *(SurfacePolygonPixelData + j + 1) * ConversionFactor, *(SurfacePolygonPixelData + j + 2) * ConversionFactor);
 
 					// Render surface plot Rektanglernes linjer
@@ -411,10 +411,10 @@ namespace OpenGLSurfacePlot {
 					glVertex3f(SurfacePolygonX0 + SurfacePolygonWidth, SurfacePolygonY0 + SurfacePolygonHeight, -PolygonZ2Pos1);
 					glVertex3f(SurfacePolygonX0, SurfacePolygonY0 + SurfacePolygonHeight, -PolygonZ3Pos1);
 
-					// Opdater næste polygons X0 koordinat
+					// Update the X0 coordinate of the next polygon
 					SurfacePolygonX0 = SurfacePolygonX0 + SurfacePolygonWidth;
 
-					// Indstil polygon farven til tilhørende pixel farve
+					// Set the polygon color to the associated pixel color
 					glColor3f(*(SurfacePolygonPixelData + j + 3) * ConversionFactor, *(SurfacePolygonPixelData + j + 4) * ConversionFactor, *(SurfacePolygonPixelData + j + 5) * ConversionFactor);
 
 					// Render surface plot Rektanglernes linjer
@@ -423,10 +423,10 @@ namespace OpenGLSurfacePlot {
 					glVertex3f(SurfacePolygonX0 + SurfacePolygonWidth, SurfacePolygonY0 + SurfacePolygonHeight, -PolygonZ2Pos2);
 					glVertex3f(SurfacePolygonX0, SurfacePolygonY0 + SurfacePolygonHeight, -PolygonZ3Pos2);
 
-					// Opdater næste polygons X0 koordinat
+					// Update the X0 coordinate of the next polygon
 					SurfacePolygonX0 = SurfacePolygonX0 + SurfacePolygonWidth;
 
-					// Indstil polygon farven til tilhørende pixel farve
+					// Set the polygon color to the associated pixel color
 					glColor3f(*(SurfacePolygonPixelData + j + 6) * ConversionFactor, *(SurfacePolygonPixelData + j + 7) * ConversionFactor, *(SurfacePolygonPixelData + j + 8) * ConversionFactor);
 
 					// Render surface plot Rektanglernes linjer
@@ -435,10 +435,10 @@ namespace OpenGLSurfacePlot {
 					glVertex3f(SurfacePolygonX0 + SurfacePolygonWidth, SurfacePolygonY0 + SurfacePolygonHeight, -PolygonZ2Pos3);
 					glVertex3f(SurfacePolygonX0, SurfacePolygonY0 + SurfacePolygonHeight, -PolygonZ3Pos3);
 
-					// Opdater næste polygons X0 koordinat
+					// Update the X0 coordinate of the next polygon
 					SurfacePolygonX0 = SurfacePolygonX0 + SurfacePolygonWidth;
 
-					// Indstil polygon farven til tilhørende pixel farve
+					// Set the polygon color to the associated pixel color
 					glColor3f(*(SurfacePolygonPixelData + j + 9) * ConversionFactor, *(SurfacePolygonPixelData + j + 10) * ConversionFactor, *(SurfacePolygonPixelData + j + 11) * ConversionFactor);
 
 					// Render surface plot Rektanglernes linjer
@@ -447,10 +447,10 @@ namespace OpenGLSurfacePlot {
 					glVertex3f(SurfacePolygonX0 + SurfacePolygonWidth, SurfacePolygonY0 + SurfacePolygonHeight, -PolygonZ2Pos4);
 					glVertex3f(SurfacePolygonX0, SurfacePolygonY0 + SurfacePolygonHeight, -PolygonZ3Pos4);
 
-					// Opdater næste polygons X0 koordinat
+					// Update the X0 coordinate of the next polygon
 					SurfacePolygonX0 = SurfacePolygonX0 + SurfacePolygonWidth;
 
-					// Indstil polygon farven til tilhørende pixel farve
+					// Set the polygon color to the associated pixel color
 					glColor3f(*(SurfacePolygonPixelData + j + 12) * ConversionFactor, *(SurfacePolygonPixelData + j + 13) * ConversionFactor, *(SurfacePolygonPixelData + j + 14) * ConversionFactor);
 
 					// Render surface plot Rektanglernes linjer
@@ -459,10 +459,10 @@ namespace OpenGLSurfacePlot {
 					glVertex3f(SurfacePolygonX0 + SurfacePolygonWidth, SurfacePolygonY0 + SurfacePolygonHeight, -PolygonZ2Pos5);
 					glVertex3f(SurfacePolygonX0, SurfacePolygonY0 + SurfacePolygonHeight, -PolygonZ3Pos5);
 
-					// Opdater næste polygons X0 koordinat
+					// Update the X0 coordinate of the next polygon
 					SurfacePolygonX0 = SurfacePolygonX0 + SurfacePolygonWidth;
 
-					// Indstil polygon farven til tilhørende pixel farve
+					// Set the polygon color to the associated pixel color
 					glColor3f(*(SurfacePolygonPixelData + j + 15) * ConversionFactor, *(SurfacePolygonPixelData + j + 16) * ConversionFactor, *(SurfacePolygonPixelData + j + 17) * ConversionFactor);
 
 					// Render surface plot Rektanglernes linjer
@@ -471,10 +471,10 @@ namespace OpenGLSurfacePlot {
 					glVertex3f(SurfacePolygonX0 + SurfacePolygonWidth, SurfacePolygonY0 + SurfacePolygonHeight, -PolygonZ2Pos6);
 					glVertex3f(SurfacePolygonX0, SurfacePolygonY0 + SurfacePolygonHeight, -PolygonZ3Pos6);
 
-					// Opdater næste polygons X0 koordinat
+					// Update the X0 coordinate of the next polygon
 					SurfacePolygonX0 = SurfacePolygonX0 + SurfacePolygonWidth;
 
-					// Indstil polygon farven til tilhørende pixel farve
+					// Set the polygon color to the associated pixel color
 					glColor3f(*(SurfacePolygonPixelData + j + 18) * ConversionFactor, *(SurfacePolygonPixelData + j + 19) * ConversionFactor, *(SurfacePolygonPixelData + j + 20) * ConversionFactor);
 
 					// Render surface plot Rektanglernes linjer
@@ -483,13 +483,13 @@ namespace OpenGLSurfacePlot {
 					glVertex3f(SurfacePolygonX0 + SurfacePolygonWidth, SurfacePolygonY0 + SurfacePolygonHeight, -PolygonZ2Pos7);
 					glVertex3f(SurfacePolygonX0, SurfacePolygonY0 + SurfacePolygonHeight, -PolygonZ3Pos7);
 
-					// Opdater næste polygons X0 koordinat
+					// Update the X0 coordinate of the next polygon
 					SurfacePolygonX0 = SurfacePolygonX0 + SurfacePolygonWidth;
 
-					// Renderer ikke sidste horizontale polygon - Data overflow grundet rendererings struktur
+					// Do not render the last horizontal polygon - data overflow due to the rendering structure
 					if (RenderedHorizontalPolygons < NmbOfHorizontalPolyGons - 8) {
 
-						// Indstil polygon farven til tilhørende pixel farve
+						// Set the polygon color to the associated pixel color
 						glColor3f(*(SurfacePolygonPixelData + j + 21) * ConversionFactor, *(SurfacePolygonPixelData + j + 22) * ConversionFactor, *(SurfacePolygonPixelData + j + 23) * ConversionFactor);
 
 						// Render surface plot Rektanglernes linjer
@@ -498,32 +498,32 @@ namespace OpenGLSurfacePlot {
 						glVertex3f(SurfacePolygonX0 + SurfacePolygonWidth, SurfacePolygonY0 + SurfacePolygonHeight, -PolygonZ2Pos8);
 						glVertex3f(SurfacePolygonX0, SurfacePolygonY0 + SurfacePolygonHeight, -PolygonZ3Pos8);
 
-						// Opdater næste polygons X0 koordinat
+						// Update the X0 coordinate of the next polygon
 						SurfacePolygonX0 = SurfacePolygonX0 + SurfacePolygonWidth;
 
 					}
 
 				}
 
-				// Inkrementer antallet af horisontale rendereret Polygoner
+				// Increment the number of horizontal polygons rendered
 				RenderedHorizontalPolygons = RenderedHorizontalPolygons + 8;
 
-				// Er antallet af rendereret horisontale Polygoner nåede 
+				// Has the number of horizontal polygons rendered been reached 
 				if (RenderedHorizontalPolygons >= NmbOfHorizontalPolyGons) {
 
-					// Inkrementer antallet af vertikale rendereret Polygoner rækker
+					// Increment the number of vertical polygon rows rendered
 					RenderedVerticalPolygons = RenderedVerticalPolygons + 1;
-					// Nulstil antallet af horisontale rendereret Polygoner
+					// Reset the number of horizontal polygons rendered
 					RenderedHorizontalPolygons = 0;
 
 					// Nulstil start polygonens X0 koordinat
 					SurfacePolygonX0 = -((GLfloat)TexturePanelWidth * 0.5);
-					// Opdater næste polygon rækkes Y0 koordinat
+					// Update the Y0 coordinate of the next polygon row
 					SurfacePolygonY0 = SurfacePolygonY0 + SurfacePolygonHeight;
 
 				}
 
-				// Opdater Polygonets X0/Y0 Z-koordinater (Sidste række kompenserede) - Loop Unroll Part 1
+				// Update the X0/Y0 Z coordinates of the polygon (last row compensated) - loop unroll part 1
 				PolygonZ0Pos1 = ((*(SurfaceZData + i + 0 + 8)) - MinZDataValue) * ZAxesScaleFactor;
 				PolygonZ1Pos1 = ((*(SurfaceZData + i + 1 + 8)) - MinZDataValue) * ZAxesScaleFactor;
 				PolygonZ1Pos2 = ((*(SurfaceZData + i + 2 + 8)) - MinZDataValue) * ZAxesScaleFactor;
@@ -533,7 +533,7 @@ namespace OpenGLSurfacePlot {
 				PolygonZ0Pos3 = PolygonZ1Pos2;
 				PolygonZ0Pos4 = PolygonZ1Pos3;
 
-				// Opdater Polygonets X0/Y0 Z-koordinater (Sidste række kompenserede) - Loop Unroll Part 2
+				// Update the X0/Y0 Z coordinates of the polygon (last row compensated) - loop unroll part 2
 				PolygonZ0Pos5 = ((*(SurfaceZData + i + 4 + 8)) - MinZDataValue) * ZAxesScaleFactor;
 				PolygonZ1Pos5 = ((*(SurfaceZData + i + 5 + 8)) - MinZDataValue) * ZAxesScaleFactor;
 				PolygonZ1Pos6 = ((*(SurfaceZData + i + 6 + 8)) - MinZDataValue) * ZAxesScaleFactor;
@@ -543,10 +543,10 @@ namespace OpenGLSurfacePlot {
 				PolygonZ0Pos7 = PolygonZ1Pos6;
 				PolygonZ0Pos8 = PolygonZ1Pos7;
 
-				// Hvis sidste vertikale polygon række er nåede
+				// If the last vertical polygon row has been reached
 				if (RenderedVerticalPolygons >= NmbOfVerticalPolyGons - 1) {
 	
-					// Opdater Polygonets X0/Y0 Z-koordinater (Sidste række kompenserede) - For første polygon - Loop Unroll Part 1
+					// Update the X0/Y0 Z coordinates of the polygon (last row compensated) - for the first polygon - loop unroll part 1
 					PolygonZ2Pos1 = PolygonZ1Pos1;
 					PolygonZ2Pos2 = PolygonZ1Pos2;
 					PolygonZ2Pos3 = PolygonZ1Pos3;
@@ -556,7 +556,7 @@ namespace OpenGLSurfacePlot {
 					PolygonZ3Pos3 = PolygonZ0Pos3;
 					PolygonZ3Pos4 = PolygonZ0Pos4;
 
-					// Opdater Polygonets X0/Y0 Z-koordinater (Sidste række kompenserede) - For første polygon - Loop Unroll Part 2
+					// Update the X0/Y0 Z coordinates of the polygon (last row compensated) - for the first polygon - loop unroll part 2
 					PolygonZ2Pos5 = PolygonZ1Pos5;
 					PolygonZ2Pos6 = PolygonZ1Pos6;
 					PolygonZ2Pos7 = PolygonZ1Pos7;
@@ -569,7 +569,7 @@ namespace OpenGLSurfacePlot {
 				}		
 				else {
 					
-					// Opdater Polygonets X0/Y0 Z-koordinater - For første polygon - Loop Unroll Part 1
+					// Update the X0/Y0 Z coordinates of the polygon - for the first polygon - loop unroll part 1
 					PolygonZ2Pos1 = ((*(SurfaceZData + i + 1 + 8 + NmbOfHorizontalPolyGons)) - MinZDataValue) * ZAxesScaleFactor;
 					PolygonZ2Pos2 = ((*(SurfaceZData + i + 2 + 8 + NmbOfHorizontalPolyGons)) - MinZDataValue) * ZAxesScaleFactor;
 					PolygonZ2Pos3 = ((*(SurfaceZData + i + 3 + 8 + NmbOfHorizontalPolyGons)) - MinZDataValue) * ZAxesScaleFactor;
@@ -579,7 +579,7 @@ namespace OpenGLSurfacePlot {
 					PolygonZ3Pos3 = PolygonZ2Pos2;
 					PolygonZ3Pos4 = PolygonZ2Pos3;
 
-					// Opdater Polygonets X0/Y0 Z-koordinater - For første polygon - Loop Unroll Part 2			
+					// Update the X0/Y0 Z coordinates of the polygon - for the first polygon - loop unroll part 2			
 					PolygonZ2Pos5 = ((*(SurfaceZData + i + 5 + 8 + NmbOfHorizontalPolyGons)) - MinZDataValue) * ZAxesScaleFactor;
 					PolygonZ2Pos6 = ((*(SurfaceZData + i + 6 + 8 + NmbOfHorizontalPolyGons)) - MinZDataValue) * ZAxesScaleFactor;
 					PolygonZ2Pos7 = ((*(SurfaceZData + i + 7 + 8 + NmbOfHorizontalPolyGons)) - MinZDataValue) * ZAxesScaleFactor;
@@ -602,9 +602,9 @@ namespace OpenGLSurfacePlot {
 
 		public: GLvoid RMH_OpenGL_ResetSurfacePlotView() {
 
-			// Routinen nustiller 3D surface plottets synsvinel til start positionen
+			// This routine resets the viewing angle of the 3D surface plot to the start position
 
-			// Nulstil surface plottets synsvinel tilbage til start positionen
+			// Reset the viewing angle of the surface plot back to the start position
 			SurfacePlotXTranstaledPos = _SurfacePlotStartDefault_XPos;
 			SurfacePlotYTranstaledPos = _SurfacePlotStartDefault_YPos;
 			SurfacePlotZTranstaledPos = _SurfacePlotStartDefault_ZPos;
@@ -616,33 +616,33 @@ namespace OpenGLSurfacePlot {
 
 		public: GLvoid RMH_OpenGL_UpdateSurfacePlotMaxZHeight(System::Object^ sender) {
 
-			// Routinen opdaterer surface plottets maksimale Z højde i pixels
+			// This routine updates the maximum Z height of the surface plot in pixels
 
 			// Cast Sender objekt som Forms Tool Strip objekt
 			System::Windows::Forms::ToolStripMenuItem^ TagSurfaceZHeight = (System::Windows::Forms::ToolStripMenuItem^)sender;
 
-			// Læs Sub Context Menu identifikations tag (Surface Plot Scale Faktor Værdi)
+			// Read the sub context menu identification tag (surface plot scale factor value)
 			GLfloat SurfaceZHeight = Convert::ToDouble(TagSurfaceZHeight->Tag);
 
-			// Opdater Surface plottets maksimale z pixel højde i procent
+			// Update the maximum Z pixel height of the surface plot in percent
 			SurfacePlotMaxZHeight = (GLfloat)SurfaceZHeight;
 
 		}
 		
 		public: GLvoid RMH_OpenGL_SetSurfacePlotPolygonMode(System::Object^ sender) {
 
-			// Routinen indstiller imellem de tilgængelige Polygon rendererings modes
+			// This routine switches between the available polygon rendering modes
 
 			// Cast Sender objekt som Forms Tool Strip objekt
 			System::Windows::Forms::ToolStripMenuItem^ TagSurfacePolygonMode = (System::Windows::Forms::ToolStripMenuItem^)sender;
 
-			// Læs Sub Context Menu identifikations tag 
+			// Read the sub context menu identification tag 
 			unsigned char SurfacePolygonMode = Convert::ToDouble(TagSurfacePolygonMode->Tag);
 
 			// Valg af Surface Plot polygon mode
 			switch (SurfacePolygonMode) {
 
-				// Indstil Surface Plottets polygon mode og størrelses parameter
+				// Set the polygon mode and size parameter of the surface plot
 				case 0: glPolygonMode(GL_FRONT_AND_BACK, GL_POINT); glPointSize(PointPolygonModePointSize);    break;
 				case 1: glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);  glLineWidth(LinePolygonModeLineSize);    break;
 				case 2: glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); glPointSize(0); glLineWidth(0); break;
@@ -653,53 +653,53 @@ namespace OpenGLSurfacePlot {
 
 		public: GLvoid RMH_OpenGL_SetSurfacePlotPolygonModePointSize(System::Object^ sender) {
 
-			// Routinen indstiller Punkt størrelsen i "GL_POINT" Polygon renderings Mode
+			// This routine sets the point size in the "GL_POINT" polygon rendering mode
 
 			// Cast Sender objekt som Forms Tool Strip objekt
 			System::Windows::Forms::ToolStripMenuItem^ TagPointPolygonMode = (System::Windows::Forms::ToolStripMenuItem^)sender;
 
-			// Læs Sub Context Menu identifikations tag 
+			// Read the sub context menu identification tag 
 			unsigned char PointPolygonModeSizeValue = Convert::ToDouble(TagPointPolygonMode->Tag);
 
-			// Opdater tilhørende private klasse variable
+			// Update the associated private class variables
 			PointPolygonModePointSize = PointPolygonModeSizeValue;
 
-			// Indstil punkt størrelsen for polygon modet
+			// Set the point size for the polygon mode
 			glPointSize(PointPolygonModePointSize);
 
 		}
 
 		public: GLvoid RMH_OpenGL_SetSurfacePlotPolygonModeLineSize(System::Object^ sender) {
 
-			// Routinen indstiller Linje størrelsen i "GL_LINE" Polygon renderings Mode
+			// This routine sets the line size in the "GL_LINE" polygon rendering mode
 
 			// Cast Sender objekt som Forms Tool Strip objekt
 			System::Windows::Forms::ToolStripMenuItem^ TagLinePolygonMode = (System::Windows::Forms::ToolStripMenuItem^)sender;
 
-			// Læs Sub Context Menu identifikations tag 
+			// Read the sub context menu identification tag 
 			unsigned char LinePolygonModeSizeValue = Convert::ToDouble(TagLinePolygonMode->Tag);
 
-			// Opdater tilhørende private klasse variable
+			// Update the associated private class variables
 			LinePolygonModeLineSize = LinePolygonModeSizeValue;
 
-			// Indstil linje størrelsen for polygon modet
+			// Set the line size for the polygon mode
 			glLineWidth(LinePolygonModeLineSize);
 
 		}
 
 		public: GLvoid RMH_OpenGL_RenderSurfacePlot(unsigned int SurfacePlotPanelWidth, unsigned int SurfacePlotPanelHeight, unsigned short *SurfacePolygonPixelData, unsigned int SurfaceDataWidth, unsigned int SurfaceDataHeight, unsigned short* SurfaceZData, GLfloat MaxZDataValue, GLfloat MinZDataValue) {
 
-			// Routinen Rendererer alle grafiske objekter som Histogrammet består af
+			// This routine renders all graphical objects that the surface plot consists of
 
-			// Læs Nuværende textur Panels pixel højde og bredde
+			// Read the current pixel height and width of the texture panel
 			CurrentTexturePanelWidth = (GLdouble)SurfacePlotPanelWidth;
 			CurrentTexturePanelHeight = (GLdouble)SurfacePlotPanelHeight;
 
-			// Læs Givet surface plot billede data pixel bredde og højde
+			// Read the given surface plot image data pixel width and height
 			ImageDataPixelWidth = SurfaceDataWidth;
 			ImageDataPixelHeight = SurfaceDataHeight;
 
-			// Udregn Pixel offsettet imellem textur området og tilhørende GUI panel
+			// Calculate the pixel offset between the texture area and the associated GUI panel
 			TextureToPanelWidthOffset = OpenGLWindowWidth - CurrentTexturePanelWidth;
 			TextureToPanelHeightOffset = OpenGLWindowHeight - CurrentTexturePanelHeight;
 
@@ -710,17 +710,17 @@ namespace OpenGLSurfacePlot {
 			// Udregn Surface Plottets Translated Y Position - Relativt til aspect ratio mm
 			TranstaledYSurfacePlotValue = (GLfloat)OpenGLWindowHeight - CurrentSurfacePlotYTranstaledPos - TextureToPanelHeightOffset - (SurfacePlotPanelHeight * 0.5);
 			
-			// Gør Tilhørende Render kontekst det nuværende render kontekst
+			// Make the associated render context the current render context
 			RMH_OpenGL_MakeRenderContextCurrent();
 			// Ryd Textur farve og bit buffere
 			RMH_OpenGL_ClearTextureBuffer();
 			// Opdater Textur Field Of View
 			RMH_OpenGL_UpdateTextureFieldOfView(CurrentTexturePanelWidth, CurrentTexturePanelHeight);
 
-			// Opdater Textur View port til midten af surface plottet
+			// Update the texture viewport to the center of the surface plot
 			glViewport(0, TextureToPanelHeightOffset, CurrentTexturePanelWidth, CurrentTexturePanelHeight);
 
-			// Læs Surface plottets nuværende positions parametere
+			// Read the current position parameters of the surface plot
 			CurrentSurfacePlotXTranstaledPos = SurfacePlotXTranstaledPos;
 			CurrentSurfacePlotYTranstaledPos =  SurfacePlotYTranstaledPos;
 			CurrentSurfacePlotZTranstaledPos = SurfacePlotZTranstaledPos;
@@ -732,9 +732,9 @@ namespace OpenGLSurfacePlot {
 			glTranslatef(((GLfloat)SurfacePlotPanelWidth * 0.5) + CurrentSurfacePlotXTranstaledPos, TranstaledYSurfacePlotValue, CurrentSurfacePlotZTranstaledPos);
 			glRotatef(180.0f + CurrentSurfacePlotYAngle, 1.0f, 0.0f, 0.0f);
 
-			// Roter om Surface plottets Z-Akse for Mus Bevægelse på X-aksen - venstra klip
+			// Rotate about the Z axis of the surface plot for mouse movement on the X axis - left click
 			glRotatef(-CurrentSurfacePlotXAngle, 0.0f, 0.0f, 1.0f);
-			// Roter om Surface plottets Y-Akse for Mus Bevægelse på X-aksen - højre klip
+			// Rotate about the Y axis of the surface plot for mouse movement on the X axis - right click
 			glRotatef(-CurrentSurfacePlotYXAngle, 0.0f, 1.0f, 0.0f);
 
 			// --------------------------------- Render Surface Plot ---------------------------------- //
@@ -744,7 +744,7 @@ namespace OpenGLSurfacePlot {
 
 			// ---------------------------------------------------------------------------------------- //
 
-			// Marker enden på en OpenGL rendererins sekvens
+			// Mark the end of an OpenGL rendering sequence
 			RMH_OpenGL_RenderingFinishedMark();
 
 		}
@@ -753,51 +753,51 @@ namespace OpenGLSurfacePlot {
 
 		private: GLvoid TexturePanel_MouseDown(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e) {
 
-			// Læs Mus Cursor Positionen
+			// Read the mouse cursor position
 			GLdouble MouseXPosition = RMH_OpenGL_TranslateOverlayPanelMouseXPosToTextureXPos(e);
 			GLdouble MouseYPosition = RMH_OpenGL_TranslateOverlayPanelMouseYPosToTextureYPos(e);
 
 			// Opdater overlay panel click flag
 			OverlayPanelIsClick = true;
 
-			// Nulstil Mus Knap Flag
+			// Reset the mouse button flag
 			RightMouseButtonClicked = false;
 			MouseWheelButtonClicked = false;
 			LeftMouseButtonClicked = false;
 
-			// Hvilken Mus Knap er blever trykket
+			// Which mouse button has been pressed
 			switch (e->Button) {
 
-				// Højre Musse knap
+				// Right mouse button
 				case System::Windows::Forms::MouseButtons::Right:
 
-					// Opdater Mus Knap Flag
+					// Update the mouse button flag
 					RightMouseButtonClicked = true;
 
-					// Læs mus cursorens positions offset
+					// Read the position offset of the mouse cursor
 					SurfacePlotYXTranstaledPosClickOffset = MouseXPosition - CurrentSurfacePlotYXAngle;
 
 				break;
 
-				// Mouse-Wheel knap
+				// Mouse wheel button
 				case System::Windows::Forms::MouseButtons::Middle:
 
-					// Opdater Mus Knap Flag
+					// Update the mouse button flag
 					MouseWheelButtonClicked = true;
 
-					// Læs mus cursorens positions offset
+					// Read the position offset of the mouse cursor
 					SurfacePlotXTranstaledPosClickOffset = MouseXPosition - CurrentSurfacePlotXTranstaledPos;
 					SurfacePlotYTranstaledPosClickOffset = MouseYPosition - CurrentSurfacePlotYTranstaledPos;
 
 				break;
 
-				// Venstre Musse knap
+				// Left mouse button
 				case System::Windows::Forms::MouseButtons::Left:
 
-					// Opdater Mus Knap Flag
+					// Update the mouse button flag
 					LeftMouseButtonClicked = true;
 
-					// Læs mus cursorens positions offset
+					// Read the position offset of the mouse cursor
 					SurfacePlotXAngleClickOffset = MouseXPosition - CurrentSurfacePlotXAngle;
 					SurfacePlotYAngleClickOffset = MouseYPosition - CurrentSurfacePlotYAngle;
 
@@ -816,26 +816,26 @@ namespace OpenGLSurfacePlot {
 
 		private: GLvoid TexturePanel_MouseMove(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e) {
 
-			// Læs Mus Cursor Positionen
+			// Read the mouse cursor position
 			GLdouble MouseXPosition = RMH_OpenGL_TranslateOverlayPanelMouseXPosToTextureXPos(e);
 			GLdouble MouseYPosition = RMH_OpenGL_TranslateOverlayPanelMouseYPosToTextureYPos(e);
 
-			// Hvis der endnu ikke er blevet klippet på panalet
+			// If the panel has not yet been clicked
 			if (OverlayPanelIsClick == false) {
 
-				// Fortsæt ikke
+				// Do not continue
 				return;
 
 			}
 
-			// Er Højre Musse knap trykket
+			// Is the right mouse button pressed
 			if (RightMouseButtonClicked == true) {
 
 				// Opdater Surface plottets Y transformerede positioner
 				SurfacePlotYXAngle = MouseXPosition - SurfacePlotYXTranstaledPosClickOffset;
 
 			}
-			// Er Mouse-Wheel knap trykket
+			// Is the mouse wheel button pressed
 			if (MouseWheelButtonClicked == true) {
 
 				// Opdater Surface plottets X of Y transformerede positioner
@@ -843,7 +843,7 @@ namespace OpenGLSurfacePlot {
 				SurfacePlotYTranstaledPos = MouseYPosition - SurfacePlotYTranstaledPosClickOffset;
 
 			}
-			// Er Venstre Musse knap trykket
+			// Is the left mouse button pressed
 			if (LeftMouseButtonClicked == true) {
 
 				// Opdater Surface plottets X of Y Vingel positioner
@@ -876,17 +876,17 @@ namespace OpenGLSurfacePlot {
 
 		private: GLvoid RMH_OpenGL_SwapOpenGLBuffers(GLvoid) {
 
-			// Routinen bytter rundt på Front/Backend bufferene
+			// This routine swaps the front/back buffers
 
-			// Byt Rundt på buffere
+			// Swap the buffers
 			SwapBuffers(m_hDC);
 
 		}
 
 		private: GLvoid RMH_OpenGL_RenderingFinishedMark(GLvoid) {
 
-			// Routinen markerer enden på en OpenGL rendererins sekvens
-			// Og skal altid kaldes til sidst, når alle objekt rendereringer er blevet eksikverede
+			// This routine marks the end of an OpenGL rendering sequence
+			// and must always be called last, when all object renderings have been executed
 
 			// Swap Textur buffere
 			RMH_OpenGL_SwapOpenGLBuffers();
@@ -897,11 +897,11 @@ namespace OpenGLSurfacePlot {
 
 		private:
 
-		// ------------- Yderligerer OpenGL Håndterings Og Opsætnings Routiner ------------- //
+		// ------------- Additional OpenGL Handling And Setup Routines ------------- //
 
 		~RMHOpenGLSurfacePlot(GLvoid) {
 
-			// Slet OpenGL Context
+			// Delete the OpenGL context
 			DeleteOpenGL();
 
 			// Destruer OpenGL Handler objekt
@@ -916,22 +916,22 @@ namespace OpenGLSurfacePlot {
 
 			// Routinen sletter alt OpenGL Context
 
-			// Lokale variabler
+			// Read the temporary array data and sort the kernel array
 			HGLRC hglrc;
 			HDC  hdc;
 
-			// Læs Thread Context
+			// Read the thread context
 			hglrc = wglGetCurrentContext();
-			// Læs tilhørende Device Context 
+			// Read the associated device context 
 			hdc = wglGetCurrentDC();
-			// Gør render contexten den nuværende context
+			// Make the render context the current context
 			wglMakeCurrent(NULL, NULL);
 			// Frigiv Device context
 			ReleaseDC(NULL, hdc);
-			// Slet Render Context
+			// Delete the render context
 			wglDeleteContext(hglrc);
 
-			// Nulstil Context variabler
+			// Reset the context variables
 			m_hglrc = nullptr;
 			m_hDC = nullptr;
 
@@ -941,97 +941,97 @@ namespace OpenGLSurfacePlot {
 
 			// Routinen konfigurerer Texturens Pixel format
 
-			// Formatet fortæller windows hvordan textur dataen skal oversættes
+			// The format tells Windows how the texture data should be interpreted
 			PIXELFORMATDESCRIPTOR pfd = {
 
-				sizeof(PIXELFORMATDESCRIPTOR),				// Størrelse af denne pixel format beskrivelse
+				sizeof(PIXELFORMATDESCRIPTOR),				// Size of this pixel format descriptor
 				1,											// Formatets Versions Nummer 
-				PFD_DRAW_TO_WINDOW |						// Formatet skal supporterer Windows
-				PFD_SUPPORT_OPENGL |						// Formatet skal supporterer OpenGL
+				PFD_DRAW_TO_WINDOW |						// The format must support Windows
+				PFD_SUPPORT_OPENGL |						// The format must support OpenGL
 				PFD_DOUBLEBUFFER,							// Formatet skal supporterer "Double Buffering"
-				PFD_TYPE_RGBA,								// Anmod om et RGBa Format
-				16,										    // Vælg "Color Depth" (16Bit)
-				0, 0, 0, 0, 0, 0,							// Farve Bits skal Ignoreres
-				0,											// Ingen "Alpha Buffer"
-				0,											// Shift Bit skal Ignoreres
-				0,											// Ingen "Accumulation Buffer"
-				0, 0, 0, 0,									// Accumulator Bits skal Ignoreres
+				PFD_TYPE_RGBA,								// Request an RGBA format
+				16,										    // Select the "color depth" (16-bit)
+				0, 0, 0, 0, 0, 0,							// Color bits are to be ignored
+				0,											// No "alpha buffer"
+				0,											// Shift bit is to be ignored
+				0,											// No "accumulation buffer"
+				0, 0, 0, 0,									// Accumulator bits are to be ignored
 				16,											// 16Bit Z-Buffer (Buffer dybde)  
-				0,											// Ingen "Stencil Buffer"
-				0,											// Ingen "Auxiliary Buffer"
-				PFD_MAIN_PLANE,								// Sæt som det primære "Drawing" lag
+				0,											// No "stencil buffer"
+				0,											// No "auxiliary buffer"
+				PFD_MAIN_PLANE,								// Set as the main "drawing" layer
 				0,											// Reserved
-				0, 0, 0										// Lag "Masks" skal Ignoreres
+				0, 0, 0										// Layer "masks" are to be ignored
 
 			};
 
-			// Vælg pixel formatet til control handler
+			// Select the pixel format for the control handler
 			if ((iPixelFormat = ChoosePixelFormat(hdc, &pfd)) == 0) {
-				// Skriv fejl meddelse - hvis fejl er registreret
+				// Write error message - if an error is registered
 				MessageBox::Show("ChoosePixelFormat Failed");
-				// Retuner Fejl
+				// Return error
 				return false;
 			}
 
-			// Sæt pixel formatet til control handler 
+			// Set the pixel format for the control handler 
 			if (SetPixelFormat(hdc, iPixelFormat, &pfd) == FALSE) {
-				// Skriv fejl meddelse - hvis fejl er registreret
+				// Write error message - if an error is registered
 				MessageBox::Show("SetPixelFormat Failed");
-				// Retuner Fejl
+				// Return error
 				return false;
 			}
 
 			if ((m_hglrc = wglCreateContext(hdc)) == NULL) {
-				// Skriv fejl meddelse - hvis fejl er registreret
+				// Write error message - if an error is registered
 				MessageBox::Show("wglCreateContext Failed");
-				// Retuner Fejl
+				// Return error
 				return false;
 			}
 
 			if ((wglMakeCurrent(hdc, m_hglrc)) == NULL) {
-				// Skriv fejl meddelse - hvis fejl er registreret
+				// Write error message - if an error is registered
 				MessageBox::Show("wglMakeCurrent Failed");
-				// Retuner Fejl
+				// Return error
 				return false;
 			}
 
-			// Retuner Status OK
+			// Return status OK
 			return true;
 		}
 
 		private: GLvoid RMH_OpenGL_ResizeOpenGLWinformsScene(unsigned int TotalTextureWidth, unsigned int TotalTextureHeight) {
 
-			// Formater Størrelsen og Initialisere OpenGL Vinduet i Winforms
+			// Format the size and initialize the OpenGL window in WinForms
 
-			// Forhindre division med '0'
+			// Prevent division by '0'
 			if (TotalTextureHeight == 0) {
-				// Piel højden er altid mindst '1'
+				// The pixel height is always at least '1'
 				TotalTextureHeight = 1;
 			}
 
-			// Nulstil nuværende "Viewport"
+			// Reset the current "viewport"
 			glViewport(0, 0, TotalTextureWidth, TotalTextureHeight);
-			// Vælg Projektions matricen
+			// Select the projection matrix
 			glMatrixMode(GL_PROJECTION);
-			// Nulstil Projektions matricen
+			// Reset the projection matrix
 			glLoadIdentity();
 			// Udregn vinduets aspect ratio
 			gluPerspective(60.0f, (GLfloat)TotalTextureWidth / (GLfloat)TotalTextureHeight, 0.01f, 10000.0f);
-			// Vælg "Model View" matricen
+			// Select the "model view" matrix
 			glMatrixMode(GL_MODELVIEW);
-			// Nulstil "Model View" matricen
+			// Reset the "model view" matrix
 			glLoadIdentity();
 
 		}
 
 		private: GLvoid RMH_OpenGL_BuildFont(GLvoid) {
 
-			// Routinen Generer FONT til display i OpenGL Textur
+			// This routine generates the FONT for display in the OpenGL texture
 
-			// Lokale variabler
+			// Read the temporary array data and sort the kernel array
 			HFONT TextureFont;
 
-			// Opdater Font Liste
+			// Update the font list
 			BaseFont = glGenLists(96);
 
 			// Generer Strutureret Font Objekt
@@ -1051,7 +1051,7 @@ namespace OpenGLSurfacePlot {
 				FF_ROMAN | DEFAULT_PITCH,		// nPitchAndFamily
 				L"Arial");				        // lpszFacename
 
-			// Indstil FONT Til OpenGL Objekt Struktur
+			// Set the FONT to the OpenGL object structure
 			SelectObject(m_hDC, TextureFont);
 			// Generer Bitmap Display FONT Liste
 			wglUseFontBitmaps(m_hDC, 32, 96, BaseFont);
@@ -1062,13 +1062,13 @@ namespace OpenGLSurfacePlot {
 
 			// Routinen Initialisere OpenGL I Winforms C++/CLR
 
-			// Aktiver "Flat Shader" Mode
+			// Enable "flat shader" mode
 			glShadeModel(GL_SMOOTH);
 			// Default Baggrund farve
 			glClearColor(0.13725f, 0.13725f, 0.13725f, 1.0f);
-			// Opsætning af "Depth Buffer"
+			// Set up the "depth buffer"
 			glClearDepth(1.0f);
-			// Aktiver OpenGL "Depth Testing"
+			// Enable OpenGL "depth testing"
 			glEnable(GL_DEPTH_TEST);
 			// For perspektiv - Fortag "Very Nice" udregniner
 			glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
@@ -1076,7 +1076,7 @@ namespace OpenGLSurfacePlot {
 			// Generer FONT Objekt
 			RMH_OpenGL_BuildFont();
 
-			// Retuner "OpenGl Opsætning" Færdig flag
+			// Return the "OpenGL setup" finished flag
 			return true;
 
 		}

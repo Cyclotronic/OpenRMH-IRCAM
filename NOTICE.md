@@ -37,6 +37,14 @@ Git history is the detailed record (`git log`, `git blame`).
 | DirectShow camera layer and the other files noted below | Released by Rune Mark Hansen as part of his source release. The files carry no other author or licence notice. |
 | Libraries downloaded by `scripts/fetch-deps.ps1` (not in this repository) | Their own authors and licences - see the table further below. |
 
+## Comment translation
+
+The source comments were originally written in Danish. They were translated to English (about 5,500 comment lines in 53
+files) without changing any code: for every file, the source with comments stripped is identical before and after, line
+counts are unchanged, and each file keeps its original text encoding and line endings. The translation is a plain reading of
+the author's comments, not a rewrite; comments that were commented-out code were left as they were. Translation errors are
+possible - please open an issue or a pull request. The original Danish text remains in git history.
+
 ## Files whose exact authorship is not stated in the files
 
 Everything below was released by the author with the rest of the source, and is treated as part of that release. The files

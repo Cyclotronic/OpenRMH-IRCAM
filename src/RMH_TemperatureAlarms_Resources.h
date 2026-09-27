@@ -13,12 +13,12 @@
 #ifndef RMH_TemperatureAlarms_Resources_H 
 #define RMH_TemperatureAlarms_Resources_H
 
-// --------------------- Tilgængelige Temperatur Alarmers Resource Data --------------------- //
+// --------------------- Available Temperature Alarm Resource Data --------------------- //
 
-// Maksimale antal konfigurerbare Temperatur Alarmer
+// Maximum number of configurable temperature alarms
 #define _MaxNumberOfConfigurableTempAlarms         5
 
-// Temperatur Alarm Nummer Macroer
+// Temperature alarm number macros
 #define _TemperatureAlarm_1                        0
 #define _TemperatureAlarm_2                        1
 #define _TemperatureAlarm_3                        2
@@ -86,12 +86,12 @@
 #define _TempAlarmTriggerAction_SaveSnapshot            5 
 #define _TempAlarmTriggerAction_SaveFullFrameTempData   6
              
-// Temperatur Alarm Type Navne Strings ->
+// Temperature alarm type name strings ->
 static std::vector<std::string> TempAlarmsConfigTypeStrings = { "Above",
 															    "Below",
 															    "Window" };
 
-// Temperatur Alarm Trigger aktion Navne Strings ->
+// Temperature alarm trigger action name strings ->
 static std::vector<std::string> TempAlarmsTriggerActionStrings = { "None",
 																   "Start Data Logging",
 														           "Stop Data Logging", 
@@ -100,7 +100,7 @@ static std::vector<std::string> TempAlarmsTriggerActionStrings = { "None",
 	                                                               "Save Snapshot", 
 															       "Save Frame Temp Data"};
 
-// Tilgængelige Temperatur Alarm Data Sources Navne Strings ->
+// Available temperature alarm data source name strings ->
 static std::vector<std::string> TempAlarmsDataSourcesStrings = { "Maximum Temp",
 																 "Minimum Temp", 
 																 "Average Temp", 

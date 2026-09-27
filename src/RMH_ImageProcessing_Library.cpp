@@ -7,35 +7,35 @@
  *
  */
 
-// Inkluderede Blblioteker
+// Included libraries
 #include "GlobalObjectsAndVariables.h"
 #include "RMH_ImageProcessing_Library.h"
 #include "RMH_MathConversions_Library.h"
 #include "RMH_ThermalCameraSupport_Library.h"
 #include "RMH_SupportedIRCameras_Resources.h"
 
-// Tilhørende namespaces for bibliotek
+// Namespaces for the associated library
 using namespace System;
 using namespace System::Windows::Forms;
 using namespace System::Drawing;
 using namespace System::Diagnostics;
 using namespace std;
 
-// ------------------------------ Billede Udregnings Routiner ------------------------------- //
+// ------------------------------ Image Calculation Routines ------------------------------- //
 
 double RMH_ImageCalculations_CalMeanOfImage16Bit(unsigned short* ImageData, unsigned int FrameWidth, unsigned int FrameHeight) {
 
-	// Routinen udregner middel værdien for et givet billede data array.
-	// Givet input billede array data skal være 16Bit eller lavere.
+	// This routine calculates the mean value of a given image data array.
+	// The given input image array data must be 16-bit or lower.
 
-	// Lokale variabler
+	// Local variables
 	double PixelValMean = 0.0;
 	unsigned long long int PixelValSum = 0;
 
-	// Udregn pixel summen for alle Y positioner
+	// Sum the pixels over all Y positions
 	for (unsigned int Y = 0; Y < FrameHeight; Y++) {
 
-		// Udregn pixel summen for alle X positioner
+		// Sum the pixels over all X positions
 		for (unsigned int X = 0; X < FrameWidth; X++) {
 
 			// Udregn samlede pixel data Sum
@@ -44,10 +44,10 @@ double RMH_ImageCalculations_CalMeanOfImage16Bit(unsigned short* ImageData, unsi
 		}
 	}
 
-	// Udregn Pixel datens middel værdi fra pixel sum
+	// Calculate the mean value of the pixel data from the pixel sum
 	PixelValMean = (double)PixelValSum / ((double)FrameWidth * (double)FrameHeight);
 
-	// Retuner udregnede Pixel data Middel værdi
+	// Return the calculated pixel data mean value
 	return PixelValMean;
 
 }
@@ -56,20 +56,20 @@ double RMH_ImageCalculations_CalMeanOfImage16Bit(unsigned short* ImageData, unsi
 
 void RMH_ImageNonUniformityCorrection_ConvertBaselineImageTo16Bit(unsigned char* BaselineImageData, unsigned short* OutputBaseline16Bit, unsigned int FrameWidth, unsigned int FrameHeight) {
 
-	// Routinen konverterer et givet Baseline billede data array til et 16Bit Baseline array
+	// This routine converts a given baseline image data array to a 16-bit baseline array
 
-	// Lokale variabler
+	// Local variables
 	register unsigned short Pixel16BitValue[3];
 
-	// Loop igennem alle baseline bånd pixels
+	// Loop through all baseline band pixels
 	for (unsigned int i = 0, j = 0; i < (FrameWidth * FrameHeight); i += 3, j += 6) {
 
-		// Læs og konverter Baseline billede bånds data til 16Bit Pixel data 
+		// Read the baseline image band data and convert it to 16-bit pixel data 
 		Pixel16BitValue[0] = ((unsigned short)(*(BaselineImageData + (j + 1))) << 8) | ((unsigned short)*(BaselineImageData + (j + 0)));
 		Pixel16BitValue[1] = ((unsigned short)(*(BaselineImageData + (j + 3))) << 8) | ((unsigned short)*(BaselineImageData + (j + 2)));
 		Pixel16BitValue[2] = ((unsigned short)(*(BaselineImageData + (j + 5))) << 8) | ((unsigned short)*(BaselineImageData + (j + 4)));
 
-		// Skriv konverterede pixel værdier til pointer array
+		// Write the converted pixel values to the pointer array
 		*(OutputBaseline16Bit + (i + 0)) = Pixel16BitValue[0];
 		*(OutputBaseline16Bit + (i + 1)) = Pixel16BitValue[1];
 		*(OutputBaseline16Bit + (i + 2)) = Pixel16BitValue[2];
@@ -80,38 +80,38 @@ void RMH_ImageNonUniformityCorrection_ConvertBaselineImageTo16Bit(unsigned char*
 
 double RMH_ImageNonUniformityCorrection_CalNonUniformityMap(unsigned short* BaselineImageData, unsigned int FrameWidth, unsigned int FrameHeight, unsigned int FrameMetaDataSize, double* OutputNonUniformityMap) {
 
-	// Routinen udregner Non-Uniformity Mapen af et givet CMOS baseline billede data array.
-	// Routinen retunerer CMOS baseline billedet Middel værdi, samt Non-Uniformity mappingen som et double array.
+	// This routine calculates the non-uniformity map of a given CMOS baseline image data array.
+	// The routine returns the mean value of the CMOS baseline image, together with the non-uniformity mapping as a double array.
 
-	// Lokale variabler
+	// Local variables
 	double BaselineImageMeanValue = 0.0;
 
-	// Udregn Middel værdien af CMOS Baseline målingen - Uden meta data
+	// Calculate the mean value of the CMOS baseline measurement - without metadata
 	BaselineImageMeanValue = RMH_ImageCalculations_CalMeanOfImage16Bit(BaselineImageData, FrameWidth, FrameHeight - FrameMetaDataSize);
 
-	// Træk Middel værdien af CMOS Baseline målingen fra selve Baseline pixel værdierne - Udregn Non-Uniformity mappingen
+	// Subtract the mean value of the CMOS baseline measurement from the baseline pixel values - calculates the non-uniformity mapping
 	for (unsigned int i = 0; i < (FrameWidth * (FrameHeight - FrameMetaDataSize)); i += 3) {
 
-		// Udregn Non-Uniformity mappingen for Baseline billede dataen
+		// Calculate the non-uniformity mapping for the baseline image data
 		OutputNonUniformityMap[i + 0] = (double)(*(BaselineImageData + (i + 0))) - BaselineImageMeanValue;
 		OutputNonUniformityMap[i + 1] = (double)(*(BaselineImageData + (i + 1))) - BaselineImageMeanValue;
 		OutputNonUniformityMap[i + 2] = (double)(*(BaselineImageData + (i + 2))) - BaselineImageMeanValue;
 
 	}
 
-	// Retuner Middel værdien af CMOS Baseline målingen
+	// Return the mean value of the CMOS baseline measurement
 	return BaselineImageMeanValue;
 
 }
 
 void RMH_ImageNonUniformityCorrection_ZeroNonUniformityMapArrayData(double* OutputNonUniformityMap, unsigned int FrameWidth, unsigned int FrameHeight) {
 
-	// Routinen nulstiller alle Non-Uniformity Map Arrayets data positioner til '0'
+	// This routine resets all data positions of the non-uniformity map array to '0'
 
 	// Loop igennem all Non-Uniformity Map Arrayets data positioner
 	for (unsigned int i = 0; i < FrameWidth * FrameHeight; i += 8) {
 
-		// Nulstil array index data til '0'
+		// Reset the array index data to '0'
 		*(OutputNonUniformityMap + (i + 0)) = 0.0;
 		*(OutputNonUniformityMap + (i + 1)) = 0.0;
 		*(OutputNonUniformityMap + (i + 2)) = 0.0;
@@ -125,23 +125,23 @@ void RMH_ImageNonUniformityCorrection_ZeroNonUniformityMapArrayData(double* Outp
 
 }
 
-// ----------------------------- Billede Konverterings Routiner ----------------------------- //
+// ----------------------------- Image Conversion Routines ----------------------------- //
 
 void RMH_ImageConversion_ArrangeYUY2ToRGB24(unsigned char* YUY2in, unsigned char* RGBout, unsigned int FrameWidth, unsigned int FrameHeight) {
 
-	// Routinen Omarrangere et input billede frame array på formatet YUY2
-	// Til et billede frame array på formatet RGB24.
+	// This routine rearranges an input image frame array in YUY2 format
+	// into an image frame array in RGB24 format.
 
 	// Omarrangere YUY2 Pixels til RGB24 Format
 	for (int i = 0, j = 0; i < (FrameWidth * FrameHeight * 3); i += 6, j += 4) {
 
-		// Skriv Omarrangerede Data til pointer
-		*(RGBout + (i + 0)) = *(YUY2in + (j + 1)); // Rød  - U0
-		*(RGBout + (i + 1)) = *(YUY2in + (j + 1)); // Grøn - U0
-		*(RGBout + (i + 2)) = *(YUY2in + (j + 0)); // Blå  - Y0
-		*(RGBout + (i + 3)) = *(YUY2in + (j + 3)); // Rød  - U1
-		*(RGBout + (i + 4)) = *(YUY2in + (j + 3)); // Grøn - U2
-		*(RGBout + (i + 5)) = *(YUY2in + (j + 2)); // Rød  - Y1
+		// Write the rearranged data to the pointer
+		*(RGBout + (i + 0)) = *(YUY2in + (j + 1)); // Red   - U0
+		*(RGBout + (i + 1)) = *(YUY2in + (j + 1)); // Green - U0
+		*(RGBout + (i + 2)) = *(YUY2in + (j + 0)); // Blue  - Y0
+		*(RGBout + (i + 3)) = *(YUY2in + (j + 3)); // Red   - U1
+		*(RGBout + (i + 4)) = *(YUY2in + (j + 3)); // Green - U2
+		*(RGBout + (i + 5)) = *(YUY2in + (j + 2)); // Red   - Y1
 
 	}
 
@@ -149,21 +149,21 @@ void RMH_ImageConversion_ArrangeYUY2ToRGB24(unsigned char* YUY2in, unsigned char
 
 void RMH_ImageConversion_ConvertYUY2ToGrayscaleRGB24(unsigned char* YUY2in, unsigned char* GrayscaleOut, unsigned int FrameWidth, unsigned int FrameHeight) {
 
-	// Routinen konverterer 24Bit YUY2 til 24Bit Grayscale
-	// Og retunerer konverterede grayscale array til argument pointer
+	// This routine converts 24-bit YUY2 to 24-bit grayscale
+	// and returns the converted grayscale array through the argument pointer
 
-	// Lokale variabler
+	// Local variables
 	unsigned char PixelValue = 0;
 
-	// Loop igennem alle YUY2 bånd pixels
+	// Loop through all YUY2 band pixels
 	for (int i = 0, j = 0; i < (FrameWidth * FrameHeight * 3); i += 3, j += 2) {
 
-		// Udregn fælles RGB24 Grayscale Pixel værdi
+		// Calculate the common RGB24 grayscale pixel value
 		PixelValue = (unsigned char)RMH_Math_Round((0.2989 * (double)(*(YUY2in + (j + 0))))) +
 				  	 (unsigned char)RMH_Math_Round((0.5870 * (double)(*(YUY2in + (j + 1))))) +
 					 (unsigned char)RMH_Math_Round((0.1140 * (double)(*(YUY2in + (j + 1)))));
 
-		// Skriv Grayscale pixel værdi til pointer array
+		// Write the grayscale pixel value to the pointer array
 		*(GrayscaleOut + (i + 0)) = PixelValue;
 		*(GrayscaleOut + (i + 1)) = PixelValue;
 		*(GrayscaleOut + (i + 2)) = PixelValue;
@@ -174,21 +174,21 @@ void RMH_ImageConversion_ConvertYUY2ToGrayscaleRGB24(unsigned char* YUY2in, unsi
 
 void RMH_ImageConversion_ConvertYUY2ToGrayscaleRGB8(unsigned char* YUY2in, unsigned char* GrayscaleOut, unsigned int FrameWidth, unsigned int FrameHeight) {
 
-	// Routinen konverterer 24Bit YUY2 til 8Bit Grayscale
-	// Og retunerer konverterede grayscale array til argument pointer
+	// This routine converts 24-bit YUY2 to 8-bit grayscale
+	// and returns the converted grayscale array through the argument pointer
 
-	// Lokale variabler
+	// Local variables
 	unsigned char PixelValue = 0;
 
-	// Loop igennem alle YUY2 bånd pixels
+	// Loop through all YUY2 band pixels
 	for (int i = 0, j = 0; i < (FrameWidth * FrameHeight); i += 1, j += 2) {
 
-		// Udregn fælles RGB24 Grayscale Pixel værdi
+		// Calculate the common RGB24 grayscale pixel value
 		PixelValue = (unsigned char)RMH_Math_Round((0.2989 * (double)(*(YUY2in + (j + 0))))) +
 				 	 (unsigned char)RMH_Math_Round((0.5870 * (double)(*(YUY2in + (j + 1))))) +
 					 (unsigned char)RMH_Math_Round((0.1140 * (double)(*(YUY2in + (j + 1)))));
 
-		// Skriv Grayscale pixel værdi til pointer array
+		// Write the grayscale pixel value to the pointer array
 		*(GrayscaleOut + (i + 0)) = PixelValue;
 
 	}
@@ -197,21 +197,21 @@ void RMH_ImageConversion_ConvertYUY2ToGrayscaleRGB8(unsigned char* YUY2in, unsig
 
 void RMH_ImageConversion_ConvertRGB24ToGrayscaleRGB24(unsigned char *RGBin, unsigned char *GrayscaleOut, unsigned int FrameWidth, unsigned int FrameHeight) {
 
-	// Routinen konverterer 24Bit RGB til 24Bit Grayscale
-	// Og retunerer konverterede grayscale array til argument pointer
+	// This routine converts 24-bit RGB to 24-bit grayscale
+	// and returns the converted grayscale array through the argument pointer
 
-	// Lokale variabler
+	// Local variables
 	unsigned char PixelValue = 0;
 
-	// Loop igennem alle RGB bånd pixels
+	// Loop through all RGB band pixels
 	for (int i = 0, j = 0; i < (FrameWidth * FrameHeight * 3); i += 3, j += 3) {
 
-		// Udregn fælles RGB24 Grayscale Pixel værdi
+		// Calculate the common RGB24 grayscale pixel value
 		PixelValue = (unsigned char)RMH_Math_Round((0.2989 * (double)(*(RGBin + (j + 2))))) +
 					 (unsigned char)RMH_Math_Round((0.5870 * (double)(*(RGBin + (j + 1))))) +
 					 (unsigned char)RMH_Math_Round((0.1140 * (double)(*(RGBin + (j + 0)))));
 
-		// Skriv Grayscale pixel værdi til pointer array
+		// Write the grayscale pixel value to the pointer array
 		*(GrayscaleOut + (i + 0)) = PixelValue;
 		*(GrayscaleOut + (i + 1)) = PixelValue;
 		*(GrayscaleOut + (i + 2)) = PixelValue;
@@ -224,17 +224,17 @@ void RMH_ImageConversion_ConvertRGB24ToGrayscaleRGB24(unsigned char *RGBin, unsi
 
 void RMH_ImageProcessing_ApplyColorPaletteToGrayscaleImageData(unsigned short* Data, unsigned int FrameWidth, unsigned int FrameHeight, unsigned short ColorPalette[3][16384], bool InvertColorPalette, unsigned short* MappedData) {
 
-	// Routinen tilføjer en given Color Palette til input billede dataen.
-	// Dette gøres ved at benytte Color Palette arrayet som look-up tabel for billede dataen
-	// Routinen retunerer Color mapped RGB24 billede data
+	// This routine applies a given color palette to the input image data.
+	// This is done by using the color palette array as a look-up table for the image data
+	// The routine returns the color-mapped RGB24 image data
 
-	// Loop igennem grayscale billede data
+	// Loop through the grayscale image data
 	for (unsigned int i = 0, j = 0; i < (FrameWidth * FrameHeight * 3); i += 9, j += 3) {
 
-		// Skal color paletten inverteres
+		// Should the color palette be inverted
 		if (InvertColorPalette == true) {
 
-			// Formater billede data til color palette format - inverterede color palette - 3 Del-Bånd af gangen (Hurtigst -> "Loop Unrolling")
+			// Format the image data to the color palette format - inverted color palette - 3 sub-bands at a time (fastest -> "loop unrolling")
 			*(MappedData + (i + 0)) = ColorPalette[0][_ImageProcessing_ImageResolution_14Bit - (unsigned short)*(Data + j)];
 			*(MappedData + (i + 1)) = ColorPalette[1][_ImageProcessing_ImageResolution_14Bit - (unsigned short)*(Data + j)];
 			*(MappedData + (i + 2)) = ColorPalette[2][_ImageProcessing_ImageResolution_14Bit - (unsigned short)*(Data + j)];
@@ -248,7 +248,7 @@ void RMH_ImageProcessing_ApplyColorPaletteToGrayscaleImageData(unsigned short* D
 		}
 		else {
 
-			// Formater billede data til color palette format - Normal color palette - 3 Del-Bånd af gangen (Hurtigst -> "Loop Unrolling")
+			// Format the image data to the color palette format - normal color palette - 3 sub-bands at a time (fastest -> "loop unrolling")
 			*(MappedData + (i + 0)) = ColorPalette[0][(unsigned short)*(Data + j)];
 			*(MappedData + (i + 1)) = ColorPalette[1][(unsigned short)*(Data + j)];
 			*(MappedData + (i + 2)) = ColorPalette[2][(unsigned short)*(Data + j)];
@@ -267,29 +267,29 @@ void RMH_ImageProcessing_ApplyColorPaletteToGrayscaleImageData(unsigned short* D
 
 void RMH_ImageProcessing_ApplyOverlayedPaletteToGrayScaleImageData(unsigned short* Data, unsigned short* MappedData, unsigned int FrameWidth, unsigned int FrameHeight, unsigned short BackGroundColorPalette[3][16384], unsigned short OverlayedColorPalette[3][16384], bool InvertBackGroundColorPalette, bool InvertOverlayedColorPalette, unsigned int X0Pos, unsigned int Y0Pos, unsigned int OCPWidth, unsigned int OCPHeight) {
 
-	// Routinen tilføjer en given Baggrunds Color Palette til det givet input billede data.
-	// Samt tilfæjer en ekstra overlejret Color Palette Oven På denne.
-	// Dette giver Mulighed for at vise billede dataen med flere forskellige Color Palettes på samme tid.
+	// This routine applies a given background color palette to the given input image data,
+	// and adds an extra overlaid color palette on top of it.
+	// This makes it possible to show the image data with several different color palettes at the same time.
 
-	// Lokale variabler
+	// Local variables
 	unsigned int DataFrameRowCount = 0;
 	unsigned int OverlayedPaletteStartIndex = 0;
 	unsigned int OverlayedPaletteStopIndex = 0;
 
-	// Udregn Start og Stop index værdierne for den overlejret Palette
+	// Calculate the start and stop index values for the overlaid palette
 	OverlayedPaletteStartIndex = (Y0Pos * FrameWidth) + X0Pos;
 	OverlayedPaletteStopIndex = (OverlayedPaletteStartIndex + OCPWidth) - 1;
 
-	// Loop igennem grayscale billede data
+	// Loop through the grayscale image data
 	for (unsigned int i = 0, j = 0; i < (FrameWidth * FrameHeight * 3); i += 3, j += 1) {
 
-		// Kontroller om nuværende index er indenfor "Overlayed" Color Palette Index Række Området
+		// Check whether the current index is within the index range of the overlaid color palette
 		if ((j >= OverlayedPaletteStartIndex && j <= OverlayedPaletteStopIndex) && DataFrameRowCount < OCPHeight) {
 
-			// Skal den overlejede color palette inverteres
+			// Should the overlaid color palette be inverted
 			if (InvertOverlayedColorPalette == true) {
 
-				// Formater billede data med Overlayed color palette data - inverterede
+				// Format the image data with the overlaid color palette data - inverted
 				*(MappedData + (i + 0)) = OverlayedColorPalette[0][_ImageProcessing_ImageResolution_14Bit - *(Data + (j + 0))];
 				*(MappedData + (i + 1)) = OverlayedColorPalette[1][_ImageProcessing_ImageResolution_14Bit - *(Data + (j + 0))];
 				*(MappedData + (i + 2)) = OverlayedColorPalette[2][_ImageProcessing_ImageResolution_14Bit - *(Data + (j + 0))];
@@ -297,20 +297,20 @@ void RMH_ImageProcessing_ApplyOverlayedPaletteToGrayScaleImageData(unsigned shor
 			}
 			else {
 
-				// Formater billede data med Overlayed color palette data 
+				// Format the image data with the overlaid color palette data 
 				*(MappedData + (i + 0)) = OverlayedColorPalette[0][*(Data + (j + 0))];
 				*(MappedData + (i + 1)) = OverlayedColorPalette[1][*(Data + (j + 0))];
 				*(MappedData + (i + 2)) = OverlayedColorPalette[2][*(Data + (j + 0))];
 
 			}
 
-			// Er Stop index værdien for den overlejret Palette nåede - Per Row
+			// Has the stop index value of the overlaid palette been reached - per row
 			if (j >= OverlayedPaletteStopIndex) {
 
-				// Inkrementer Frame Data Row Tæller variabel
+				// Increment the frame data row counter variable
 				DataFrameRowCount = DataFrameRowCount + 1;
 
-				// Inkrementer til næste overlejret Palette data række
+				// Increment to the next overlaid palette data row
 				OverlayedPaletteStartIndex = OverlayedPaletteStartIndex + FrameWidth;
 				OverlayedPaletteStopIndex = OverlayedPaletteStopIndex + FrameWidth;
 
@@ -319,10 +319,10 @@ void RMH_ImageProcessing_ApplyOverlayedPaletteToGrayScaleImageData(unsigned shor
 		}
 		else {
 
-			// Skal baggrunds paletten inverteres
+			// Should the background palette be inverted
 			if (InvertBackGroundColorPalette == true) {
 
-				// Formater billede data med Baggrund color palette data - inverterede
+				// Format the image data with the background color palette data - inverted
 				*(MappedData + (i + 0)) = BackGroundColorPalette[0][_ImageProcessing_ImageResolution_14Bit - *(Data + (j + 0))];
 				*(MappedData + (i + 1)) = BackGroundColorPalette[1][_ImageProcessing_ImageResolution_14Bit - *(Data + (j + 0))];
 				*(MappedData + (i + 2)) = BackGroundColorPalette[2][_ImageProcessing_ImageResolution_14Bit - *(Data + (j + 0))];
@@ -330,7 +330,7 @@ void RMH_ImageProcessing_ApplyOverlayedPaletteToGrayScaleImageData(unsigned shor
 			}
 			else {
 
-				// Formater billede data med Baggrund color palette data 
+				// Format the image data with the background color palette data 
 				*(MappedData + (i + 0)) = BackGroundColorPalette[0][*(Data + (j + 0))];
 				*(MappedData + (i + 1)) = BackGroundColorPalette[1][*(Data + (j + 0))];
 				*(MappedData + (i + 2)) = BackGroundColorPalette[2][*(Data + (j + 0))];
@@ -345,30 +345,30 @@ void RMH_ImageProcessing_ApplyOverlayedPaletteToGrayScaleImageData(unsigned shor
 
 void RMH_ImageProcessing_DisplayColorPaletteInPictureBox(unsigned char ColorPalette[3][256], System::Windows::Forms::PictureBox^ PictureBox) {
 
-	// Routinen Om-Formaterer et givet Color Palette array til et RGB array og konverterrer dette til Bitmap
-	// Og viser Bitmappet i en givet PictureBox Uden de normale anti-aliserings problemer
+	// This routine reformats a given color palette array to an RGB array and converts it to a bitmap
+	// and displays the bitmap in a given PictureBox without the usual anti-aliasing problems
 
-	// Lokale definerede konstanter
-	#define _ColorBar_Width      4      // Skal være et multiplum af 2!
-	#define _ColorBar_Height     256    // Skal være et multiplum af 2!
+	// Locally defined constants
+	#define _ColorBar_Width      4      // Must be a multiple of 2!
+	#define _ColorBar_Height     256    // Must be a multiple of 2!
 	#define _ColorBar_RGBBands   3
 
-	// Lokale variabler og objekter
+	// Local variables and objects
 	System::Drawing::Bitmap^ TempBitmap = gcnew Bitmap(PictureBox->Width, PictureBox->Height, System::Drawing::Imaging::PixelFormat::Format24bppRgb);
 	System::Drawing::Graphics^ BitmapGraphics = Graphics::FromImage(TempBitmap);
 
-	// Lokale array til givet Color Palette Om-formatering
+	// Local array for reformatting the given color palette
 	unsigned char ColorPaletteRGB[_ColorBar_Width * _ColorBar_Height * _ColorBar_RGBBands] = { 0 };
 	// Udregn Givet Color Palette array til RGB Color Palette array offset  
 	unsigned char ColorPaletteArrayOffset = (_ColorBar_Width * _ColorBar_Height * _ColorBar_RGBBands) / _ColorBar_Height;
 
-	// Konverter og formater Color Palette til RGB array
+	// Convert and format the color palette to an RGB array
 	for (int i = 0; i < (_ColorBar_Width * _ColorBar_Height * _ColorBar_RGBBands); i += 3) {
 
-		// Skriv RGB værdier fra givet Color Palette array til Formaterede RGB array
-		ColorPaletteRGB[i + 0] = ColorPalette[2][i / ColorPaletteArrayOffset];  // Blå
-		ColorPaletteRGB[i + 1] = ColorPalette[1][i / ColorPaletteArrayOffset];  // Grøn
-		ColorPaletteRGB[i + 2] = ColorPalette[0][i / ColorPaletteArrayOffset];  // Rød
+		// Write the RGB values from the given color palette array to the formatted RGB array
+		ColorPaletteRGB[i + 0] = ColorPalette[2][i / ColorPaletteArrayOffset];  // Blue
+		ColorPaletteRGB[i + 1] = ColorPalette[1][i / ColorPaletteArrayOffset];  // Green
+		ColorPaletteRGB[i + 2] = ColorPalette[0][i / ColorPaletteArrayOffset];  // Red
 
 	}
 
@@ -380,7 +380,7 @@ void RMH_ImageProcessing_DisplayColorPaletteInPictureBox(unsigned char ColorPale
 		System::Drawing::Imaging::PixelFormat::Format24bppRgb,
 		IntPtr(ColorPaletteRGB));
 
-	// Roter Bitmap Med 180 Grader - KAN OPTIMERES!!
+	// Rotate the bitmap by 180 degrees - CAN BE OPTIMIZED!!
 	ColorBarBitmap->RotateFlip(System::Drawing::RotateFlipType::Rotate180FlipNone);
 
 	// Ryd Grafik objektet til default "BackColor"
@@ -389,17 +389,17 @@ void RMH_ImageProcessing_DisplayColorPaletteInPictureBox(unsigned char ColorPale
 	// Konfigurer Bitmap Interpolations metode
 	BitmapGraphics->InterpolationMode = System::Drawing::Drawing2D::InterpolationMode::Bilinear;
 
-	// Tilpas Color Palette Bitmap ind i området af Pictureboxen
+	// Fit the color palette bitmap into the area of the PictureBox
 	BitmapGraphics->DrawImage(
-		ColorBarBitmap,                                          // Source Bitmap Billede
+		ColorBarBitmap,                                          // Source bitmap image
 		System::Drawing::Rectangle(0, 0, PictureBox->Width, PictureBox->Height),  // Distanations Rectangle
 		0,                                                       // Source X kordinat
 		0,                                                       // Source Y kordinat
-		_ColorBar_Width - 1,                                     // Width af Source Rectangle
-		_ColorBar_Height,                                        // Height af Source Rectangle
+		_ColorBar_Width - 1,                                     // Width of the source rectangle
+		_ColorBar_Height,                                        // Height of the source rectangle
 		GraphicsUnit::Pixel);                                    // Grafisk Unit Format 
 
-    // Slet Midlertidigt grafisk objekt
+    // Delete the temporary graphics object
 	delete BitmapGraphics;
 
 	// Display Formaterede Color Palette Bitmap i PictureBox
@@ -409,20 +409,20 @@ void RMH_ImageProcessing_DisplayColorPaletteInPictureBox(unsigned char ColorPale
 
 void RMH_ImageProcessing_FormatColorPaletteRangeInsideBackgroundPalette(unsigned short MainPalette[3][16384], bool MainPaletteInvertFlag, bool AdaptFullPaletteWithinRange, unsigned short BackPalette[3][16384], bool BackPaletteInvertFlag, unsigned short MainPaletteMaxRange, unsigned short MainPaletteMinRange, unsigned short (*OutputPalette)[16384]) {
 
-	// Routinen formaterer en givet color palette oveni en baggrund color palette, med givet range parameter
+	// This routine formats a given color palette on top of a background color palette, with a given range parameter
 
-	// Lokale variabler
+	// Local variables
 	unsigned int RangedIndex = 0;
 	unsigned int RangeDifference = MainPaletteMaxRange - MainPaletteMinRange;
 	double RangeScale = (double)_ImageProcessing_ImageResolution_14Bit / RangeDifference;
 
-	// Loop til og med længden af color paletten
+	// Loop up to and including the length of the color palette
 	for (unsigned int i = 0; i < (_ImageProcessing_ImageResolution_14Bit + 1); i++) {
 
-		// Hvis index er indenfor den primære palette Max/Min range
+		// If the index is within the primary palette max/min range
 		if (i >= MainPaletteMinRange && i <= MainPaletteMaxRange) {
 
-			// Skal hele den primære color palette justeres til af fitte indstillede range
+			// Should the whole primary color palette be adjusted to fit the set range
 			if (AdaptFullPaletteWithinRange == true) {
 
 				// Udregn Range Index for full color palette range justering
@@ -431,12 +431,12 @@ void RMH_ImageProcessing_FormatColorPaletteRangeInsideBackgroundPalette(unsigned
 			}
 			else {
 
-				// Range Index er lig med 'i'
+				// The range index is equal to 'i'
 				RangedIndex = i;
 
 			}
 
-			// Skriv primære palette RGB værdier til output array pointer
+			// Write the primary palette RGB values to the output array pointer
 			*(*(OutputPalette + 0) + i) = MainPalette[0][RangedIndex];
 			*(*(OutputPalette + 1) + i) = MainPalette[1][RangedIndex];
 			*(*(OutputPalette + 2) + i) = MainPalette[2][RangedIndex];
@@ -447,10 +447,10 @@ void RMH_ImageProcessing_FormatColorPaletteRangeInsideBackgroundPalette(unsigned
 			// Kompenser for inverterede main color palette
 			if (MainPaletteInvertFlag == true) {
 
-				// Skal baggrunds paletten inverteres
+				// Should the background palette be inverted
 				if (BackPaletteInvertFlag == true) {
 
-					// Skriv Baggrund palette RGB værdier til output array pointer
+					// Write the background palette RGB values to the output array pointer
 					*(*(OutputPalette + 0) + i) = BackPalette[0][i];
 					*(*(OutputPalette + 1) + i) = BackPalette[1][i];
 					*(*(OutputPalette + 2) + i) = BackPalette[2][i];
@@ -459,7 +459,7 @@ void RMH_ImageProcessing_FormatColorPaletteRangeInsideBackgroundPalette(unsigned
 				}
 				else {
 
-					// Skriv Baggrund palette RGB værdier til output array pointer
+					// Write the background palette RGB values to the output array pointer
 					*(*(OutputPalette + 0) + i) = BackPalette[0][_ImageProcessing_ImageResolution_14Bit - i];
 					*(*(OutputPalette + 1) + i) = BackPalette[1][_ImageProcessing_ImageResolution_14Bit - i];
 					*(*(OutputPalette + 2) + i) = BackPalette[2][_ImageProcessing_ImageResolution_14Bit - i];
@@ -469,10 +469,10 @@ void RMH_ImageProcessing_FormatColorPaletteRangeInsideBackgroundPalette(unsigned
 			}
 			else {
 
-				// Skal baggrunds paletten inverteres
+				// Should the background palette be inverted
 				if (BackPaletteInvertFlag == true) {
 
-					// Skriv Baggrund palette RGB værdier til output array pointer
+					// Write the background palette RGB values to the output array pointer
 					*(*(OutputPalette + 0) + i) = BackPalette[0][_ImageProcessing_ImageResolution_14Bit - i];
 					*(*(OutputPalette + 1) + i) = BackPalette[1][_ImageProcessing_ImageResolution_14Bit - i];
 					*(*(OutputPalette + 2) + i) = BackPalette[2][_ImageProcessing_ImageResolution_14Bit - i];
@@ -481,7 +481,7 @@ void RMH_ImageProcessing_FormatColorPaletteRangeInsideBackgroundPalette(unsigned
 				}
 				else {
 
-					// Skriv Baggrund palette RGB værdier til output array pointer
+					// Write the background palette RGB values to the output array pointer
 					*(*(OutputPalette + 0) + i) = BackPalette[0][i];
 					*(*(OutputPalette + 1) + i) = BackPalette[1][i];
 					*(*(OutputPalette + 2) + i) = BackPalette[2][i];
@@ -496,15 +496,15 @@ void RMH_ImageProcessing_FormatColorPaletteRangeInsideBackgroundPalette(unsigned
 
 }
 
-// ----------------------------- Billede Processerings Routiner ----------------------------- //
+// ----------------------------- Image Processing Routines ----------------------------- //
 
 void RMH_ImageProcessing_LinearAutomaticGainControlRaw(unsigned short *ThermalData, unsigned short *GainGrayscale, unsigned int FrameWidth, unsigned int FrameHeight, double MaxOutPixelVal, double MinOutPixelVal, double MaxInPixelVal, double MinInPixelVal) {
 
-	// Routinen implementerer Linear Automatisk Gain Kontrol til et input billede data array
-	// AGC billede dataer er derfra passerede videre til pointer arrayet.
-	// Algoritme er liniariceret som: y = a * x + b
+	// This routine implements linear automatic gain control (AGC) for an input image data array
+	// The AGC image data is then passed on to the pointer array.
+	// The algorithm is linearized as: y = a * x + b
 
-	// Lokale variabler - Lager i CPU register
+	// Local variables - stored in CPU registers
 	register double PixelValue1 = 0.0;
 	register double PixelValue2 = 0.0;
 	register double PixelValue3 = 0.0;
@@ -515,16 +515,16 @@ void RMH_ImageProcessing_LinearAutomaticGainControlRaw(unsigned short *ThermalDa
 	// Udregn linear Offset skalleringen (b Parameter)
 	double OffsetScale = -LinearScaleFactor * (double)MaxInPixelVal + (double)MaxOutPixelVal;
 
-	// Loop til og med frame opløsningen W * H
+	// Loop up to and including the frame resolution W * H
 	for (unsigned int i = 0; i < (FrameWidth * FrameHeight); i += 4) {
 
-		// Læs pixel værdierne
+		// Read the pixel values
 		PixelValue1 = (double)*(ThermalData + i);
 		PixelValue2 = (double)*(ThermalData + (i + 1));
 		PixelValue3 = (double)*(ThermalData + (i + 2));
 		PixelValue4 = (double)*(ThermalData + (i + 3));
 
-		// Skaller Pixel værdier til givet skallerings og offset faktor
+		// Scale the pixel values by the given scaling and offset factors
 		*(GainGrayscale + i) = (unsigned short)(LinearScaleFactor * PixelValue1 + OffsetScale);
 		*(GainGrayscale + (i + 1)) = (unsigned short)(LinearScaleFactor * PixelValue2 + OffsetScale);
 		*(GainGrayscale + (i + 2)) = (unsigned short)(LinearScaleFactor * PixelValue3 + OffsetScale);
@@ -536,12 +536,12 @@ void RMH_ImageProcessing_LinearAutomaticGainControlRaw(unsigned short *ThermalDa
 
 unsigned char RMH_ImageProcessing_GetKernelPixelOverlayPixelValue(unsigned char* ImageData, unsigned int ImageDataWidth, unsigned int ImageDataHeight, float XPos, float YPos) {
 
-	// Routinen håndterer pixel værdien for en filter Kernel med kordinat udenfor billede data matricen
+	// This routine handles the pixel value for a filter kernel with a coordinate outside the image data matrix
 
-	// Lokale variabler
+	// Local variables
 	unsigned int ArrayIndex = 0;
 
-	// For pixel værdier udenfor Billede data matrice området
+	// For pixel values outside the image data matrix area
 	if (XPos < 0.0) { XPos = 0.0; }
 	if (XPos > ImageDataWidth - 1) { XPos = ImageDataWidth - 1; }
 	if (YPos < 0.0) { YPos = 0.0; }
@@ -550,27 +550,27 @@ unsigned char RMH_ImageProcessing_GetKernelPixelOverlayPixelValue(unsigned char*
 	// Konverter matrice index til array index
 	ArrayIndex = (YPos * ImageDataWidth) + XPos;
 
-	// Retuner Pixel data værdien
+	// Return the pixel data value
 	return *(ImageData + ArrayIndex);
 
 }
 
-// --- Gaussian Billede Filtrerings Processering --->
+// --- Gaussian Image Filtering --->
 
 void RMH_ImageProcessing_2DGaussian3x3KernelBlur(unsigned char* ImageData, unsigned int ImageDataWidth, unsigned int ImageDataHeight, unsigned char *BluredImage) {
 
-	// Routinen implementerer et 2D Gaussian Kernel Blur filter
+	// This routine implements a 2D Gaussian kernel blur filter
 
-	// Lokale variabler
+	// Local variables
 	unsigned int ArrayIndex = 0;
 	float GaussianKernelSum = 0.0;
 	float GaussianImageKernelSum = 0.0;
 	unsigned int KernalMaskSize = 3 * 3;
 
-	// Loop igennem alle billed matricens rækker
+	// Loop through all rows of the image matrix
 	for (unsigned int Y = 0; Y < ImageDataHeight; Y++) {
 
-		// Loop igennem alle billed matricens Kolonner
+		// Loop through all columns of the image matrix
 		for (unsigned int X = 0; X < ImageDataWidth; X++) {
 
 			// Nulstil Gaussian kernel sum variabelet
@@ -578,28 +578,28 @@ void RMH_ImageProcessing_2DGaussian3x3KernelBlur(unsigned char* ImageData, unsig
 			// Nulstil Gaussian Kernal sum variablet
 			GaussianKernelSum = 0;
 
-			// Loop for hver position i Kernel masken
+			// Loop over each position in the kernel mask
 			for (unsigned int i = 0; i < KernalMaskSize; i++) {
 
 				// Udregn Gaussian Kernelens Sum
 				GaussianKernelSum = GaussianKernelSum + Gaussian3x3KernelMask[i];
 
-				// Udregn den filtreret 2. Ordens Laplacian Billede data koefficient
+				// Calculate the filtered 2nd-order Laplacian image data coefficient
 				GaussianImageKernelSum = GaussianImageKernelSum + (Gaussian3x3KernelMask[i] * (float)RMH_ImageProcessing_GetKernelPixelOverlayPixelValue(&ImageData[0], ImageDataWidth, ImageDataHeight, (float)X + Kernel3x3MatrixXCoordinates[i], (float)Y + Kernel3x3MatrixYCoordinates[i]));
 
 			}
 			
-			// Divider Udregnede Gaussian Blur pixel værdi med Kernel Sum (Kernel Normalisering)
+			// Divide the calculated Gaussian blur pixel value by the kernel sum (kernel normalization)
 			GaussianImageKernelSum = GaussianImageKernelSum / GaussianKernelSum;
 
 			// Konverter matrice index til array index
 			ArrayIndex = (Y * ImageDataWidth) + X;
 
-			// Clamp processerede billede pixel data til 8Bit Range
+			// Clamp the processed image pixel data to the 8-bit range
 			if (GaussianImageKernelSum > 255.0) { GaussianImageKernelSum = 255.0; }
 			if (GaussianImageKernelSum < 0.0) { GaussianImageKernelSum = 0.0; }
 
-			// Skriv Gaussian Blur Billede data til pointer array
+			// Write the Gaussian blur image data to the pointer array
 			*(BluredImage + ArrayIndex) = (unsigned char)GaussianImageKernelSum;
 
 		}
@@ -612,11 +612,11 @@ void RMH_ImageProcessing_2DGaussian3x3KernelBlur(unsigned char* ImageData, unsig
 
 bool RMH_ImageProcessing_GenerateUnsharpKernelMask(unsigned char KernelMaskSize, float Sigma, float *KernelMaskPointer) {
 
-	// Routinen genererer en Normaliseret Unsharp Kernel masken til Unsharp billede filtrerings routinen
+	// This routine generates a normalized unsharp kernel mask for the unsharp image filtering routine
 	// Givet sigma indput er Unsharp Kernel maskens Standard diviation
-	// Rotutinen retunerer et status flag som indikerer at Kernel masken var korrekt genereret
+	// The routine returns a status flag indicating that the kernel mask was generated correctly
 
-	// Lokale variabler
+	// Local variables
 	float PI = 3.141592654;
 	float EQDivisionPart = 0.0;
 	float* KernelXCoordPointer;
@@ -628,32 +628,32 @@ bool RMH_ImageProcessing_GenerateUnsharpKernelMask(unsigned char KernelMaskSize,
 	float MinimumKernalValue = 0xFFFF;
 	bool KernelMaskGeneratedOkFlag = false;
 
-	// Kontroller valgte Kernel Maske størrelse og indstil relavante parametere
+	// Check the selected kernel mask size and set the relevant parameters
 	switch (KernelMaskSize) {
 
-		// Indstil pointer til valgte filter Kernel, Filter Kernel X/Y koordinat matricer
+		// Set the pointers to the selected filter kernel and the filter kernel X/Y coordinate matrices
 		case _ImageKernelMaskFilter_Size3x3: KernelMaskOKFlag = true; KernelXCoordPointer = Kernel3x3MatrixXCoordinates; KernelYCoordPointer = Kernel3x3MatrixYCoordinates; break;
 		case _ImageKernelMaskFilter_Size5x5: KernelMaskOKFlag = true; KernelXCoordPointer = Kernel5x5MatrixXCoordinates; KernelYCoordPointer = Kernel5x5MatrixYCoordinates; break;
 
 	}
 
-	// Kontroller om korrekte kernel maske parametere er blevet givet
+	// Check whether correct kernel mask parameters have been given
 	if (KernelMaskOKFlag == true) {
 
-		// Loop til og med størrelsen af Gaussian kernel masken som skal genereres
+		// Loop up to and including the size of the Gaussian kernel mask to be generated
 		for (unsigned int i = 0; i < KernelMaskSize; i++) {
 
 			// Udregn del stykker af samlede Gaussian Kernel formular
 			EQDivisionPart = 1 / (2 * PI * pow(Sigma, 2));
 			EQExponentialPart = exp(-(pow(KernelXCoordPointer[i], 2) + pow(KernelYCoordPointer[i], 2)) / (2 * pow(Sigma, 2)));
 
-			// Udregn den samlede aktuelle Gaussian Kernel Værdi
+			// Calculate the total current Gaussian kernel value
 			GaussianKernalValue = EQDivisionPart * EQExponentialPart;
 
-			// Find den laveste Gaussian Kernal værdi 
+			// Find the lowest Gaussian kernel value 
 			if (GaussianKernalValue < MinimumKernalValue) {
 
-				// Opdater Laveste Gaussian Kernal værdi
+				// Update the lowest Gaussian kernel value
 				MinimumKernalValue = GaussianKernalValue;
 
 			}
@@ -661,7 +661,7 @@ bool RMH_ImageProcessing_GenerateUnsharpKernelMask(unsigned char KernelMaskSize,
 			// Udregn Gaussian kernelens Normalicerings Faktor
 			KernalScaleFactor = 1.0 / MinimumKernalValue;
 
-			// Udregn den Normaliseret Gaussian Kernel Værdi
+			// Calculate the normalized Gaussian kernel value
 			*(KernelMaskPointer + i) = KernalScaleFactor * GaussianKernalValue;
 
 		}
@@ -684,16 +684,16 @@ bool RMH_ImageProcessing_GenerateUnsharpKernelMask(unsigned char KernelMaskSize,
 
 void RMH_ImageProcessing_2DUnsharpMaskKernelImageSharpening(unsigned short* ImageData, unsigned int ImageResolution, unsigned int ImageDataWidth, unsigned int ImageDataHeight, unsigned char KernelMaskSize, float *KernelMaskPointer, float SharpeningStrength, bool OutputUnsharpMaskFlag, unsigned short* SharpenedImage) {
 
-	// Routinen implementerer et 2-Dimensionelt Gaussian Blur Unsharp Kernel Maske Billede processerings teknik
-	// Som benyttes til at gøre et billede mere skarpt, men konfigurerbar styrke.
-	// 19-05-2023 -> Routinen er blevet super optimerede med "Loop Unrolling" med en faktor af 8 = 450% hurtigere
+	// This routine implements a 2-dimensional Gaussian blur unsharp kernel mask image processing technique
+	// which is used to sharpen an image, with configurable strength.
+	// 19-05-2023 -> The routine has been heavily optimized with "loop unrolling" by a factor of 8 = 450% faster
 	// 23-07-2023 -> Opdaterede.
 
 	/*
 		
-		Tilhørende Macroer ->
+		Associated macros ->
 
-		// Billede Opløsnings Format Reference Macroer
+		// Image Resolution Format Reference Macros
 		#define _ImageProcessing_ImageResolution_8Bit           255
 		#define _ImageProcessing_ImageResolution_14Bit          16383
 		#define _ImageProcessing_ImageResolution_16Bit          65535
@@ -701,7 +701,7 @@ void RMH_ImageProcessing_2DUnsharpMaskKernelImageSharpening(unsigned short* Imag
 	
 	*/
 
-	// Lokale variabler - Lager i CPU register
+	// Local variables - stored in CPU registers
 	register float* KernelXCoordPointer;
 	register float* KernelYCoordPointer;
 	register float GaussianKernelSum = 0.0;
@@ -755,16 +755,16 @@ void RMH_ImageProcessing_2DUnsharpMaskKernelImageSharpening(unsigned short* Imag
 	register unsigned int KernelToImageIndex7 = 0;
 	register unsigned int KernelToImageIndex8 = 0;
 
-	// Kontroller valgte Kernel Maske størrelse og indstil relavante parametere
+	// Check the selected kernel mask size and set the relevant parameters
 	switch (KernelMaskSize) {
 
-		// Indstil pointer til valgte filter Kernel, Filter Kernel X/Y koordinat matricer
+		// Set the pointers to the selected filter kernel and the filter kernel X/Y coordinate matrices
 		case _ImageKernelMaskFilter_Size3x3: KernelXCoordPointer = Kernel3x3MatrixXCoordinates; KernelYCoordPointer = Kernel3x3MatrixYCoordinates; break;
 		case _ImageKernelMaskFilter_Size5x5: KernelXCoordPointer = Kernel5x5MatrixXCoordinates; KernelYCoordPointer = Kernel5x5MatrixYCoordinates; break;
 
 	}
 
-	// Loop for hver position i Kernel masken
+	// Loop over each position in the kernel mask
 	for (unsigned int i = 0; i < KernelMaskSize; i++) {
 
 		// Udregn Gaussian Kernel maskens Sum
@@ -775,10 +775,10 @@ void RMH_ImageProcessing_2DUnsharpMaskKernelImageSharpening(unsigned short* Imag
 	// Division til Multiplikations konverter gaussian sum (CPU Cycle Optimering)
 	GaussianKernelSum = 1.0 / GaussianKernelSum;
 
-	// Loop igennem alle billed matricens rækker
+	// Loop through all rows of the image matrix
 	for (unsigned int Y = 0; Y < ImageDataHeight; Y++) {
 
-		// Loop igennem alle billed matricens Kolonner
+		// Loop through all columns of the image matrix
 		for (unsigned int X = 0; X < ImageDataWidth; X += 8) {
 
 			// Nulstil Gaussian kernel sum variabelet
@@ -794,7 +794,7 @@ void RMH_ImageProcessing_2DUnsharpMaskKernelImageSharpening(unsigned short* Imag
 			// Loop for each position in the kernel mask
 			for (unsigned int i = 0; i < KernelMaskSize; i++) {
 
-				// Udregn Kernel-Til-Billede X & Y kordinaterne
+				// Calculate the kernel-to-image X and Y coordinates
 				KernelToImageXPos1 = X + *(KernelXCoordPointer + i);
 				KernelToImageXPos2 = (X + 1) + *(KernelXCoordPointer + i);
 				KernelToImageXPos3 = (X + 2) + *(KernelXCoordPointer + i);
@@ -805,7 +805,7 @@ void RMH_ImageProcessing_2DUnsharpMaskKernelImageSharpening(unsigned short* Imag
 				KernelToImageXPos8 = (X + 7) + *(KernelXCoordPointer + i);
 				KernelToImageYPos = Y + *(KernelYCoordPointer + i);
 
-				// Kompenser for pixel værdier udenfor Billede data matrice området
+				// Compensate for pixel values outside the image data matrix area
 				if (KernelToImageXPos1 < 0) { KernelToImageXPos1 = 0; } if (KernelToImageXPos1 > ImageDataWidth - 1) { KernelToImageXPos1 = ImageDataWidth - 1; }
 				if (KernelToImageXPos2 < 0) { KernelToImageXPos2 = 0; } if (KernelToImageXPos2 > ImageDataWidth - 1) { KernelToImageXPos2 = ImageDataWidth - 1; }
 				if (KernelToImageXPos3 < 0) { KernelToImageXPos3 = 0; } if (KernelToImageXPos3 > ImageDataWidth - 1) { KernelToImageXPos3 = ImageDataWidth - 1; }
@@ -816,7 +816,7 @@ void RMH_ImageProcessing_2DUnsharpMaskKernelImageSharpening(unsigned short* Imag
 				if (KernelToImageXPos8 < 0) { KernelToImageXPos8 = 0; } if (KernelToImageXPos8 > ImageDataWidth - 1) { KernelToImageXPos8 = ImageDataWidth - 1; }
 				if (KernelToImageYPos < 0)  { KernelToImageYPos = 0;  } if (KernelToImageYPos > ImageDataHeight - 1) { KernelToImageYPos = ImageDataHeight - 1; }
 
-				// Udregn Kernel Til Billede Index
+				// Calculate the kernel-to-image index
 				KernelToImageIndex1 = KernelToImageYPos * ImageDataWidth + KernelToImageXPos1;
 				KernelToImageIndex2 = KernelToImageYPos * ImageDataWidth + KernelToImageXPos2;
 				KernelToImageIndex3 = KernelToImageYPos * ImageDataWidth + KernelToImageXPos3;
@@ -826,7 +826,7 @@ void RMH_ImageProcessing_2DUnsharpMaskKernelImageSharpening(unsigned short* Imag
 				KernelToImageIndex7 = KernelToImageYPos * ImageDataWidth + KernelToImageXPos7;
 				KernelToImageIndex8 = KernelToImageYPos * ImageDataWidth + KernelToImageXPos8;
 
-				// Udregn Gaussian Unsharp Kernel-Til-Billede data summen
+				// Calculate the Gaussian unsharp kernel-to-image data sum
 				GaussianImageKernelSum1 = GaussianImageKernelSum1 + *(KernelMaskPointer + i) * *(ImageData + KernelToImageIndex1);
 				GaussianImageKernelSum2 = GaussianImageKernelSum2 + *(KernelMaskPointer + i) * *(ImageData + KernelToImageIndex2);
 				GaussianImageKernelSum3 = GaussianImageKernelSum3 + *(KernelMaskPointer + i) * *(ImageData + KernelToImageIndex3);
@@ -848,7 +848,7 @@ void RMH_ImageProcessing_2DUnsharpMaskKernelImageSharpening(unsigned short* Imag
 			ArrayIndex7 = ArrayIndex1 + 6;
 			ArrayIndex8 = ArrayIndex1 + 7;
 
-			// Divider (kompenserede division) Udregnede Gaussian Blur pixel værdi med Kernel Sum (Kernel Normalisering)
+			// Divide (compensated division) the calculated Gaussian blur pixel value by the kernel sum (kernel normalization)
 			GaussianImageKernelSum1 = GaussianImageKernelSum1 * GaussianKernelSum;
 			GaussianImageKernelSum2 = GaussianImageKernelSum2 * GaussianKernelSum;
 			GaussianImageKernelSum3 = GaussianImageKernelSum3 * GaussianKernelSum;
@@ -858,7 +858,7 @@ void RMH_ImageProcessing_2DUnsharpMaskKernelImageSharpening(unsigned short* Imag
 			GaussianImageKernelSum7 = GaussianImageKernelSum7 * GaussianKernelSum;
 			GaussianImageKernelSum8 = GaussianImageKernelSum8 * GaussianKernelSum;
 
-			// Udregn Unsharp Maske pixel værdien
+			// Calculate the unsharp mask pixel value
 			BlurMaskPixelValue1 = (float)(*(ImageData + ArrayIndex1) - GaussianImageKernelSum1) * SharpeningStrength;
 			BlurMaskPixelValue2 = (float)(*(ImageData + ArrayIndex2) - GaussianImageKernelSum2) * SharpeningStrength;
 			BlurMaskPixelValue3 = (float)(*(ImageData + ArrayIndex3) - GaussianImageKernelSum3) * SharpeningStrength;
@@ -868,10 +868,10 @@ void RMH_ImageProcessing_2DUnsharpMaskKernelImageSharpening(unsigned short* Imag
 			BlurMaskPixelValue7 = (float)(*(ImageData + ArrayIndex7) - GaussianImageKernelSum7) * SharpeningStrength;
 			BlurMaskPixelValue8 = (float)(*(ImageData + ArrayIndex8) - GaussianImageKernelSum8) * SharpeningStrength;
 
-			// Skal Unsharp makse pixel værdierne skrives til output array
+			// Should the unsharp mask pixel values be written to the output array
 			if (OutputUnsharpMaskFlag == true) {
 
-				// Skiv Unsharp makse pixel værdierne skrives til output array
+				// The unsharp mask pixel values are written to the output array
 				SharpenedPixelValue1 = BlurMaskPixelValue1;
 				SharpenedPixelValue2 = BlurMaskPixelValue2;
 				SharpenedPixelValue3 = BlurMaskPixelValue3;
@@ -884,7 +884,7 @@ void RMH_ImageProcessing_2DUnsharpMaskKernelImageSharpening(unsigned short* Imag
 			}
 			else {
 
-				// Skriv sharpened billede processerede pixel til output array
+				// Write the sharpened image processed pixel to the output array
 				SharpenedPixelValue1 = *(ImageData + ArrayIndex1) + BlurMaskPixelValue1;
 				SharpenedPixelValue2 = *(ImageData + ArrayIndex2) + BlurMaskPixelValue2;
 				SharpenedPixelValue3 = *(ImageData + ArrayIndex3) + BlurMaskPixelValue3;
@@ -896,7 +896,7 @@ void RMH_ImageProcessing_2DUnsharpMaskKernelImageSharpening(unsigned short* Imag
 
 			}
 
-			// Clamp processerede billede pixel data til billede opløsningens fulde Range
+			// Clamp the processed image pixel data to the full range of the image resolution
 			if (SharpenedPixelValue1 > ImageResolution) { SharpenedPixelValue1 = ImageResolution; } if (SharpenedPixelValue1 < 0.0) { SharpenedPixelValue1 = 0.0; }
 			if (SharpenedPixelValue2 > ImageResolution) { SharpenedPixelValue2 = ImageResolution; } if (SharpenedPixelValue2 < 0.0) { SharpenedPixelValue2 = 0.0; }
 			if (SharpenedPixelValue3 > ImageResolution) { SharpenedPixelValue3 = ImageResolution; } if (SharpenedPixelValue3 < 0.0) { SharpenedPixelValue3 = 0.0; }
@@ -906,7 +906,7 @@ void RMH_ImageProcessing_2DUnsharpMaskKernelImageSharpening(unsigned short* Imag
 			if (SharpenedPixelValue7 > ImageResolution) { SharpenedPixelValue7 = ImageResolution; } if (SharpenedPixelValue7 < 0.0) { SharpenedPixelValue7 = 0.0; }
 			if (SharpenedPixelValue8 > ImageResolution) { SharpenedPixelValue8 = ImageResolution; } if (SharpenedPixelValue8 < 0.0) { SharpenedPixelValue8 = 0.0; }
 
-			// Skriv Gaussian Blur skærpede Billede data til pointer array
+			// Write the Gaussian blur sharpened image data to the pointer array
 			*(SharpenedImage + ArrayIndex1) = (unsigned short)SharpenedPixelValue1;
 			*(SharpenedImage + ArrayIndex2) = (unsigned short)SharpenedPixelValue2;
 			*(SharpenedImage + ArrayIndex3) = (unsigned short)SharpenedPixelValue3;
@@ -922,14 +922,14 @@ void RMH_ImageProcessing_2DUnsharpMaskKernelImageSharpening(unsigned short* Imag
 
 }
 
-// --- Laplacian Billede Sharpening Processering --->
+// --- Laplacian Image Sharpening --->
 
 void RMH_ImageProcessing_LaplacianImageSharpening(unsigned char* ImageData, unsigned int ImageDataWidth, unsigned int ImageDataHeight, unsigned char KernelMask, float SharpeningStreangth, bool ShowFilteredMaks, unsigned char* SharpenedImage) {
 
-	// Routinen implementerer Laplacian Kernel filtrering til givet input billede data
-	// Hvilket benyttes til at gøre et billede mere skarpt
+	// This routine implements Laplacian kernel filtering of the given input image data
+	// which is used to sharpen an image
 
-	// Lokale variabler
+	// Local variables
 	float* KernelMaskPointer;
 	float* KernelXCoordPointer;
 	float* KernelYCoordPointer;
@@ -939,14 +939,14 @@ void RMH_ImageProcessing_LaplacianImageSharpening(unsigned char* ImageData, unsi
 	unsigned int KernalMaskSize = 0;
 	unsigned int KernelCenterIndex = 0;
 
-	// Begræns valget af Kernel maske input værdien
+	// Limit the selectable kernel mask input value
 	if (KernelMask < _LaplacianImageSharpening_MinNmbOfKernelMasks) { KernelMask = _LaplacianImageSharpening_MinNmbOfKernelMasks; }
 	if (KernelMask > _LaplacianImageSharpening_MaxNmbOfKernelMasks) { KernelMask = _LaplacianImageSharpening_MaxNmbOfKernelMasks; }
 
-	// Valg af filter maske
+	// Selection of the filter mask
 	switch (KernelMask) {
 
-		// Indstil pointer til valgte filter Kernel, Filter Kernel X/Y koordinat matricer og indstil fast kernel størrelse
+		// Set the pointers to the selected filter kernel and the filter kernel X/Y coordinate matrices, and set a fixed kernel size
 		case _LaplacianImageKernel_3x3KernalMask1: KernalMaskSize = 3 * 3; KernelMaskPointer = Laplacian3x3KernelMask1; KernelXCoordPointer = Kernel3x3MatrixXCoordinates; KernelYCoordPointer = Kernel3x3MatrixYCoordinates;  break;
 		case _LaplacianImageKernel_3x3KernalMask2: KernalMaskSize = 3 * 3; KernelMaskPointer = Laplacian3x3KernelMask2; KernelXCoordPointer = Kernel3x3MatrixXCoordinates; KernelYCoordPointer = Kernel3x3MatrixYCoordinates;  break;
 		case _LaplacianImageKernel_5x5KernalMask1: KernalMaskSize = 5 * 5; KernelMaskPointer = Laplacian5x5KernelMask2; KernelXCoordPointer = Kernel5x5MatrixXCoordinates; KernelYCoordPointer = Kernel5x5MatrixYCoordinates;  break;
@@ -956,19 +956,19 @@ void RMH_ImageProcessing_LaplacianImageSharpening(unsigned char* ImageData, unsi
 	// Udregn Kernel mertricens center koefficients array index
 	KernelCenterIndex = (KernalMaskSize - 1) / 2;
 
-	// Loop igennem alle billed matricens rækker
+	// Loop through all rows of the image matrix
 	for (unsigned int Y = 0; Y < ImageDataHeight; Y++) {
 
-		// Loop igennem alle billed matricens Kolonner
+		// Loop through all columns of the image matrix
 		for (unsigned int X = 0; X < ImageDataWidth; X++) {
 
-			// Nulstil Laplacian Sharpenings sum værien
+			// Reset the Laplacian sharpening sum value
 			IILaplacianVal = 0;
 
-			// Loop for hver position i Kernel masken
+			// Loop over each position in the kernel mask
 			for (unsigned int i = 0; i < KernalMaskSize; i++) {
 
-				// Udregn den filtreret 2. Ordens Laplacian Billede data koefficient
+				// Calculate the filtered 2nd-order Laplacian image data coefficient
 				IILaplacianVal = IILaplacianVal + ((KernelMaskPointer[i] * SharpeningStreangth) * (float)RMH_ImageProcessing_GetKernelPixelOverlayPixelValue(&ImageData[0], ImageDataWidth, ImageDataHeight, (float)X + KernelXCoordPointer[i], (float)Y + KernelYCoordPointer[i]));
 
 			}
@@ -976,55 +976,55 @@ void RMH_ImageProcessing_LaplacianImageSharpening(unsigned char* ImageData, unsi
 			// Konverter matrice index til array index
 			ArrayIndex = (Y * ImageDataWidth) + X;
 
-			// Kontroller polaritet af filter maskens center koefficient (undgå clipping)
+			// Check the polarity of the filter mask center coefficient (avoids clipping)
 			if (KernelMaskPointer[KernelCenterIndex] < 0.0) {
 
-				// Træk altid laveste værdi fra højeste værdi
+				// Always subtract the lowest value from the highest value
 				if (IILaplacianVal > (float)ImageData[ArrayIndex]) {
 
-					// Skal kun det filtreret Laplacian billede vises
+					// Should only the filtered Laplacian image be shown
 					if (ShowFilteredMaks == true) {
 
-						// Udregn den Skærpet billede pixel værdi
+						// Calculate the sharpened image pixel value
 						SharpenedPixelValue = IILaplacianVal;
 
 					}
 					else {
 
-						// Udregn den Skærpet billede pixel værdi
+						// Calculate the sharpened image pixel value
 						SharpenedPixelValue = IILaplacianVal - (float)ImageData[ArrayIndex];
 
 					}
 
-					// Clamp Skærpet billede pixel data til 8Bit Range
+					// Clamp the sharpened image pixel data to the 8-bit range
 					if (SharpenedPixelValue > 255.0) { SharpenedPixelValue = 255.0; }
 					if (SharpenedPixelValue < 0.0) { SharpenedPixelValue = 0.0; }
 
-					// Skriv Skærpet Billede data til pointer array
+					// Write the sharpened image data to the pointer array
 					*(SharpenedImage + ArrayIndex) = (unsigned char)SharpenedPixelValue;
 
 				}
 				else {
 
-					// Skal kun det filtreret Laplacian billede vises
+					// Should only the filtered Laplacian image be shown
 					if (ShowFilteredMaks == true) {
 
-						// Udregn den Skærpet billede pixel værdi
+						// Calculate the sharpened image pixel value
 						SharpenedPixelValue = IILaplacianVal;
 
 					}
 					else {
 
-						// Udregn den Skærpet billede pixel værdi
+						// Calculate the sharpened image pixel value
 						SharpenedPixelValue = (float)ImageData[ArrayIndex] - IILaplacianVal;
 
 					}
 
-					// Clamp Skærpet billede pixel data til 8Bit Range
+					// Clamp the sharpened image pixel data to the 8-bit range
 					if (SharpenedPixelValue > 255.0) { SharpenedPixelValue = 255.0; }
 					if (SharpenedPixelValue < 0.0) { SharpenedPixelValue = 0.0; }
 
-					// Skriv Skærpet Billede data til pointer array
+					// Write the sharpened image data to the pointer array
 					*(SharpenedImage + ArrayIndex) = (unsigned char)SharpenedPixelValue;
 
 				}
@@ -1032,25 +1032,25 @@ void RMH_ImageProcessing_LaplacianImageSharpening(unsigned char* ImageData, unsi
 			}
 			else {
 
-				// Skal kun det filtreret Laplacian billede vises
+				// Should only the filtered Laplacian image be shown
 				if (ShowFilteredMaks == true) {
 
-					// Udregn den Skærpet billede pixel værdi
+					// Calculate the sharpened image pixel value
 					SharpenedPixelValue = IILaplacianVal;
 
 				}
 				else {
 
-					// Udregn den Skærpet billede pixel værdi
+					// Calculate the sharpened image pixel value
 					SharpenedPixelValue = IILaplacianVal + (float)ImageData[ArrayIndex];
 
 				}
 
-				// Clamp Skærpet billede pixel data til 8Bit Range
+				// Clamp the sharpened image pixel data to the 8-bit range
 				if (SharpenedPixelValue > 255.0) { SharpenedPixelValue = 255.0; }
 				if (SharpenedPixelValue < 0.0) { SharpenedPixelValue = 0.0; }
 
-				// Skriv Skærpet Billede data til pointer array
+				// Write the sharpened image data to the pointer array
 				*(SharpenedImage + ArrayIndex) = (unsigned char)SharpenedPixelValue;
 
 			}
@@ -1061,25 +1061,25 @@ void RMH_ImageProcessing_LaplacianImageSharpening(unsigned char* ImageData, unsi
 
 }
 
-// --- Billede Median Filtrerings Processering --->
+// --- Image Median Filtering --->
 
 void RMH_ImageProcessing_ImageMedianFiltering(unsigned char* ImageData, unsigned int ImageDataWidth, unsigned int ImageDataHeight, unsigned char *MedianFilteredImage) {
 
-	// Routinen implementerer et 3x3 median maske billede filter
+	// This routine implements a 3x3 median mask image filter
 
-	// Lokale variabler
+	// Local variables
 	unsigned int Temp = 0;
 	unsigned int ArrayIndex = 0;
 	unsigned char MedianKernelArray[3 * 3];
 	unsigned int MedianMaskSize = 3 * 3;
 
-	// Loop igennem alle billed matricens rækker
+	// Loop through all rows of the image matrix
 	for (unsigned int FrameRow = 0; FrameRow < ImageDataHeight; FrameRow++) {
 
-		// Loop igennem alle billed matricens Kolonner
+		// Loop through all columns of the image matrix
 		for (unsigned int FrameColumn = 0; FrameColumn < ImageDataWidth; FrameColumn++) {
 
-			// Læs Median Filterets Kernel Matrice pixel værdier
+			// Read the pixel values of the median filter kernel matrix
 			MedianKernelArray[0] = RMH_ImageProcessing_GetKernelPixelOverlayPixelValue(&ImageData[0], ImageDataWidth, ImageDataHeight, (float)FrameColumn - 1, (float)FrameRow - 1);
 			MedianKernelArray[1] = RMH_ImageProcessing_GetKernelPixelOverlayPixelValue(&ImageData[0], ImageDataWidth, ImageDataHeight, (float)FrameColumn, (float)FrameRow - 1);
 			MedianKernelArray[2] = RMH_ImageProcessing_GetKernelPixelOverlayPixelValue(&ImageData[0], ImageDataWidth, ImageDataHeight, (float)FrameColumn + 1, (float)FrameRow - 1);
@@ -1093,16 +1093,16 @@ void RMH_ImageProcessing_ImageMedianFiltering(unsigned char* ImageData, unsigned
 			// Konverter matrice index til array index
 			ArrayIndex = (FrameRow * ImageDataWidth) + FrameColumn;
 
-			// Sorter Median kernel matricens rækker
+			// Sort the rows of the median kernel matrix
 			for (unsigned int i = 0; i < MedianMaskSize - 1; i++) {
 
 				// Sorter Median kernel matricens kolonner
 				for (unsigned int j = 0; j < MedianMaskSize - i; j++) {
 
-					// Sorter laveste kernel værdier fra start til slut index
+					// Sort the lowest kernel values from the start to the end index
 					if (MedianKernelArray[j] <= MedianKernelArray[j + 1]) {
 
-						// Læs midlatidig array data og sorter kernel arrayet
+						// Read the temporary array data and sort the kernel array
 						Temp = MedianKernelArray[j];
 						MedianKernelArray[j] = MedianKernelArray[j + 1];
 						MedianKernelArray[j + 1] = Temp;
@@ -1110,7 +1110,7 @@ void RMH_ImageProcessing_ImageMedianFiltering(unsigned char* ImageData, unsigned
 					}
 					else {
 
-						// Fortsæt ydre iteration 
+						// Continue the outer iteration 
 						continue;
 
 					}
@@ -1118,7 +1118,7 @@ void RMH_ImageProcessing_ImageMedianFiltering(unsigned char* ImageData, unsigned
 				}
 			}
 
-			// Skriv billedets median værdi til filtreret billede array pointer
+			// Write the median value of the image to the filtered image array pointer
 			*(MedianFilteredImage + ArrayIndex) = MedianKernelArray[4];
 
 		}
@@ -1127,15 +1127,15 @@ void RMH_ImageProcessing_ImageMedianFiltering(unsigned char* ImageData, unsigned
 
 }
 
-// --- Billede 2D Interpolation Processering --->
+// --- Image 2D Interpolation --->
 
 void RMH_ImageProcessing_2DBilinearInterpolation(unsigned short* ImageData, unsigned int ImageDataWidth, unsigned int ImageDataHeight, unsigned int InterpolatedImageWidth, unsigned int InterpolatedImageHeight, unsigned short* InterpolatedImage) {
 
 	// Routinen implementerer 2D Bilinear Interpolation 
-	// Hvilket benyttes til at op/ned-skallerer et billedes opløsning
-	// Routinen er specielt optimerede til at være ekstrem hurtig til at håndterer positiv integer billed data.
+	// which is used to scale an image's resolution up or down
+	// The routine is specially optimized to be extremely fast when handling positive integer image data.
 
-	// Lokale variabler
+	// Local variables
 	double WidthRatio = 0.0;
 	double HeightRatio = 0.0;
 	double YHeightHeight = 0.0;
@@ -1150,43 +1150,43 @@ void RMH_ImageProcessing_2DBilinearInterpolation(unsigned short* ImageData, unsi
 	unsigned int YHeightHeightIndex = 0;
 	unsigned int ImagePixelValue = 0.0;
 
-	// Kontroller givet billede data opløsnings parametere - Udregn Det interpolerede billedes Højde/Bredde forhold
+	// Check the given image data resolution parameters - calculate the height/width ratio of the interpolated image
 	if (InterpolatedImageWidth > 1) { WidthRatio = ((double)ImageDataWidth - 1.0) / ((double)InterpolatedImageWidth - 1.0); } else { WidthRatio = 0; }
 	if (InterpolatedImageHeight > 1) { HeightRatio = ((double)ImageDataHeight - 1.0) / ((double)InterpolatedImageHeight - 1.0); } else { HeightRatio = 0; }
 
-	// Loop igennem alle billed matricens Kolonner
+	// Loop through all columns of the image matrix
 	for (unsigned int X = 0; X < InterpolatedImageHeight; X++) {
 
-		// Udregn Højde forholdets X fraktions parameter
+		// Calculate the X fraction parameter of the height ratio
 		XHeightRatioStepSize = HeightRatio * X;
 
-		// Udregn Y pixel længden, højden og vægten fra tilhørende højde/længde forhold
+		// Calculate the Y pixel length, height and weight from the associated height/length ratio
 		YHeightLength = XHeightRatioStepSize;
 		YHeightHeight = (unsigned int)(XHeightRatioStepSize + 0.999);  // RMH Implementering af Hurtig -> ceil(XHeightRatioStepSize);
 		YHeightWeight = XHeightRatioStepSize - YHeightLength;
 
-		// Udregn billed data arrayets Y højde og Vægt indekser
+		// Calculate the Y height and weight indices of the image data array
 		YHeightLengthIndex = YHeightLength * ImageDataWidth;
 		YHeightHeightIndex = YHeightHeight * ImageDataWidth;
 
-		// Loop igennem alle billed arrayets Rækker
+		// Loop through all rows of the image array
 		for (unsigned int Y = 0; Y < InterpolatedImageWidth; Y++) {
 
-			// Udregn længde forholdets Y fraktions parameter
+			// Calculate the Y fraction parameter of the length ratio
 			YWidthRatioStepSize = WidthRatio * Y;
 
-			// Udregn X pixel længden, højden og vægten fra tilhørende højde/længde forhold
+			// Calculate the X pixel length, height and weight from the associated height/length ratio
 			XWidthLength = YWidthRatioStepSize;
 			XWidthHeight = (unsigned int)(YWidthRatioStepSize + 0.999); // RMH Implementering af Hurtig -> ceil(YWidthRatioStepSize);
 			XWidthWeight = YWidthRatioStepSize - XWidthLength;
 
-			// Udregn den interpolerede pixels værdi
+			// Calculate the interpolated pixel value
 			ImagePixelValue = ImageData[YHeightLengthIndex + XWidthLength] * (1.0 - XWidthWeight) * (1.0 - YHeightWeight) +
 							  ImageData[YHeightLengthIndex + XWidthHeight] * XWidthWeight * (1.0 - YHeightWeight) +
 							  ImageData[YHeightHeightIndex + XWidthLength] * YHeightWeight * (1.0 - XWidthWeight) +
 							  ImageData[YHeightHeightIndex + XWidthHeight] * XWidthWeight * YHeightWeight;
 
-			// Skriv Interpolerede pixels værdi til givet pointer array
+			// Write the interpolated pixel value to the given pointer array
 			*(InterpolatedImage + (X * InterpolatedImageWidth + Y)) = ImagePixelValue;
 
 		}

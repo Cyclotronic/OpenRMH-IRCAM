@@ -1,12 +1,12 @@
 #pragma once
 
-// Inkluderede Blblioteker
+// Included libraries
 #include "GlobalObjectsAndVariables.h"
 #include "RMH_Winforms_Library.h"
 
 namespace IRCAMThermalViewer {
 
-	// Tilhørende namespaces
+	// Associated namespaces
 	using namespace System;
 	using namespace System::ComponentModel;
 	using namespace System::Collections;
@@ -17,7 +17,7 @@ namespace IRCAMThermalViewer {
 	// Summary for Form - InputValueDialog
 	public ref class InputValueDialog : public System::Windows::Forms::Form {
 
-		// Lokale klasse variabler og objekter
+		// Local class variables and objects
 		float *DialogOutputValuePointer;
 		bool* DialogNewValueReadyFlag = false;
 
@@ -27,20 +27,20 @@ namespace IRCAMThermalViewer {
 
 		InputValueDialog(System::String^ InfoLabel1String, System::String^ InfoLabel2String, float UpDownMaxRangeVal, float UpDownMinRangeVal, float *DialogOutputVal, bool *NewValueReadyFlag) {
 
-			// Init GUI komponenter og objekter
+			// Init GUI components and objects
 			InitializeComponent();
 
 			// Aktiver Applikationens TitelBars Dark Mode
 			RMH_Winforms_EnableTitleBarDarkMode(this->Handle);
 
-			// Initiliser lokalt ouput dialog værdi og "værdi klar" flag pointere
+			// Initialize the local output dialog value and "value ready" flag pointers
 			DialogOutputValuePointer = DialogOutputVal;
 			DialogNewValueReadyFlag = NewValueReadyFlag;
 
 			// Opdaterer Teksten i toppen af Dialogen
 			RMH_Winforms_ChangeFormTitleBarText(this, "Please Enter A Value");
 			
-			// Opdater Informations labels
+			// Update the information labels
 			this->InfoLabel1->Text = InfoLabel1String;
 			this->InfoLabel2->Text = InfoLabel2String;
 
@@ -48,10 +48,10 @@ namespace IRCAMThermalViewer {
 			this->InputValueUpDown->Maximum = (System::Decimal)UpDownMaxRangeVal;
 			this->InputValueUpDown->Minimum = (System::Decimal)UpDownMinRangeVal;
 
-			// Sæt Input dialog UpDown værdi til givet output værdi pointer
+			// Set the input dialog UpDown value to the given output value pointer
 			this->InputValueUpDown->Value = (System::Decimal) * DialogOutputVal;
 
-			// Opdater tilhørende form er aktiv flag
+			// Update the associated form active flag
 			InputValueDialogIsShownFlag = true;
 			
 		}
@@ -65,12 +65,12 @@ namespace IRCAMThermalViewer {
 		/// </summary>
 		~InputValueDialog() {
 
-			// Opdater tilhørende form er aktiv flag
+			// Update the associated form active flag
 			InputValueDialogIsShownFlag = false;
 
 			if (components) {
 
-				// Slet alle Form Komponenter
+				// Delete all form components
 				delete components;
 
 			}
@@ -326,27 +326,27 @@ namespace IRCAMThermalViewer {
 
 		// ------------------------------ Input Dialog Callback Routiner ------------------------------ //
 
-		// Input Værdi Dialog OK Knap Callback Routine ->
+		// Input value dialog OK button callback routine ->
 		private: System::Void SetInputValueButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Skriv indstillede dialog værdi til output pointer addresse
+			// Write the configured dialog value to the output pointer address
 			*DialogOutputValuePointer = (float)this->InputValueUpDown->Value;
 
-			// Opdater "Dialog værdi er klar" flag
+			// Update the "dialog value is ready" flag
 			*DialogNewValueReadyFlag = true;
 
-			// Luk Dialog
+			// Close the dialog
 			this->Close();
 
 		}
 
-		// Apply værdi dialog knap Callback Routine ->
+		// Apply value dialog button callback routine ->
 		private: System::Void ApplyValueButton_Click(System::Object^ sender, System::EventArgs^ e) {
 
-			// Skriv indstillede dialog værdi til output pointer addresse
+			// Write the configured dialog value to the output pointer address
 			*DialogOutputValuePointer = (float)this->InputValueUpDown->Value;
 
-			// Opdater "Dialog værdi er klar" flag
+			// Update the "dialog value is ready" flag
 			*DialogNewValueReadyFlag = true;
 
 		}
