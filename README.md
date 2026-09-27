@@ -76,7 +76,7 @@ Details, prerequisites and troubleshooting: [`docs/BUILDING.md`](docs/BUILDING.m
 src/          Visual Studio solution and all source (C++/CLI WinForms + OpenGL)
   res/          icons/images the build needs
 scripts/      fetch-deps.ps1, build.ps1
-docs/         building, supported cameras, architecture
+docs/         building, supported cameras, architecture, developer guide
 examples/     MATLAB scripts that read the CSV exports
 deps/         (git-ignored) third-party libraries fetched by the script
 ```
@@ -87,5 +87,7 @@ deps/         (git-ignored) third-party libraries fetched by the script
 
 ## Contributing
 
-Issues and pull requests are welcome (contributions are accepted under the MIT licence). Please do not commit binaries, downloaded
+See [`CONTRIBUTING.md`](CONTRIBUTING.md). Issues and pull requests are welcome (contributions are accepted under the MIT licence);
+[`docs/DEVELOPER-GUIDE.md`](docs/DEVELOPER-GUIDE.md) explains how a frame flows through the program and how to add a camera model.
+See [`CHANGELOG.md`](CHANGELOG.md) for what changed in each release. Please do not commit binaries, downloaded
 dependencies, licence keys or personal paths (see `.gitignore`).

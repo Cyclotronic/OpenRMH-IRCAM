@@ -64,6 +64,8 @@ jobs:
     permissions:
       contents: write               # create the release and upload the zip
     steps:
+      - uses: actions/checkout@v4
+
       - uses: actions/download-artifact@v4
         with:
           name: OpenRMH-IRCAM-win-x64
@@ -98,4 +100,6 @@ jobs:
 
           SHA-256 of the zip: \`${sha}\`
           EOF
+          awk -v t="## ${TAG} " 'index($0,t)==1{f=1;next} /^## /{f=0} f' CHANGELOG.md > changes.md || true
+          if [ -s changes.md ]; then { printf '\n**Changes in this build**\n\n'; cat changes.md; } >> notes.md; fi
           gh release create "${TAG}" "${zip_name}" --repo "${GITHUB_REPOSITORY}" --title "OpenRMH-IRCAM ${TAG}" --notes-file notes.md --verify-tag
