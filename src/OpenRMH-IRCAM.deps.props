@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Locations of third-party dependencies (not stored in this repository).
+     Populate <repo>\deps with scripts\fetch-deps.ps1, or override:  msbuild /p:OpenRMHDepsDir=D:\libs\  -->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <OpenRMHDepsDir Condition="'$(OpenRMHDepsDir)'==''">$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\deps'))\</OpenRMHDepsDir>
+    <!-- glew.h and glfw3.h are included flat (#include &lt;glew.h&gt;), so their subfolders are on the path too -->
+    <OpenRMHIncludeDirs>$(OpenRMHDepsDir)opencv\build\include;$(OpenRMHDepsDir)glew\include\GL;$(OpenRMHDepsDir)glfw\include\GLFW;$(OpenRMHDepsDir)glew\include;$(OpenRMHDepsDir)glfw\include</OpenRMHIncludeDirs>
+    <OpenRMHLibDirs>$(OpenRMHDepsDir)opencv\build\x64\vc16\lib;$(OpenRMHDepsDir)glfw\lib-vc2022;$(OpenRMHDepsDir)glew\lib\Release\x64</OpenRMHLibDirs>
+  </PropertyGroup>
+</Project>

@@ -1,0 +1,46 @@
+name: build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  windows-release-x64:
+    runs-on: windows-2022        # Visual Studio 2022 17.14 with C++/CLI, ATL, .NET 4.7.2 pack, Windows SDK 22621/26100
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache third-party dependencies
+        id: deps-cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            deps
+            src/packages
+          key: deps-${{ runner.os }}-${{ hashFiles('scripts/fetch-deps.ps1') }}
+
+      - name: Fetch dependencies
+        if: steps.deps-cache.outputs.cache-hit != 'true'
+        shell: pwsh
+        run: ./scripts/fetch-deps.ps1
+
+      - name: Build (Release|x64)
+        shell: pwsh
+        run: ./scripts/build.ps1
+
+      - name: Collect output
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory dist | Out-Null
+          Copy-Item "src/x64/Release/IRCAM Thermal Viewer.exe" dist/
+          Copy-Item src/x64/Release/*.dll dist/
+          Copy-Item LICENSE, NOTICE.md dist/
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: OpenRMH-IRCAM-win-x64
+          path: dist/
+          if-no-files-found: error

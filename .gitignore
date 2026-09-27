@@ -1,0 +1,52 @@
+# --- Third-party dependencies (fetched by scripts/fetch-deps.ps1, never committed) ---
+/deps/
+/src/packages/
+
+# --- Build output ---
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Bb]in/
+[Oo]bj/
+IRCAM Th.*/
+*.obj
+*.pdb
+*.ilk
+*.exp
+*.lib
+*.dll
+*.exe
+*.res
+*.resources
+*.tlog
+*.log
+*.metagen
+*.idb
+*.ipch
+*.cache
+*.lastbuildstate
+*.Build.CppClean.log
+*.vcxproj.user
+*.suo
+*.aps
+*.VC.db
+*.VC.opendb
+
+# --- Visual Studio / editors ---
+.vs/
+.vscode/
+*.rsp
+[Gg]enerated Files/
+
+# --- Local / private ---
+*.local
+TurboActivate.dat
+*.pfx
+*.snk
+secrets/
+
+# --- Installers built from this repo (publish via GitHub Releases, not git) ---
+/dist/
+*.msi
+*.zip
