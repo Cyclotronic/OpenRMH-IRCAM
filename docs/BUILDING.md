@@ -43,6 +43,22 @@ Or open `src\IRCAM Thermal Viewer.sln` in Visual Studio, choose **Release | x64*
 - **Debug|x64 is unmaintained**: it still references `opencv_world460d.lib`. Use Release until it is fixed.
 - **Licensing code.** No licence check is compiled in; the original TurboActivate dependency was removed.
 
+## Building the installer (optional)
+
+The GitHub Actions release build produces a Windows installer with [Inno Setup](https://jrsoftware.org/isinfo.php) 6
+(preinstalled on GitHub's Windows runners) from `installer/setup.iss`. To build it locally:
+
+```powershell
+.\scripts\fetch-deps.ps1
+.\scripts\build.ps1
+# The redistributable is optional locally; the installer skips it if the file isn't there.
+Invoke-WebRequest https://aka.ms/vc14/vc_redist.x64.exe -OutFile installer\payload\vc_redist.x64.exe
+& "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer\setup.iss /DAppVersion=3.0.0-community.local
+```
+
+Output: `installer-out\OpenRMH-IRCAM-<version>-setup.exe`. The script is adapted from the original author's own
+Inno Setup script (not included in this repository) to use paths relative to this repo instead of his desktop folders.
+
 ## Troubleshooting
 
 | Symptom | Cause / fix |

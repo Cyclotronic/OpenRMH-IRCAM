@@ -12,15 +12,18 @@ analysis (CSV, with MATLAB examples).
 
 ## Download
 
-**[Latest release](https://github.com/Cyclotronic/OpenRMH-IRCAM/releases/latest)** - a Windows x64 zip built by GitHub Actions
-from the tagged source. Unzip anywhere and run `IRCAM Thermal Viewer.exe`.
-Current: **v3.0.0-community.2**, a community build of IRCAM Thermal Viewer 3.0.0 (September 2026).
+**[Latest release](https://github.com/Cyclotronic/OpenRMH-IRCAM/releases/latest)** - built by GitHub Actions from the tagged source, in two forms:
+- **Installer** (`OpenRMH-IRCAM-<version>-setup.exe`) - installs to Program Files, adds Start Menu/desktop shortcuts and an
+  uninstaller, and silently installs the VC++ Redistributable if needed. Recommended for most people.
+- **Portable zip** (`OpenRMH-IRCAM-<version>-win-x64.zip`) - unzip anywhere and run `IRCAM Thermal Viewer.exe` directly, no install.
 
-Requirements: Windows 10/11 x64 and .NET Framework 4.7.2 or later (included in current Windows). The
-[Microsoft Visual C++ Redistributable (x64)](https://aka.ms/vc14/vc_redist.x64.exe) **may also be required**
-- the program uses the dynamic C++ runtime - but this has **not been tested** on a machine without it. If the program
-does not start and reports a missing DLL (for example `VCRUNTIME140.dll`), install the redistributable ([Microsoft's page on it](https://learn.microsoft.com/cpp/windows/latest-supported-vc-redist)).
-The executable is unsigned, so Windows SmartScreen may warn on first run; the release notes give the zip's SHA-256.
+Current: **v3.0.0-community.3**, a community build of IRCAM Thermal Viewer 3.0.0 (September 2026).
+
+Requirements: Windows 10/11 x64 and .NET Framework 4.7.2 or later (included in current Windows). The Microsoft Visual C++
+Redistributable (x64) is required (the program uses the dynamic C++ runtime); the installer installs it for you, and the
+portable zip needs it installed separately (matching what the original author's own installer did) - get it from
+[Microsoft's page on it](https://learn.microsoft.com/cpp/windows/latest-supported-vc-redist).
+The executable is unsigned, so Windows SmartScreen may warn on first run; the release notes give each file's SHA-256.
 Tags look like `v<upstream version>-community.<n>`: the first part is the author's version, the number counts builds of this repository.
 
 ## Origin, status and intent
@@ -75,6 +78,7 @@ Details, prerequisites and troubleshooting: [`docs/BUILDING.md`](docs/BUILDING.m
 ```
 src/          Visual Studio solution and all source (C++/CLI WinForms + OpenGL)
   res/          icons/images the build needs
+installer/    Inno Setup script for the Windows installer (see docs/BUILDING.md)
 scripts/      fetch-deps.ps1, build.ps1
 docs/         building, supported cameras, architecture, developer guide
 examples/     MATLAB scripts that read the CSV exports
