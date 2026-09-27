@@ -6,6 +6,11 @@ The application source in `src/` was written by **Rune Mark Hansen** (about 33 f
 `Author: Rune Mark Hansen`, first dated 2022–2023). Copyright in that code belongs to the author unless
 and until it is licensed to others. **No licence file accompanied the source we received.**
 
+Name note: about 33 source headers read `Author: Rune Mark Hansen`, while the program's title bar text and one header
+(`RMH_LiveView_ZoomWindow.h`) read `Rune Mark Glendorf`. Both are in the author's own release; this repository has not
+changed either. The `LICENSE` copyright line uses the name in the majority of headers and will be updated if the author
+asks for a different form.
+
 ## Licence
 
 On 24-25 September 2026 the original author announced, on the project's community Discord server, that the complete

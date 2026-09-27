@@ -78,7 +78,8 @@ jobs:
           (cd package && zip -qr "../${zip_name}" .)
           sha=$(sha256sum "${zip_name}" | cut -d' ' -f1)
           cat > notes.md <<EOF
-          Community build of IRCAM Thermal Viewer (source by Rune Mark Hansen), built from tag \`${TAG}\` by GitHub Actions.
+          Community build of **IRCAM Thermal Viewer 3.0.0** (September 2026 source release by Rune Mark Hansen), built from tag \`${TAG}\`
+          by GitHub Actions. The program reports itself as version 3.0.0; the tag suffix numbers builds of this repository.
 
           **Install:** unzip anywhere and run \`IRCAM Thermal Viewer.exe\`. In the camera list choose your exact model
           (Thermal Master P2 Pro: *InfiRay Or Thermal Master P2Pro*). See docs/SUPPORTED-CAMERAS.md.
