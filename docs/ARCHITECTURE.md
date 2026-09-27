@@ -2,7 +2,7 @@
 
 A single C++/CLI executable: WinForms windows for the UI, native C++ (OpenCV, OpenGL, DirectShow) for the work.
 Every source file is compiled with `/clr`. The code comments were **translated from Danish to English** (the original
-author's language) in a comment-only change: the code is byte-for-byte identical once comments are removed. A number of
+author's language) in a comment-only change: the code is identical once comments are removed (checked for every file). A number of
 identifiers and a few variable names are still Danish-influenced; the original wording is in git history.
 
 This is a file-level map from the file names and headers; it is not a design document.
