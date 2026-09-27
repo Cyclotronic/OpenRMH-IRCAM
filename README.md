@@ -16,8 +16,10 @@ analysis (CSV, with MATLAB examples).
 from the tagged source. Unzip anywhere and run `IRCAM Thermal Viewer.exe`.
 Current: **v3.0.0-community.1**, a community build of IRCAM Thermal Viewer 3.0.0 (September 2026).
 
-Requirements: Windows 10/11 x64, .NET Framework 4.7.2 or later (included in current Windows), and the
-[Microsoft Visual C++ Redistributable 2015-2022 (x64)](https://aka.ms/vs/17/release/vc_redist.x64.exe).
+Requirements: Windows 10/11 x64 and .NET Framework 4.7.2 or later (included in current Windows). The
+[Microsoft Visual C++ Redistributable 2015-2022 (x64)](https://aka.ms/vs/17/release/vc_redist.x64.exe) **may also be required**
+- the program uses the dynamic C++ runtime - but this has **not been tested** on a machine without it. If the program
+does not start and reports a missing DLL (for example `VCRUNTIME140.dll`), install the redistributable.
 The executable is unsigned, so Windows SmartScreen may warn on first run; the release notes give the zip's SHA-256.
 Tags look like `v<upstream version>-community.<n>`: the first part is the author's version, the number counts builds of this repository.
 
