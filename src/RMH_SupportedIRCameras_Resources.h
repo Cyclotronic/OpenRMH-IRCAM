@@ -46,6 +46,7 @@
 #define _SupportedThermalCameras_Pool_2                   2
 #define _SupportedThermalCameras_Pool_3                   3
 #define _SupportedThermalCameras_Pool_4                   4
+#define _SupportedThermalCameras_Pool_5                   5
 
 // Thermal camera temperature range reference macros 
 #define _ThermalCamera_TemperatureRange_HighRange         1
@@ -71,12 +72,13 @@
 #define _SupportedThermalCamera_InfiRayS0Series           16 
 #define _SupportedThermalCamera_InfiRayTiny1C             17
 #define _SupportedThermalCamera_ThermalMasterP2           18
-#define _SupportedThermalCamera_HTIHT301                  19  
-#define _SupportedThermalCamera_UNITUTi260M               20  
-#define _SupportedThermalCamera_TOPDONTC001               21  
-#define _SupportedThermalCamera_TOPDONTC002               22 
-#define _SupportedThermalCamera_Victor328B                23 
-#define _SupportedThermalCamera_LODESTARL2                24
+#define _SupportedThermalCamera_ThermalMasterP3           19
+#define _SupportedThermalCamera_HTIHT301                  20
+#define _SupportedThermalCamera_UNITUTi260M               21
+#define _SupportedThermalCamera_TOPDONTC001               22
+#define _SupportedThermalCamera_TOPDONTC002               23
+#define _SupportedThermalCamera_Victor328B                24
+#define _SupportedThermalCamera_LODESTARL2                25
 
 // Reference macros for whether a thermal camera supports a higher temperature range
 #define _SupportedThermalCamera_InfiRayT2L_SupportsHighRange                false      
@@ -101,7 +103,8 @@
 #define _SupportedThermalCamera_TOPDONTC001_SupportsHighRange               true   
 #define _SupportedThermalCamera_TOPDONTC002_SupportsHighRange               true 
 #define _SupportedThermalCamera_Victor328B_SupportsHighRange                true 
-#define _SupportedThermalCamera_LODESTARL2_SupportsHighRange                true     
+#define _SupportedThermalCamera_LODESTARL2_SupportsHighRange                true
+#define _SupportedThermalCamera_ThermalMasterP3_SupportsHighRange           true
 
 // Supported thermal camera frame rate reference macros
 #define _SupportedThermalCamera_InfiRayT2L_FrameRate                25.0      
@@ -126,7 +129,8 @@
 #define _SupportedThermalCamera_TOPDONTC001_FrameRate               25.0     
 #define _SupportedThermalCamera_TOPDONTC002_FrameRate               25.0  
 #define _SupportedThermalCamera_Victor328B_FrameRate                25.0  
-#define _SupportedThermalCamera_LODESTARL2_FrameRate                25.0  
+#define _SupportedThermalCamera_LODESTARL2_FrameRate                25.0
+#define _SupportedThermalCamera_ThermalMasterP3_FrameRate           25.0
 
 // -------------------- Supported IR Camera Pool 1 Reference Macros --------------------- //
 
@@ -208,11 +212,12 @@ static std::vector<std::string> SupportedCamerasModelNames = { "Snapshot Analysi
                                                                "InfiRay S0 Series", 
                                                                "InfiRay Tiny1-C",
                                                                "Thermal Master P2",
+                                                               "Thermal Master P3",
                                                                "HTI HT-301",
                                                                "UNI-T UTi260M",
                                                                "TOPDON TC001 or TS001", 
                                                                "TOPDON TC002 or TC003",
-                                                               "Victor 328B", 
+                                                               "Victor 328B",
                                                                "LODESTAR L2"};
 
 // Supported camera device names - InfiRay T2L - supported pool 1
@@ -283,6 +288,9 @@ static std::vector<std::string> Victor328BDeviceNames = { "USB Camera" };
 
 // Supported camera device names - LODESTAR L2 - supported pool 2
 static std::vector<std::string> LODESTARL2DeviceNames = { "USB Camera" };
+
+// Supported camera device names - Thermal Master P3 - supported pool 4
+static std::vector<std::string> ThermalMasterP3DeviceNames = { "P3" };
 
 // ------------------------------------------------------------------------------------------ //
 

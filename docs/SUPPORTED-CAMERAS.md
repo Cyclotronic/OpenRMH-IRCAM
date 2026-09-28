@@ -28,13 +28,42 @@ Device names come from `src/RMH_SupportedIRCameras_Resources.h`.
 | TOPDON TC002 / TC003 | `USB Camera`, `TC002`, `TC003` | 2 |
 | Victor 328B | `USB Camera` | 2 |
 | LODESTAR L2 | `USB Camera` | 2 |
+| **Thermal Master P3** | *(not DirectShow — see below)* | 5 |
 | Snapshot Analysis / Recording Analysis | (no camera — works on saved data) | — |
+
+### Thermal Master P3 (Pool 5): not a DirectShow camera
+
+The P3 (VID `3474`, PID `45A2`) has no USB Video Class interface at all — Windows binds WinUSB to it
+(`P3.inf`), and the vendor's own app talks to it with a private protocol, not DirectShow. Pool 5 is a
+second camera backend, entirely separate from the DirectShow path every other entry in this table uses:
+`src/p3_winusb_camera.h`/`.cpp` open the device directly via WinUSB, replicate the vendor's control
+protocol (reverse engineered from a USB capture — see that file's header comment for the wire format),
+and pull raw frames over a bulk endpoint. The frame format is byte-for-byte the same as Pool 4 (Thermal
+Master P2), so it is fed into the same conversion/temperature code once acquired; only the acquisition
+(`RMH_IRThermalCamera_OpenIRCameraDevice` / `_CloseIRCameraDevice` / `_ReadFrameRaw` / etc. in
+`RMH_ThermalCameraSupport_Library.cpp`) branches on `_SupportedThermalCameras_Pool_5` to call into
+`P3WinUsbCamera` instead of the shared `IRThermalCamera` DirectShow object.
+
+Two quirks specific to this camera, both handled in `RMH_ThermalCameraSupport_Library.cpp`/
+`p3_winusb_camera.cpp` and not applicable to Pool 4's other camera (Thermal Master P2):
+`FrameWidthPixelOffset` is set to 6 to skip a fixed 6-pixel dead zone at the start of the display row
+(and the resulting 6-pixel read past the end of the raw buffer is filled with duplicated data in
+`P3WinUsbCamera::getFrame()`); live view rotation is left at the camera's native orientation (rotate it
+physically, or use *Rotate Live View CW/CCW* in the live view menu).
+
+Shutter (NUC) calibration is supported: the *Calibrate* button sends the camera's own vendor command
+(`P3WinUsbCamera::triggerShutterCalibration()`) rather than doing any NUC processing on this side - the
+camera performs the calibration internally, the same as pressing the button in the vendor's app.
+A freshly plugged-in camera can take several seconds before it answers any command at all (observed
+up to ~9s in a real capture); both `startCapture()` and the shutter trigger retry with a few seconds
+of patience rather than failing on the first attempt.
 
 ## Verification status
 
 | Camera | Status |
 |---|---|
 | Thermal Master P2 Pro (USB `0BDA:5830`, shows as "USB Camera") | **works** — select *InfiRay Or Thermal Master P2Pro* |
+| Thermal Master P3 (USB `3474:45A2`) | **works** — select *Thermal Master P3*. Not a DirectShow camera; see the Pool 5 section above. Requires the stock WinUSB driver from the vendor installer (`P3.inf`) to be bound — no driver changes needed beyond what the vendor's own installer already sets up. |
 | all others | untested in this repository |
 
 ## If your camera is not found

@@ -12,6 +12,7 @@ This is a file-level map from the file names and headers; it is not a design doc
 | Entry point | `main.cpp` |
 | Shared state | `GlobalObjectsAndVariables.{h,cpp}`, `ApplicationResource.h` |
 | Camera access (DirectShow/UVC) | `ds_camera*.{h,cpp}`, `abstract_ds_camera.*`, `camera_device.*`, `uvc_camera*.{h,cpp}`, `ds_grabber_callback.*`, `ds_video_format.*`, `ds_guid.h`, `ds_libs_setting.h`, `qedit.h`, `cv_mat_convertor.*` |
+| Camera access (WinUSB, Thermal Master P3 only — not DirectShow) | `p3_winusb_camera.{h,cpp}` |
 | Supported cameras, protocols, temperature ranges | `RMH_SupportedIRCameras_Resources.h`, `RMH_ThermalCameraSupport_Library.{h,cpp}` |
 | Image processing and temperature maths | `RMH_ImageProcessing_Library.*`, `RMH_MathConversions_Library.*` |
 | Snapshot / recording analysis | `RMH_AnalysisMode_Routines.*` |
