@@ -11,7 +11,7 @@
 #include <string>
 #include <math.h>
 #include <iostream>
-#include <cstdlib>
+#include <cstdlib> 
 #include "uvc_camera.h"
 #include "p3_winusb_camera.h"
 #include "GlobalObjectsAndVariables.h"
@@ -629,7 +629,9 @@ ThermalCameraDevice::IRCameraDeviceFormat RMH_IRThermalCamera_ConnectToThermalCa
 	// Read the associated ComboBox item's camera identity - translate its position in the sorted ComboBox
 	// (see SupportedCamerasDisplayOrder in RMH_SupportedIRCameras_Resources.h) back to the camera's stable
 	// macro index, since the two are no longer the same number once the list is displayed alphabetically.
-	CameraStatus.SellectedCameraIndex = SupportedCamerasDisplayOrder[CameraSourceComboBox->SelectedIndex];
+	// RMH_GetCameraIndexAtDisplayPosition() bounds-checks this - CameraSourceComboBox->SelectedIndex is -1
+	// if nothing is selected (for example a saved session referencing a since-removed camera).
+	CameraStatus.SellectedCameraIndex = RMH_GetCameraIndexAtDisplayPosition(CameraSourceComboBox->SelectedIndex);
 
 	// Check and update the associated supported camera pool and the associated camera frame rate parameter
 	switch (CameraStatus.SellectedCameraIndex) {
@@ -949,7 +951,7 @@ double RMH_IRThermalCamera_ConvertYUY2To14BitThermalDataArray(ThermalCameraDevic
 
 			// Convert only the metadata area
 			IRCamera->FrameHeight = IRCamera->FrameHeight;
-
+					
 			// Calculate the array index value of the center pixel
 			CenterPixelIndex = ((IRCamera->FrameHeight - IRCamera->FrameMetadataSize) * 0.5) * IRCamera->FrameWidth + (IRCamera->FrameWidth * 0.5);
 
@@ -991,7 +993,7 @@ double RMH_IRThermalCamera_ConvertYUY2To14BitThermalDataArray(ThermalCameraDevic
 		Pixel16BitValue[1] = ((unsigned short)(*(YUY2in + (j + 3))) << 8) | ((unsigned short)*(YUY2in + (j + 2)));
 		Pixel16BitValue[2] = ((unsigned short)(*(YUY2in + (j + 5))) << 8) | ((unsigned short)*(YUY2in + (j + 4)));
 		Pixel16BitValue[3] = ((unsigned short)(*(YUY2in + (j + 7))) << 8) | ((unsigned short)*(YUY2in + (j + 6)));
-
+	
 		// Do not limit the 16-bit pixel values in the metadata area
 		if (i < FrameSizeMinusMeta) {
 
@@ -1953,7 +1955,7 @@ double RMH_IRThermalCamera_ReadPixelTemperature(ThermalCameraDevice::IRCameraDev
 			PixelTemperature = ((double)PixelValue * 0.015625) - 273.15;
 			// Compensate for the environmental contribution to the temperature calculations
 			PixelTemperature = PixelTemperature * IRCamera->ObjectEnvirTempCorrectionFactor + IRCamera->ObjectEnvirTempCorrectionOffset;
-			// Compensate for the temperature correction
+			// Compensate for the temperature correction 
 			PixelTemperature = PixelTemperature + IRCamera->TemperatureCorrectionSetting;
 
 		break;
@@ -2043,7 +2045,7 @@ double RMH_IRThermalCamera_ReadFramePixelTemperature(ThermalCameraDevice::IRCame
 
 	}
 
-	// Return the pixel temperature
+	// Return the pixel temperature 
 	return PixelTemperature;
 
 }
@@ -3238,7 +3240,7 @@ void RMH_IRThermalCamera_ConnectToThermalCameraOrAnalysisMode() {
 
 								// Configure the live view stream OpenGL texture rendering resolution 
 								GlobalVariables::OpenGLRender->RMH_OpenGL_InitImageTexture(IRCamera.FrameWidth, IRCamera.FrameHeight - IRCamera.FrameMetadataSize);
-								// Configure the live view OpenGL zoom texture rendering resolution
+								// Configure the live view OpenGL zoom texture rendering resolution 
 								GlobalVariables::LiveViewZoomWindowRender->RMH_OpenGL_InitLiveViewZoomWindow(IRCamera.FrameWidth, IRCamera.FrameHeight - IRCamera.FrameMetadataSize);
 
 								// Pool 5 (Thermal Master P3) sensor is mounted rotated 90 degrees - correct it automatically
@@ -3523,7 +3525,7 @@ void RMH_IRThermalCamera_ConnectToThermalCameraOrAnalysisMode() {
 
 										// Configure the live view stream OpenGL texture rendering resolution 
 										GlobalVariables::OpenGLRender->RMH_OpenGL_InitImageTexture(IRCamera.FrameWidth, IRCamera.FrameHeight - IRCamera.FrameMetadataSize);
-										// Configure the live view OpenGL zoom texture rendering resolution
+										// Configure the live view OpenGL zoom texture rendering resolution 
 										GlobalVariables::LiveViewZoomWindowRender->RMH_OpenGL_InitLiveViewZoomWindow(IRCamera.FrameWidth, IRCamera.FrameHeight - IRCamera.FrameMetadataSize);
 
 										// Pool 5 (Thermal Master P3) sensor is mounted rotated 90 degrees - correct it automatically
@@ -3801,7 +3803,7 @@ void RMH_IRThermalCamera_ConnectToThermalCameraOrAnalysisMode() {
 
 					// Configure the live view stream OpenGL texture rendering resolution 
 					GlobalVariables::OpenGLRender->RMH_OpenGL_InitImageTexture(IRCamera.FrameWidth, IRCamera.FrameHeight - IRCamera.FrameMetadataSize);
-					// Configure the live view OpenGL zoom texture rendering resolution
+					// Configure the live view OpenGL zoom texture rendering resolution 
 					GlobalVariables::LiveViewZoomWindowRender->RMH_OpenGL_InitLiveViewZoomWindow(IRCamera.FrameWidth, IRCamera.FrameHeight - IRCamera.FrameMetadataSize);
 
 					// Pool 5 (Thermal Master P3) sensor is mounted rotated 90 degrees - correct it automatically
