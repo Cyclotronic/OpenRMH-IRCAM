@@ -251,7 +251,7 @@ namespace IRCAMThermalViewer {
 
 			// Store the selected camera's stable macro index (not its position in the sorted ComboBox) in
 			// the global variable for the saved session parameter
-			SelectedThermalCameraIndex = SupportedCamerasDisplayOrder[this->CameraSourceDropList->SelectedIndex];
+			SelectedThermalCameraIndex = RMH_GetCameraIndexAtDisplayPosition(this->CameraSourceDropList->SelectedIndex);
 
 			// Store the selected full frame temperature CSV data delimiter in the global variable for the saved session parameter
 			SelectedFullFrameTempCSVDataDelimiterIndex = this->FullFrameTempDataCSVDelimiterCombiBox->SelectedIndex;
@@ -6826,7 +6826,7 @@ namespace IRCAMThermalViewer {
 			this->MaxTempDriftSetPountLabel->Name = L"MaxTempDriftSetPountLabel";
 			this->MaxTempDriftSetPountLabel->Size = System::Drawing::Size(193, 15);
 			this->MaxTempDriftSetPountLabel->TabIndex = 28;
-			this->MaxTempDriftSetPountLabel->Text = L"Maximum Drift Temperature [ï¿½C]:";
+			this->MaxTempDriftSetPountLabel->Text = L"Maximum Drift Temperature [°C]:";
 			this->MaxTempDriftSetPountLabel->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
 			// 
 			// SensorDriftCalButton
@@ -7353,7 +7353,7 @@ namespace IRCAMThermalViewer {
 			this->TempCorrLabel->Name = L"TempCorrLabel";
 			this->TempCorrLabel->Size = System::Drawing::Size(170, 15);
 			this->TempCorrLabel->TabIndex = 15;
-			this->TempCorrLabel->Text = L"Temperature Correction [ï¿½C]:";
+			this->TempCorrLabel->Text = L"Temperature Correction [°C]:";
 			this->TempCorrLabel->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
 			// 
 			// DistanceUpDown
@@ -7396,7 +7396,7 @@ namespace IRCAMThermalViewer {
 			this->AmbientTempLabel->Name = L"AmbientTempLabel";
 			this->AmbientTempLabel->Size = System::Drawing::Size(157, 15);
 			this->AmbientTempLabel->TabIndex = 17;
-			this->AmbientTempLabel->Text = L"Ambient Temperature [ï¿½C]:";
+			this->AmbientTempLabel->Text = L"Ambient Temperature [°C]:";
 			this->AmbientTempLabel->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
 			// 
 			// EmissivityLabel
@@ -7477,7 +7477,7 @@ namespace IRCAMThermalViewer {
 			this->ReflectedTempLabel->Name = L"ReflectedTempLabel";
 			this->ReflectedTempLabel->Size = System::Drawing::Size(164, 15);
 			this->ReflectedTempLabel->TabIndex = 21;
-			this->ReflectedTempLabel->Text = L"Reflected Temperature [ï¿½C]:";
+			this->ReflectedTempLabel->Text = L"Reflected Temperature [°C]:";
 			this->ReflectedTempLabel->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
 			// 
 			// HumidityUpDown

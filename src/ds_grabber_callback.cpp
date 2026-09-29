@@ -4,6 +4,7 @@
 
 namespace DirectShowCamera
 {
+
     /**
      * @brief Constructor
     */

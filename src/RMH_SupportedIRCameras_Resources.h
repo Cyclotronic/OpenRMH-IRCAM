@@ -58,28 +58,28 @@
 // Supported thermal camera reference index macros
 #define _SnapShotAnalysisMode                             0  
 #define _RecordingAnalysisMode                            1   
-#define _SupportedThermalCamera_InfiRayT2L                2
-#define _SupportedThermalCamera_InfiRayT2LV2              3
-#define _SupportedThermalCamera_InfiRayT2Search           4
-#define _SupportedThermalCamera_InfiRayT2SearchV2         5
-#define _SupportedThermalCamera_InfiRayT2Sp               6
+#define _SupportedThermalCamera_InfiRayT2L                2     
+#define _SupportedThermalCamera_InfiRayT2LV2              3  
+#define _SupportedThermalCamera_InfiRayT2Search           4 
+#define _SupportedThermalCamera_InfiRayT2SearchV2         5  
+#define _SupportedThermalCamera_InfiRayT2Sp               6   
 #define _SupportedThermalCamera_InfiRayT2SpV2             7
-#define _SupportedThermalCamera_InfiRayT2Pro              8
-#define _SupportedThermalCamera_InfiRayT2ProV2            9
-#define _SupportedThermalCamera_InfiRayT3Search           10
-#define _SupportedThermalCamera_InfiRayT3S                11
-#define _SupportedThermalCamera_InfiRayT3Pro              12
-#define _SupportedThermalCamera_InfiRayP2                 13
-#define _SupportedThermalCamera_InfiRayP2Pro              14
-#define _SupportedThermalCamera_InfiRayDVDL13             15
-#define _SupportedThermalCamera_InfiRayS0Series           16
+#define _SupportedThermalCamera_InfiRayT2Pro              8  
+#define _SupportedThermalCamera_InfiRayT2ProV2            9  
+#define _SupportedThermalCamera_InfiRayT3Search           10          
+#define _SupportedThermalCamera_InfiRayT3S                11    
+#define _SupportedThermalCamera_InfiRayT3Pro              12       
+#define _SupportedThermalCamera_InfiRayP2                 13   
+#define _SupportedThermalCamera_InfiRayP2Pro              14     
+#define _SupportedThermalCamera_InfiRayDVDL13             15    
+#define _SupportedThermalCamera_InfiRayS0Series           16 
 #define _SupportedThermalCamera_InfiRayTiny1C             17
 #define _SupportedThermalCamera_ThermalMasterP2           18
-#define _SupportedThermalCamera_HTIHT301                  19
-#define _SupportedThermalCamera_UNITUTi260M               20
-#define _SupportedThermalCamera_TOPDONTC001               21
-#define _SupportedThermalCamera_TOPDONTC002               22
-#define _SupportedThermalCamera_Victor328B                23
+#define _SupportedThermalCamera_HTIHT301                  19  
+#define _SupportedThermalCamera_UNITUTi260M               20  
+#define _SupportedThermalCamera_TOPDONTC001               21  
+#define _SupportedThermalCamera_TOPDONTC002               22 
+#define _SupportedThermalCamera_Victor328B                23 
 #define _SupportedThermalCamera_LODESTARL2                24
 #define _SupportedThermalCamera_ThermalMasterP3           25
 #define _SupportedThermalCamera_ThermalMasterTHOR001      26
@@ -107,7 +107,7 @@
 #define _SupportedThermalCamera_TOPDONTC001_SupportsHighRange               true   
 #define _SupportedThermalCamera_TOPDONTC002_SupportsHighRange               true 
 #define _SupportedThermalCamera_Victor328B_SupportsHighRange                true 
-#define _SupportedThermalCamera_LODESTARL2_SupportsHighRange                true
+#define _SupportedThermalCamera_LODESTARL2_SupportsHighRange                true     
 #define _SupportedThermalCamera_ThermalMasterP3_SupportsHighRange           true
 #define _SupportedThermalCamera_ThermalMasterTHOR001_SupportsHighRange      false // Unknown - not yet verified against real hardware
 
@@ -134,7 +134,7 @@
 #define _SupportedThermalCamera_TOPDONTC001_FrameRate               25.0     
 #define _SupportedThermalCamera_TOPDONTC002_FrameRate               25.0  
 #define _SupportedThermalCamera_Victor328B_FrameRate                25.0  
-#define _SupportedThermalCamera_LODESTARL2_FrameRate                25.0
+#define _SupportedThermalCamera_LODESTARL2_FrameRate                25.0  
 #define _SupportedThermalCamera_ThermalMasterP3_FrameRate           25.0
 #define _SupportedThermalCamera_ThermalMasterTHOR001_FrameRate      25.0
 
@@ -194,7 +194,7 @@
 #define _SupporteredeThermalCameraPool4_SensorWidthWithThermalData       256  
 #define _SupporteredeThermalCameraPool4_SensorHeightWithThermalData      386 
 #define _SupporteredeThermalCameraPool4_FrameWidthPixelOffset            0  
-#define _SupporteredeThermalCameraPool4_FrameHeightPixelOffset           194
+#define _SupporteredeThermalCameraPool4_FrameHeightPixelOffset           194  
 
 // -------------------- Supported IR Camera Pool 6 Reference Macros --------------------- //
 
@@ -203,13 +203,13 @@
 // 16 bit sensor values - a single 256 x 192 block, with no second (display/pseudocolor) block like Pool
 // 2/4's sensors, so there is no FrameHeightPixelOffset to skip. See RMH_ThermalCameraSupport_Library.cpp
 // for the DirectShow video format selection (must explicitly pick the MEDIASUBTYPE_H264-labeled format).
-#define _SupporteredeThermalCameraPool6_SensorWidthWithThermalData       256
-#define _SupporteredeThermalCameraPool6_SensorHeightWithThermalData      192
+#define _SupporteredeThermalCameraPool6_SensorWidthWithThermalData       256  
+#define _SupporteredeThermalCameraPool6_SensorHeightWithThermalData      192  
 // The raw sample is a fixed 10-byte header (5x "ff 00", confirmed against real hardware) immediately
 // followed by 256 x 192 raw 16 bit pixel values with no other padding, so skipping 5 pixels (10 bytes)
 // lines up exactly with the start of real pixel data and exactly consumes the rest of the buffer.
-#define _SupporteredeThermalCameraPool6_FrameWidthPixelOffset            5
-#define _SupporteredeThermalCameraPool6_FrameHeightPixelOffset           0
+#define _SupporteredeThermalCameraPool6_FrameWidthPixelOffset            5  
+#define _SupporteredeThermalCameraPool6_FrameHeightPixelOffset           0  
 
 // The camera interleaves two differently-sized sample streams on the same pin (a real, variable-size H.264
 // preview alongside the constant-size raw data), so DirectShow's own automatic sample-size detection never
@@ -221,29 +221,29 @@
 
 // Supported thermal camera model names ->
 static std::vector<std::string> SupportedCamerasModelNames = { "Snapshot Analysis Mode",
-                                                               "Recording Analysis Mode",
+                                                               "Recording Analysis Mode", 
                                                                "InfiRay T2L",
                                                                "InfiRay T2L V2",
                                                                "InfiRay T2-Search",
                                                                "InfiRay T2-Search V2",
-                                                               "InfiRay T2S+",
+                                                               "InfiRay T2S+", 
                                                                "InfiRay T2S+ V2",
-                                                               "InfiRay T2Pro And T2SPro",
+                                                               "InfiRay T2Pro And T2SPro", 
                                                                "InfiRay T2Pro And T2SPro V2",
-                                                               "InfiRay T3-Search",
-                                                               "InfiRay T3S",
-                                                               "InfiRay T3Pro",
+                                                               "InfiRay T3-Search", 
+                                                               "InfiRay T3S", 
+                                                               "InfiRay T3Pro", 
                                                                "InfiRay P2",
                                                                "InfiRay Or Thermal Master P2Pro",
-                                                               "InfiRay DV-DL13",
-                                                               "InfiRay S0 Series",
+                                                               "InfiRay DV-DL13", 
+                                                               "InfiRay S0 Series", 
                                                                "InfiRay Tiny1-C",
                                                                "Thermal Master P2",
                                                                "HTI HT-301",
                                                                "UNI-T UTi260M",
-                                                               "TOPDON TC001 or TS001",
+                                                               "TOPDON TC001 or TS001", 
                                                                "TOPDON TC002 or TC003",
-                                                               "Victor 328B",
+                                                               "Victor 328B", 
                                                                "LODESTAR L2",
                                                                "Thermal Master P3",
                                                                "Thermal Master THOR001"};
@@ -294,6 +294,20 @@ inline int RMH_FindCameraDisplayPosition(int CameraIndex) {
 	}
 
 	return -1;
+
+}
+
+// The inverse of RMH_FindCameraDisplayPosition(): given a ComboBox position, returns the camera's stable
+// macro index at that position, or _SnapShotAnalysisMode (0) if the position is out of range. A ComboBox
+// can end up with no selection (SelectedIndex == -1) after RMH_Winforms_CombiBox_SetSellectedItemPosition()
+// silently declines to select a saved camera ID that RMH_FindCameraDisplayPosition() could not find (an old
+// or hand-edited saved session file) - indexing SupportedCamerasDisplayOrder with that -1 directly would be
+// undefined behaviour, so every read of a ComboBox position must go through this function instead.
+inline int RMH_GetCameraIndexAtDisplayPosition(int Position) {
+
+	if (Position < 0 || Position >= (int)SupportedCamerasDisplayOrder.size()) { return _SnapShotAnalysisMode; }
+
+	return SupportedCamerasDisplayOrder[Position];
 
 }
 
