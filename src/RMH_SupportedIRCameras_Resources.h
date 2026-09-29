@@ -57,34 +57,31 @@
 // Supported thermal camera reference index macros
 #define _SnapShotAnalysisMode                             0  
 #define _RecordingAnalysisMode                            1   
-// Index macros are ordered/numbered to match the alphabetical order of SupportedCamerasModelNames below
-// (case-insensitive) - the two are kept in lockstep so the ComboBox selection index always lines up with
-// the macro used in the pool-assignment switch in RMH_IRThermalCamera_ConnectToThermalCamera().
-#define _SupportedThermalCamera_HTIHT301                  2
-#define _SupportedThermalCamera_InfiRayDVDL13             3
-#define _SupportedThermalCamera_InfiRayP2Pro              4
-#define _SupportedThermalCamera_InfiRayP2                 5
-#define _SupportedThermalCamera_InfiRayS0Series           6
-#define _SupportedThermalCamera_InfiRayT2Search           7
-#define _SupportedThermalCamera_InfiRayT2SearchV2         8
-#define _SupportedThermalCamera_InfiRayT2L                9
-#define _SupportedThermalCamera_InfiRayT2LV2              10
-#define _SupportedThermalCamera_InfiRayT2Pro              11
-#define _SupportedThermalCamera_InfiRayT2ProV2            12
-#define _SupportedThermalCamera_InfiRayT2Sp               13
-#define _SupportedThermalCamera_InfiRayT2SpV2             14
-#define _SupportedThermalCamera_InfiRayT3Search           15
-#define _SupportedThermalCamera_InfiRayT3Pro              16
-#define _SupportedThermalCamera_InfiRayT3S                17
-#define _SupportedThermalCamera_InfiRayTiny1C             18
-#define _SupportedThermalCamera_LODESTARL2                19
-#define _SupportedThermalCamera_ThermalMasterP2           20
-#define _SupportedThermalCamera_ThermalMasterP3           21
-#define _SupportedThermalCamera_ThermalMasterTHOR001      22
-#define _SupportedThermalCamera_TOPDONTC001               23
-#define _SupportedThermalCamera_TOPDONTC002               24
-#define _SupportedThermalCamera_UNITUTi260M               25
-#define _SupportedThermalCamera_Victor328B                26
+#define _SupportedThermalCamera_InfiRayT2L                2
+#define _SupportedThermalCamera_InfiRayT2LV2              3
+#define _SupportedThermalCamera_InfiRayT2Search           4
+#define _SupportedThermalCamera_InfiRayT2SearchV2         5
+#define _SupportedThermalCamera_InfiRayT2Sp               6
+#define _SupportedThermalCamera_InfiRayT2SpV2             7
+#define _SupportedThermalCamera_InfiRayT2Pro              8
+#define _SupportedThermalCamera_InfiRayT2ProV2            9
+#define _SupportedThermalCamera_InfiRayT3Search           10
+#define _SupportedThermalCamera_InfiRayT3S                11
+#define _SupportedThermalCamera_InfiRayT3Pro              12
+#define _SupportedThermalCamera_InfiRayP2                 13
+#define _SupportedThermalCamera_InfiRayP2Pro              14
+#define _SupportedThermalCamera_InfiRayDVDL13             15
+#define _SupportedThermalCamera_InfiRayS0Series           16
+#define _SupportedThermalCamera_InfiRayTiny1C             17
+#define _SupportedThermalCamera_ThermalMasterP2           18
+#define _SupportedThermalCamera_HTIHT301                  19
+#define _SupportedThermalCamera_UNITUTi260M               20
+#define _SupportedThermalCamera_TOPDONTC001               21
+#define _SupportedThermalCamera_TOPDONTC002               22
+#define _SupportedThermalCamera_Victor328B                23
+#define _SupportedThermalCamera_LODESTARL2                24
+#define _SupportedThermalCamera_ThermalMasterP3           25
+#define _SupportedThermalCamera_ThermalMasterTHOR001      26
 
 // Reference macros for whether a thermal camera supports a higher temperature range
 #define _SupportedThermalCamera_InfiRayT2L_SupportsHighRange                false      
@@ -222,34 +219,33 @@
 // ------------------- Supported IR Camera Device Names & Manufacturers -------------------- //
 
 // Supported thermal camera model names ->
-// Order matches the alphabetical (case-insensitive) index macros above - keep the two in lockstep.
 static std::vector<std::string> SupportedCamerasModelNames = { "Snapshot Analysis Mode",
                                                                "Recording Analysis Mode",
-                                                               "HTI HT-301",
-                                                               "InfiRay DV-DL13",
-                                                               "InfiRay Or Thermal Master P2Pro",
-                                                               "InfiRay P2",
-                                                               "InfiRay S0 Series",
-                                                               "InfiRay T2-Search",
-                                                               "InfiRay T2-Search V2",
                                                                "InfiRay T2L",
                                                                "InfiRay T2L V2",
-                                                               "InfiRay T2Pro And T2SPro",
-                                                               "InfiRay T2Pro And T2SPro V2",
+                                                               "InfiRay T2-Search",
+                                                               "InfiRay T2-Search V2",
                                                                "InfiRay T2S+",
                                                                "InfiRay T2S+ V2",
+                                                               "InfiRay T2Pro And T2SPro",
+                                                               "InfiRay T2Pro And T2SPro V2",
                                                                "InfiRay T3-Search",
-                                                               "InfiRay T3Pro",
                                                                "InfiRay T3S",
+                                                               "InfiRay T3Pro",
+                                                               "InfiRay P2",
+                                                               "InfiRay Or Thermal Master P2Pro",
+                                                               "InfiRay DV-DL13",
+                                                               "InfiRay S0 Series",
                                                                "InfiRay Tiny1-C",
-                                                               "LODESTAR L2",
                                                                "Thermal Master P2",
-                                                               "Thermal Master P3",
-                                                               "Thermal Master THOR001",
+                                                               "HTI HT-301",
+                                                               "UNI-T UTi260M",
                                                                "TOPDON TC001 or TS001",
                                                                "TOPDON TC002 or TC003",
-                                                               "UNI-T UTi260M",
-                                                               "Victor 328B"};
+                                                               "Victor 328B",
+                                                               "LODESTAR L2",
+                                                               "Thermal Master P3",
+                                                               "Thermal Master THOR001"};
 
 // Supported camera device names - InfiRay T2L - supported pool 1
 static std::vector<std::string> InfiRayT2LDeviceNames = { "T2L-A4L", "T2L-A6L", "T2L-A8L", "T2L", "T2L-A4L_R", "T2L-A4L_A", "T2L-A4L_C" };

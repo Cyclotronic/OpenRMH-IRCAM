@@ -7,31 +7,29 @@ entry matters — a wrong choice simply reports that no device was found.
 
 Device names come from `src/RMH_SupportedIRCameras_Resources.h`.
 
-List entries below are in the same alphabetical order as the camera selection ComboBox.
-
 | List entry | Windows device name(s) matched | Protocol pool |
 |---|---|---|
-| HTI HT-301 | `T3`, `T3-317-13`, `T3-317-68`, `HT-301` | 1 |
-| InfiRay DV-DL13 | `VirtualBox Webcam - DV-DL13`, `DV-DL13` | 1 |
-| **InfiRay Or Thermal Master P2Pro** | `USB Camera`, `Camera` | 2 |
-| InfiRay P2 | `USB Camera`, `Camera` | 2 |
-| InfiRay S0 Series | `S0-90W`, `S0-40`, `S0-68`, `S0-90` | 1 |
-| InfiRay T2-Search / V2 | `T2-Search`, `T2`, `T2S`, … | 1 / 3 |
 | InfiRay T2L / T2L V2 | `T2L-A4L`, `T2L-A6L`, `T2L-A8L`, `T2L`, … | 1 / 3 |
-| InfiRay T2Pro and T2SPro / V2 | `T2Pro`, `T2+`, `T2p`, `T2P`, `T2SPro`, … | 1 / 3 |
+| InfiRay T2-Search / V2 | `T2-Search`, `T2`, `T2S`, … | 1 / 3 |
 | InfiRay T2S+ / V2 | `T2S+`, `T2Sp`, `T2SPro`, … | 1 / 3 |
+| InfiRay T2Pro and T2SPro / V2 | `T2Pro`, `T2+`, `T2p`, `T2P`, `T2SPro`, … | 1 / 3 |
 | InfiRay T3-Search | `T3-Search`, `T3` | 1 |
-| InfiRay T3Pro | `T3Pro-A13`, `T3Pro-A68`, `T3Pro`, … | 1 |
 | InfiRay T3S | `Xtherm-T3S`, `T3S-A68`, `T3S-A13`, `T3S`, … | 1 |
+| InfiRay T3Pro | `T3Pro-A13`, `T3Pro-A68`, `T3Pro`, … | 1 |
+| InfiRay P2 | `USB Camera`, `Camera` | 2 |
+| **InfiRay Or Thermal Master P2Pro** | `USB Camera`, `Camera` | 2 |
+| InfiRay DV-DL13 | `VirtualBox Webcam - DV-DL13`, `DV-DL13` | 1 |
+| InfiRay S0 Series | `S0-90W`, `S0-40`, `S0-68`, `S0-90` | 1 |
 | InfiRay Tiny1-C | `USB Camera`, `Tiny1C` | 2 |
-| LODESTAR L2 | `USB Camera` | 2 |
 | Thermal Master P2 | `Camera` | 4 |
-| **Thermal Master P3** | *(not DirectShow — see below)* | 5 |
-| **Thermal Master THOR001** | `THOR001` | 6 |
+| HTI HT-301 | `T3`, `T3-317-13`, `T3-317-68`, `HT-301` | 1 |
+| UNI-T UTi260M | `USB Camera` | 2 |
 | TOPDON TC001 / TS001 | `USB Camera`, `TC001` | 2 |
 | TOPDON TC002 / TC003 | `USB Camera`, `TC002`, `TC003` | 2 |
-| UNI-T UTi260M | `USB Camera` | 2 |
 | Victor 328B | `USB Camera` | 2 |
+| LODESTAR L2 | `USB Camera` | 2 |
+| **Thermal Master P3** | *(not DirectShow — see below)* | 5 |
+| **Thermal Master THOR001** | `THOR001` | 6 |
 | Snapshot Analysis / Recording Analysis | (no camera — works on saved data) | — |
 
 ### Thermal Master P3 (Pool 5): not a DirectShow camera
