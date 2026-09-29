@@ -401,6 +401,37 @@ void RMH_IRThermalCamera_SetIRCameraTemperatureRange(unsigned int TemperatureRan
 
 		break;
 
+		// Supported camera pool 5
+		case _SupportedThermalCameras_Pool_5:
+
+			// Which temperature range should be set - switch the camera's own hardware range,
+			// see P3WinUsbCamera::setTemperatureRange()
+			switch (TemperatureRange) {
+
+				case _ThermalCamera_TemperatureRange_HighRange:
+
+					if (P3Camera.setTemperatureRange(true) == false) {
+
+						RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "P3 setTemperatureRange(high) failed: " + P3Camera.getLastError(), _StatusMessageType_Error);
+
+					}
+
+				break;
+
+				case _ThermalCamera_TemperatureRange_LowRange:
+
+					if (P3Camera.setTemperatureRange(false) == false) {
+
+						RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "P3 setTemperatureRange(low) failed: " + P3Camera.getLastError(), _StatusMessageType_Error);
+
+					}
+
+				break;
+
+			}
+
+		break;
+
 	}
 
 }
@@ -595,8 +626,10 @@ ThermalCameraDevice::IRCameraDeviceFormat RMH_IRThermalCamera_ConnectToThermalCa
 	std::vector<std::string> CameraDeviceNamesPointer;
 	ThermalCameraDevice::IRCameraDeviceFormat CameraStatus;
 	
-	// Read the associated ComboBox item index value
-	CameraStatus.SellectedCameraIndex = CameraSourceComboBox->SelectedIndex;
+	// Read the associated ComboBox item's camera identity - translate its position in the sorted ComboBox
+	// (see SupportedCamerasDisplayOrder in RMH_SupportedIRCameras_Resources.h) back to the camera's stable
+	// macro index, since the two are no longer the same number once the list is displayed alphabetically.
+	CameraStatus.SellectedCameraIndex = SupportedCamerasDisplayOrder[CameraSourceComboBox->SelectedIndex];
 
 	// Check and update the associated supported camera pool and the associated camera frame rate parameter
 	switch (CameraStatus.SellectedCameraIndex) {
@@ -2397,10 +2430,71 @@ void RMH_IRThermalCamera_ChangeThermalCameraTemperatureRange() {
 			break;
 
 			// Supported camera pools 2 and 4
-			case _SupportedThermalCameras_Pool_2: case _SupportedThermalCameras_Pool_4: case _SupportedThermalCameras_Pool_5:
+			case _SupportedThermalCameras_Pool_2: case _SupportedThermalCameras_Pool_4:
 
 				// Write GUI status message
 				RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "This Function Is Not Supported For The Camera In This Version Of IRCAM Thermal Viewer", _StatusMessageType_Warning);
+
+			break;
+
+			// Supported camera pool 5 (Thermal Master P3) - the camera itself has a genuine hardware
+			// high/low range, unlike pool 2/4 - see P3WinUsbCamera::setTemperatureRange()
+			case _SupportedThermalCameras_Pool_5:
+
+				// Toggle the temperature range flag
+				ThermalCameraHighRangeFlag = !ThermalCameraHighRangeFlag;
+
+				// Write GUI status message
+				RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "Changing Thermal Camera Temperature Range... Please Wait...", _StatusMessageType_Normal);
+
+				// Handle the state of the temperature range flag
+				if (ThermalCameraHighRangeFlag == true) {
+
+					// Configure the thermal camera to its highest temperature range
+					RMH_IRThermalCamera_SetIRCameraTemperatureRange(_ThermalCamera_TemperatureRange_HighRange, IRCamera.ThermalCameraSupportPool);
+
+					// Update the temperature range button border color
+					GlobalVariables::GlobalTempRangeButton->FlatAppearance->BorderColor = System::Drawing::Color::Yellow;
+
+					// Update the temperature range button graphic
+					GlobalVariables::GlobalTempRangeButton->Update();
+					// Wait for the temperature range to switch correctly
+					System::Threading::Thread::Sleep(_ThermalCameraPool4_RangeSwitchReadyTimeMs);
+
+					// Update the IR camera device temperature range variable
+					IRCamera.CurrentIRTempRangeFlag = 2;
+
+					// Update the temperature range button border color
+					GlobalVariables::GlobalTempRangeButton->FlatAppearance->BorderColor = System::Drawing::Color::Lime;
+
+				}
+				else {
+
+					// Configure the thermal camera to its lowest temperature range
+					RMH_IRThermalCamera_SetIRCameraTemperatureRange(_ThermalCamera_TemperatureRange_LowRange, IRCamera.ThermalCameraSupportPool);
+
+					// Update the temperature range button border color
+					GlobalVariables::GlobalTempRangeButton->FlatAppearance->BorderColor = System::Drawing::Color::Yellow;
+
+					// Update the temperature range button graphic
+					GlobalVariables::GlobalTempRangeButton->Update();
+					// Wait for the temperature range to switch correctly
+					System::Threading::Thread::Sleep(_ThermalCameraPool4_RangeSwitchReadyTimeMs);
+
+					// Update the IR camera device temperature range variable
+					IRCamera.CurrentIRTempRangeFlag = 1;
+
+					// Update the temperature range button border color
+					GlobalVariables::GlobalTempRangeButton->FlatAppearance->BorderColor = System::Drawing::Color::FromArgb(255, 40, 40, 40);
+
+				}
+
+				// Write GUI status message
+				RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "Thermal Camera Temperature Range Was Changed", _StatusMessageType_Normal);
+
+				// Perform a thermal camera calibration - switching range needs a fresh shutter (NUC)
+				// calibration for the new gain/range, exactly like the vendor app's own range menu does
+				RMH_IRThermalCamera_CalibrateThermalCamera();
 
 			break;
 

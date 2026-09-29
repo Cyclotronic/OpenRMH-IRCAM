@@ -460,6 +460,19 @@ bool P3WinUsbCamera::triggerShutterCalibration() {
 
 }
 
+bool P3WinUsbCamera::setTemperatureRange(bool highRange) {
+
+    // Opcode 0x01 0x2f (the same opcode used for start-stream) with byte2 0x41 (not the usual
+    // 0x81, nor the shutter trigger's 0x43) and param 0x00/0x01, no response expected. Confirmed by
+    // three isolated USB captures of the vendor app's range menu, each with exactly one 18-byte
+    // command on the wire: switching to the 100-600C range sent param 0x00; switching to the
+    // -20-150C range sent param 0x01; switching to "Auto" sent the exact same command as -20-150C,
+    // meaning Auto is a vendor-app-side display feature over the low-range sensor data, not a
+    // separate camera hardware mode - there is nothing to send this camera for it.
+    return sendCommand(0x01, 0x2f, highRange ? 0x00 : 0x01, 0, NULL, 0x41);
+
+}
+
 bool P3WinUsbCamera::stopCapture() {
 
     if (!m_opened || !m_capturing) { return true; }

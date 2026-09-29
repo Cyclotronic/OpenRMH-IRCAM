@@ -38,6 +38,10 @@ public:
     // Triggers the camera's shutter (NUC) calibration (opcode 0x01 0x36, param 0x43, fire-and-forget).
     bool triggerShutterCalibration();
 
+    // Switches the camera's own hardware temperature range (opcode 0x01 0x2f, byte2 0x41,
+    // param 0x00 = high range/100-600C, param 0x01 = low range/-20-150C), fire-and-forget.
+    bool setTemperatureRange(bool highRange);
+
     // Reads one raw YUY2 frame (256 x 386 x 2 bytes) into "frame". Mirrors the signature of
     // DirectShowCamera::UVCCamera::getFrame() so call sites can branch on pool with minimal change.
     bool getFrame(unsigned char* frame, int* numOfBytes, bool onlyGetNewFrame, int maxBytes);

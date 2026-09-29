@@ -11,6 +11,7 @@
  // Included libraries
 #include <string>
 #include <vector>
+#include <algorithm>
 
 // RMH_SupportedIRCameras_Resources.h
 #ifndef RMH_SupportedIRCameras_Resources_H 
@@ -246,6 +247,55 @@ static std::vector<std::string> SupportedCamerasModelNames = { "Snapshot Analysi
                                                                "LODESTAR L2",
                                                                "Thermal Master P3",
                                                                "Thermal Master THOR001"};
+
+// The camera selection ComboBox is not populated from SupportedCamerasModelNames directly - it is populated
+// in the order below instead, so that adding a new camera only ever means appending a new macro index and a
+// new SupportedCamerasModelNames entry (as above), without renumbering anything or hand-sorting any list.
+//
+// SupportedCamerasDisplayOrder[i] is the camera macro index shown at ComboBox position i: position 0 and 1
+// are always "Snapshot Analysis Mode" and "Recording Analysis Mode" (matching their fixed macro values 0
+// and 1), and every other position is one of the real camera macro indices (2 upward), sorted alphabetically
+// (case-insensitive) by its SupportedCamerasModelNames entry. Every place that turns a ComboBox selection
+// into a camera identity (or vice-versa) must go through this array or RMH_FindCameraDisplayPosition() below
+// - see RMH_IRThermalCamera_ConnectToThermalCamera() and ThermalCameraGUI.h's camera ComboBox handling.
+inline std::vector<int> RMH_BuildCameraDisplayOrder() {
+
+	std::vector<int> DisplayOrder;
+	DisplayOrder.push_back(_SnapShotAnalysisMode);
+	DisplayOrder.push_back(_RecordingAnalysisMode);
+
+	std::vector<int> CameraIndices;
+	for (int i = 2; i < (int)SupportedCamerasModelNames.size(); i++) { CameraIndices.push_back(i); }
+
+	std::sort(CameraIndices.begin(), CameraIndices.end(), [](int a, int b) {
+		std::string NameA = SupportedCamerasModelNames[a];
+		std::string NameB = SupportedCamerasModelNames[b];
+		std::transform(NameA.begin(), NameA.end(), NameA.begin(), ::tolower);
+		std::transform(NameB.begin(), NameB.end(), NameB.begin(), ::tolower);
+		return NameA < NameB;
+	});
+
+	DisplayOrder.insert(DisplayOrder.end(), CameraIndices.begin(), CameraIndices.end());
+	return DisplayOrder;
+
+}
+
+static std::vector<int> SupportedCamerasDisplayOrder = RMH_BuildCameraDisplayOrder();
+
+// Reverse lookup for SupportedCamerasDisplayOrder - given a camera's stable macro index (for example one
+// read back from a saved session file), returns the ComboBox position it is currently displayed at, or -1
+// if it is not found (an old or hand-edited saved session referencing a since-removed camera).
+inline int RMH_FindCameraDisplayPosition(int CameraIndex) {
+
+	for (int i = 0; i < (int)SupportedCamerasDisplayOrder.size(); i++) {
+
+		if (SupportedCamerasDisplayOrder[i] == CameraIndex) { return i; }
+
+	}
+
+	return -1;
+
+}
 
 // Supported camera device names - InfiRay T2L - supported pool 1
 static std::vector<std::string> InfiRayT2LDeviceNames = { "T2L-A4L", "T2L-A6L", "T2L-A8L", "T2L", "T2L-A4L_R", "T2L-A4L_A", "T2L-A4L_C" };
