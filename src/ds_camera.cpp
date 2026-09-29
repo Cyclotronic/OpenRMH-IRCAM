@@ -907,6 +907,21 @@ namespace DirectShowCamera
         return result;
     }
 
+    /**
+     * @brief Overrides the grabber callback's expected sample size directly, bypassing the automatic
+     * "5 identical sizes in a row" resize in SampleGrabberCallback::SampleCB(). Needed for cameras that
+     * interleave two differently-sized sample streams on the same pin, where that automatic detection
+     * never settles because the size never repeats twice, let alone 5 times, in a row.
+     * @param numOfBytes The exact sample size (in bytes) to accept.
+    */
+    void DirectShowCamera::forceExpectedFrameBufferSize(int numOfBytes)
+    {
+        if (m_sampleGrabberCallback)
+        {
+            m_sampleGrabberCallback->setBufferSize(numOfBytes);
+        }
+    }
+
 #pragma endregion Video Format
 
 #pragma region Properties
