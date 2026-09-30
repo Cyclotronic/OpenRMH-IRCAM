@@ -17,7 +17,7 @@ analysis (CSV, with MATLAB examples).
   uninstaller, and silently installs the VC++ Redistributable if needed. Recommended for most people.
 - **Portable zip** (`OpenRMH-IRCAM-<version>-win-x64.zip`) - unzip anywhere and run `IRCAM Thermal Viewer.exe` directly, no install.
 
-Current: **v3.0.0-community.3**, a community build of IRCAM Thermal Viewer 3.0.0 (September 2026).
+Current: **v3.0.0-community.5**, a community build of IRCAM Thermal Viewer 3.0.0 (September 2026).
 
 Requirements: Windows 10/11 x64 and .NET Framework 4.7.2 or later (included in current Windows). The Microsoft Visual C++
 Redistributable (x64) is required (the program uses the dynamic C++ runtime); the installer installs it for you, and the
