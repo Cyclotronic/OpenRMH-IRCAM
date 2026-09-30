@@ -3,6 +3,22 @@
 Tags look like `v<upstream version>-community.<n>`: the first part is the version of IRCAM Thermal Viewer the source came from,
 the number counts builds of this repository.
 
+## v3.0.0-community.5 - 2026-09-30
+
+- Two new cameras, contributed by Krzysztof Boksa ([#2](https://github.com/Cyclotronic/OpenRMH-IRCAM/pull/2)). Both
+  were tested by the contributor on real hardware; neither has been tested by this project.
+  - **Thermal Master P3** (pool 5): the camera has no USB Video Class interface, so it is opened directly through WinUSB
+    (`src/p3_winusb_camera.h`/`.cpp`) using the vendor's own protocol, reverse engineered from a USB capture of the vendor
+    app. The Calibrate button triggers the camera's shutter, and the Temperature Range button switches the camera between
+    its two ranges.
+  - **Thermal Master THOR001** (pool 6): a UVC camera that declares an H.264 format but delivers raw 256 x 192 sensor
+    values. Temperature is decoded as deci-Kelvin, unlike the other pools. Its range is not yet known.
+- The camera list is now shown alphabetically. Each camera keeps a fixed index, which is what a saved session stores, so
+  existing sessions still select the same camera; new cameras are appended to the list of indexes and sort themselves in.
+- A saved session that names an unknown camera now falls back to Snapshot Analysis mode instead of indexing outside the
+  list.
+- The camera-adding guide in `docs/DEVELOPER-GUIDE.md` now covers cameras that are not DirectShow devices.
+
 ## v3.0.0-community.4 - 2026-09-27
 
 - User manual: the author's manual, converted from the Word original in his source release to Markdown
