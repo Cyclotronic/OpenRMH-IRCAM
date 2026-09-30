@@ -2517,6 +2517,15 @@ namespace DirectShowCamera
     }
 
     /**
+     * @brief Overrides the grabber callback's expected sample size - see DirectShowCamera::forceExpectedFrameBufferSize().
+     * @param numOfBytes The exact sample size (in bytes) to accept.
+    */
+    void UVCCamera::forceExpectedFrameBufferSize(int numOfBytes)
+    {
+        m_directShowCamera->forceExpectedFrameBufferSize(numOfBytes);
+    }
+
+    /**
      * @brief Get the current DirectShowVideoFormat
      * @return Return the current DirectShowVideoFormat
     */
