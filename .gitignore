@@ -54,3 +54,6 @@ secrets/
 /dist/
 *.msi
 *.zip
+
+# --- Python ---
+__pycache__/
