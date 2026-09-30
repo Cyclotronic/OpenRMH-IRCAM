@@ -11,6 +11,7 @@
  // Included libraries
 #include <string>
 #include <vector>
+#include <algorithm>
 
 // RMH_SupportedIRCameras_Resources.h
 #ifndef RMH_SupportedIRCameras_Resources_H 
@@ -23,6 +24,7 @@
 #define _FixedThermalCameraFrame_AspectRatio_Pool_2      1.33333333
 #define _FixedThermalCameraFrame_AspectRatio_Pool_3      1.33333333
 #define _FixedThermalCameraFrame_AspectRatio_Pool_4      1.33333333
+#define _FixedThermalCameraFrame_AspectRatio_Pool_6      1.33333333
 
 // Camera pool timing constants reference macros
 #define _ThermalCameraShutter_CloseTimeMs                500
@@ -46,6 +48,8 @@
 #define _SupportedThermalCameras_Pool_2                   2
 #define _SupportedThermalCameras_Pool_3                   3
 #define _SupportedThermalCameras_Pool_4                   4
+#define _SupportedThermalCameras_Pool_5                   5
+#define _SupportedThermalCameras_Pool_6                   6
 
 // Thermal camera temperature range reference macros 
 #define _ThermalCamera_TemperatureRange_HighRange         1
@@ -77,6 +81,8 @@
 #define _SupportedThermalCamera_TOPDONTC002               22 
 #define _SupportedThermalCamera_Victor328B                23 
 #define _SupportedThermalCamera_LODESTARL2                24
+#define _SupportedThermalCamera_ThermalMasterP3           25
+#define _SupportedThermalCamera_ThermalMasterTHOR001      26
 
 // Reference macros for whether a thermal camera supports a higher temperature range
 #define _SupportedThermalCamera_InfiRayT2L_SupportsHighRange                false      
@@ -102,6 +108,8 @@
 #define _SupportedThermalCamera_TOPDONTC002_SupportsHighRange               true 
 #define _SupportedThermalCamera_Victor328B_SupportsHighRange                true 
 #define _SupportedThermalCamera_LODESTARL2_SupportsHighRange                true     
+#define _SupportedThermalCamera_ThermalMasterP3_SupportsHighRange           true
+#define _SupportedThermalCamera_ThermalMasterTHOR001_SupportsHighRange      false // Unknown - not yet verified against real hardware
 
 // Supported thermal camera frame rate reference macros
 #define _SupportedThermalCamera_InfiRayT2L_FrameRate                25.0      
@@ -127,6 +135,8 @@
 #define _SupportedThermalCamera_TOPDONTC002_FrameRate               25.0  
 #define _SupportedThermalCamera_Victor328B_FrameRate                25.0  
 #define _SupportedThermalCamera_LODESTARL2_FrameRate                25.0  
+#define _SupportedThermalCamera_ThermalMasterP3_FrameRate           25.0
+#define _SupportedThermalCamera_ThermalMasterTHOR001_FrameRate      25.0
 
 // -------------------- Supported IR Camera Pool 1 Reference Macros --------------------- //
 
@@ -186,6 +196,27 @@
 #define _SupporteredeThermalCameraPool4_FrameWidthPixelOffset            0  
 #define _SupporteredeThermalCameraPool4_FrameHeightPixelOffset           194  
 
+// -------------------- Supported IR Camera Pool 6 Reference Macros --------------------- //
+
+// Thermal Master THOR001 (Pool 6): a standard UVC device (usbvideo.sys), unlike Pool 5 (P3). The video
+// streaming interface declares a "H264" format, but the bytes actually delivered over that pipe are raw
+// 16 bit sensor values - a single 256 x 192 block, with no second (display/pseudocolor) block like Pool
+// 2/4's sensors, so there is no FrameHeightPixelOffset to skip. See RMH_ThermalCameraSupport_Library.cpp
+// for the DirectShow video format selection (must explicitly pick the MEDIASUBTYPE_H264-labeled format).
+#define _SupporteredeThermalCameraPool6_SensorWidthWithThermalData       256  
+#define _SupporteredeThermalCameraPool6_SensorHeightWithThermalData      192  
+// The raw sample is a fixed 10-byte header (5x "ff 00", confirmed against real hardware) immediately
+// followed by 256 x 192 raw 16 bit pixel values with no other padding, so skipping 5 pixels (10 bytes)
+// lines up exactly with the start of real pixel data and exactly consumes the rest of the buffer.
+#define _SupporteredeThermalCameraPool6_FrameWidthPixelOffset            5  
+#define _SupporteredeThermalCameraPool6_FrameHeightPixelOffset           0  
+
+// The camera interleaves two differently-sized sample streams on the same pin (a real, variable-size H.264
+// preview alongside the constant-size raw data), so DirectShow's own automatic sample-size detection never
+// settles (see forceExpectedFrameBufferSize() in ds_camera.h/.cpp). This is the raw sample's exact size, in
+// bytes, confirmed against real hardware.
+#define _SupporteredeThermalCameraPool6_RawFrameSizeBytes                98314
+
 // ------------------- Supported IR Camera Device Names & Manufacturers -------------------- //
 
 // Supported thermal camera model names ->
@@ -213,7 +244,72 @@ static std::vector<std::string> SupportedCamerasModelNames = { "Snapshot Analysi
                                                                "TOPDON TC001 or TS001", 
                                                                "TOPDON TC002 or TC003",
                                                                "Victor 328B", 
-                                                               "LODESTAR L2"};
+                                                               "LODESTAR L2",
+                                                               "Thermal Master P3",
+                                                               "Thermal Master THOR001"};
+
+// The camera selection ComboBox is not populated from SupportedCamerasModelNames directly - it is populated
+// in the order below instead, so that adding a new camera only ever means appending a new macro index and a
+// new SupportedCamerasModelNames entry (as above), without renumbering anything or hand-sorting any list.
+//
+// SupportedCamerasDisplayOrder[i] is the camera macro index shown at ComboBox position i: position 0 and 1
+// are always "Snapshot Analysis Mode" and "Recording Analysis Mode" (matching their fixed macro values 0
+// and 1), and every other position is one of the real camera macro indices (2 upward), sorted alphabetically
+// (case-insensitive) by its SupportedCamerasModelNames entry. Every place that turns a ComboBox selection
+// into a camera identity (or vice-versa) must go through this array or RMH_FindCameraDisplayPosition() below
+// - see RMH_IRThermalCamera_ConnectToThermalCamera() and ThermalCameraGUI.h's camera ComboBox handling.
+inline std::vector<int> RMH_BuildCameraDisplayOrder() {
+
+	std::vector<int> DisplayOrder;
+	DisplayOrder.push_back(_SnapShotAnalysisMode);
+	DisplayOrder.push_back(_RecordingAnalysisMode);
+
+	std::vector<int> CameraIndices;
+	for (int i = 2; i < (int)SupportedCamerasModelNames.size(); i++) { CameraIndices.push_back(i); }
+
+	std::sort(CameraIndices.begin(), CameraIndices.end(), [](int a, int b) {
+		std::string NameA = SupportedCamerasModelNames[a];
+		std::string NameB = SupportedCamerasModelNames[b];
+		std::transform(NameA.begin(), NameA.end(), NameA.begin(), ::tolower);
+		std::transform(NameB.begin(), NameB.end(), NameB.begin(), ::tolower);
+		return NameA < NameB;
+	});
+
+	DisplayOrder.insert(DisplayOrder.end(), CameraIndices.begin(), CameraIndices.end());
+	return DisplayOrder;
+
+}
+
+static std::vector<int> SupportedCamerasDisplayOrder = RMH_BuildCameraDisplayOrder();
+
+// Reverse lookup for SupportedCamerasDisplayOrder - given a camera's stable macro index (for example one
+// read back from a saved session file), returns the ComboBox position it is currently displayed at, or -1
+// if it is not found (an old or hand-edited saved session referencing a since-removed camera).
+inline int RMH_FindCameraDisplayPosition(int CameraIndex) {
+
+	for (int i = 0; i < (int)SupportedCamerasDisplayOrder.size(); i++) {
+
+		if (SupportedCamerasDisplayOrder[i] == CameraIndex) { return i; }
+
+	}
+
+	return -1;
+
+}
+
+// The inverse of RMH_FindCameraDisplayPosition(): given a ComboBox position, returns the camera's stable
+// macro index at that position, or _SnapShotAnalysisMode (0) if the position is out of range. A ComboBox
+// can end up with no selection (SelectedIndex == -1) after RMH_Winforms_CombiBox_SetSellectedItemPosition()
+// silently declines to select a saved camera ID that RMH_FindCameraDisplayPosition() could not find (an old
+// or hand-edited saved session file) - indexing SupportedCamerasDisplayOrder with that -1 directly would be
+// undefined behaviour, so every read of a ComboBox position must go through this function instead.
+inline int RMH_GetCameraIndexAtDisplayPosition(int Position) {
+
+	if (Position < 0 || Position >= (int)SupportedCamerasDisplayOrder.size()) { return _SnapShotAnalysisMode; }
+
+	return SupportedCamerasDisplayOrder[Position];
+
+}
 
 // Supported camera device names - InfiRay T2L - supported pool 1
 static std::vector<std::string> InfiRayT2LDeviceNames = { "T2L-A4L", "T2L-A6L", "T2L-A8L", "T2L", "T2L-A4L_R", "T2L-A4L_A", "T2L-A4L_C" };
@@ -283,6 +379,12 @@ static std::vector<std::string> Victor328BDeviceNames = { "USB Camera" };
 
 // Supported camera device names - LODESTAR L2 - supported pool 2
 static std::vector<std::string> LODESTARL2DeviceNames = { "USB Camera" };
+
+// Supported camera device names - Thermal Master P3 - supported pool 4
+static std::vector<std::string> ThermalMasterP3DeviceNames = { "P3" };
+
+// Supported camera device names - Thermal Master THOR001 - supported pool 6
+static std::vector<std::string> ThermalMasterTHOR001DeviceNames = { "THOR001" };
 
 // ------------------------------------------------------------------------------------------ //
 

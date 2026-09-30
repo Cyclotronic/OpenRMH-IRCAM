@@ -64,6 +64,9 @@ namespace DirectShowCamera
 
         bool setDirectShowVideoFormat(DirectShowVideoFormat* videoFormat);
 
+        // Overrides the grabber callback's expected sample size - see DirectShowCamera::forceExpectedFrameBufferSize().
+        void forceExpectedFrameBufferSize(int numOfBytes);
+
         // ------Frame------
 
         bool getFrame(unsigned char* frame, int* numOfBytes = NULL, bool onlyGetNewFrame = false, int maxBytes = 0);

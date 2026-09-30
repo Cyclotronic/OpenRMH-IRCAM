@@ -89,6 +89,22 @@ buffer swap; every frame follows the same shape: clear, bind texture, draw, draw
    to see every place a pool is handled).
 4. Add the model to `docs/SUPPORTED-CAMERAS.md` with its Windows device name, and say how you tested it.
 
+### If the camera has no DirectShow/UVC interface at all
+
+Some cameras (e.g. Thermal Master P3, Pool 5) only expose a vendor-specific WinUSB interface — no
+amount of DirectShow device-name matching will ever find them. `p3_winusb_camera.h`/`.cpp` is a
+self-contained example of an alternative backend for this case: it opens the device directly via the
+Win32 WinUSB API and implements the vendor's own control/streaming protocol (reverse engineered from a
+USB capture of the vendor's app — see that file's header comment). To wire in a new backend of this
+kind: give the camera its own pool number, have `RMH_IRThermalCamera_ConnectToThermalCamera()` bypass
+the DirectShow enumeration entirely for that pool (early-return once your backend's `open()` succeeds),
+and branch the handful of acquisition functions (`OpenIRCameraDevice`, `CloseIRCameraDevice`,
+`StartCapturing`, `StopCapturing`, `CheckForCameraDisconnection`, `ReadFrameRaw`, `ReadCameraFPS`) on
+that pool number to call your backend instead of the shared `IRThermalCamera` object. If the raw frame
+layout matches an existing pool once acquired (check the total byte count against
+`width*height*bytesPerPixel`), every other pool-keyed switch statement can just add your pool number
+as a fallthrough case alongside the matching one instead of duplicating its logic.
+
 ## Things worth knowing
 
 - Camera identification is by **name only**, and several models share the generic name `USB Camera`. That is why the user must pick the model.

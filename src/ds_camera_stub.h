@@ -84,6 +84,7 @@ namespace DirectShowCamera
 
         bool setVideoFormat(DirectShowVideoFormat* videoFormat);
         bool setVideoFormat(int videoFormatIndex);
+        void forceExpectedFrameBufferSize(int numOfBytes);
 
         // Property
         void refreshProperties();

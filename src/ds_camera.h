@@ -93,6 +93,11 @@ namespace DirectShowCamera
         bool setVideoFormat(DirectShowVideoFormat* videoFormat);
         bool setVideoFormat(int videoFormatIndex);
 
+        // Overrides the grabber callback's expected sample size, bypassing the automatic "5 identical
+        // sizes in a row" detection in SampleGrabberCallback::SampleCB(). Needed for cameras that interleave
+        // two differently-sized sample streams on the same pin (so the automatic detection never settles).
+        void forceExpectedFrameBufferSize(int numOfBytes);
+
         // Property
         void refreshProperties();
         DirectShowCameraProperties* getProperties();
