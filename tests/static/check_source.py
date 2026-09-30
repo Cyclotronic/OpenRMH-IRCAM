@@ -9,6 +9,16 @@ The program is organised around camera "pools" (protocol families) and a camera 
 touching many `switch` statements and lists by hand, and a missed one compiles cleanly and fails only on a user's
 camera. These checks find those misses without a Windows build, on any machine.
 
+For pools specifically:
+  - Integration: every switch on the pool handles every pool (or says why not), at least one camera uses each pool,
+    the snapshot/recording loader accepts every pool, and docs/SUPPORTED-CAMERAS.md lists it.
+  - Uniqueness: a pool exists only through what the program does differently for it. Every place the program
+    branches on the pool (a switch on it, or an `if` comparing it) is compared across pools, after resolving
+    constant macros and the per-pool functions those places call. A pool that does the same as another pool at
+    every such place is a duplicate: its cameras belong in the existing pool. The count and list of places where
+    each pool differs from its nearest neighbour is printed, so a reviewer can judge whether a small difference
+    would be better handled inside the existing pool.
+
 Each check prints its findings; the exit status is 1 if any check reported an error. Under GitHub Actions the
 findings are also emitted as annotations on the pull request.
 
@@ -16,12 +26,13 @@ Opting out: a pool `switch` that deliberately has no case for a pool carries a c
 line before it) of the form
     // pool-coverage: skip 5 6 - <reason>
 and a camera-index `switch` likewise
-    // camera-coverage: skip ThermalMasterP3 - <reason>
+    // camera-coverage: skip InfiRayT2L InfiRayT3S - <reason>
 The reason is for the reviewer; the check only reads the numbers/names.
 
 Standard library only, Python 3.9+.
 """
 import argparse
+import hashlib
 import os
 import pathlib
 import re
@@ -113,13 +124,13 @@ def blank_comments_and_strings(text):
     return "".join(out)
 
 
-def matching_brace(code, open_index):
-    """Index just past the brace that closes the one at open_index."""
+def matching_brace(code, open_index, opening="{", closing="}"):
+    """Index just past the bracket that closes the one at open_index."""
     depth = 0
     for i in range(open_index, len(code)):
-        if code[i] == "{":
+        if code[i] == opening:
             depth += 1
-        elif code[i] == "}":
+        elif code[i] == closing:
             depth -= 1
             if depth == 0:
                 return i + 1
@@ -138,17 +149,37 @@ def switches(code, selector_re):
             yield m.start(), body_start, matching_brace(code, body_start), m.group(1).strip()
 
 
+CASE_LABEL_RE = re.compile(r"\bcase\s+(\w+)\s*:(?!:)|\bdefault\s*:(?!:)")
+
+
+def case_groups(code, body_start, body_end):
+    """The top-level case groups of a switch body, in order: [(labels, body_text)].
+
+    Labels that follow each other with nothing between them share a group; the default label is None. Only labels at
+    brace depth 0 of the body count, so a switch nested inside a case is left alone.
+    """
+    text = code[body_start + 1:body_end - 1]
+    labels, depth, last = [], 0, 0
+    for m in CASE_LABEL_RE.finditer(text):
+        segment = text[last:m.start()]
+        depth += segment.count("{") - segment.count("}")
+        last = m.start()
+        if depth == 0:
+            labels.append((m.start(), m.end(), m.group(1)))
+    groups = []
+    for k, (_, end, label) in enumerate(labels):
+        body = text[end:labels[k + 1][0] if k + 1 < len(labels) else len(text)]
+        if groups and not groups[-1][1].strip():
+            groups[-1] = (groups[-1][0] + [label], body)
+        else:
+            groups.append(([label], body))
+    return groups
+
+
 def top_level_cases(code, body_start, body_end):
-    """Case labels of a switch body, ignoring any switch nested inside it."""
-    body = list(code[body_start + 1:body_end - 1])
-    text = "".join(body)
-    for m in SWITCH_RE.finditer(text):
-        end = matching_brace(text, m.end() - 1)
-        for k in range(m.start(), end):
-            if body[k] != "\n":
-                body[k] = " "
-    text = "".join(body)
-    return re.findall(r"\bcase\s+([\w]+)\s*:", text), bool(re.search(r"\bdefault\s*:", text))
+    """Case labels of a switch body (ignoring nested switches), and whether it has a default."""
+    labels = [label for group, _ in case_groups(code, body_start, body_end) for label in group]
+    return [label for label in labels if label], None in labels
 
 
 def enclosing_function(code, index):
@@ -191,6 +222,7 @@ class CameraTable:
         self.model_names = re.findall(r'"([^"]*)"', m.group(1)) if m else []
         self.model_names_line = line_of(raw, m.start()) if m else None
         self.device_name_lists = set(re.findall(r"std::vector<std::string>\s+(\w+DeviceNames)\s*=", raw))
+        self.camera_pool = {}   # camera name -> pool, filled from the connect routine by check_camera_switches
 
 
 def check_camera_table(table, report):
@@ -237,17 +269,31 @@ def check_camera_switches(table, report):
                          + ", ".join(m.replace("_SupportedThermalCamera_", "") for m in missing),
                          CAMERA_LIBRARY, line_of(raw, start))
 
-        # In the connect routine each case assigns a pool and a device-name list; check both exist
-        body = raw[body_start:body_end]
-        for m in re.finditer(r"ThermalCameraSupportPool\s*=\s*_SupportedThermalCameras_Pool_(\d+)", body):
-            if int(m.group(1)) not in table.pools:
-                report.error(f"camera mapped to undefined pool {m.group(1)}", CAMERA_LIBRARY, line_of(raw, body_start + m.start()))
-        for m in re.finditer(r"CameraDeviceNamesPointer\s*=\s*(\w+)", body):
-            if m.group(1) not in table.device_name_lists:
-                report.error(f"device-name list {m.group(1)} is not defined in {CAMERA_TABLE.name}",
-                             CAMERA_LIBRARY, line_of(raw, body_start + m.start()))
+        # The connect routine's switch maps each camera to its pool and device-name list
+        if "ThermalCameraSupportPool" not in code[body_start:body_end]:
+            continue
+        for labels, body in case_groups(code, body_start, body_end):
+            names = ", ".join(l.replace("_SupportedThermalCamera_", "") for l in labels if l)
+            pools = re.findall(r"ThermalCameraSupportPool\s*=\s*_SupportedThermalCameras_Pool_(\d+)", body)
+            if len(set(pools)) != 1:
+                report.error(f"camera {names} is not mapped to exactly one pool in {enclosing_function(code, start)}",
+                             CAMERA_LIBRARY, line_of(raw, start))
+                continue
+            pool = int(pools[0])
+            if pool not in table.pools:
+                report.error(f"camera {names} is mapped to undefined pool {pool}", CAMERA_LIBRARY, line_of(raw, start))
+            for label in labels:
+                if label:
+                    table.camera_pool[label.replace("_SupportedThermalCamera_", "")] = pool
+            for name in re.findall(r"CameraDeviceNamesPointer\s*=\s*(\w+)", body):
+                if name not in table.device_name_lists:
+                    report.error(f"device-name list {name} is not defined in {CAMERA_TABLE.name}",
+                                 CAMERA_LIBRARY, line_of(raw, start))
     if found == 0:
         report.error("no switch on SellectedCameraIndex found; the check no longer matches the source", CAMERA_LIBRARY)
+    elif not table.camera_pool:
+        report.error("could not find the switch that maps cameras to pools; the check no longer matches the source",
+                     CAMERA_LIBRARY)
 
 
 def check_pool_switches(table, report):
@@ -274,6 +320,138 @@ def check_pool_switches(table, report):
                              path, line_of(raw, start))
     if found == 0:
         report.error("no switch on a camera pool found; the check no longer matches the source", CAMERA_LIBRARY)
+
+
+def check_pools_used_and_documented(table, report):
+    """Every pool has at least one camera, and the camera list in the docs mentions every pool."""
+    if not table.camera_pool:
+        return
+    for pool in table.pools:
+        if pool not in table.camera_pool.values():
+            report.error(f"pool {pool} is defined but no camera is mapped to it", table.path)
+    docs = ROOT / "docs" / "SUPPORTED-CAMERAS.md"
+    documented = set()
+    for line in docs.read_text(encoding="utf-8").splitlines():
+        cells = [c.strip() for c in line.strip().strip("|").split("|")]
+        if line.startswith("|") and len(cells) >= 3:
+            documented.update(int(n) for n in re.findall(r"\b\d+\b", cells[-1]))
+    for pool in table.pools:
+        if pool not in documented:
+            report.warning(f"docs/SUPPORTED-CAMERAS.md lists no camera in pool {pool}", docs)
+
+
+class PoolBehaviour:
+    """Normalises code so that two pools' code at a branch point can be compared for what it does, not how it reads.
+
+    Comments and string contents are dropped, whitespace collapsed, constant #define macros replaced by their values
+    (so two pools using differently named macros with equal values compare equal), and each per-pool function
+    (a name ending in Pool<n> or Pool_<n>) replaced by a fingerprint of its own normalised body (so two pools calling
+    copies of the same routine compare equal).
+    """
+
+    CONSTANT = re.compile(r"-?(?:0x[0-9A-Fa-f]+|\d+\.?\d*(?:[eE][-+]?\d+)?)[fFuUlL]*|true|false")
+    IDENTIFIER = re.compile(r"\b[A-Za-z_]\w*\b")
+
+    def __init__(self):
+        self.macros = {}
+        for path in sorted(SRC.glob("*.h")):
+            for m in re.finditer(r"^[ \t]*#define[ \t]+(\w+)[ \t]+(\S+)", read_source(path), re.M):
+                if self.CONSTANT.fullmatch(m.group(2)):
+                    self.macros[m.group(1)] = m.group(2)
+        self.functions = {}
+        for path in sorted(SRC.glob("*.cpp")):
+            code = blank_comments_and_strings(read_source(path))
+            for m in FUNCTION_RE.finditer(code):
+                if re.search(r"Pool_?\d+$", m.group(1)):
+                    body = code[m.end() - 1:matching_brace(code, m.end() - 1)]
+                    self.functions[m.group(1)] = "fn#" + hashlib.sha1(self._flatten(body).encode()).hexdigest()[:12]
+
+    def _flatten(self, text):
+        text = self.IDENTIFIER.sub(lambda m: self.macros.get(m.group(0), m.group(0)), text)
+        return re.sub(r"\s+", " ", text).strip()
+
+    def normalise(self, text):
+        text = self.IDENTIFIER.sub(lambda m: self.functions.get(m.group(0), m.group(0)), text)
+        return self._flatten(text)
+
+
+class BranchPoint:
+    def __init__(self, path, line, where, keys):
+        self.path, self.line, self.where, self.keys = path, line, where, keys
+
+
+def pool_branch_points(pools):
+    """Every place the program does something that depends on the pool, with a behaviour key per pool."""
+    behaviour = PoolBehaviour()
+    points = []
+    for path in sorted(SRC.glob("*.cpp")) + sorted(SRC.glob("*.h")):
+        raw = read_source(path)
+        if "_SupportedThermalCameras_Pool_" not in raw:
+            continue
+        code = blank_comments_and_strings(raw)
+        for start, body_start, body_end, selector in switches(code, r"Pool\s*$"):
+            keys, default = {}, None
+            for labels, body in case_groups(code, body_start, body_end):
+                key = behaviour.normalise(body)
+                for label in labels:
+                    if label is None:
+                        default = key
+                    elif label.startswith("_SupportedThermalCameras_Pool_"):
+                        keys[int(label.rsplit("_", 1)[1])] = key
+            # A pool with no case and no default is an integration gap (reported by check_pool_switches), not a
+            # difference in behaviour: leave it out of the comparison
+            for pool in pools:
+                keys.setdefault(pool, default)
+            points.append(BranchPoint(path, line_of(raw, start), f"switch in {enclosing_function(code, start)}", keys))
+        for m in re.finditer(r"\bif\s*\(", code):
+            condition = code[m.end():matching_brace(code, m.end() - 1, "(", ")") - 1]
+            named = {int(n) for n in re.findall(r"_SupportedThermalCameras_Pool_(\d+)", condition)}
+            if named:
+                keys = {pool: "taken" if pool in named else "not taken" for pool in pools}
+                points.append(BranchPoint(path, line_of(raw, m.start()), f"if in {enclosing_function(code, m.start())}", keys))
+    return points
+
+
+def nearest_pool(pool, others, points):
+    """The pool in `others` that behaves most like `pool`, and the branch points where they differ."""
+    best = None
+    for other in others:
+        if other != pool:
+            differing = [p for p in points
+                         if p.keys[pool] is not None and p.keys[other] is not None and p.keys[pool] != p.keys[other]]
+            if best is None or len(differing) < len(best[1]):
+                best = (other, differing)
+    return best
+
+
+def describe(points, limit=10):
+    places = []
+    for p in points:
+        if p.where not in places:
+            places.append(p.where)
+    return ", ".join(places[:limit]) + (f", ... {len(places) - limit} more" if len(places) > limit else "")
+
+
+def check_pool_uniqueness(table, report, base_pools):
+    """A pool must do something no other pool does; report how each pool differs from its nearest neighbour."""
+    if len(table.pools) < 2:
+        return
+    points = pool_branch_points(table.pools)
+    print(f"Pool uniqueness: the program branches on the pool at {len(points)} places")
+    for pool in table.pools:
+        other, differing = nearest_pool(pool, table.pools, points)
+        print(f"  pool {pool}: nearest is pool {other}, differs at {len(differing)} place(s)")
+        if not differing and other < pool:
+            report.error(f"pool {pool} does the same as pool {other} at every one of the {len(points)} places the program "
+                         f"branches on the pool, so it is not a separate protocol: map its cameras to pool {other} "
+                         "instead of adding a pool", table.path)
+    for pool in sorted(set(table.pools) - set(base_pools or table.pools)):
+        existing = [p for p in table.pools if p in base_pools]
+        if existing:
+            other, differing = nearest_pool(pool, existing, points)
+            print(f"  new pool {pool}: nearest existing pool is {other}; differs at {len(differing)} place(s): "
+                  f"{describe(differing) or 'none'}")
+    print()
 
 
 def check_file_metadata_validator(table, report):
@@ -328,6 +506,15 @@ def check_project_file(report):
 
 def git(*args):
     return subprocess.run(["git", *args], cwd=ROOT, capture_output=True, check=True).stdout
+
+
+def pools_at(ref):
+    """The pool numbers defined at a git ref (None if the ref is unknown)."""
+    try:
+        text = git("show", f"{ref}:{CAMERA_TABLE.relative_to(ROOT).as_posix()}").decode("latin-1")
+    except subprocess.CalledProcessError:
+        return None
+    return sorted({int(n) for n in re.findall(r"#define\s+_SupportedThermalCameras_Pool_(\d+)\s+\d+", text)})
 
 
 def check_tracked_files(report):
@@ -393,9 +580,12 @@ def main():
 
     report = Report()
     table = CameraTable(CAMERA_TABLE)
+    base_pools = pools_at(args.base) if args.base else None
     check_camera_table(table, report)
     check_camera_switches(table, report)
     check_pool_switches(table, report)
+    check_pools_used_and_documented(table, report)
+    check_pool_uniqueness(table, report, base_pools)
     check_file_metadata_validator(table, report)
     check_reference_decoder(table, report)
     check_project_file(report)
