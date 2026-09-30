@@ -13,6 +13,7 @@
 #include <iostream>
 #include <cstdlib> 
 #include "uvc_camera.h"
+#include "p3_winusb_camera.h"
 #include "GlobalObjectsAndVariables.h"
 #include "RMH_MathConversions_Library.h"
 #include "RMH_ThermalCameraSupport_Library.h"
@@ -27,6 +28,8 @@ using namespace System::Diagnostics;
 // Global objects and variables
 UVCCamera IRThermalCamera = UVCCamera();
 std::vector<CameraDevice> IRThermalCameraDeivceList;
+// Pool 5 - Thermal Master P3, which has no DirectShow/UVC interface at all and is only reachable over WinUSB
+P3WinUsbCamera P3Camera;
 
 // ----------------------- USB Communication, Read/Write, Configuration & Handling Routines ------------------------ //
 
@@ -76,6 +79,7 @@ double RMH_IRThermalCamera_ReadCameraFPS() {
 	// This routine reads and returns the frame rate of the connected thermal camera 
 
 	// Read and return the camera frame rate
+	if (IRCamera.ThermalCameraSupportPool == _SupportedThermalCameras_Pool_5) { return P3Camera.getFPS(); }
 	return IRThermalCamera.getFPS();
 
 }
@@ -84,11 +88,38 @@ void RMH_IRThermalCamera_StartCapturing() {
 
 	// This routine starts the video capture of the camera
 
+	// Pool 5 (Thermal Master P3) is not a DirectShow device - it has its own WinUSB backend
+	if (IRCamera.ThermalCameraSupportPool == _SupportedThermalCameras_Pool_5) {
+
+		if (P3Camera.isOpened() == true) {
+
+			if (P3Camera.startCapture() == false) {
+
+				RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "P3 startCapture() failed: " + P3Camera.getLastError(), _StatusMessageType_Error);
+
+			}
+
+		}
+		return;
+
+	}
+
 	// Check that the camera is open
 	if (IRThermalCamera.isOpened() == true) {
 
 		// Start video capture
 		IRThermalCamera.startCapture();
+
+		// Pool 6 (THOR001): DirectShowCamera::start() (called from within startCapture() above) always calls
+		// updateGrabberFilterVideoFormat(), which resets the grabber callback's expected sample size back to
+		// the format's bogus declared size (614400) - undoing forceExpectedFrameBufferSize() set during
+		// RMH_IRThermalCamera_OpenIRCameraDevice(). This function is the last thing that (re)starts capture
+		// before frames are actually read, so the override is (re)applied here every time, right after it.
+		if (IRCamera.ThermalCameraSupportPool == _SupportedThermalCameras_Pool_6) {
+
+			IRThermalCamera.forceExpectedFrameBufferSize(_SupporteredeThermalCameraPool6_RawFrameSizeBytes);
+
+		}
 
 	}
 
@@ -97,6 +128,14 @@ void RMH_IRThermalCamera_StartCapturing() {
 void RMH_IRThermalCamera_StopCapturing() {
 
 	// This routine stops the video capture of the camera
+
+	// Pool 5 (Thermal Master P3) is not a DirectShow device - it has its own WinUSB backend
+	if (IRCamera.ThermalCameraSupportPool == _SupportedThermalCameras_Pool_5) {
+
+		if (P3Camera.isOpened() == true) { P3Camera.stopCapture(); }
+		return;
+
+	}
 
 	// Check that the camera is open
 	if (IRThermalCamera.isOpened() == true) {
@@ -113,6 +152,15 @@ void RMH_IRThermalCamera_CloseIRCameraDevice() {
 	// This routine stops and closes the DirectShow webcam device
 	// which also disables video streaming
 
+	// Pool 5 (Thermal Master P3) is not a DirectShow device - it has its own WinUSB backend
+	if (IRCamera.ThermalCameraSupportPool == _SupportedThermalCameras_Pool_5) {
+
+		P3Camera.stopCapture();
+		P3Camera.close();
+		return;
+
+	}
+
 	// Close the video capture device
 	IRThermalCamera.stopCapture();
 	IRThermalCamera.close();
@@ -121,7 +169,10 @@ void RMH_IRThermalCamera_CloseIRCameraDevice() {
 
 bool RMH_IRThermalCamera_CheckForCameraDisconnection() {
 
-	// This routine checks whether the camera connection was lost 
+	// This routine checks whether the camera connection was lost
+
+	// Pool 5 (Thermal Master P3) is not a DirectShow device - it has its own WinUSB backend
+	if (IRCamera.ThermalCameraSupportPool == _SupportedThermalCameras_Pool_5) { return P3Camera.checkDisconnection(); }
 
 	// Return the connection status
 	return IRThermalCamera.checkDisconnection();
@@ -175,6 +226,48 @@ void RMH_IRThermalCamera_OpenIRCameraDevice(unsigned char IRCameraDeviceIndex, u
 
 		break;
 
+		// Supported camera pool 6
+		case _SupportedThermalCameras_Pool_6:
+
+			// Open the selected video capture device with its default format first - Pool 6's raw data
+			// is delivered on a format the camera's own descriptor mislabels as "H264" (see
+			// RMH_SupportedIRCameras_Resources.h), which the normal open(device, width, height) overload
+			// would refuse (it only accepts RGB/monochrome-convertible subtypes), so the video format has
+			// to be looked up and selected explicitly here instead.
+			IRThermalCamera.open(IRThermalCameraDeivceList[IRCameraDeviceIndex]);
+
+			{
+				std::vector<DirectShowVideoFormat> Pool6VideoFormats = IRThermalCamera.getSupportDirectShowVideoFormats();
+
+				for (unsigned int i = 0; i < Pool6VideoFormats.size(); i++) {
+
+					if (Pool6VideoFormats[i].getVideoType() == MEDIASUBTYPE_H264) {
+
+						IRThermalCamera.setDirectShowVideoFormat(&Pool6VideoFormats[i]);
+						break;
+
+					}
+
+				}
+			}
+
+			// Start video capture explicitly - Pool 6 does not go through a vendor "start stream" step like
+			// Pool 5 (P3), but the DirectShow graph still needs Run() called before samples flow.
+			IRThermalCamera.startCapture();
+
+			// The camera interleaves a real, variable-size H.264 preview stream with the constant-size raw
+			// data on the same pin, so the grabber callback's automatic "5 identical sizes in a row" sample
+			// size detection never settles (confirmed via SampleCB diagnostic logging against real hardware:
+			// sizes alternated between 98314 and ~13000-14000 every sample, never repeating). Force the
+			// expected size directly to the raw sample's real, confirmed size instead - this also has the
+			// side effect of making the grabber callback silently ignore the interleaved preview samples,
+			// since they will never match this fixed size. This MUST happen after startCapture() - start()
+			// internally calls updateGrabberFilterVideoFormat(), which would otherwise overwrite this back
+			// to the format's bogus declared size.
+			IRThermalCamera.forceExpectedFrameBufferSize(_SupporteredeThermalCameraPool6_RawFrameSizeBytes);
+
+		break;
+
 	}
 
 	// Configure the camera to the default temperature range
@@ -217,6 +310,18 @@ void RMH_IRThermalCamera_CalibrateIRCamera(unsigned short SupportedCameraPool) {
 		// Supported camera pool 4
 		case _SupportedThermalCameras_Pool_4:
 
+
+		break;
+
+		// Supported camera pool 5
+		case _SupportedThermalCameras_Pool_5:
+
+			// Trigger the camera's own shutter (NUC) calibration
+			if (P3Camera.triggerShutterCalibration() == false) {
+
+				RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "P3 triggerShutterCalibration() failed: " + P3Camera.getLastError(), _StatusMessageType_Error);
+
+			}
 
 		break;
 
@@ -291,6 +396,37 @@ void RMH_IRThermalCamera_SetIRCameraTemperatureRange(unsigned int TemperatureRan
 				// This routine configures the temperature range of the IR camera
 				case _ThermalCamera_TemperatureRange_HighRange: break;
 				case _ThermalCamera_TemperatureRange_LowRange:  break;
+
+			}
+
+		break;
+
+		// Supported camera pool 5
+		case _SupportedThermalCameras_Pool_5:
+
+			// Which temperature range should be set - switch the camera's own hardware range,
+			// see P3WinUsbCamera::setTemperatureRange()
+			switch (TemperatureRange) {
+
+				case _ThermalCamera_TemperatureRange_HighRange:
+
+					if (P3Camera.setTemperatureRange(true) == false) {
+
+						RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "P3 setTemperatureRange(high) failed: " + P3Camera.getLastError(), _StatusMessageType_Error);
+
+					}
+
+				break;
+
+				case _ThermalCamera_TemperatureRange_LowRange:
+
+					if (P3Camera.setTemperatureRange(false) == false) {
+
+						RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "P3 setTemperatureRange(low) failed: " + P3Camera.getLastError(), _StatusMessageType_Error);
+
+					}
+
+				break;
 
 			}
 
@@ -462,9 +598,9 @@ void RMH_IRThermalCamera_InitIRCameraConstants(ThermalCameraDevice::IRCameraDevi
 
 		break;
 
-		// ------------------------------------ Supported Camera Pool 4 ------------------------------------ //
+		// ------------------------------------ Supported Camera Pool 4 (and Pool 5/6 - identical frame layout) ------------------------------------ //
 
-		case _SupportedThermalCameras_Pool_4:
+		case _SupportedThermalCameras_Pool_4: case _SupportedThermalCameras_Pool_5: case _SupportedThermalCameras_Pool_6:
 
 			// Set metadata index 1
 			CameraStatus->MetaData1Index = CameraStatus->FrameWidth * (CameraStatus->FrameHeight - CameraStatus->FrameMetadataSize);
@@ -490,8 +626,12 @@ ThermalCameraDevice::IRCameraDeviceFormat RMH_IRThermalCamera_ConnectToThermalCa
 	std::vector<std::string> CameraDeviceNamesPointer;
 	ThermalCameraDevice::IRCameraDeviceFormat CameraStatus;
 	
-	// Read the associated ComboBox item index value
-	CameraStatus.SellectedCameraIndex = CameraSourceComboBox->SelectedIndex;
+	// Read the associated ComboBox item's camera identity - translate its position in the sorted ComboBox
+	// (see SupportedCamerasDisplayOrder in RMH_SupportedIRCameras_Resources.h) back to the camera's stable
+	// macro index, since the two are no longer the same number once the list is displayed alphabetically.
+	// RMH_GetCameraIndexAtDisplayPosition() bounds-checks this - CameraSourceComboBox->SelectedIndex is -1
+	// if nothing is selected (for example a saved session referencing a since-removed camera).
+	CameraStatus.SellectedCameraIndex = RMH_GetCameraIndexAtDisplayPosition(CameraSourceComboBox->SelectedIndex);
 
 	// Check and update the associated supported camera pool and the associated camera frame rate parameter
 	switch (CameraStatus.SellectedCameraIndex) {
@@ -520,6 +660,61 @@ ThermalCameraDevice::IRCameraDeviceFormat RMH_IRThermalCamera_ConnectToThermalCa
 		case _SupportedThermalCamera_TOPDONTC002:       CameraStatus.ThermalCameraSupportPool = _SupportedThermalCameras_Pool_2; CameraDeviceNamesPointer = TOPDONTC002DeviceNames;			CameraStatus.FrameRate = _SupportedThermalCamera_TOPDONTC002_FrameRate; break;
 		case _SupportedThermalCamera_Victor328B:        CameraStatus.ThermalCameraSupportPool = _SupportedThermalCameras_Pool_2; CameraDeviceNamesPointer = Victor328BDeviceNames;			CameraStatus.FrameRate = _SupportedThermalCamera_Victor328B_FrameRate; break;	
 		case _SupportedThermalCamera_LODESTARL2:        CameraStatus.ThermalCameraSupportPool = _SupportedThermalCameras_Pool_2; CameraDeviceNamesPointer = LODESTARL2DeviceNames;			CameraStatus.FrameRate = _SupportedThermalCamera_LODESTARL2_FrameRate; break;
+		case _SupportedThermalCamera_ThermalMasterP3:   CameraStatus.ThermalCameraSupportPool = _SupportedThermalCameras_Pool_5; CameraDeviceNamesPointer = ThermalMasterP3DeviceNames;		CameraStatus.FrameRate = _SupportedThermalCamera_ThermalMasterP3_FrameRate; break;
+		case _SupportedThermalCamera_ThermalMasterTHOR001: CameraStatus.ThermalCameraSupportPool = _SupportedThermalCameras_Pool_6; CameraDeviceNamesPointer = ThermalMasterTHOR001DeviceNames;	CameraStatus.FrameRate = _SupportedThermalCamera_ThermalMasterTHOR001_FrameRate; break;
+
+	}
+
+	// Pool 5 (Thermal Master P3) has no DirectShow/UVC interface at all - it is only reachable over WinUSB with its
+	// own vendor protocol (see p3_winusb_camera.h). Bypass the DirectShow enumeration/name-matching below entirely.
+	if (CameraStatus.ThermalCameraSupportPool == _SupportedThermalCameras_Pool_5) {
+
+		// Stop video capture and close whatever camera was previously open
+		RMH_IRThermalCamera_CloseIRCameraDevice();
+		// Reset the camera "isStreaming" status flag
+		CameraStatus.isStreaming = false;
+
+		// Open the WinUSB camera device
+		if (P3Camera.open()) {
+
+			// Update the camera connected status flag
+			CameraStatus.ConnectedFlag = true;
+			// Update the camera device name and index - there is no DirectShow enumeration for this camera
+			CameraStatus.CameraDeviceName = "P3";
+			CameraStatus.IRCameraDeviceIndex = 0;
+			CameraStatus.CameraSystemDevicePath = "WinUSB";
+
+			// Update the camera device info - frame width and height
+			CameraStatus.FrameWidth = P3Camera.getWidth();
+			CameraStatus.FrameHeight = P3Camera.getHeight();
+
+			// Update the camera device info - metadata size (same frame layout as Pool 4)
+			CameraStatus.FrameMetadataSize = round((float)CameraStatus.FrameHeight - (float)CameraStatus.FrameWidth / (float)_FixedThermalCameraFrame_AspectRatio_Pool_4);
+
+			// Read the operating constants of the IR camera - relative to the supported pool
+			RMH_IRThermalCamera_InitIRCameraConstants(&CameraStatus, CameraStatus.ThermalCameraSupportPool);
+
+			// Update the camera status message
+			CameraStatus.StatusMessage = "Thermal Camera Is Connected And Ready.";
+
+		}
+		else {
+
+			// Update the camera connected status flag
+			CameraStatus.ConnectedFlag = false;
+			// Update the camera status message
+			CameraStatus.StatusMessage = "Error: Could Not Connect To The Selected Thermal Camera! (" + P3Camera.getLastError() + ")";
+			// Reset the camera device name from the class object
+			CameraStatus.CameraDeviceName = "NAN";
+			CameraStatus.CameraSystemDevicePath = "NAN";
+			CameraStatus.IRCameraDeviceIndex = 0;
+			CameraStatus.FrameWidth = 0;
+			CameraStatus.FrameHeight = 0;
+
+		}
+
+		// Return the camera status
+		return CameraStatus;
 
 	}
 
@@ -598,6 +793,21 @@ ThermalCameraDevice::IRCameraDeviceFormat RMH_IRThermalCamera_ConnectToThermalCa
 			// Update the camera device info - frame height
 			CameraStatus.FrameHeight = IRThermalCamera.getHeight();
 
+			// Pool 6 (Thermal Master THOR001): the selected DirectShow format's declared resolution (640 x 480,
+			// from its VideoStreaming frame descriptor) does not match the true raw pixel layout actually sent
+			// over the wire (256 x 192 - see RMH_SupportedIRCameras_Resources.h), so the reported values are
+			// overridden with the real, known sensor dimensions.
+			if (CameraStatus.ThermalCameraSupportPool == _SupportedThermalCameras_Pool_6) {
+
+				CameraStatus.FrameWidth = _SupporteredeThermalCameraPool6_SensorWidthWithThermalData;
+				CameraStatus.FrameHeight = _SupporteredeThermalCameraPool6_SensorHeightWithThermalData;
+
+				// Skip the raw sample's fixed 10 byte ("ff 00" x5) header - see RMH_SupportedIRCameras_Resources.h
+				CameraStatus.FrameWidthPixelOffset = _SupporteredeThermalCameraPool6_FrameWidthPixelOffset;
+				CameraStatus.FrameHeightPixelOffset = _SupporteredeThermalCameraPool6_FrameHeightPixelOffset;
+
+			}
+
 			// Refuse a video format that does not fit the frame buffers (for example an ordinary webcam matched by the generic name "USB Camera")
 			if (RMH_FrameBuffer_IsFrameSizeSupported(CameraStatus.FrameWidth, CameraStatus.FrameHeight) == false) {
 
@@ -623,6 +833,7 @@ ThermalCameraDevice::IRCameraDeviceFormat RMH_IRThermalCamera_ConnectToThermalCa
 				case _SupportedThermalCameras_Pool_2: CameraStatus.FrameMetadataSize = round((float)CameraStatus.FrameHeight - (float)CameraStatus.FrameWidth / (float)_FixedThermalCameraFrame_AspectRatio_Pool_2); break;
 				case _SupportedThermalCameras_Pool_3: CameraStatus.FrameMetadataSize = round((float)CameraStatus.FrameHeight - (float)CameraStatus.FrameWidth / (float)_FixedThermalCameraFrame_AspectRatio_Pool_3); break;
 				case _SupportedThermalCameras_Pool_4: CameraStatus.FrameMetadataSize = round((float)CameraStatus.FrameHeight - (float)CameraStatus.FrameWidth / (float)_FixedThermalCameraFrame_AspectRatio_Pool_4); break;
+				case _SupportedThermalCameras_Pool_6: CameraStatus.FrameMetadataSize = round((float)CameraStatus.FrameHeight - (float)CameraStatus.FrameWidth / (float)_FixedThermalCameraFrame_AspectRatio_Pool_6); break;
 
 			}
 
@@ -735,8 +946,8 @@ double RMH_IRThermalCamera_ConvertYUY2To14BitThermalDataArray(ThermalCameraDevic
 
 		break;
 
-		// Supported camera pools 2 and 4
-		case _SupportedThermalCameras_Pool_2: case _SupportedThermalCameras_Pool_4:
+		// Supported camera pools 2, 4, 5 and 6
+		case _SupportedThermalCameras_Pool_2: case _SupportedThermalCameras_Pool_4: case _SupportedThermalCameras_Pool_5: case _SupportedThermalCameras_Pool_6:
 
 			// Convert only the metadata area
 			IRCamera->FrameHeight = IRCamera->FrameHeight;
@@ -956,7 +1167,7 @@ void RMH_IRThermalCamera_LinearAutomaticGainControlTemp(unsigned short* ThermalD
 			PixelValue4 = IRCamera.TemperatureLookUpTabel[*(ThermalData + i + 3) & 0x3FFF];
 
 		}
-		else if (IRCamera.ThermalCameraSupportPool == _SupportedThermalCameras_Pool_2 || IRCamera.ThermalCameraSupportPool == _SupportedThermalCameras_Pool_4) {
+		else if (IRCamera.ThermalCameraSupportPool == _SupportedThermalCameras_Pool_2 || IRCamera.ThermalCameraSupportPool == _SupportedThermalCameras_Pool_4 || IRCamera.ThermalCameraSupportPool == _SupportedThermalCameras_Pool_5) {
 
 			// Calculate the pixel temperature from the raw pixel data
 			PixelValue1 = (*(ThermalData + i) * 0.015625) - 273.15;
@@ -970,7 +1181,26 @@ void RMH_IRThermalCamera_LinearAutomaticGainControlTemp(unsigned short* ThermalD
 			PixelValue3 = PixelValue3 * IRCamera.ObjectEnvirTempCorrectionFactor + IRCamera.ObjectEnvirTempCorrectionOffset;
 			PixelValue4 = PixelValue4 * IRCamera.ObjectEnvirTempCorrectionFactor + IRCamera.ObjectEnvirTempCorrectionOffset;
 
-			// Compensate for the temperature correction 
+			// Compensate for the temperature correction
+			PixelValue1 = PixelValue1 + IRCamera.TemperatureCorrectionSetting;
+			PixelValue2 = PixelValue2 + IRCamera.TemperatureCorrectionSetting;
+			PixelValue3 = PixelValue3 + IRCamera.TemperatureCorrectionSetting;
+			PixelValue4 = PixelValue4 + IRCamera.TemperatureCorrectionSetting;
+
+		}
+		else if (IRCamera.ThermalCameraSupportPool == _SupportedThermalCameras_Pool_6) {
+
+			// The raw pixel value is temperature in deci-Kelvin (Kelvin x10) - confirmed against real
+			// hardware: a scene reading 23.1 C on the vendor's own app produced raw values of ~2965-3021,
+			// matching (23.1 + 273.15) x 10 = 2962.5 almost exactly. This is a different encoding from pool
+			// 2/4/5's Kelvin x64, and no environmental correction factor is applied (not verified for this
+			// camera, and the direct conversion already matches the reference reading closely).
+			PixelValue1 = (*(ThermalData + i) / 10.0) - 273.15;
+			PixelValue2 = (*(ThermalData + i + 1) / 10.0) - 273.15;
+			PixelValue3 = (*(ThermalData + i + 2) / 10.0) - 273.15;
+			PixelValue4 = (*(ThermalData + i + 3) / 10.0) - 273.15;
+
+			// Compensate for the temperature correction
 			PixelValue1 = PixelValue1 + IRCamera.TemperatureCorrectionSetting;
 			PixelValue2 = PixelValue2 + IRCamera.TemperatureCorrectionSetting;
 			PixelValue3 = PixelValue3 + IRCamera.TemperatureCorrectionSetting;
@@ -1069,7 +1299,7 @@ ROIAreaPixelInfoFormat RMH_IRThermalCamera_ReadROIAreaPixelInfoInsideFrameArea(T
 
 			}
 			// Applies to both pool 2 and 4
-			else if (SupportedCameraPool == _SupportedThermalCameras_Pool_2 || SupportedCameraPool == _SupportedThermalCameras_Pool_4) {
+			else if (SupportedCameraPool == _SupportedThermalCameras_Pool_2 || SupportedCameraPool == _SupportedThermalCameras_Pool_4 || SupportedCameraPool == _SupportedThermalCameras_Pool_5) {
 
 				// Calculate the pixel temperature from the raw pixel data
 				PixelTempValue = (PixelValue * 0.015625) - 273.15;
@@ -1129,6 +1359,9 @@ bool RMH_IRThermalCamera_ReadFrameRaw(unsigned char* ImageData, unsigned int* Im
 
 	// This routine reads and returns a raw data frame from the camera
 	// ImageData must be one of the global frame buffers (MaximumFrameDataArraySize bytes); a larger frame is refused
+
+	// Pool 5 (Thermal Master P3) is not a DirectShow device - it has its own WinUSB backend
+	if (IRCamera.ThermalCameraSupportPool == _SupportedThermalCameras_Pool_5) { return P3Camera.getFrame(ImageData, (int*)ImageSize, true, MaximumFrameDataArraySize); }
 
 	// Return the camera data frame
 	return IRThermalCamera.getFrame(ImageData, (int*)ImageSize, true, MaximumFrameDataArraySize);
@@ -1228,8 +1461,8 @@ void RMH_IRThermalCamera_ReadCalFrameMetaData(unsigned short* ThermalData, Therm
 
 		break;
 
-		// Supported camera pool 4
-		case _SupportedThermalCameras_Pool_4:
+		// Supported camera pools 4, 5 and 6
+		case _SupportedThermalCameras_Pool_4: case _SupportedThermalCameras_Pool_5: case _SupportedThermalCameras_Pool_6:
 
 			// Read and calculate the IR camera detector temperature - not supported yet! (Must be 1!!)
 			IRCamera->temp_fpa_Raw = 1;
@@ -1308,8 +1541,8 @@ void RMH_IRThermalCamera_ReadCalibrationParameters(unsigned short* ThermalData, 
 
 		break;
 
-		// Supported camera pool 4
-		case _SupportedThermalCameras_Pool_4:
+		// Supported camera pools 4 and 5
+		case _SupportedThermalCameras_Pool_4: case _SupportedThermalCameras_Pool_5:
 
 			// Read the internal calibration parameters of the IR camera
 			IRCamera->CalValue0 = 0.0;
@@ -1376,10 +1609,27 @@ void RMH_IRThermalCamera_ReadCameraConfigParameters(unsigned short* ThermalData,
 
 		break;
 
-		// Supported camera pool 4
-		case _SupportedThermalCameras_Pool_4:
+		// Supported camera pools 4 and 5
+		case _SupportedThermalCameras_Pool_4: case _SupportedThermalCameras_Pool_5:
 
 			// Read the internal configuration parameters of the camera - from the associated GUI up/down controls
+			IRCamera->TemperatureCorrectionSetting = _IRThermalCameraDefault_TemperatureCorrectionValue;
+			IRCamera->AmbientTemperatureSetting = _IRThermalCameraDefault_AmbientTemperatureValue;
+			IRCamera->ReflectedTemperatureSetting = _IRThermalCameraDefault_ReflectedTemperatureValue;
+			IRCamera->HumiditySetting = _IRThermalCameraDefault_SurroundingHumidityValue;
+			IRCamera->EmissivitySetting = _IRThermalCameraDefault_ObjectEmissivityValue;
+			IRCamera->DistanceSetting = _IRThermalCameraDefault_ObjectDistanceValue;
+
+		break;
+
+		// Supported camera pool 6
+		case _SupportedThermalCameras_Pool_6:
+
+			// The camera has no emissivity/atmospheric correction settings at all - not in its raw frame
+			// data, and not exposed anywhere in the vendor's own app either (confirmed: there is no such
+			// setting in "TM THOR"). The raw pixel value is used as-is (see
+			// RMH_IRThermalCamera_LinearAutomaticGainControlTemp()), so these are just fixed defaults for
+			// the configuration panel to display - they play no part in the pool 6 temperature calculation.
 			IRCamera->TemperatureCorrectionSetting = _IRThermalCameraDefault_TemperatureCorrectionValue;
 			IRCamera->AmbientTemperatureSetting = _IRThermalCameraDefault_AmbientTemperatureValue;
 			IRCamera->ReflectedTemperatureSetting = _IRThermalCameraDefault_ReflectedTemperatureValue;
@@ -1655,8 +1905,8 @@ void RMH_IRThermalCamera_GenerateThermoGrapicLookUpTable(ThermalCameraDevice::IR
 			
 		break;
 
-		// Supported camera pool 2
-		case _SupportedThermalCameras_Pool_2: case _SupportedThermalCameras_Pool_4:
+		// Supported camera pools 2, 4, 5 and 6
+		case _SupportedThermalCameras_Pool_2: case _SupportedThermalCameras_Pool_4: case _SupportedThermalCameras_Pool_5: case _SupportedThermalCameras_Pool_6:
 
 			// Calculate the reflected contribution from atmospheric water vapor
 			Omega = RMH_IRThermalCamera_CalAtmosphericWaterVaporContribution(IRCamera->HumiditySetting, IRCamera->AmbientTemperatureSetting);
@@ -1698,8 +1948,8 @@ double RMH_IRThermalCamera_ReadPixelTemperature(ThermalCameraDevice::IRCameraDev
 
 		break;
 
-		// Supported camera pool 2
-		case _SupportedThermalCameras_Pool_2: case _SupportedThermalCameras_Pool_4:
+		// Supported camera pools 2, 4 and 5
+		case _SupportedThermalCameras_Pool_2: case _SupportedThermalCameras_Pool_4: case _SupportedThermalCameras_Pool_5:
 
 			// Calculate the pixel temperature from the raw pixel data
 			PixelTemperature = ((double)PixelValue * 0.015625) - 273.15;
@@ -1707,7 +1957,18 @@ double RMH_IRThermalCamera_ReadPixelTemperature(ThermalCameraDevice::IRCameraDev
 			PixelTemperature = PixelTemperature * IRCamera->ObjectEnvirTempCorrectionFactor + IRCamera->ObjectEnvirTempCorrectionOffset;
 			// Compensate for the temperature correction 
 			PixelTemperature = PixelTemperature + IRCamera->TemperatureCorrectionSetting;
-			
+
+		break;
+
+		// Supported camera pool 6
+		case _SupportedThermalCameras_Pool_6:
+
+			// The raw pixel value is temperature in deci-Kelvin (Kelvin x10) - see
+			// RMH_IRThermalCamera_LinearAutomaticGainControlTemp() for how this was confirmed.
+			PixelTemperature = ((double)PixelValue / 10.0) - 273.15;
+			// Compensate for the temperature correction
+			PixelTemperature = PixelTemperature + IRCamera->TemperatureCorrectionSetting;
+
 		break;
 
 	}
@@ -1747,8 +2008,8 @@ double RMH_IRThermalCamera_ReadFramePixelTemperature(ThermalCameraDevice::IRCame
 
 		break;
 
-		// Supported camera pool 2
-		case _SupportedThermalCameras_Pool_2: case _SupportedThermalCameras_Pool_4:
+		// Supported camera pools 2, 4 and 5
+		case _SupportedThermalCameras_Pool_2: case _SupportedThermalCameras_Pool_4: case _SupportedThermalCameras_Pool_5:
 
 			// Prevent array index overflow
 			if (ArrayIndex > (IRCamera->FrameWidth * (IRCamera->FrameHeight - IRCamera->FrameMetadataSize)) - 1) { ArrayIndex = 0; }
@@ -1760,7 +2021,24 @@ double RMH_IRThermalCamera_ReadFramePixelTemperature(ThermalCameraDevice::IRCame
 			PixelTemperature = ((double)PixelData * 0.015625) - 273.15;
 			// Compensate for the environmental contribution to the temperature calculations
 			PixelTemperature = PixelTemperature * IRCamera->ObjectEnvirTempCorrectionFactor + IRCamera->ObjectEnvirTempCorrectionOffset;
-			// Compensate for the temperature correction 
+			// Compensate for the temperature correction
+			PixelTemperature = PixelTemperature + IRCamera->TemperatureCorrectionSetting;
+
+		break;
+
+		// Supported camera pool 6
+		case _SupportedThermalCameras_Pool_6:
+
+			// Prevent array index overflow
+			if (ArrayIndex > (IRCamera->FrameWidth * (IRCamera->FrameHeight - IRCamera->FrameMetadataSize)) - 1) { ArrayIndex = 0; }
+
+			// Read the pixel data from the thermal frame data
+			PixelData = *(ThermalData + ArrayIndex);
+
+			// The raw pixel value is temperature in deci-Kelvin (Kelvin x10) - see
+			// RMH_IRThermalCamera_LinearAutomaticGainControlTemp() for how this was confirmed.
+			PixelTemperature = ((double)PixelData / 10.0) - 273.15;
+			// Compensate for the temperature correction
 			PixelTemperature = PixelTemperature + IRCamera->TemperatureCorrectionSetting;
 
 		break;
@@ -1788,7 +2066,7 @@ void RMH_IRThermalCamera_WriteDataToVideoRecordingFilesSequence(unsigned short S
 			switch (SupportedCameraPool) {
 
 				// Supported camera pools 1, 2 and 4
-				case _SupportedThermalCameras_Pool_1: case _SupportedThermalCameras_Pool_2: case _SupportedThermalCameras_Pool_4:
+				case _SupportedThermalCameras_Pool_1: case _SupportedThermalCameras_Pool_2: case _SupportedThermalCameras_Pool_4: case _SupportedThermalCameras_Pool_5:
 
 					// Write the RAW camera data frames to the video file
 					RMH_VideoFileRecording_WriteDataToFile(_VideoFileWriteObject_RecordingAnalysisModeFile, IRCamera.FrameWidth, IRCamera.FrameHeight, IRCameraFrameData);
@@ -1840,7 +2118,7 @@ bool RMH_IRThermalCamera_ConvertCapturedRawImageDataToSnapshotPNG(unsigned short
 	switch (SupportedCameraPool) {
 
 		// Supported camera pools 1, 2 and 4
-		case _SupportedThermalCameras_Pool_1: case _SupportedThermalCameras_Pool_2: case _SupportedThermalCameras_Pool_4:
+		case _SupportedThermalCameras_Pool_1: case _SupportedThermalCameras_Pool_2: case _SupportedThermalCameras_Pool_4: case _SupportedThermalCameras_Pool_5:
 
 			// Generate and write extra RAW metadata to the frame data array 
 			RMH_AnalysisMode_AddIDAndMetaDataToFrameArray(IRCamera.FrameWidth, IRCamera.FrameHeight, &IRCameraFrameData[0],
@@ -1959,6 +2237,32 @@ void RMH_IRThermalCamera_CalibrateThermalCamera() {
 
 		break;
 
+		// Supported camera pool 5 (Thermal Master P3) - the camera performs its own shutter (NUC)
+		// calibration internally; there is no look-up table to regenerate on this side (pool 5
+		// calculates temperature directly from the raw pixel value, like pool 4)
+		case _SupportedThermalCameras_Pool_5:
+
+			// Update the calibration button border color
+			GlobalVariables::GlobalCalibrateCameraButton->FlatAppearance->BorderColor = System::Drawing::Color::Lime;
+			GlobalVariables::GlobalCalibrateCameraButton->Refresh();
+
+			// Trigger the camera's shutter calibration
+			RMH_IRThermalCamera_CalibrateIRCamera(IRCamera.ThermalCameraSupportPool);
+
+			// Write GUI status message
+			RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "Thermal Camera Is Calibrating...", _StatusMessageType_Normal);
+
+			// Wait for the calibration shutter to close and reopen
+			System::Threading::Thread::Sleep(_ThermalCameraShutter_CloseTimeMs + _ThermalCameraShutter_OpenTimeMs);
+
+			// Write GUI status message
+			RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "Thermal Camera Calibrating Finished.", _StatusMessageType_Success);
+
+			// Update the calibration button border color
+			GlobalVariables::GlobalCalibrateCameraButton->FlatAppearance->BorderColor = System::Drawing::Color::FromArgb(255, 40, 40, 40);
+
+		break;
+
 		// Supported camera pool 3
 		case _SupportedThermalCameras_Pool_3:
 
@@ -2058,6 +2362,7 @@ void RMH_IRThermalCamera_ChangeThermalCameraTemperatureRange() {
 		case _SupportedThermalCamera_TOPDONTC002:       SupportsHighTemperatureRangeFlag = _SupportedThermalCamera_TOPDONTC002_SupportsHighRange; break;
 		case _SupportedThermalCamera_Victor328B:        SupportsHighTemperatureRangeFlag = _SupportedThermalCamera_Victor328B_SupportsHighRange; break;
 		case _SupportedThermalCamera_LODESTARL2:        SupportsHighTemperatureRangeFlag = _SupportedThermalCamera_LODESTARL2_SupportsHighRange; break;
+		case _SupportedThermalCamera_ThermalMasterP3:   SupportsHighTemperatureRangeFlag = _SupportedThermalCamera_ThermalMasterP3_SupportsHighRange; break;
 
 	}
 
@@ -2131,6 +2436,67 @@ void RMH_IRThermalCamera_ChangeThermalCameraTemperatureRange() {
 
 				// Write GUI status message
 				RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "This Function Is Not Supported For The Camera In This Version Of IRCAM Thermal Viewer", _StatusMessageType_Warning);
+
+			break;
+
+			// Supported camera pool 5 (Thermal Master P3) - the camera itself has a genuine hardware
+			// high/low range, unlike pool 2/4 - see P3WinUsbCamera::setTemperatureRange()
+			case _SupportedThermalCameras_Pool_5:
+
+				// Toggle the temperature range flag
+				ThermalCameraHighRangeFlag = !ThermalCameraHighRangeFlag;
+
+				// Write GUI status message
+				RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "Changing Thermal Camera Temperature Range... Please Wait...", _StatusMessageType_Normal);
+
+				// Handle the state of the temperature range flag
+				if (ThermalCameraHighRangeFlag == true) {
+
+					// Configure the thermal camera to its highest temperature range
+					RMH_IRThermalCamera_SetIRCameraTemperatureRange(_ThermalCamera_TemperatureRange_HighRange, IRCamera.ThermalCameraSupportPool);
+
+					// Update the temperature range button border color
+					GlobalVariables::GlobalTempRangeButton->FlatAppearance->BorderColor = System::Drawing::Color::Yellow;
+
+					// Update the temperature range button graphic
+					GlobalVariables::GlobalTempRangeButton->Update();
+					// Wait for the temperature range to switch correctly
+					System::Threading::Thread::Sleep(_ThermalCameraPool4_RangeSwitchReadyTimeMs);
+
+					// Update the IR camera device temperature range variable
+					IRCamera.CurrentIRTempRangeFlag = 2;
+
+					// Update the temperature range button border color
+					GlobalVariables::GlobalTempRangeButton->FlatAppearance->BorderColor = System::Drawing::Color::Lime;
+
+				}
+				else {
+
+					// Configure the thermal camera to its lowest temperature range
+					RMH_IRThermalCamera_SetIRCameraTemperatureRange(_ThermalCamera_TemperatureRange_LowRange, IRCamera.ThermalCameraSupportPool);
+
+					// Update the temperature range button border color
+					GlobalVariables::GlobalTempRangeButton->FlatAppearance->BorderColor = System::Drawing::Color::Yellow;
+
+					// Update the temperature range button graphic
+					GlobalVariables::GlobalTempRangeButton->Update();
+					// Wait for the temperature range to switch correctly
+					System::Threading::Thread::Sleep(_ThermalCameraPool4_RangeSwitchReadyTimeMs);
+
+					// Update the IR camera device temperature range variable
+					IRCamera.CurrentIRTempRangeFlag = 1;
+
+					// Update the temperature range button border color
+					GlobalVariables::GlobalTempRangeButton->FlatAppearance->BorderColor = System::Drawing::Color::FromArgb(255, 40, 40, 40);
+
+				}
+
+				// Write GUI status message
+				RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "Thermal Camera Temperature Range Was Changed", _StatusMessageType_Normal);
+
+				// Perform a thermal camera calibration - switching range needs a fresh shutter (NUC)
+				// calibration for the new gain/range, exactly like the vendor app's own range menu does
+				RMH_IRThermalCamera_CalibrateThermalCamera();
 
 			break;
 
@@ -2603,6 +2969,21 @@ void RMH_IRThermalCamera_ThermalCameraInitialConnectionEvents_Pool4() {
 	IRCamera.FrameWidthPixelOffset = _SupporteredeThermalCameraPool4_FrameWidthPixelOffset;
 	IRCamera.FrameHeightPixelOffset = _SupporteredeThermalCameraPool4_FrameHeightPixelOffset;
 
+	// Pool 5 (Thermal Master P3): the first 6 pixels of the row where display starts read as a
+	// fixed near-zero value (a small dead/blanking region, not real image content) - skip them.
+	// A handful of words at the very end of the frame become unused padding as a result, which is
+	// far less noticeable than 6 dead pixels at the start of the image.
+	if (IRCamera.ThermalCameraSupportPool == _SupportedThermalCameras_Pool_5) {
+		IRCamera.FrameWidthPixelOffset = 6;
+	}
+
+	// Pool 6 (Thermal Master THOR001): the raw sample starts with a fixed 10 byte (5 pixel) sync
+	// header ("ff 00" x5) before the real pixel data - skip it.
+	if (IRCamera.ThermalCameraSupportPool == _SupportedThermalCameras_Pool_6) {
+		IRCamera.FrameWidthPixelOffset = _SupporteredeThermalCameraPool6_FrameWidthPixelOffset;
+		IRCamera.FrameHeightPixelOffset = _SupporteredeThermalCameraPool6_FrameHeightPixelOffset;
+	}
+
 	// Write GUI status message
 	RMH_Winforms_RichTextBox_WriteLine(GlobalVariables::GlobalGUIInfoTextArea, "Reading The Thermal Camera Temperature Configuration...", _StatusMessageType_Normal);
 	// Read the internal configuration parameters of the camera
@@ -2861,6 +3242,11 @@ void RMH_IRThermalCamera_ConnectToThermalCameraOrAnalysisMode() {
 								GlobalVariables::OpenGLRender->RMH_OpenGL_InitImageTexture(IRCamera.FrameWidth, IRCamera.FrameHeight - IRCamera.FrameMetadataSize);
 								// Configure the live view OpenGL zoom texture rendering resolution 
 								GlobalVariables::LiveViewZoomWindowRender->RMH_OpenGL_InitLiveViewZoomWindow(IRCamera.FrameWidth, IRCamera.FrameHeight - IRCamera.FrameMetadataSize);
+
+								// Pool 5 (Thermal Master P3) sensor is mounted rotated 90 degrees - correct it automatically
+								if (IRCamera.ThermalCameraSupportPool == _SupportedThermalCameras_Pool_5) {
+									while (GlobalVariables::OpenGLRender->RMH_LiveView_GetRotation() != 0.0) { GlobalVariables::OpenGLRender->RMH_OpenGL_RotateLiveViewCCW(); }
+								}
 
 								// Toggle/update the live view enhanced image resolution mode
 								RMH_ThermalViewer_ToggleEnhancedLiveViewResolution();
@@ -3142,6 +3528,11 @@ void RMH_IRThermalCamera_ConnectToThermalCameraOrAnalysisMode() {
 										// Configure the live view OpenGL zoom texture rendering resolution 
 										GlobalVariables::LiveViewZoomWindowRender->RMH_OpenGL_InitLiveViewZoomWindow(IRCamera.FrameWidth, IRCamera.FrameHeight - IRCamera.FrameMetadataSize);
 
+										// Pool 5 (Thermal Master P3) sensor is mounted rotated 90 degrees - correct it automatically
+										if (IRCamera.ThermalCameraSupportPool == _SupportedThermalCameras_Pool_5) {
+											while (GlobalVariables::OpenGLRender->RMH_LiveView_GetRotation() != 0.0) { GlobalVariables::OpenGLRender->RMH_OpenGL_RotateLiveViewCCW(); }
+										}
+
 										// Toggle/update the live view enhanced image resolution mode
 										RMH_ThermalViewer_ToggleEnhancedLiveViewResolution();
 										// Toggle/update the live view ultra image resolution mode
@@ -3368,10 +3759,10 @@ void RMH_IRThermalCamera_ConnectToThermalCameraOrAnalysisMode() {
 
 					break;
 
-					// Supported thermal camera pool 4
-					case _SupportedThermalCameras_Pool_4:
+					// Supported thermal camera pools 4, 5 and 6
+					case _SupportedThermalCameras_Pool_4: case _SupportedThermalCameras_Pool_5: case _SupportedThermalCameras_Pool_6:
 
-						// Handle the events, sequences and actions to be performed after connecting to a pool 3 thermal camera 
+						// Handle the events, sequences and actions to be performed after connecting to a pool 4/5/6 thermal camera
 						RMH_IRThermalCamera_ThermalCameraInitialConnectionEvents_Pool4();
 
 					break;
@@ -3414,6 +3805,11 @@ void RMH_IRThermalCamera_ConnectToThermalCameraOrAnalysisMode() {
 					GlobalVariables::OpenGLRender->RMH_OpenGL_InitImageTexture(IRCamera.FrameWidth, IRCamera.FrameHeight - IRCamera.FrameMetadataSize);
 					// Configure the live view OpenGL zoom texture rendering resolution 
 					GlobalVariables::LiveViewZoomWindowRender->RMH_OpenGL_InitLiveViewZoomWindow(IRCamera.FrameWidth, IRCamera.FrameHeight - IRCamera.FrameMetadataSize);
+
+					// Pool 5 (Thermal Master P3) sensor is mounted rotated 90 degrees - correct it automatically
+					if (IRCamera.ThermalCameraSupportPool == _SupportedThermalCameras_Pool_5) {
+						while (GlobalVariables::OpenGLRender->RMH_LiveView_GetRotation() != 0.0) { GlobalVariables::OpenGLRender->RMH_OpenGL_RotateLiveViewCCW(); }
+					}
 
 					// Toggle/update the live view enhanced image resolution mode
 					RMH_ThermalViewer_ToggleEnhancedLiveViewResolution();

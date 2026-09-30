@@ -51,6 +51,9 @@ namespace DirectShowCamera
         virtual bool setVideoFormat(DirectShowVideoFormat* videoFormat) = 0;
         virtual bool setVideoFormat(int videoFormatIndex) = 0;
 
+        // Overrides the grabber callback's expected sample size - see DirectShowCamera::forceExpectedFrameBufferSize().
+        virtual void forceExpectedFrameBufferSize(int numOfBytes) = 0;
+
         // Property
         virtual void refreshProperties() = 0;
         virtual DirectShowCameraProperties* getProperties() = 0;

@@ -78,10 +78,17 @@ namespace IRCAMThermalViewer {
 			// Update the text at the top of the GUI
 			RMH_Winforms_ChangeFormTitleBarText(this, "Thermal Camera Settings, Setup And Configuration");
 
-			// Insert the list of supported thermal cameras into the "Supported Devices" ComboBox.
-			RMH_Winforms_CombiBox_AddArrayOfItemStrings(GlobalVariables::GlobalCameraSourceDropList, SupportedCamerasModelNames);
-			// Set the selected thermal camera index from the saved session data
-			RMH_Winforms_CombiBox_SetSellectedItemPosition(this->CameraSourceDropList, SelectedThermalCameraIndex);
+			// Insert the list of supported thermal cameras into the "Supported Devices" ComboBox, sorted per
+			// SupportedCamerasDisplayOrder (see RMH_SupportedIRCameras_Resources.h) rather than in raw macro
+			// index order.
+			{
+				std::vector<std::string> SortedCamerasModelNames;
+				for (unsigned int i = 0; i < SupportedCamerasDisplayOrder.size(); i++) { SortedCamerasModelNames.push_back(SupportedCamerasModelNames[SupportedCamerasDisplayOrder[i]]); }
+				RMH_Winforms_CombiBox_AddArrayOfItemStrings(GlobalVariables::GlobalCameraSourceDropList, SortedCamerasModelNames);
+			}
+			// Set the selected thermal camera index from the saved session data - translate the camera's
+			// stable macro index back to its (possibly different) position in the sorted ComboBox.
+			RMH_Winforms_CombiBox_SetSellectedItemPosition(this->CameraSourceDropList, RMH_FindCameraDisplayPosition(SelectedThermalCameraIndex));
 
 			// Insert the list of available full frame temperature CSV data delimiters into the associated combobox
 			RMH_Winforms_CombiBox_AddArrayOfItemStrings(GlobalVariables::GlobalFullFrameTempDataCSVDelimiterCombiBox, FullFrameTempCSVDataDelimiters);
@@ -242,8 +249,9 @@ namespace IRCAMThermalViewer {
 
 			// Update the saved session parameters of the form into global variables
 
-			// Store the selected camera index in the global variable for the saved session parameter
-			SelectedThermalCameraIndex = this->CameraSourceDropList->SelectedIndex;
+			// Store the selected camera's stable macro index (not its position in the sorted ComboBox) in
+			// the global variable for the saved session parameter
+			SelectedThermalCameraIndex = RMH_GetCameraIndexAtDisplayPosition(this->CameraSourceDropList->SelectedIndex);
 
 			// Store the selected full frame temperature CSV data delimiter in the global variable for the saved session parameter
 			SelectedFullFrameTempCSVDataDelimiterIndex = this->FullFrameTempDataCSVDelimiterCombiBox->SelectedIndex;

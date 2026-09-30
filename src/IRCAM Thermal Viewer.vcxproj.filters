@@ -105,6 +105,9 @@
     <ClInclude Include="uvc_camera.h">
       <Filter>Header Files\RMH DirectShow Camera Library</Filter>
     </ClInclude>
+    <ClInclude Include="p3_winusb_camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="uvc_camera_looper.h">
       <Filter>Header Files\RMH DirectShow Camera Library</Filter>
     </ClInclude>
@@ -283,6 +286,9 @@
     </ClCompile>
     <ClCompile Include="uvc_camera.cpp">
       <Filter>Source Files\RMH DirectShow Camera Library</Filter>
+    </ClCompile>
+    <ClCompile Include="p3_winusb_camera.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="uvc_camera_looper.cpp">
       <Filter>Source Files\RMH DirectShow Camera Library</Filter>

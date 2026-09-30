@@ -170,6 +170,7 @@
     <ClCompile Include="RMH_Winforms_Library.cpp" />
     <ClCompile Include="uvc_camera.cpp" />
     <ClCompile Include="uvc_camera_looper.cpp" />
+    <ClCompile Include="p3_winusb_camera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="abstract_ds_camera.h" />
@@ -262,6 +263,7 @@
     </ClInclude>
     <ClInclude Include="uvc_camera.h" />
     <ClInclude Include="uvc_camera_looper.h" />
+    <ClInclude Include="p3_winusb_camera.h" />
     <ClInclude Include="VideoPlayBackTools.h">
       <FileType>CppForm</FileType>
     </ClInclude>

@@ -480,6 +480,11 @@ namespace DirectShowCamera
         return result;
     }
 
+    void DirectShowCameraStub::forceExpectedFrameBufferSize(int numOfBytes)
+    {
+        // No-op: the stub has no real grabber callback to override.
+    }
+
 #pragma endregion Video Format
 
 #pragma region Properties
