@@ -2117,8 +2117,13 @@ bool RMH_IRThermalCamera_ConvertCapturedRawImageDataToSnapshotPNG(unsigned short
 	// Which supported camera pool is selected
 	switch (SupportedCameraPool) {
 
-		// Supported camera pools 1, 2 and 4
-		case _SupportedThermalCameras_Pool_1: case _SupportedThermalCameras_Pool_2: case _SupportedThermalCameras_Pool_4:
+		// Supported camera pools 1, 2, 4 and 6 (Thermal Master THOR001) - pool 6's FrameWidth/FrameHeight (256 x
+		// 192) are already the true displayed image size (unlike pool 5's 256 x 386 full-buffer size), and its
+		// raw data starts only FrameWidthPixelOffset (5) pixels into the buffer, so the metadata row this writes
+		// at (FrameHeight - 1) falls past the real _SupporteredeThermalCameraPool6_RawFrameSizeBytes (98314)
+		// altogether - it lands in the buffer's unused padding tail, not over any real pixel data, so pool 6
+		// needs no re-encoding step of its own: saving &IRCameraFrameData[0] directly works like pools 1/2/4.
+		case _SupportedThermalCameras_Pool_1: case _SupportedThermalCameras_Pool_2: case _SupportedThermalCameras_Pool_4: case _SupportedThermalCameras_Pool_6:
 
 			// Generate and write extra RAW metadata to the frame data array 
 			RMH_AnalysisMode_AddIDAndMetaDataToFrameArray(IRCamera.FrameWidth, IRCamera.FrameHeight, &IRCameraFrameData[0],
