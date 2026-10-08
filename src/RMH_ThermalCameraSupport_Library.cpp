@@ -2065,8 +2065,8 @@ void RMH_IRThermalCamera_WriteDataToVideoRecordingFilesSequence(unsigned short S
 			// Which supported camera pool is selected
 			switch (SupportedCameraPool) {
 
-				// Supported camera pools 1, 2 and 4
-				case _SupportedThermalCameras_Pool_1: case _SupportedThermalCameras_Pool_2: case _SupportedThermalCameras_Pool_4: case _SupportedThermalCameras_Pool_5:
+				// Supported camera pools 1, 2, 4, 5 and 6
+				case _SupportedThermalCameras_Pool_1: case _SupportedThermalCameras_Pool_2: case _SupportedThermalCameras_Pool_4: case _SupportedThermalCameras_Pool_5: case _SupportedThermalCameras_Pool_6:
 
 					// Write the RAW camera data frames to the video file
 					RMH_VideoFileRecording_WriteDataToFile(_VideoFileWriteObject_RecordingAnalysisModeFile, IRCamera.FrameWidth, IRCamera.FrameHeight, IRCameraFrameData);
