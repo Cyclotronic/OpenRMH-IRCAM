@@ -179,8 +179,10 @@ bool RMH_AnalysisMode_IsRAWMetaDataValid(RAWFileIDFormat* MetaData, unsigned int
     // The frame itself must fit the frame buffers
     if (RMH_FrameBuffer_IsFrameSizeSupported(FrameWidth, FrameHeight) == false) { return false; }
 
-    // The camera pool must be one of the supported pools (1 - 4)
-    if (MetaData->CameraPoolID < 1 || MetaData->CameraPoolID > 4) { return false; }
+    // The camera pool must be one of the defined pools (1 - 6); the loader must accept every pool the
+    // program can write, even ones that cannot save a RAW snapshot today (see
+    // RMH_IRThermalCamera_ConvertCapturedRawImageDataToSnapshotPNG), so that it does not reject a future one
+    if (MetaData->CameraPoolID < 1 || MetaData->CameraPoolID > 6) { return false; }
 
     // The metadata rows must be fewer than the frame rows
     if (MetaData->FileMetaDataSizeID >= FrameHeight) { return false; }
