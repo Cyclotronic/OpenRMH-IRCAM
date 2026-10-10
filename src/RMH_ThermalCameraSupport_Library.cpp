@@ -2065,8 +2065,8 @@ void RMH_IRThermalCamera_WriteDataToVideoRecordingFilesSequence(unsigned short S
 			// Which supported camera pool is selected
 			switch (SupportedCameraPool) {
 
-				// Supported camera pools 1, 2 and 4
-				case _SupportedThermalCameras_Pool_1: case _SupportedThermalCameras_Pool_2: case _SupportedThermalCameras_Pool_4: case _SupportedThermalCameras_Pool_5:
+				// Supported camera pools 1, 2, 4, 5 and 6
+				case _SupportedThermalCameras_Pool_1: case _SupportedThermalCameras_Pool_2: case _SupportedThermalCameras_Pool_4: case _SupportedThermalCameras_Pool_5: case _SupportedThermalCameras_Pool_6:
 
 					// Write the RAW camera data frames to the video file
 					RMH_VideoFileRecording_WriteDataToFile(_VideoFileWriteObject_RecordingAnalysisModeFile, IRCamera.FrameWidth, IRCamera.FrameHeight, IRCameraFrameData);
@@ -2117,8 +2117,13 @@ bool RMH_IRThermalCamera_ConvertCapturedRawImageDataToSnapshotPNG(unsigned short
 	// Which supported camera pool is selected
 	switch (SupportedCameraPool) {
 
-		// Supported camera pools 1, 2 and 4
-		case _SupportedThermalCameras_Pool_1: case _SupportedThermalCameras_Pool_2: case _SupportedThermalCameras_Pool_4: case _SupportedThermalCameras_Pool_5:
+		// Supported camera pools 1, 2, 4 and 6 (Thermal Master THOR001) - pool 6's FrameWidth/FrameHeight (256 x
+		// 192) are already the true displayed image size (unlike pool 5's 256 x 386 full-buffer size), and its
+		// raw data starts only FrameWidthPixelOffset (5) pixels into the buffer, so the metadata row this writes
+		// at (FrameHeight - 1) falls past the real _SupporteredeThermalCameraPool6_RawFrameSizeBytes (98314)
+		// altogether - it lands in the buffer's unused padding tail, not over any real pixel data, so pool 6
+		// needs no re-encoding step of its own: saving &IRCameraFrameData[0] directly works like pools 1/2/4.
+		case _SupportedThermalCameras_Pool_1: case _SupportedThermalCameras_Pool_2: case _SupportedThermalCameras_Pool_4: case _SupportedThermalCameras_Pool_6:
 
 			// Generate and write extra RAW metadata to the frame data array 
 			RMH_AnalysisMode_AddIDAndMetaDataToFrameArray(IRCamera.FrameWidth, IRCamera.FrameHeight, &IRCameraFrameData[0],
@@ -2128,6 +2133,58 @@ bool RMH_IRThermalCamera_ConvertCapturedRawImageDataToSnapshotPNG(unsigned short
 			// Save a raw sensor data snapshot from the connected thermal camera
 			SnapshotStatus = RMH_Winforms_SaveRawImageDataAsSnapShotPNG(GlobalVariables::SnapShotDefaultPath, IRCamera.FrameWidth, IRCamera.FrameHeight, &IRCameraFrameData[0]);
 
+		break;
+
+		// Supported camera pool 5 (Thermal Master P3) - RMH_AnalysisMode_AddIDAndMetaDataToFrameArray() and
+		// RMH_Winforms_SaveRawImageDataAsSnapShotPNG() both treat the frame buffer as 3 bytes/pixel, which
+		// matches what pool 1/2/4 actually get from DirectShow - but P3's own WinUSB backend (p3_winusb_camera.cpp)
+		// delivers tightly-packed 2-byte/pixel raw samples straight off the wire, with no such conversion.
+		// Saving &IRCameraFrameData[0] directly at IRCamera.FrameWidth x IRCamera.FrameHeight (as the pool
+		// 1/2/4 case above does) therefore reads the 256 x 386 raw buffer with the wrong stride and produces
+		// a corrupt PNG. Re-encode the real, already-offset-corrected 256 x 192 image (the exact pixels the
+		// live view displays, after applying FrameWidthPixelOffset/FrameHeightPixelOffset) into its own
+		// 3-bytes/pixel buffer first instead - R = low byte, G = high byte, B unused. The counterpart of this
+		// (de-interleaving back to 2 bytes/pixel on load) is in RMH_IRThermalCamera_ConnectToThermalCamera()'s
+		// Snapshot Analysis Mode handling, right before RMH_IRThermalCamera_ConvertYUY2To14BitThermalDataArray().
+		case _SupportedThermalCameras_Pool_5: {
+
+			unsigned int SnapshotWidth = IRCamera.FrameWidth;
+			unsigned int SnapshotImageHeight = IRCamera.FrameHeight - IRCamera.FrameMetadataSize;
+			// An extra pixel row is appended on top of the real, offset-corrected image for the ID/metadata
+			// string, instead of overwriting the image's own last row (as the pool 1/2/4 case above does) -
+			// unlike that shared path, which relies on the sacrificed row already being outside the real
+			// image (true for pools 1-4's own camera-embedded metadata rows), pool 5's saved buffer here IS
+			// exactly the real image with nothing spare, so every one of its rows is kept intact.
+			unsigned int SnapshotHeight = SnapshotImageHeight + 1;
+			unsigned int FrameDataArrayOffset = (IRCamera.FrameHeightPixelOffset * IRCamera.FrameWidth) + IRCamera.FrameWidthPixelOffset;
+			unsigned char* Pool5SnapshotBuffer = new unsigned char[SnapshotWidth * SnapshotHeight * 3];
+
+			for (unsigned int i = 0; i < SnapshotWidth * SnapshotImageHeight; i++) {
+
+				Pool5SnapshotBuffer[i * 3 + 0] = IRCameraFrameData[(FrameDataArrayOffset + i) * 2 + 0];
+				Pool5SnapshotBuffer[i * 3 + 1] = IRCameraFrameData[(FrameDataArrayOffset + i) * 2 + 1];
+				Pool5SnapshotBuffer[i * 3 + 2] = 0;
+
+			}
+
+			// Generate and write extra RAW metadata to the frame data array - the saved buffer already IS the
+			// real, offset-corrected image, so the pixel offsets recorded for it are both zero, but the
+			// metadata size is 1: the loader must exclude this extra row from its min/max scan, or the
+			// ID-string/float bytes would be read as a wildly out-of-range "pixel" and blow out the whole
+			// colour range. RMH_IRThermalCamera_ConnectToThermalCameraOrAnalysisMode()'s pool 5 de-interleave
+			// step (before RMH_IRThermalCamera_ConvertYUY2To14BitThermalDataArray()) already processes
+			// IRCamera.FrameWidth x IRCamera.FrameHeight pixels generically, so it needs no change for the
+			// extra row - it reads back as the file's own height (SnapshotHeight), the same way it is written.
+			RMH_AnalysisMode_AddIDAndMetaDataToFrameArray(SnapshotWidth, SnapshotHeight, Pool5SnapshotBuffer,
+				IRCamera.ThermalCameraSupportPool, 1, 0, 0,
+				IRCamera.TemperatureCorrectionSetting, IRCamera.AmbientTemperatureSetting, IRCamera.ReflectedTemperatureSetting, IRCamera.HumiditySetting, IRCamera.EmissivitySetting, IRCamera.DistanceSetting);
+
+			// Save a raw sensor data snapshot from the connected thermal camera
+			SnapshotStatus = RMH_Winforms_SaveRawImageDataAsSnapShotPNG(GlobalVariables::SnapShotDefaultPath, SnapshotWidth, SnapshotHeight, Pool5SnapshotBuffer);
+
+			delete[] Pool5SnapshotBuffer;
+
+		}
 		break;
 
 		// Supported camera pool 3
@@ -3209,6 +3266,26 @@ void RMH_IRThermalCamera_ConnectToThermalCameraOrAnalysisMode() {
 								IRCamera.HumiditySetting = SnapShotAnalysisModeFileMetaData.RecordingHumiditySetting;
 								IRCamera.EmissivitySetting = SnapShotAnalysisModeFileMetaData.RecordingEmissivitySetting;
 								IRCamera.DistanceSetting = SnapShotAnalysisModeFileMetaData.RecordingDistanceSetting;
+
+								// Pool 5 (Thermal Master P3) snapshots are saved as 3 bytes/pixel (R = low byte, G = high
+								// byte, B unused - see RMH_IRThermalCamera_ConvertCapturedRawImageDataToSnapshotPNG()'s
+								// pool 5 case), since that is what RMH_AnalysisMode_ReadAndLoadPNGImage()/
+								// RMH_AnalysisMode_ReadRAWMetaData() above require - but
+								// RMH_IRThermalCamera_ConvertYUY2To14BitThermalDataArray() below expects a tightly-packed
+								// 2-byte/pixel buffer (P3's actual live wire format). De-interleave in place
+								// (R,G,B,R,G,B... -> R,G,R,G...) before calling it - safe in place since the write index
+								// never overtakes the read index.
+								if (IRCamera.ThermalCameraSupportPool == _SupportedThermalCameras_Pool_5) {
+
+									unsigned int Pool5PixelCount = IRCamera.FrameWidth * IRCamera.FrameHeight;
+									for (unsigned int i = 0; i < Pool5PixelCount; i++) {
+
+										IRCameraFrameData[i * 2 + 0] = IRCameraFrameData[i * 3 + 0];
+										IRCameraFrameData[i * 2 + 1] = IRCameraFrameData[i * 3 + 1];
+
+									}
+
+								}
 
 								// Read the operating constants of the IR camera - relative to the supported pool
 								RMH_IRThermalCamera_InitIRCameraConstants(&IRCamera, IRCamera.ThermalCameraSupportPool);
